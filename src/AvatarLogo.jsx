@@ -9,7 +9,7 @@ import multiavatar from '@multiavatar/multiavatar'
 
 
 
-const makingStyleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
+const styleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
 
   return {
     avatarCss: ({ size, personName, ...props }) => {
@@ -41,8 +41,8 @@ const makingStyleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttrib
       return {
 
         height: "auto",
-        paddingTop: "2px",
-        paddingBottom: "2px",
+        paddingTop: labelOn ? "2px" : "4px",
+        paddingBottom: labelOn ? "2px" : "4px",
         boxShadow: theme.shadows[lift],
         backgroundColor: bgColor ? bgColor : theme.isLight ? "#b7e1fc" : theme.palette.primary.light,
         overflow: "hidden",
@@ -118,7 +118,7 @@ const makingStyleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttrib
   }
 }
 
-const useStyles = makeStyles(makingStyleObj)
+const useStyles = makeStyles(styleObj)
 
 
 
@@ -270,7 +270,7 @@ export function TwoLineLabel({ lineTop, lineDown, size, rightMarginOn = false })
     <>
       <Typography color="textPrimary" className={typoUpCss} >{lineTop}</Typography>
       <Typography color="textSecondary" className={typoDownCss} >{lineDown}</Typography>
-    
+
     </>
   )
 
@@ -280,7 +280,7 @@ export function TwoLineLabel({ lineTop, lineDown, size, rightMarginOn = false })
 
 
 
-export const AvatarLogo = withStyles(makingStyleObj)(AvatarLogo_);
-export const AvatarChip = withStyles(makingStyleObj)(AvatarChip_);
+export const AvatarLogo = withStyles(styleObj)(AvatarLogo_);
+export const AvatarChip = withStyles(styleObj)(AvatarChip_);
 
 

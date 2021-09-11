@@ -114,7 +114,7 @@ export default function DraftEditor() {
         lift={0}
         logoOn={true}
         labelOn={true}
-
+      size="1.5rem"
         label={
           <TwoLineLabel lineTop="AAA" lineDown="FDSFsssssss" rightMarginOn={false} />
 
@@ -131,16 +131,16 @@ export default function DraftEditor() {
       <AvatarChip personName=""
         // bgColor="blue"
         // size="5.5rem"
-        lift={0}
+        lift={9}
         logoOn={true}
-        labelOn={true}
+        labelOn={false}
 
         label={
           <TwoLineLabel lineTop={<strong>AAA</strong>} lineDown="FDSFsssssss" rightMarginOn={true} />
 
         }
 
-
+        src="https://picsum.photos/200"
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
         onClick={function () { setLogoOn(pre => !pre) }}
