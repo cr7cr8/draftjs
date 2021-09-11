@@ -9,6 +9,12 @@ import Grow from '@material-ui/core/Grow';
 import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 import multiavatar from '@multiavatar/multiavatar'
 
+
+console.log(Array.prototype)
+
+
+
+
 function breakpointsAttribute(...args) {
 
   let xs = {}
@@ -36,78 +42,94 @@ function breakpointsAttribute(...args) {
 }
 const breakpoints = createBreakpoints({})
 
+function multiplyArr(arr,factor) {
+  return arr.map((item) => {
+    const num = Number(item.replace(/[^\d\.]/g, ''))
+    const unit = String(item.replace(/[\d\.]/g, ''))
+    return String(num * factor + unit)
+  })
+}
+
 
 
 
 ////////////////////////////////////////////////////////////////////////////
 
-Array.prototype.multiply = function (factor) {
-
-  return this.map((item) => {
-
-    const num = Number(item.replace(/[^\d\.]/g, ''))
-    const unit = String(item.replace(/[\d\.]/g, ''))
-
-    return String(num * factor + unit)
-  })
-
-
-
-}
-
-
-
 const makingStyleObj = function (theme) {
 
   return {
-    avatarCss: ({ avatarSize, labelSize, personName, ...props }) => {
+    avatarCss: ({ size, personName, ...props }) => {
+
+      const size_ = Array.isArray(size)
+        ? size
+        : typeof (size) === "string"
+          ? [size]
+          : multiplyArr(theme.textSizeArr, 1.3)
 
 
 
-      // const size_ = avatarSize || labelSize && labelSize.multiply(1.3) || theme.textSizeArr.multiply(1.3)
-      // return {
-
-      //   ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
-
-      // }
-
-    },
-    chipCss: ({ avatarSize, labelSize, personName, label, ...props }) => {
-      //alert(JSON.stringify(theme.textSizeArr.multiply(1.3)))
-
-      const size_ = avatarSize || labelSize && labelSize.multiply(1.3) || ["1rem", "2rem", "3rem", "4rem", "5rem"].multiply(1.3)
-      console.log(size_)
 
       return {
 
-        // height: "auto",
-        // paddingTop: "4px",
-        // paddingBottom: "4px",
+        ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
 
-        // ...breakpointsAttribute(["borderRadius", "100000px"]),
+      }
 
-        // ...(!label) && (!personName) && { backgroundColor: "transparent", borderRadius: "1000px", },
-
-        // ...(label) && (!(label && label.props && label.props.children)) && {
-        //   backgroundColor: "transparent", borderRadius: "1000px",
-        // },
+    },
+    chipCss: ({ size, personName, label, bgColor, lift = 3, ...props }) => {
+      // const size_ = Array.isArray(size) ? size : [size]
+      // const size_ = size || multiplyArr.call(theme.textSizeArr, 1.3)
 
 
-        // "& .MuiChip-avatar": {
-        //   ...(!label) && (!personName) && { marginRight: "-19px" },
-        //   ...(label) && (!(label && label.props && label.props.children)) && { marginRight: "-19px" },
+      const factor = 1.3
+      const size_ = Array.isArray(size)
+        ? size
+        : typeof (size) === "string"
+          ? [size]
+          : multiplyArr(theme.textSizeArr, factor)
 
-        //   ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
+      const roundFactor = 0.3
+      const radius_ = Array.isArray(size)
+        ? multiplyArr(size, roundFactor)
+        : typeof (size) === "string"
+          ? multiplyArr([size], roundFactor)
+          : multiplyArr(theme.textSizeArr, roundFactor)
 
-        // },
-
-        // "& .MuiChip-label": {
-        //   fontWeight: "bold",
-        //   userSelect: "text",
 
 
-        //   ...breakpointsAttribute(["fontSize", ...size_]), //avatar label size
-        // },
+      return {
+
+        height: "auto",
+        paddingTop: "4px",
+        paddingBottom: "4px",
+        boxShadow: theme.shadows[lift],
+        backgroundColor: bgColor ? bgColor : theme.isLight ? "#b7e1fc" : theme.palette.primary.light,
+        overflow: "hidden",
+       // ...breakpointsAttribute(["borderRadius", ...radius_]),
+          ...breakpointsAttribute(["borderRadius","999999px"]),
+
+        ...(!label) && (!personName) && { backgroundColor: "transparent", borderRadius: "1000px", },
+
+        ...(label) && (!(label && label.props && label.props.children)) && {
+          backgroundColor: "transparent", borderRadius: "1000px",
+        },
+
+
+        "& .MuiChip-avatar": {
+          ...(!label) && (!personName) && { marginRight: "-19px" },
+          ...(label) && (!(label && label.props && label.props.children)) && { marginRight: "-19px" },
+
+          ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
+
+        },
+
+        "& .MuiChip-label": {
+          fontWeight: "bold",
+          userSelect: "text",
+
+
+          ...breakpointsAttribute(["fontSize", ...theme.textSizeArr]), // label size
+        },
 
 
 
@@ -137,13 +159,11 @@ const makingStyleObj = function (theme) {
 class AvatarLogo_ extends Component {
 
   render() {
-    const { classes, personName, src, avatarSize, ...rest } = this.props
-    //   const src_ = "data:image/svg+xml;base64," + btoa(personName && multiavatar(personName)) || null
+    const { classes, personName, src, ...rest } = this.props
+    const src_ = "data:image/svg+xml;base64," + btoa(personName && multiavatar(personName))
 
-    const src_ = "data:image/svg+xml;base64," + btoa(personName && multiavatar(personName)) || null
+    return <Avatar classes={{ root: classes.avatarCss }} src={this.props.src || src_} {...rest} />
 
-    // return <Avatar classes={{ root: classes.avatarCss }} src={src_} {...rest} />
-    return <Avatar src={"data:image/svg+xml;base64," + btoa(multiavatar("dsd"))} {...rest} />
   }
 }
 
@@ -225,7 +245,7 @@ class AvatarChip_ extends Component {
   }
 
   render() {
-    const { classes, avatarSize, labelSize, personName, avatarProps, noAvatar = false, ...rest } = this.props
+    const { classes, size, personName, avatarProps, noAvatar = false, ...rest } = this.props
 
     const { src, ...avatarRest } = this.props.avatarProps || {}
 
@@ -235,7 +255,7 @@ class AvatarChip_ extends Component {
 
         <Chip
           classes={{ root: classes.chipCss }}
-          {...!noAvatar && { avatar: <AvatarLogo avatarSize={avatarSize} personName={personName} src={this.props.src}{...avatarRest} /> }}
+          {...!noAvatar && { avatar: <AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} /> }}
 
 
           // avatar={<AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} />}

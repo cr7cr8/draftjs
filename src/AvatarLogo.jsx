@@ -1,59 +1,15 @@
 import React, { Component } from "react"
 
+import { withStyles, makeStyles, useTheme } from '@material-ui/styles'
 
-
-import { withStyles, makeStyles, } from '@material-ui/styles'
-
-import { Avatar, Chip, Popover, Typography } from "@material-ui/core";
+import { Avatar, Chip, Popover, Typography, } from "@material-ui/core";
 import Grow from '@material-ui/core/Grow';
-import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
+
 import multiavatar from '@multiavatar/multiavatar'
 
-function breakpointsAttribute(...args) {
-
-  let xs = {}
-  let sm = {}
-  let md = {}
-  let lg = {}
-  let xl = {}
-
-  args.forEach(item => {
-    xs = { ...xs, [item[0]]: item[1] }
-    sm = { ...sm, [item[0]]: item[2] || item[1] }
-    md = { ...md, [item[0]]: item[3] || item[2] || item[1] }
-    lg = { ...lg, [item[0]]: item[4] || item[3] || item[2] || item[1] }
-    xl = { ...xl, [item[0]]: item[5] || item[4] || item[3] || item[2] || item[1] }
-  })
 
 
-  return {
-    [breakpoints.only('xs')]: { ...xs },
-    [breakpoints.only('sm')]: { ...sm },
-    [breakpoints.only('md')]: { ...md },
-    [breakpoints.only('lg')]: { ...lg },
-    [breakpoints.only('xl')]: { ...xl },
-  }
-}
-const breakpoints = createBreakpoints({})
-
-function multiplyArr(factor) {
-
-  return this.map((item) => {
-
-    const num = Number(item.replace(/[^\d\.]/g, ''))
-    const unit = String(item.replace(/[\d\.]/g, ''))
-
-    return String(num * factor + unit)
-  })
-
-
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////
-
-const makingStyleObj = function (theme) {
+const makingStyleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
 
   return {
     avatarCss: ({ size, personName, ...props }) => {
@@ -62,83 +18,85 @@ const makingStyleObj = function (theme) {
         ? size
         : typeof (size) === "string"
           ? [size]
-          : multiplyArr.call(theme.textSizeArr, 1.3)
-
-
-
-
+          : lgTextSizeArr
 
       return {
-
         ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
-
       }
-
     },
-    chipCss: ({ size, personName, label, ...props }) => {
-      // const size_ = Array.isArray(size) ? size : [size]
-      // const size_ = size || multiplyArr.call(theme.textSizeArr, 1.3)
+    chipCss: ({ size, personName, label, bgColor, lift = 3, logoOn = true, labelOn = true, ...props }) => {
+
       const size_ = Array.isArray(size)
         ? size
         : typeof (size) === "string"
           ? [size]
-          : multiplyArr.call(theme.textSizeArr, 1.3)
-      const avatarSize_ = ["1.25rem", "2.5rem", "3.75rem", "5rem", "8rem"]
+          : lgTextSizeArr
 
       return {
 
         height: "auto",
-        paddingTop: "4px",
-        paddingBottom: "4px",
+        paddingTop: "2px",
+        paddingBottom: "2px",
+        boxShadow: theme.shadows[lift],
+        backgroundColor: bgColor ? bgColor : theme.isLight ? "#b7e1fc" : theme.palette.primary.light,
+        overflow: "hidden",
 
-        ...breakpointsAttribute(["borderRadius", "100000px"]),
+        ...breakpointsAttribute(["borderRadius", "999999px"]),
 
-        ...(!label) && (!personName) && { backgroundColor: "transparent", borderRadius: "1000px", },
+        ...(!label) && (!personName) && { backgroundColor: "transparent", borderRadius: "999999px", },
 
-        ...(label) && (!(label && label.props && label.props.children)) && {
-          backgroundColor: "transparent", borderRadius: "1000px",
-        },
-
+        // ...(label) && (!(label && label.props && label.props.children)) && {
+        //   backgroundColor: "transparent", borderRadius: "999999px",
+        // },
 
         "& .MuiChip-avatar": {
-          ...(!label) && (!personName) && { marginRight: "-19px" },
-          ...(label) && (!(label && label.props && label.props.children)) && { marginRight: "-19px" },
-
+          // ...((!label) || (!labelOn)) && (!personName) && { marginRight: "-19px" },
+         // ...(label) && (!(label && label.props && label.props.children)) && { marginRight: "-19px" },
+          ...(logoOn && (!labelOn)) && { marginRight: "-19px" },
+          ...(logoOn && (labelOn)) && { marginRight: "-6px" },
           ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
 
         },
 
         "& .MuiChip-label": {
-          fontWeight: "bold",
+          // fontWeight: "bold",
           userSelect: "text",
-
-
-          ...breakpointsAttribute(["fontSize", ...theme.textSizeArr]), // label size
+          ...breakpointsAttribute(["fontSize", ...textSizeArr]), // label size
         },
 
 
 
-
-
-
       }
 
     },
-    popover: () => {
+
+    typoUpCss: () => {
       return {
-        pointerEvents: 'none',
+        lineHeight: "unset",
+        ...breakpointsAttribute(
+          ["fontSize", ...multiplyArr(textSizeArr, 60 / 100)],
+          //    ["marginRight", ...multiplyArr(textSizeArr, 40 / 100)]
+        ),
+
       }
     },
-    paper: () => {
+    typoDownCss: () => {
       return {
-        pointerEvents: "auto",
-        //  padding: muiTheme.spacing(1),
-        padding: theme.spacing(1),
+        lineHeight: "unset",
+        ...breakpointsAttribute(
+          ["fontSize", ...multiplyArr(textSizeArr, 40 / 100)],
+          //   ["marginRight", ...multiplyArr(textSizeArr, 40 / 100)]
+        ),
       }
     },
 
+    popover: () => { return { pointerEvents: 'none', } },
+    paper: () => { return { pointerEvents: "auto", padding: theme.spacing(1), } },
   }
 }
+
+const useStyles = makeStyles(makingStyleObj)
+
 
 
 class AvatarLogo_ extends Component {
@@ -146,16 +104,12 @@ class AvatarLogo_ extends Component {
   render() {
     const { classes, personName, src, ...rest } = this.props
     const src_ = "data:image/svg+xml;base64," + btoa(personName && multiavatar(personName))
-
     return <Avatar classes={{ root: classes.avatarCss }} src={this.props.src || src_} {...rest} />
 
   }
 }
 
 
-
-
-export const AvatarLogo = withStyles(makingStyleObj)(AvatarLogo_);
 
 class AvatarChip_ extends Component {
 
@@ -167,7 +121,7 @@ class AvatarChip_ extends Component {
       transOriginH: "left",
       transOriginV: "top",
       anchorPos: { "top": 0, "left": 0 },
-      //firstTime: true,
+
 
     }
 
@@ -175,24 +129,6 @@ class AvatarChip_ extends Component {
 
   };
 
-  // componentDidMount() {
-  //   this.setState(pre => {
-  //     return {
-  //       ...pre,
-  //       firstTime: false
-  //     }
-  //   })
-  // }
-
-  componentWillUpdate() {
-    // this.setState(pre => {
-    //   return {
-    //     ...pre,
-    //     firstTime: false
-    //   }
-    // })
-
-  }
 
 
   handlePopoverOpen = (event) => {
@@ -230,7 +166,7 @@ class AvatarChip_ extends Component {
   }
 
   render() {
-    const { classes, size, personName, avatarProps, noAvatar = false, ...rest } = this.props
+    const { classes, size, personName, avatarProps, logoOn = true, labelOn = true, ...rest } = this.props
 
     const { src, ...avatarRest } = this.props.avatarProps || {}
 
@@ -240,13 +176,15 @@ class AvatarChip_ extends Component {
 
         <Chip
           classes={{ root: classes.chipCss }}
-          {...!noAvatar && { avatar: <AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} /> }}
+          {...logoOn && { avatar: <AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} /> }}
 
 
           // avatar={<AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} />}
           label={personName}
 
           {...rest}
+
+          {...(!labelOn) && { label: null }}
           {...this.props.hoverContent && { onMouseEnter: this.handlePopoverOpen }}
           {...this.props.hoverContent && { onMouseLeave: this.handlePopoverClose }}
 
@@ -254,6 +192,8 @@ class AvatarChip_ extends Component {
           // aria-haspopup="true"
           // innerRef={this.state.anchorEl}
           //  ref={this.anchorRef}
+
+
           ref={(element) => { this.anchorRef = element }}
         />
 
@@ -298,9 +238,24 @@ class AvatarChip_ extends Component {
 }
 
 
+export function TwoLineLabel({ lineTop, lineDown }) {
+  const { typoUpCss, typoDownCss } = useStyles()
+
+  return (
+    <><>
+      <Typography color="textPrimary" className={typoUpCss} >{lineTop}</Typography>
+      <Typography color="textSecondary" className={typoDownCss} >{lineDown}</Typography>
+    </>
+    </>
+  )
+
+}
 
 
 
+
+
+export const AvatarLogo = withStyles(makingStyleObj)(AvatarLogo_);
 export const AvatarChip = withStyles(makingStyleObj)(AvatarChip_);
 
 

@@ -59,10 +59,21 @@ function breakpointsAttribute(...args) {
   }
 }
 
-// Array.prototype.myUcase = function () {
-//     for (let i = 0; i < this.length; i++) {
-//       this[i] = this[i].toUpperCase();
-//     }
+
+function multiplyArr(arr, factor) {
+  return arr.map((item) => {
+    const num = Number(item.replace(/[^\d\.]/g, ''))
+    const unit = String(item.replace(/[\d\.]/g, ''))
+    return String(num * factor + unit)
+  })
+}
+
+
+
+// Object.prototype.myUcase = function () {
+//     // for (let i = 0; i < this.length; i++) {
+//     //   this[i] = this[i].toUpperCase();
+//     // }
 // };
 
 
@@ -70,7 +81,7 @@ export default function ContextProvider(props) {
 
 
 
-  const textSizeArr = ["1rem", "2rem", "3rem", "4rem", "5rem"]
+  const textSizeArr = ["1rem", "2rem", "3rem", "4rem", "2rem"]
 
   const theme_ = useTheme()
 
@@ -83,7 +94,19 @@ export default function ContextProvider(props) {
 
     let muiTheme = createTheme({
 
-      textSizeArr: textSizeArr,
+     
+      textSizeArr,
+      factor: 1.3,
+      get lgTextSizeArr() { return this.multiplyArr(this.textSizeArr, this.factor) },
+       
+
+      multiplyArr,
+      isLight,
+      breakpointsAttribute,
+
+
+      
+
 
 
       palette: {
@@ -97,13 +120,14 @@ export default function ContextProvider(props) {
 
       },
       overrides: {
-        // MuiChip:{
-        //   root:{
-        //     backgroundColor:isLight ? "#b7e1fc" : theme_.palette.primary.light,
-        //     ...breakpointsAttribute(["borderRadius", ...textSizeArr])
-        //   }
+        MuiChip: {
+          root: {
 
-        // }
+
+            //     ...breakpointsAttribute(["borderRadius", ...textSizeArr])
+          }
+
+        }
 
       }
 
@@ -142,12 +166,7 @@ export default function ContextProvider(props) {
 
   return (
     <Context.Provider value={{
-
       isLight, setIsLight, theme, breakpointsAttribute,
-
-
-
-
     }}>
       <ThemeProvider theme={theme}>
         {props.children}
