@@ -132,19 +132,19 @@ export default function DraftEditor() {
         bgColor="blue"
         size={["15rem", "4rem", "3rem", "2rem", "19rem"]}
         lift={9}
-        logoOn={true}
-        labelOn={true}
+        logoOn={logoOn}
+        labelOn={labelOn}
         labelSize={["15rem", "4rem", "3rem", "2rem", "19rem"]}
         label={
           <TwoLineLabel lineTop={<strong>AAA00009999</strong>} lineDown="FDSFsssssss" rightMarginOn={true} />
 
         }
 
-       // src="https://picsum.photos/200"
+        // src="https://picsum.photos/200"
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
         onClick={function () { setLogoOn(pre => !pre) }}
-        //  onDelete={function(){setLabelOn(pre=>!pre) ; setLogoOn(pre=>!pre)   }}
+        onDelete={function () { setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
         hoverContent={"aaa"}
       />
 

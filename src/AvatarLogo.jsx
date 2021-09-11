@@ -198,7 +198,7 @@ class AvatarChip_ extends Component {
           {...(!labelOn) && { label: null }}
 
 
-          {...(this.props.label && this.props.label.type && this.props.label.type.name === "TwoLineLabel") && {
+          {...(this.props.label && this.props.label.type && this.props.label.type.name === "TwoLineLabel") && labelOn && {
 
             label: <TwoLineLabel {...this.props.label.props}  {...(Array.isArray(this.props.labelSize) || (typeof (this.props.labelSize) === "string")) && { size: this.props.labelSize, }} />
 
