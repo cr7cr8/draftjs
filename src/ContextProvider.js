@@ -27,20 +27,17 @@ import yellow from '@material-ui/core/colors/yellow';
 import { PhoneMissed } from '@material-ui/icons';
 
 
-
-
-
 export const Context = createContext();
+
+
+
 const breakpoints = createBreakpoints({})
-
 function breakpointsAttribute(...args) {
-
   let xs = {}
   let sm = {}
   let md = {}
   let lg = {}
   let xl = {}
-
   args.forEach(item => {
     xs = { ...xs, [item[0]]: item[1] }
     sm = { ...sm, [item[0]]: item[2] || item[1] }
@@ -48,8 +45,6 @@ function breakpointsAttribute(...args) {
     lg = { ...lg, [item[0]]: item[4] || item[3] || item[2] || item[1] }
     xl = { ...xl, [item[0]]: item[5] || item[4] || item[3] || item[2] || item[1] }
   })
-
-
   return {
     [breakpoints.only('xs')]: { ...xs },
     [breakpoints.only('sm')]: { ...sm },
@@ -58,7 +53,6 @@ function breakpointsAttribute(...args) {
     [breakpoints.only('xl')]: { ...xl },
   }
 }
-
 
 function multiplyArr(arr, factor) {
   return arr.map((item) => {
@@ -70,23 +64,14 @@ function multiplyArr(arr, factor) {
 
 
 
-// Object.prototype.myUcase = function () {
-//     // for (let i = 0; i < this.length; i++) {
-//     //   this[i] = this[i].toUpperCase();
-//     // }
-// };
-
-
 export default function ContextProvider(props) {
 
 
 
-  const textSizeArr = ["1rem", "2rem", "3rem", "4rem", "2rem"]
+  const textSizeArr = ["1rem", "2rem", "4rem", "6rem", "8rem"]
 
   const theme_ = useTheme()
 
-  // const iconSizeArr = ["1.8rem", "1.8rem", "1.8rem", "1.8rem", "1.8rem"]
-  //const iconSizeArr = ["1.5rem", "1.5rem", "1.5rem", "1.5rem", "1.5rem"]
 
   const [isLight, setIsLight] = useState(true)
 
@@ -94,18 +79,18 @@ export default function ContextProvider(props) {
 
     let muiTheme = createTheme({
 
-     
+
       textSizeArr,
       factor: 1.3,
       get lgTextSizeArr() { return this.multiplyArr(this.textSizeArr, this.factor) },
-       
+
 
       multiplyArr,
       isLight,
       breakpointsAttribute,
 
 
-      
+
 
 
 
@@ -116,8 +101,8 @@ export default function ContextProvider(props) {
       typography: {
         fontSize: 14,
         button: { textTransform: 'none' },
-        body2: breakpointsAttribute(["fontSize", ...textSizeArr])
-
+        body2: breakpointsAttribute(["fontSize", ...textSizeArr]),
+        body1: breakpointsAttribute(["fontSize", ...textSizeArr]),
       },
       overrides: {
         MuiChip: {

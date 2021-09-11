@@ -24,13 +24,19 @@ const makingStyleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttrib
         ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
       }
     },
-    chipCss: ({ size, personName, label, bgColor, lift = 3, logoOn = true, labelOn = true, ...props }) => {
+    chipCss: ({ size, personName, label, bgColor, lift = 3, logoOn = true, labelOn = true, labelSize, ...props }) => {
 
       const size_ = Array.isArray(size)
         ? size
         : typeof (size) === "string"
           ? [size]
           : lgTextSizeArr
+
+      const labelSize_ = Array.isArray(labelSize)
+        ? labelSize
+        : typeof (size) === "string"
+          ? [labelSize]
+          : textSizeArr
 
       return {
 
@@ -43,7 +49,7 @@ const makingStyleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttrib
 
         ...breakpointsAttribute(["borderRadius", "999999px"]),
 
-        ...(!label) && (!personName) && { backgroundColor: "transparent", borderRadius: "999999px", },
+        // ...(!label) && (!personName) && { backgroundColor: "transparent", borderRadius: "999999px", },
 
         // ...(label) && (!(label && label.props && label.props.children)) && {
         //   backgroundColor: "transparent", borderRadius: "999999px",
@@ -51,7 +57,7 @@ const makingStyleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttrib
 
         "& .MuiChip-avatar": {
           // ...((!label) || (!labelOn)) && (!personName) && { marginRight: "-19px" },
-         // ...(label) && (!(label && label.props && label.props.children)) && { marginRight: "-19px" },
+          // ...(label) && (!(label && label.props && label.props.children)) && { marginRight: "-19px" },
           ...(logoOn && (!labelOn)) && { marginRight: "-19px" },
           ...(logoOn && (labelOn)) && { marginRight: "-6px" },
           ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
@@ -61,7 +67,7 @@ const makingStyleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttrib
         "& .MuiChip-label": {
           // fontWeight: "bold",
           userSelect: "text",
-          ...breakpointsAttribute(["fontSize", ...textSizeArr]), // label size
+          ...breakpointsAttribute(["fontSize", ...labelSize_]), // label size
         },
 
 
@@ -70,22 +76,39 @@ const makingStyleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttrib
 
     },
 
-    typoUpCss: () => {
+    typoUpCss: ({ size, rightMarginOn }) => {
+
+
+      const size_ = Array.isArray(size)
+        ? size
+        : typeof (size) === "string"
+          ? [size]
+          : textSizeArr
+
+
       return {
         lineHeight: "unset",
         ...breakpointsAttribute(
-          ["fontSize", ...multiplyArr(textSizeArr, 60 / 100)],
-          //    ["marginRight", ...multiplyArr(textSizeArr, 40 / 100)]
+          ["fontSize", ...multiplyArr(size_, 60 / 100)],
+          rightMarginOn ? ["marginRight", ...multiplyArr(size_, 40 / 100)] : []
+          //    ["marginRight", ...multiplyArr(size_, 40 / 100)]
         ),
 
       }
     },
-    typoDownCss: () => {
+    typoDownCss: ({ size, rightMarginOn }) => {
+
+      const size_ = Array.isArray(size)
+        ? size
+        : typeof (size) === "string"
+          ? [size]
+          : textSizeArr
+
       return {
         lineHeight: "unset",
         ...breakpointsAttribute(
-          ["fontSize", ...multiplyArr(textSizeArr, 40 / 100)],
-          //   ["marginRight", ...multiplyArr(textSizeArr, 40 / 100)]
+          ["fontSize", ...multiplyArr(size_, 40 / 100)],
+          rightMarginOn ? ["marginRight", ...multiplyArr(size_, 40 / 100)] : []
         ),
       }
     },
@@ -238,14 +261,16 @@ class AvatarChip_ extends Component {
 }
 
 
-export function TwoLineLabel({ lineTop, lineDown }) {
-  const { typoUpCss, typoDownCss } = useStyles()
+export function TwoLineLabel({ lineTop, lineDown, size, rightMarginOn = false }) {
+
+  const theme = useTheme()
+  const { typoUpCss, typoDownCss } = useStyles({ size: size || theme.textSizeArr, rightMarginOn })
 
   return (
-    <><>
+    <>
       <Typography color="textPrimary" className={typoUpCss} >{lineTop}</Typography>
       <Typography color="textSecondary" className={typoDownCss} >{lineDown}</Typography>
-    </>
+    
     </>
   )
 

@@ -1,4 +1,4 @@
-import React,{useState} from "react"
+import React, { useState } from "react"
 
 import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
 import { Avatar, Chip, Popover, Typography, Container, CssBaseline } from "@material-ui/core";
@@ -55,8 +55,8 @@ export default function DraftEditor() {
   const theme = useTheme()
   const { typoUpCss, typoDownCss } = useStyles()
 
-  const [logoOn,setLogoOn] = useState(true)
-  const [labelOn,setLabelOn] = useState(true)
+  const [logoOn, setLogoOn] = useState(true)
+  const [labelOn, setLabelOn] = useState(true)
 
   return (
     <>
@@ -91,32 +91,61 @@ export default function DraftEditor() {
         avatarProps={{ onClick: function () { alert("ss") } }}
 
       />
+      <br />
+      <AvatarChip size="8rem" labelSize={["1rem","2rem","10rem","6px"]} bgColor="#599875" lift={0} logoOn={true} labelOn={true} personName="ewe"
+        label={<b>红看来大家分离开了就看发大水了</b>}
 
-
-      <AvatarChip bgColor="#959875" lift={0} logoOn={logoOn} labelOn={!logoOn} personName="ewe"
-        label={"dddseee就看发大水了dfew"}
-       // avatarProps={{ onClick: function () { alert("ss") } }}
-        onClick={function(){   setLogoOn(pre=>!pre)   }}
-        onDelete={function(){}}
+        onClick={function () { setLogoOn(pre => !pre) }}
+        onDelete={function () { }}
       />
 
+      <br />
+      <AvatarChip size={["1.3rem", "2.6rem", "3.9rem", "5.2rem", "6.5rem"]}  labelSize={["1rem", "2rem", "3rem", "4rem", "5rem"]} bgColor="#959875" lift={0} logoOn={true} labelOn={true} personName="ewe"
+        label={"dddseee就看发大水了dfewFDSFS"}
 
+        onClick={function () { setLogoOn(pre => !pre) }}
+        onDelete={function () { }}
+      />
+      <br />
+
+      <AvatarChip personName="d"
+        // bgColor="blue"
+        // size="5.5rem"
+        lift={0}
+        logoOn={true}
+        labelOn={true}
+
+        label={
+          <TwoLineLabel lineTop="AAA" lineDown="FDSFsssssss" rightMarginOn={false} />
+
+        }
+
+
+        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
+
+        onClick={function () { setLogoOn(pre => !pre) }}
+        //  onDelete={function(){setLabelOn(pre=>!pre) ; setLogoOn(pre=>!pre)   }}
+        hoverContent={"aaa"}
+      />
+      <br />
       <AvatarChip personName=""
-      bgColor="blue"
-      lift={0}
-      logoOn={true}
-      labelOn={false}
-        // label={
-        //   <TwoLineLabel lineTop="AAA" lineDown="FDSF" />
+        // bgColor="blue"
+        // size="5.5rem"
+        lift={0}
+        logoOn={true}
+        labelOn={true}
 
-        // }
-        // label={""}
-        
-        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre=>!pre)  } }}
+        label={
+          <TwoLineLabel lineTop={<strong>AAA</strong>} lineDown="FDSFsssssss" rightMarginOn={true} />
 
-        onClick={function(){   setLogoOn(pre=>!pre)   }}
-      //  onDelete={function(){setLabelOn(pre=>!pre) ; setLogoOn(pre=>!pre)   }}
-      hoverContent={"aaa"}
+        }
+
+
+        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
+
+        onClick={function () { setLogoOn(pre => !pre) }}
+        //  onDelete={function(){setLabelOn(pre=>!pre) ; setLogoOn(pre=>!pre)   }}
+        hoverContent={"aaa"}
       />
 
 
