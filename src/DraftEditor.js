@@ -101,17 +101,26 @@ export default function DraftEditor() {
       />
 
 
-      <AvatarChip personName="sGGdss"
-      logoOn={false}
-        label={
-          <TwoLineLabel lineTop="AAA" lineDown="FDSF" />
+      <AvatarChip personName=""
+      bgColor="blue"
+      lift={0}
+      logoOn={true}
+      labelOn={false}
+        // label={
+        //   <TwoLineLabel lineTop="AAA" lineDown="FDSF" />
 
-        }
-        hoverContent={<>fdsfds</>}
+        // }
+        // label={""}
+        
+        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre=>!pre)  } }}
+
+        onClick={function(){   setLogoOn(pre=>!pre)   }}
+      //  onDelete={function(){setLabelOn(pre=>!pre) ; setLogoOn(pre=>!pre)   }}
+      hoverContent={"aaa"}
       />
 
 
-      <AvatarChip personName="sdss"
+      {/* <AvatarChip personName="sdss"
        logoOn={logoOn} labelOn={labelOn}
         label={
           <>
@@ -124,7 +133,7 @@ export default function DraftEditor() {
 
         onClick={function(){   setLabelOn(pre=>!pre)   }}
         onDelete={function(){setLogoOn(true)}}
-      />
+      /> */}
 
 
 
