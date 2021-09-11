@@ -193,6 +193,12 @@ class AvatarChip_ extends Component {
 
     const { src, ...avatarRest } = this.props.avatarProps || {}
 
+
+    if (this.props.label && this.props.label.type && this.props.label.type.name === "TwoLineLabel") {
+
+      console.log(this.props.label.props)
+    }
+
     return (
       // <Grow in={true} >
       <div style={{ width: "fit-content", display: "inline-block" }}    >
@@ -208,6 +214,14 @@ class AvatarChip_ extends Component {
           {...rest}
 
           {...(!labelOn) && { label: null }}
+
+
+          {...(this.props.label && this.props.label.type && this.props.label.type.name === "TwoLineLabel") && {
+
+            label: <TwoLineLabel {...this.props.label.props}  {...(Array.isArray(this.props.labelSize) || (typeof (this.props.labelSize) === "string")) && { size: this.props.labelSize, }} />
+
+          }}
+
           {...this.props.hoverContent && { onMouseEnter: this.handlePopoverOpen }}
           {...this.props.hoverContent && { onMouseLeave: this.handlePopoverClose }}
 
@@ -275,6 +289,19 @@ export function TwoLineLabel({ lineTop, lineDown, size, rightMarginOn = false })
   )
 
 }
+
+
+function wrap(Compo) {
+
+  return function (props) {
+    return function (props2) {
+      return <Compo  {...props}  {...props2} />
+
+    }
+  }
+
+}
+
 
 
 

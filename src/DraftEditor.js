@@ -92,7 +92,7 @@ export default function DraftEditor() {
 
       />
       <br />
-      <AvatarChip size="8rem" labelSize={["1rem","2rem","10rem","6px"]} bgColor="#599875" lift={0} logoOn={true} labelOn={true} personName="ewe"
+      <AvatarChip size="8rem" labelSize={["1rem", "2rem", "10rem", "6px"]} bgColor="#599875" lift={0} logoOn={true} labelOn={true} personName="ewe"
         label={<b>红看来大家分离开了就看发大水了</b>}
 
         onClick={function () { setLogoOn(pre => !pre) }}
@@ -100,7 +100,7 @@ export default function DraftEditor() {
       />
 
       <br />
-      <AvatarChip size={["1.3rem", "2.6rem", "3.9rem", "5.2rem", "6.5rem"]}  labelSize={["1rem", "2rem", "3rem", "4rem", "5rem"]} bgColor="#959875" lift={0} logoOn={true} labelOn={true} personName="ewe"
+      <AvatarChip size={["1.3rem", "2.6rem", "3.9rem", "5.2rem", "6.5rem"]} labelSize={["1rem", "2rem", "3rem", "4rem", "5rem"]} bgColor="#959875" lift={0} logoOn={true} labelOn={true} personName="ewe"
         label={"dddseee就看发大水了dfewFDSFS"}
 
         onClick={function () { setLogoOn(pre => !pre) }}
@@ -114,7 +114,7 @@ export default function DraftEditor() {
         lift={0}
         logoOn={true}
         labelOn={true}
-      size="1.5rem"
+        size="1.5rem"
         label={
           <TwoLineLabel lineTop="AAA" lineDown="FDSFsssssss" rightMarginOn={false} />
 
@@ -129,14 +129,14 @@ export default function DraftEditor() {
       />
       <br />
       <AvatarChip personName=""
-        // bgColor="blue"
-        // size="5.5rem"
+        bgColor="blue"
+        size={["15rem", "4rem", "3rem", "2rem", "19rem"]}
         lift={9}
         logoOn={true}
-        labelOn={false}
-
+        labelOn={true}
+        labelSize={["15rem", "4rem", "3rem", "2rem", "19rem"]}
         label={
-          <TwoLineLabel lineTop={<strong>AAA</strong>} lineDown="FDSFsssssss" rightMarginOn={true} />
+          <TwoLineLabel lineTop={<strong>AAA00009999</strong>} lineDown="FDSFsssssss" rightMarginOn={true} />
 
         }
 
