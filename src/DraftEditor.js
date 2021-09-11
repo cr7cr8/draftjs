@@ -128,7 +128,7 @@ export default function DraftEditor() {
         hoverContent={"aaa"}
       />
       <br />
-      <AvatarChip personName=""
+      <AvatarChip personName="will"
         bgColor="blue"
         size={["15rem", "4rem", "3rem", "2rem", "19rem"]}
         lift={9}
@@ -140,7 +140,7 @@ export default function DraftEditor() {
 
         }
 
-        src="https://picsum.photos/200"
+       // src="https://picsum.photos/200"
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
         onClick={function () { setLogoOn(pre => !pre) }}

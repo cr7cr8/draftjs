@@ -7,13 +7,9 @@ import Grow from '@material-ui/core/Grow';
 
 import multiavatar from '@multiavatar/multiavatar'
 
-
-
 const styleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
-
   return {
     avatarCss: ({ size, personName, ...props }) => {
-
       const size_ = Array.isArray(size)
         ? size
         : typeof (size) === "string"
@@ -69,9 +65,6 @@ const styleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttribute, m
           userSelect: "text",
           ...breakpointsAttribute(["fontSize", ...labelSize_]), // label size
         },
-
-
-
       }
 
     },
@@ -119,9 +112,6 @@ const styleObj = function ({ lgTextSizeArr, textSizeArr, breakpointsAttribute, m
 }
 
 const useStyles = makeStyles(styleObj)
-
-
-
 class AvatarLogo_ extends Component {
 
   render() {
@@ -131,8 +121,6 @@ class AvatarLogo_ extends Component {
 
   }
 }
-
-
 
 class AvatarChip_ extends Component {
 
@@ -144,8 +132,6 @@ class AvatarChip_ extends Component {
       transOriginH: "left",
       transOriginV: "top",
       anchorPos: { "top": 0, "left": 0 },
-
-
     }
 
     this.anchorRef = null //  React.createRef();
@@ -181,11 +167,7 @@ class AvatarChip_ extends Component {
     this.setState(pre => { return { ...pre, open: false } });
   };
 
-
   componentDidUpdate(preProp, preState) {
-
-
-
   }
 
   render() {
