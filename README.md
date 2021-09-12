@@ -43,6 +43,7 @@
             );
           };
         }
+###
         export function withContext4(Component) {
           return function (props) {
             const ctx = useContext(Context)
@@ -52,9 +53,6 @@
           };
         }
 ###
-
-
-
 
         const A = withContext4(function ({ ctx, ...props }) {
 
