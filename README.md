@@ -1,3 +1,70 @@
+  ### Import
+       import { Context } from "./ContextProvider";
+        
+  ###
+        function withContext(Compo) {
+          return class BBB extends Component {
+            static contextType = Context
+            constructor(props, ccc) {
+              super(props, ccc)
+              console.log(ccc.isLight + "000000000000")
+            }
+
+            render() {
+              return <Compo {...this.props} ctx={this.context} />
+            }
+          }
+        }
+
+
+###
+        function withContext2(Compo) {
+          return class BBB extends Component {
+
+            render() {
+              return (
+                <Context.Consumer>
+                  {state => <Compo {...this.props} ctx={state} />}
+                </Context.Consumer>
+              )
+
+
+            }
+          }
+        }
+
+###
+        export function withContext3(Component) {
+          return function (props) {
+            return (
+              <Context.Consumer>
+                {state => <Component {...props} ctx={state} />}
+              </Context.Consumer>
+            );
+          };
+        }
+        export function withContext4(Component) {
+          return function (props) {
+            const ctx = useContext(Context)
+            return (
+              <Component {...props} ctx={ctx} />
+            );
+          };
+        }
+###
+
+
+
+
+        const A = withContext4(function ({ ctx, ...props }) {
+
+          return <h1>{JSON.stringify(ctx.isLight)}</h1>
+
+        })
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

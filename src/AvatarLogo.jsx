@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, useContext } from "react"
 
 import { withStyles, makeStyles, useTheme } from '@material-ui/styles'
 
@@ -112,21 +112,72 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 }
 
 
-function aaa(){
-  return class extends Component {
+function withContext(Compo) {
+  return class BBB extends Component {
+    static contextType = Context
+    constructor(props, ccc) {
+      super(props, ccc)
+      console.log(ccc.isLight + "000000000000")
+    }
 
-    render(){
-      return <h1>aaa</h1>
+    render() {
+      return <Compo {...this.props} ctx={this.context} />
     }
   }
 }
-   const A = aaa()
+
+
+
+function withContext2(Compo) {
+  return class BBB extends Component {
+
+    render() {
+      return (
+        <Context.Consumer>
+          {state => <Compo {...this.props} ctx={state} />}
+        </Context.Consumer>
+      )
+
+
+    }
+  }
+}
+
+
+export function withContext3(Component) {
+  return function (props) {
+    return (
+      <Context.Consumer>
+        {state => <Component {...props} ctx={state} />}
+      </Context.Consumer>
+    );
+  };
+}
+export function withContext4(Component) {
+  return function (props) {
+    const ctx = useContext(Context)
+    return (
+      <Component {...props} ctx={ctx} />
+
+    );
+  };
+}
+
+
+
+
+
+const A = withContext4(function ({ ctx, ...props }) {
+
+  return <h1>{JSON.stringify(ctx.isLight)}</h1>
+
+})
 
 
 class TwoLineLabel_ extends Component {
 
-  constructor(props,ctx){
-    super(props,ctx)
+  constructor(props, ctx) {
+    super(props, ctx)
     console.log(ctx)
 
   }
@@ -159,9 +210,6 @@ TwoLineLabel_.defaultProps = { rightMarginOn: true }
 TwoLineLabel_.contextType = Context
 
 
-TwoLineLabel_.contextTypes = {
-  router: PropTypes.object.isRequired
-};
 export const TwoLineLabel = withStyles(styleObj, { withTheme: true })(TwoLineLabel_)
 const TwoLineLabelCompoStyled = styled(TwoLineLabel)`
   ${function ({ logoOn, labelOn, breakpointsAttribute, multiplyArr, size, textSizeArr }) {
@@ -242,7 +290,7 @@ class AvatarChip_ extends Component {
     return (
       // <Grow in={true} >
       <div style={{ width: "fit-content", display: "inline-block" }}    >
-<A />
+        <A />
         <Chip
           classes={{ root: classes.chipCss }}
           {...logoOn && { avatar: <AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} /> }}
