@@ -8,10 +8,14 @@ import Grow from '@material-ui/core/Grow';
 import multiavatar from '@multiavatar/multiavatar';
 import classNames from 'classnames';
 import styled from 'styled-components'
+import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 
-import PropTypes from 'prop-types';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
-import { Context } from "./ContextProvider";
+
+
+
+
 
 function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
   return {
@@ -51,8 +55,15 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 
         ...breakpointsAttribute(["borderRadius", "999999px"]),
 
-        "& .MuiChip-avatar": {
+        // ...(!label) && (!personName) && { backgroundColor: "transparent", borderRadius: "999999px", },
 
+        // ...(label) && (!(label && label.props && label.props.children)) && {
+        //   backgroundColor: "transparent", borderRadius: "999999px",
+        // },
+
+        "& .MuiChip-avatar": {
+          // ...((!label) || (!labelOn)) && (!personName) && { marginRight: "-19px" },
+          // ...(label) && (!(label && label.props && label.props.children)) && { marginRight: "-19px" },
           ...(logoOn && (!labelOn)) && { marginRight: "-19px" },
           ...(logoOn && (labelOn)) && { marginRight: "-6px" },
           ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
@@ -96,7 +107,7 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         : typeof (size) === "string"
           ? [size]
           : textSizeArr
-
+      console.log("---", ((!logoOn) && labelOn))
       return {
         lineHeight: "unset",
         ...breakpointsAttribute(
@@ -106,79 +117,31 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         ),
       }
     },
+
+
+    typoCssLeftMargin: ({ size, logoOn, labelOn, randomName }) => {
+
+      const size_ = Array.isArray(size)
+        ? size
+        : typeof (size) === "string"
+          ? [size]
+          : textSizeArr
+      return {
+        ...breakpointsAttribute(
+
+          ["marginLeft", ...multiplyArr(size_, 40 / 100)]
+        ),
+      }
+    },
+
+
+
     popover: () => { return { pointerEvents: 'none', } },
     paper: () => { return { pointerEvents: "auto", padding: theme.spacing(1), } },
   }
 }
 
-
-function aaa(){
-  return class extends Component {
-
-    render(){
-      return <h1>aaa</h1>
-    }
-  }
-}
-   const A = aaa()
-
-
-class TwoLineLabel_ extends Component {
-
-  constructor(props,ctx){
-    super(props,ctx)
-    console.log(ctx)
-
-  }
-
-  render() {
-
-    const { lineTop, lineDown, className, rightMarginOn = true } = this.props
-
-    const { typoUpCss, typoDownCss, typoCssLeftMargin } = this.props.classes
-
-    const allClassNamesTop = classNames({
-      [typoUpCss]: true,
-      [className]: true
-    })
-    const allClassNamesDown = classNames({
-      [typoDownCss]: true,
-      [className]: true
-    })
-    return (
-
-      <>
-        <Typography color="textPrimary" className={allClassNamesTop} >{lineTop}</Typography>
-        <Typography color="textSecondary" className={allClassNamesDown} >{lineDown}</Typography>
-      </>
-    )
-  }
-
-}
-TwoLineLabel_.defaultProps = { rightMarginOn: true }
-TwoLineLabel_.contextType = Context
-
-
-TwoLineLabel_.contextTypes = {
-  router: PropTypes.object.isRequired
-};
-export const TwoLineLabel = withStyles(styleObj, { withTheme: true })(TwoLineLabel_)
-const TwoLineLabelCompoStyled = styled(TwoLineLabel)`
-  ${function ({ logoOn, labelOn, breakpointsAttribute, multiplyArr, size, textSizeArr }) {
-    const size_ = Array.isArray(size)
-      ? size
-      : typeof (size) === "string"
-        ? [size]
-        : textSizeArr
-    return {
-      ...breakpointsAttribute(
-        ((!logoOn) && labelOn) ? ["marginLeft", ...multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
-      ),
-    }
-  }} 
-`
-
-
+const useStyles = makeStyles(styleObj)
 class AvatarLogo_ extends Component {
 
   render() {
@@ -193,14 +156,18 @@ class AvatarChip_ extends Component {
 
   constructor(props) {
     super(props);
+
     this.state = {
       open: false,
       transOriginH: "left",
       transOriginV: "top",
       anchorPos: { "top": 0, "left": 0 },
     }
+
     this.anchorRef = null //  React.createRef();
+
   };
+
 
 
   handlePopoverOpen = (event) => {
@@ -234,29 +201,44 @@ class AvatarChip_ extends Component {
   }
 
   render() {
-    const { classes, theme, size, personName, avatarProps, logoOn = true, labelOn = true, ...rest } = this.props
+    const { classes, size, personName, avatarProps, logoOn = true, labelOn = true, ...rest } = this.props
 
     const { src, ...avatarRest } = this.props.avatarProps || {}
     //console.log(this.props.label)
 
+    if (this.props.label && this.props.label.type && this.props.label.type.name === "TwoLineLabel") {
+
+
+    }
+
+    if ((this.props.label && this.props.label.type && this.props.label.type.Naked) && labelOn) {
+
+    }
+
     return (
       // <Grow in={true} >
       <div style={{ width: "fit-content", display: "inline-block" }}    >
-<A />
+
         <Chip
           classes={{ root: classes.chipCss }}
           {...logoOn && { avatar: <AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} /> }}
           // avatar={<AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} />}
           label={personName}
           {...rest}
-
+          // {...(this.props.label && this.props.label.type && this.props.label.type.name === "TwoLineLabel") && labelOn && {
+          //   label: <FinalTwoLineLabel
+          //   {...this.props.label.props}
+          //   logoOn={this.props.logoOn}
+          //   labelOn={this.props.labelOn}
+          //   {...(Array.isArray(this.props.labelSize) || (typeof (this.props.labelSize) === "string")) && { size: this.props.labelSize, }}
+          // />
+          // }}
           {...(this.props.label && this.props.label.type && this.props.label.type.Naked && this.props.label.type.Naked.name === "TwoLineLabel_") && labelOn && {
 
-            label: <TwoLineLabelCompoStyled
+            label: <FinalTwoLineLabel
               {...this.props.label.props}
               logoOn={this.props.logoOn}
               labelOn={this.props.labelOn}
-              multiplyArr={theme.multiplyArr} breakpointsAttribute={theme.breakpointsAttribute} textSizeArr={theme.textSizeArr}
               {...(Array.isArray(this.props.labelSize) || (typeof (this.props.labelSize) === "string")) && { size: this.props.labelSize, }}
             />
           }}
@@ -307,12 +289,96 @@ class AvatarChip_ extends Component {
   }
 }
 
+class TwoLineLabel_ extends Component {
 
 
 
+  render() {
+
+    const { lineTop, lineDown, className } = this.props
+
+    const { typoUpCss, typoDownCss, typoCssLeftMargin } = this.props.classes
+
+    // const allClassNamesTop = classNames({
+    //   [typoUpCss]: true,
+    //   [typoCssLeftMargin]: Boolean((!this.props.logoOn) && this.props.labelOn),
+    //   [className]: true
+    // })
+
+    // const allClassNamesDown = classNames({
+    //   [typoDownCss]: true,
+    //   [typoCssLeftMargin]: Boolean((!this.props.logoOn) && this.props.labelOn),
+    //   [className]: true
+    // })
 
 
-export const AvatarLogo = withStyles(styleObj, { withTheme: true })(AvatarLogo_);
-export const AvatarChip = withStyles(styleObj, { withTheme: true })(AvatarChip_);
+    return (
+
+      <>
+
+        {/* size, rightMarginOn, logoOn, labelOn, multiplyArr,textSizeArr, breakpointsAttribute
+   
+<TypographyCompo color="textPrimary" className={typoUpCss} >{lineTop}</TypographyCompo>
+<TypographyCompo color="textSecondary" className={typoDownCss} >{lineDown}</TypographyCompo> */}
+
+        <Typography color="textPrimary" className={typoUpCss + className ? " " + className : ""} >{lineTop}</Typography>
+        <Typography color="textSecondary" className={typoDownCss + className ? + " " + className : ""} >{lineDown}</Typography>
+        {/* <Typography color="textPrimary" className={allClassNamesTop} >{lineTop}</Typography>
+        <Typography color="textSecondary" className={allClassNamesDown} >{lineDown}</Typography> */}
+
+      </>
+    )
+  }
+
+}
+
+export const TwoLineLabel = withStyles(styleObj)(TwoLineLabel_)
 
 
+// export function TwoLineLabel({ lineTop, lineDown, size, rightMarginOn = false, logoOn, labelOn }) {
+
+//   const theme = useTheme()
+
+//   const { typoUpCss, typoDownCss, typoUpCss2, typoDownCss2, typoCssLeftMargin } = useStyles({ size: size || theme.textSizeArr, rightMarginOn, logoOn, labelOn })
+//   const allClassNamesTop = classNames({
+//     [typoUpCss]: true,
+//     [typoCssLeftMargin]: Boolean((!logoOn) && labelOn)
+//   })
+//   const allClassNamesDown = classNames({
+//     [typoDownCss]: true,
+//     [typoCssLeftMargin]: Boolean((!logoOn) && labelOn)
+//   })
+//   console.log(logoOn, labelOn)
+//   return (
+//     <>
+//       <Typography color="textPrimary" className={allClassNamesTop} >{lineTop}</Typography>
+//       <Typography color="textSecondary" className={allClassNamesDown} >{lineDown}</Typography>
+//     </>
+//   )
+
+// }
+
+
+export const AvatarLogo = withStyles(styleObj)(AvatarLogo_);
+export const AvatarChip = withStyles(styleObj)(AvatarChip_);
+
+const TwoLineLabelCompoStyled = styled(TwoLineLabel)`
+  ${function ({ logoOn, labelOn, breakpointsAttribute, multiplyArr, size, textSizeArr }) {
+    const size_ = Array.isArray(size)
+      ? size
+      : typeof (size) === "string"
+        ? [size]
+        : textSizeArr
+    return {
+      ...breakpointsAttribute(
+        ((!logoOn) && labelOn) ? ["marginLeft", ...multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
+      ),
+
+    }
+  }} 
+`
+
+function FinalTwoLineLabel(props) {
+  const theme = useTheme()
+  return <TwoLineLabelCompoStyled multiplyArr={theme.multiplyArr} breakpointsAttribute={theme.breakpointsAttribute} textSizeArr={theme.textSizeArr}  {...props} />
+}

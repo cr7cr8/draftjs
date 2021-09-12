@@ -52,8 +52,8 @@ const useStyles = makeStyles(function ({ textSizeArr, breakpointsAttribute, mult
 
 
 export default function DraftEditor() {
-  const theme = useTheme()
-  const { typoUpCss, typoDownCss } = useStyles()
+ // const theme = useTheme()
+ // const { typoUpCss, typoDownCss } = useStyles()
 
   const [logoOn, setLogoOn] = useState(true)
   const [labelOn, setLabelOn] = useState(true)
@@ -134,9 +134,9 @@ export default function DraftEditor() {
         lift={9}
         logoOn={logoOn}
         labelOn={labelOn}
-        labelSize={["15rem", "4rem", "3rem", "2rem", "9rem"]}
+        labelSize={["15rem", "4rem", "3rem", "2rem", "11rem"]}
         label={
-          <TwoLineLabel lineTop={<strong>AAA00009999</strong>} lineDown="FDSFsssssss" rightMarginOn={true}  />
+          <TwoLineLabel lineTop={<strong>AAA00009999</strong>} lineDown="FDSFsssssss"  />
 
         }
 

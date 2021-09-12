@@ -102,7 +102,7 @@ export default function ContextProvider(props) {
         fontSize: 14,
         button: { textTransform: 'none' },
         body2: breakpointsAttribute(["fontSize", ...textSizeArr]),
-        body1: breakpointsAttribute(["fontSize", ...textSizeArr]),
+  //      body1: breakpointsAttribute(["fontSize", ...textSizeArr]),
       },
       overrides: {
         MuiChip: {
