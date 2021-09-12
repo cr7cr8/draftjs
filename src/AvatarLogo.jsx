@@ -12,6 +12,7 @@ import styled from 'styled-components'
 
 import { Context } from "./ContextProvider";
 
+
 function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
   return {
     avatarCss: ({ size, personName, ...props }) => {
@@ -35,15 +36,23 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 
       const labelSize_ = Array.isArray(labelSize)
         ? labelSize
-        : typeof (size) === "string"
+        : typeof (labelSize) === "string"
           ? [labelSize]
           : textSizeArr
+
+
+
+      console.log(labelSize_)
 
       return {
 
         height: "auto",
-        paddingTop: labelOn ? "2px" : "4px",
-        paddingBottom: labelOn ? "2px" : "4px",
+        // paddingTop: labelOn ? "2px" : "4px",
+        // paddingBottom: labelOn ? "2px" : "4px",
+
+        padding: 0,
+        margin: 0,
+
         boxShadow: theme.shadows[lift],
         backgroundColor: bgColor ? bgColor : theme.isLight ? "#b7e1fc" : theme.palette.primary.light,
         overflow: "hidden",
@@ -51,15 +60,19 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         ...breakpointsAttribute(["borderRadius", "999999px"]),
 
         "& .MuiChip-avatar": {
-          ...(logoOn && (!labelOn)) && { marginRight: "-19px" },
-          ...(logoOn && (labelOn)) && { marginRight: "-6px" },
-          ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
+          ...(logoOn && (!labelOn)) && { transform: "scale(0.95)" },
+          ...(logoOn && (labelOn)) && { transform: "scale(0.95)" },
+          ...breakpointsAttribute(["width", ...size_], ["height", ...size_], ["margin", 0]), //avatar size
         },
 
         "& .MuiChip-label": {
           // fontWeight: "bold",
           userSelect: "text",
-          ...breakpointsAttribute(["fontSize", ...labelSize_]), // label size
+          backgroundColor: "#a2c3b2",
+          lineHeight: "100%",
+          margin: 0,
+          padding: 0,
+          ...breakpointsAttribute(["fontSize", ...labelSize_], ["paddingLeft", ...multiplyArr(labelSize_,0.1)], ["paddingRight", ...multiplyArr(labelSize_,0.5)]), // label size
         },
       }
 
@@ -114,6 +127,8 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 
 class TwoLineLabel_ extends Component {
 
+  static contextType = Context
+  static defaultProps = { rightMarginOn: true }
   constructor(props, ctx) {
     super(props, ctx)
     console.log(ctx)
@@ -122,9 +137,9 @@ class TwoLineLabel_ extends Component {
 
   render() {
 
-    const { lineTop, lineDown, className, rightMarginOn = true } = this.props
+    const { lineTop, lineDown, className, } = this.props
 
-    const { typoUpCss, typoDownCss, typoCssLeftMargin } = this.props.classes
+    const { typoUpCss, typoDownCss } = this.props.classes
 
     const allClassNamesTop = classNames({
       [typoUpCss]: true,
@@ -144,12 +159,10 @@ class TwoLineLabel_ extends Component {
   }
 
 }
-TwoLineLabel_.defaultProps = { rightMarginOn: true }
-TwoLineLabel_.contextType = Context
 
 
-export const TwoLineLabel = withStyles(styleObj, { withTheme: true })(TwoLineLabel_)
-const TwoLineLabelCompoStyled = styled(TwoLineLabel)`
+const TwoLineLabelWithTheme = withStyles(styleObj, { withTheme: true })(TwoLineLabel_)
+export const TwoLineLabel = styled(TwoLineLabelWithTheme)`
   ${function ({ logoOn, labelOn, breakpointsAttribute, multiplyArr, size, textSizeArr }) {
     const size_ = Array.isArray(size)
       ? size
@@ -216,19 +229,17 @@ class AvatarChip_ extends Component {
     this.setState(pre => { return { ...pre, open: false } });
   };
 
-  componentDidUpdate(preProp, preState) {
-  }
+
 
   render() {
     const { classes, theme, size, personName, avatarProps, logoOn = true, labelOn = true, ...rest } = this.props
 
     const { src, ...avatarRest } = this.props.avatarProps || {}
-    //console.log(this.props.label)
 
     return (
       // <Grow in={true} >
       <div style={{ width: "fit-content", display: "inline-block" }}    >
-      
+
         <Chip
           classes={{ root: classes.chipCss }}
           {...logoOn && { avatar: <AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} /> }}
@@ -238,7 +249,7 @@ class AvatarChip_ extends Component {
 
           {...(this.props.label && this.props.label.type && this.props.label.type.Naked && this.props.label.type.Naked.name === "TwoLineLabel_") && labelOn && {
 
-            label: <TwoLineLabelCompoStyled
+            label: <TwoLineLabel
               {...this.props.label.props}
               logoOn={this.props.logoOn}
               labelOn={this.props.labelOn}

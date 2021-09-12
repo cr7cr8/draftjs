@@ -66,34 +66,19 @@ function multiplyArr(arr, factor) {
 
 export default function ContextProvider(props) {
 
-
-
   const textSizeArr = ["1rem", "2rem", "4rem", "6rem", "2rem"]
-
-  const theme_ = useTheme()
-
-
   const [isLight, setIsLight] = useState(true)
 
   const theme = useMemo(function () {
 
     let muiTheme = createTheme({
-
-
       textSizeArr,
       factor: 1.3,
       get lgTextSizeArr() { return this.multiplyArr(this.textSizeArr, this.factor) },
 
-
       multiplyArr,
       isLight,
       breakpointsAttribute,
-
-
-
-
-
-
       palette: {
         primary: primaryColor,
         type: isLight ? 'light' : "dark",
@@ -102,46 +87,18 @@ export default function ContextProvider(props) {
         fontSize: 14,
         button: { textTransform: 'none' },
         body2: breakpointsAttribute(["fontSize", ...textSizeArr]),
-  //      body1: breakpointsAttribute(["fontSize", ...textSizeArr]),
       },
       overrides: {
         MuiChip: {
           root: {
 
-
             //     ...breakpointsAttribute(["borderRadius", ...textSizeArr])
           }
-
         }
-
       }
-
     })
-
     return muiTheme
   }, [isLight])
-
-
-
-  // const xs = useMediaQuery(theme.breakpoints.only('xs'));
-  // const sm = useMediaQuery(theme.breakpoints.only('sm'));
-  // const md = useMediaQuery(theme.breakpoints.only('md'));
-  // const lg = useMediaQuery(theme.breakpoints.only('lg'));
-  // const xl = useMediaQuery(theme.breakpoints.only('xl'));
-
-  // const deviceSize = xs ? "xs" : sm ? "sm" : md ? "md" : lg ? "lg" : "xl"
-  // const lgSizeObj = { xs: "1.5rem", sm: "1.5rem", md: "1.5rem", lg: "1.5rem", xl: "1.5rem" }
-  // const smSizeObj = { xs: "0.8rem", sm: "0.8rem", md: "0.8rem", lg: "0.8rem", xl: "0.8rem" }
-
-
-
-
-
-  const [editorContent, setEditorContent] = useState(
-    EditorState.createWithContent(ContentState.createFromText(''))
-  );
-
-
 
 
 

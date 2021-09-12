@@ -85,18 +85,21 @@ export default function DraftEditor() {
       <div>&nbsp;</div>*/}
 
       <AvatarChip bgColor="pink" personName="sdss" />
-      <AvatarChip bgColor="lightblue" personName="sdss" label={"dddsdfew"} />
+      <AvatarChip bgColor="lightblue" personName="sdssf" label={"dddsd了就看发大"} size="11.7rem" labelSize="9rem"   
+       onDelete={function () { }} 
+       />
       <AvatarChip bgColor="lightpink" lift={0} labelOn={false} personName="ewe" label={"dddsdfew"}
 
         avatarProps={{ onClick: function () { alert("ss") } }}
 
       />
       <br />
-      <AvatarChip size="8rem" labelSize={["1rem", "2rem", "10rem", "6px"]} bgColor="#599875" lift={0} logoOn={true} labelOn={true} personName="ewe"
+      <AvatarChip size="8rem" labelSize={["1rem", "2rem", "10rem", "56px"]} bgColor="#599875" lift={0}  logoOn={logoOn}
+        labelOn={labelOn} personName="ewe"
         label={<b>红看来大家分离开了就看发大水了</b>}
 
         onClick={function () { setLogoOn(pre => !pre) }}
-        onDelete={function () { }}
+      //  onDelete={function () { }}
       />
 
       <br />
