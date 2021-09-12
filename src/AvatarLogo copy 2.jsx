@@ -82,11 +82,13 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 
       return {
         lineHeight: "unset",
+        //  ...((!logoOn) && labelOn) && { marginLeft: "350px" },
         ...breakpointsAttribute(
           ["fontSize", ...multiplyArr(size_, 60 / 100)],
           rightMarginOn ? ["marginRight", ...multiplyArr(size_, 40 / 100)] : [],
-          ((!logoOn) && labelOn) ? ["marginLeft", ...multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
 
+          ((!logoOn) && labelOn) ? ["marginLeft", ...multiplyArr(size_, 40 / 100)] : []
+          //    ["marginRight", ...multiplyArr(size_, 40 / 100)]
         ),
 
       }
@@ -101,16 +103,18 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
       console.log("---", ((!logoOn) && labelOn))
       return {
         lineHeight: "unset",
+        //   ...((!logoOn) && labelOn) && { marginLeft: "350px" },
+
+
         ...breakpointsAttribute(
           ["fontSize", ...multiplyArr(size_, 40 / 100)],
           rightMarginOn ? ["marginRight", ...multiplyArr(size_, 40 / 100)] : [],
-          ((!logoOn) && labelOn) ? ["marginLeft", ...multiplyArr(size_, 40 / 100)] : [] // not updating with props updating logoOn labelOn
+          ((!logoOn) && labelOn) ? ["marginLeft", ...multiplyArr(size_, 40 / 100)] : []
         ),
       }
     },
 
-
-    typoCssLeftMargin: ({ size, logoOn, labelOn, randomName }) => {
+    typoCssLeftMargin: ({ size, logoOn, labelOn }) => {
 
       const size_ = Array.isArray(size)
         ? size
@@ -195,7 +199,7 @@ class AvatarChip_ extends Component {
     const { classes, size, personName, avatarProps, logoOn = true, labelOn = true, ...rest } = this.props
 
     const { src, ...avatarRest } = this.props.avatarProps || {}
-    //console.log(this.props.label)
+
 
     if (this.props.label && this.props.label.type && this.props.label.type.name === "TwoLineLabel") {
 
@@ -210,10 +214,6 @@ class AvatarChip_ extends Component {
       // if(Array.isArray(this.props.labelSize) || (typeof (this.props.labelSize) === "string")) {
       //   this.props.label.props.size = this.props.labelSize
       // }
-    }
-
-    if ((this.props.label && this.props.label.type && this.props.label.type.Naked) && labelOn) {
-     // console.log(this.props.label.type.Naked.name)
     }
 
     return (
@@ -233,18 +233,7 @@ class AvatarChip_ extends Component {
 
 
 
-          // {...(this.props.label && this.props.label.type && this.props.label.type.name === "TwoLineLabel") && labelOn && {
-
-          //   label: <TwoLineLabel
-          //     logoOn={this.props.logoOn}
-          //     labelOn={this.props.labelOn}
-          //     {...this.props.label.props}
-          //     {...(Array.isArray(this.props.labelSize) || (typeof (this.props.labelSize) === "string")) && { size: this.props.labelSize, }}
-          //   />
-
-          // }}
-
-          {...(this.props.label && this.props.label.type && this.props.label.type.Naked  && this.props.label.type.Naked.name === "TwoLineLabel_" ) && labelOn && {
+          {...(this.props.label && this.props.label.type && this.props.label.type.name === "TwoLineLabel") && labelOn && {
 
             label: <TwoLineLabel
               logoOn={this.props.logoOn}
@@ -333,10 +322,8 @@ class TwoLineLabel_ extends Component {
     return (
 
       <>
-        <Typography color="textPrimary" className={typoUpCss} >{lineTop}</Typography>
-        <Typography color="textSecondary" className={typoDownCss} >{lineDown}</Typography>
-        {/* <Typography color="textPrimary" className={allClassNamesTop} >{lineTop}</Typography>
-        <Typography color="textSecondary" className={allClassNamesDown} >{lineDown}</Typography> */}
+        <Typography color="textPrimary" className={allClassNamesTop} >{lineTop}</Typography>
+        <Typography color="textSecondary" className={allClassNamesDown} >{lineDown}</Typography>
 
       </>
     )
@@ -344,43 +331,44 @@ class TwoLineLabel_ extends Component {
 
 }
 
-export const TwoLineLabel = withStyles(styleObj)(TwoLineLabel_)
+//export const TwoLineLabel = withStyles(styleObj)(TwoLineLabel_)
 
 
-// export function TwoLineLabel({ lineTop, lineDown, size, rightMarginOn = false, logoOn, labelOn }) {
+export function TwoLineLabel({ lineTop, lineDown, size, rightMarginOn = false, logoOn, labelOn }) {
 
-//   const theme = useTheme()
+  const theme = useTheme()
 
-//   const { typoUpCss, typoDownCss, typoUpCss2, typoDownCss2, typoCssLeftMargin } = useStyles({ size: size || theme.textSizeArr, rightMarginOn, logoOn, labelOn })
-
-
-//   const allClassNamesTop = classNames({
-//     [typoUpCss]: true,
-//     [typoCssLeftMargin]: Boolean((!logoOn) && labelOn)
-//   })
-
-//   const allClassNamesDown = classNames({
-//     [typoDownCss]: true,
-//     [typoCssLeftMargin]: Boolean((!logoOn) && labelOn)
-//   })
+  const { typoUpCss, typoDownCss,typoCssLeftMargin } = useStyles({ size: size || theme.textSizeArr, rightMarginOn, logoOn, labelOn })
 
 
+  const allClassNamesTop = classNames({
+    [typoUpCss]: true,
+    [typoCssLeftMargin]: Boolean((!logoOn) && labelOn)
+  })
 
-//   console.log(logoOn, labelOn)
-
-
-//   return (
-//     <>
+  const allClassNamesDown = classNames({
+    [typoDownCss]: true,
+    [typoCssLeftMargin]: Boolean((!logoOn) && labelOn)
+  })
 
 
 
-//       <Typography color="textPrimary" className={allClassNamesTop} >{lineTop}</Typography>
-//       <Typography color="textSecondary" className={allClassNamesDown} >{lineDown}</Typography>
+  console.log(logoOn, labelOn)
 
-//     </>
-//   )
 
-// }
+  return (
+    <>
+
+      {/* <Typography color="textPrimary" className={typoUpCss} >{lineTop}</Typography>
+      <Typography color="textSecondary" className={typoDownCss} >{lineDown}</Typography> */}
+
+      <Typography color="textPrimary" className={allClassNamesTop} >{lineTop}</Typography>
+      <Typography color="textSecondary" className={allClassNamesDown} >{lineDown}</Typography>
+
+    </>
+  )
+
+}
 
 
 

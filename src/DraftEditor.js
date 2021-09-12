@@ -116,7 +116,7 @@ export default function DraftEditor() {
         labelOn={true}
         size="1.5rem"
         label={
-          <TwoLineLabel lineTop="AAA" lineDown="FDSFsssssss" rightMarginOn={false} />
+          <TwoLineLabel lineTop="textArrSize" lineDown="FDSFsssssss" rightMarginOn={false} />
 
         }
 
@@ -129,22 +129,22 @@ export default function DraftEditor() {
       />
       <br />
       <AvatarChip personName="will"
-        bgColor="blue"
-        size={["15rem", "4rem", "3rem", "2rem", "19rem"]}
+        bgColor="lightyellow"
+        size={["15rem", "4rem", "3rem", "2rem", "12rem"]}
         lift={9}
         logoOn={logoOn}
         labelOn={labelOn}
-        labelSize={["15rem", "4rem", "3rem", "2rem", "19rem"]}
+        labelSize={["15rem", "4rem", "3rem", "2rem", "9rem"]}
         label={
-          <TwoLineLabel lineTop={<strong>AAA00009999</strong>} lineDown="FDSFsssssss" rightMarginOn={true} />
+          <TwoLineLabel lineTop={<strong>AAA00009999</strong>} lineDown="FDSFsssssss" rightMarginOn={true}  />
 
         }
 
         // src="https://picsum.photos/200"
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
-        onClick={function () { setLogoOn(pre => !pre) }}
-        onDelete={function () { setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
+        onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
+        //   onDelete={function (e) { e.stopPropagation();  setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
         hoverContent={"aaa"}
       />
 

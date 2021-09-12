@@ -68,7 +68,7 @@ export default function ContextProvider(props) {
 
 
 
-  const textSizeArr = ["1rem", "2rem", "4rem", "6rem", "8rem"]
+  const textSizeArr = ["1rem", "2rem", "4rem", "6rem", "2rem"]
 
   const theme_ = useTheme()
 
