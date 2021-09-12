@@ -2,11 +2,106 @@ import React, { Component } from "react"
 
 import { withStyles, makeStyles, useTheme } from '@material-ui/styles'
 
-import { Avatar, Chip, Popover, Typography, } from "@material-ui/core";
+import { Avatar, Chip, Popover, Typography, Button, } from "@material-ui/core";
 import Grow from '@material-ui/core/Grow';
 
 import multiavatar from '@multiavatar/multiavatar';
 import classNames from 'classnames';
+import styled from 'styled-components'
+import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
+
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+const breakpoints = createBreakpoints({})
+function breakpointsAttribute(...args) {
+  let xs = {}
+  let sm = {}
+  let md = {}
+  let lg = {}
+  let xl = {}
+  args.forEach(item => {
+    xs = { ...xs, [item[0]]: item[1] }
+    sm = { ...sm, [item[0]]: item[2] || item[1] }
+    md = { ...md, [item[0]]: item[3] || item[2] || item[1] }
+    lg = { ...lg, [item[0]]: item[4] || item[3] || item[2] || item[1] }
+    xl = { ...xl, [item[0]]: item[5] || item[4] || item[3] || item[2] || item[1] }
+  })
+  return {
+    [breakpoints.only('xs')]: { ...xs },
+    [breakpoints.only('sm')]: { ...sm },
+    [breakpoints.only('md')]: { ...md },
+    [breakpoints.only('lg')]: { ...lg },
+    [breakpoints.only('xl')]: { ...xl },
+  }
+}
+
+class TTT extends Component {
+  render() {
+    return <Typography color="textSecondary">FFFFF</Typography>
+  }
+
+}
+
+// function TTT(){
+//   return <Typography color="textSecondary">FFFFF</Typography>
+// }
+
+
+const Div = styled(Button)`
+
+${    function ({ logoOn, labelOn, breakpointsAttribute }) {
+    console.log(logoOn)
+    return {
+
+
+      ...breakpointsAttribute(["backgroundColor", "yellow", "yellow", "yellow", "yellow", logoOn ? "yellow" : "blue"]),
+
+
+
+      // [breakpoints.only('xs')]: { backgroundColor: logoOn ? "red" : "yellowgreen" },
+      // [breakpoints.only('sm')]: { backgroundColor: logoOn ? "blue" : "red" },
+      // [breakpoints.only('md')]: { backgroundColor: logoOn ? "yellow" : "red" },
+      // [breakpoints.only('lg')]: { backgroundColor: logoOn ? "pink" : "red" },
+      // [breakpoints.only('xl')]: { backgroundColor: logoOn ? "brown" : "red" }
+
+
+
+
+    }
+
+  }}
+   & .MuiButton-label{
+        color:   ${function ({ logoOn }) { return logoOn ? "blue" : "yellow" }};
+        ${    function ({ logoOn, labelOn, breakpointsAttribute }) {
+
+    return {
+
+
+      ...breakpointsAttribute(["width", logoOn ? "1rem" : "13rem"],["display","inline-block"]),
+
+
+
+      // [breakpoints.only('xs')]: { backgroundColor: logoOn ? "red" : "yellowgreen" },
+      // [breakpoints.only('sm')]: { backgroundColor: logoOn ? "blue" : "red" },
+      // [breakpoints.only('md')]: { backgroundColor: logoOn ? "yellow" : "red" },
+      // [breakpoints.only('lg')]: { backgroundColor: logoOn ? "pink" : "red" },
+      // [breakpoints.only('xl')]: { backgroundColor: logoOn ? "brown" : "red" }
+
+
+
+
+    }
+
+  }} 
+   }
+`
+
+
+
+
+
+
+
 
 function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
   return {
@@ -213,13 +308,13 @@ class AvatarChip_ extends Component {
     }
 
     if ((this.props.label && this.props.label.type && this.props.label.type.Naked) && labelOn) {
-     // console.log(this.props.label.type.Naked.name)
+      // console.log(this.props.label.type.Naked.name)
     }
 
     return (
       // <Grow in={true} >
       <div style={{ width: "fit-content", display: "inline-block" }}    >
-
+        <Div    classes={{ root: classes.chipCss }}   logoOn={this.props.logoOn} labelOn breakpointsAttribute={breakpointsAttribute} >dfsf</Div>
         <Chip
           classes={{ root: classes.chipCss }}
           {...logoOn && { avatar: <AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} /> }}
@@ -244,7 +339,7 @@ class AvatarChip_ extends Component {
 
           // }}
 
-          {...(this.props.label && this.props.label.type && this.props.label.type.Naked  && this.props.label.type.Naked.name === "TwoLineLabel_" ) && labelOn && {
+          {...(this.props.label && this.props.label.type && this.props.label.type.Naked && this.props.label.type.Naked.name === "TwoLineLabel_") && labelOn && {
 
             label: <TwoLineLabel
               logoOn={this.props.logoOn}
@@ -333,6 +428,12 @@ class TwoLineLabel_ extends Component {
     return (
 
       <>
+
+        {/* size, rightMarginOn, logoOn, labelOn, multiplyArr,textSizeArr, breakpointsAttribute
+   
+<TypographyCompo color="textPrimary" className={typoUpCss} >{lineTop}</TypographyCompo>
+<TypographyCompo color="textSecondary" className={typoDownCss} >{lineDown}</TypographyCompo> */}
+
         <Typography color="textPrimary" className={typoUpCss} >{lineTop}</Typography>
         <Typography color="textSecondary" className={typoDownCss} >{lineDown}</Typography>
         {/* <Typography color="textPrimary" className={allClassNamesTop} >{lineTop}</Typography>
@@ -389,5 +490,6 @@ export const TwoLineLabel = withStyles(styleObj)(TwoLineLabel_)
 
 export const AvatarLogo = withStyles(styleObj)(AvatarLogo_);
 export const AvatarChip = withStyles(styleObj)(AvatarChip_);
+
 
 
