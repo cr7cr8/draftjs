@@ -9,7 +9,6 @@ import multiavatar from '@multiavatar/multiavatar';
 import classNames from 'classnames';
 import styled from 'styled-components'
 
-import PropTypes from 'prop-types';
 
 import { Context } from "./ContextProvider";
 
@@ -52,11 +51,9 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         ...breakpointsAttribute(["borderRadius", "999999px"]),
 
         "& .MuiChip-avatar": {
-
           ...(logoOn && (!labelOn)) && { marginRight: "-19px" },
           ...(logoOn && (labelOn)) && { marginRight: "-6px" },
           ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
-
         },
 
         "& .MuiChip-label": {

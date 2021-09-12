@@ -136,7 +136,7 @@ export default function DraftEditor() {
         labelOn={labelOn}
         labelSize={["15rem", "4rem", "3rem", "2rem", "11rem"]}
         label={
-          <TwoLineLabel lineTop={<strong>AAA00009999</strong>} lineDown="FDSFsssssss"  />
+          <TwoLineLabel lineTop={<>AAA00009999</>} lineDown="FDSFsssssss"  />
 
         }
 
