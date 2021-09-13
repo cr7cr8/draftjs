@@ -149,9 +149,12 @@ const theme = useTheme()
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
         onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
-
+onDelete={function(){}}
         hoverContent={"aaa"}
-      /><br />
+      >
+        <>FFFFFFFFDDD<br />FFFFFFFFDDD<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+      FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />dfdfwe</>
+      </AvatarChip><br />
 
 
 

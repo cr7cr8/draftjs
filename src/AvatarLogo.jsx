@@ -260,7 +260,7 @@ class AvatarChip_ extends Component {
 
 
   render() {
-    const { classes, theme, size, personName, avatarProps, logoOn = true, labelOn = true, ...rest } = this.props
+    const { classes, theme, size, personName, avatarProps, logoOn = true, labelOn = true, children, ...rest } = this.props
 
     const { src, ...avatarRest } = this.props.avatarProps || {}
 
@@ -275,7 +275,8 @@ class AvatarChip_ extends Component {
           label={personName}
           {...rest}
 
-          {...(this.props.label && this.props.label.type && this.props.label.type.Naked && this.props.label.type.Naked.name === "TwoLineLabel_") && labelOn && {
+          {...(this.props.label && this.props.label.type && this.props.label.type.Naked && this.props.label.type.Naked.name === "TwoLineLabel_")
+          && labelOn && {
 
             label: <TwoLineLabel
               {...this.props.label.props}
@@ -286,8 +287,9 @@ class AvatarChip_ extends Component {
             />
           }}
 
-          {...(!labelOn) && { label: null }}
 
+          {...(!labelOn) && { label: null }}
+          {...this.props.children && { label: this.props.children }}
           {...this.props.hoverContent && { onMouseEnter: this.handlePopoverOpen }}
           {...this.props.hoverContent && { onMouseLeave: this.handlePopoverClose }}
           // aria-owns={this.state.open ? 'mouse-over-popover' : undefined}
