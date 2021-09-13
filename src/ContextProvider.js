@@ -27,6 +27,12 @@ import yellow from '@material-ui/core/colors/yellow';
 import { PhoneMissed } from '@material-ui/icons';
 
 
+function flatten(arr) {
+  return arr.reduce(function (flat, toFlatten) {
+    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+  }, []);
+}
+
 export const Context = createContext();
 
 
@@ -38,7 +44,8 @@ function breakpointsAttribute(...args) {
   let md = {}
   let lg = {}
   let xl = {}
-  args.forEach(item => {
+  args.forEach(item_ => {
+    const item = flatten(item_)
     xs = { ...xs, [item[0]]: item[1] }
     sm = { ...sm, [item[0]]: item[2] || item[1] }
     md = { ...md, [item[0]]: item[3] || item[2] || item[1] }

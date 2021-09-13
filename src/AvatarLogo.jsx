@@ -40,10 +40,6 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
           ? [labelSize]
           : textSizeArr
 
-
-
-      console.log(labelSize_)
-
       return {
 
         height: "auto",
@@ -62,17 +58,17 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         "& .MuiChip-avatar": {
           ...(logoOn && (!labelOn)) && { transform: "scale(0.95)" },
           ...(logoOn && (labelOn)) && { transform: "scale(0.95)" },
-          ...breakpointsAttribute(["width", ...size_], ["height", ...size_], ["margin", 0]), //avatar size
+          ...breakpointsAttribute(["width", size_], ["height", size_], ["margin", 0]), //avatar size
         },
 
         "& .MuiChip-label": {
           // fontWeight: "bold",
           userSelect: "text",
-          backgroundColor: "#a2c3b2",
+     //     backgroundColor: "#a2c3b2",
           lineHeight: "100%",
           margin: 0,
           padding: 0,
-          ...breakpointsAttribute(["fontSize", ...labelSize_], ["paddingLeft", ...multiplyArr(labelSize_,0.1)], ["paddingRight", ...multiplyArr(labelSize_,0.5)]), // label size
+          ...breakpointsAttribute(["fontSize", labelSize_], ["paddingLeft", labelOn?multiplyArr(labelSize_,0.1):[0]], ["paddingRight", labelOn?multiplyArr(labelSize_,0.3):[0]]), // label size
         },
       }
 
@@ -89,11 +85,14 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 
 
       return {
-        lineHeight: "unset",
+        lineHeight: "100%",
+       // backgroundColor:"pink",
+        margin:0,
+        padding:0,
         ...breakpointsAttribute(
-          ["fontSize", ...multiplyArr(size_, 60 / 100)],
-          rightMarginOn ? ["marginRight", ...multiplyArr(size_, 40 / 100)] : [],
-          ((!logoOn) && labelOn) ? ["marginLeft", ...multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
+          ["fontSize", multiplyArr(size_, 60 / 100)],
+       //   rightMarginOn ? ["marginRight", multiplyArr(size_, 40 / 100)] : [],
+       //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
 
         ),
 
@@ -108,11 +107,14 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
           : textSizeArr
 
       return {
-        lineHeight: "unset",
+        lineHeight: "100%",
+      //  backgroundColor:"lightblue",
+        margin:0,
+        padding:0,
         ...breakpointsAttribute(
-          ["fontSize", ...multiplyArr(size_, 40 / 100)],
-          rightMarginOn ? ["marginRight", ...multiplyArr(size_, 40 / 100)] : [],
-          ((!logoOn) && labelOn) ? ["marginLeft", ...multiplyArr(size_, 40 / 100)] : [] // not updating with props updating logoOn labelOn
+          ["fontSize", multiplyArr(size_, 40 / 100)],
+      //    rightMarginOn ? ["marginRight", multiplyArr(size_, 40 / 100)] : [],
+      //    ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : [] // not updating with props updating logoOn labelOn
         ),
       }
     },
@@ -171,7 +173,7 @@ export const TwoLineLabel = styled(TwoLineLabelWithTheme)`
         : textSizeArr
     return {
       ...breakpointsAttribute(
-        ((!logoOn) && labelOn) ? ["marginLeft", ...multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
+        ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
       ),
     }
   }} 
