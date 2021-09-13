@@ -84,24 +84,24 @@ export default function DraftEditor() {
       />
       <div>&nbsp;</div>*/}
 
-      <AvatarChip size={theme.textSizeArr} bgColor="pink" personName="sdss" onDelete={function () { }} /> <br />
+      <AvatarChip size={theme.textSizeArr} bgColor="pink" personName="" onDelete={function () { }} /> <br />
       <AvatarChip bgColor="pink" personName="sdss" onDelete={function () { }} /> <br />
-      <AvatarChip size={theme.textSizeArr} bgColor="pink" personName="sdss" /> <br />
+      <AvatarChip size={theme.textSizeArr} bgColor="pink" label={<strong>ieowuei</strong>} /> <br />
       <AvatarChip bgColor="pink" personName="sdss" /> <br />
 
 
 
       <AvatarChip personName="will"
-        bgColor="orange"
+        // bgColor="orange"
         size={theme.lgTextSizeArr}
         labelSize={theme.textSizeArr}
         logoOn={logoOn}
         labelOn={labelOn}
         label={
-          <TwoLineLabel lineTop={<>AAA00009999</>} lineDown="FDSFsssssss" />
+          <TwoLineLabel lineTop={"毛噶飞"} lineDown="银行经理" />
         }
 
-        src="https://picsum.photos/200"
+     //   src="https://picsum.photos/200"
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
         onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
@@ -110,15 +110,16 @@ export default function DraftEditor() {
       /><br />
 
       <AvatarChip personName="will"
-        bgColor="lightyellow"
-      
+      //  bgColor="lightpink"
+        size={theme.multiplyArr(theme.lgTextSizeArr,1.5)}
+        labelSize={theme.multiplyArr(theme.textSizeArr,3.5)}
         logoOn={logoOn}
         labelOn={labelOn}
         label={
-          <TwoLineLabel lineTop={<>AAA00009999</>} lineDown="FDSFsssssss" />
+          <TwoLineLabel lineTop={"毛噶飞"} lineDown="银行经理" />
         }
 
-        // src="https://picsum.photos/200"
+        src="https://picsum.photos/200"
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
         onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
@@ -128,8 +129,25 @@ export default function DraftEditor() {
 
       <AvatarChip personName="will"
         bgColor="lightyellow"
+
+        logoOn={logoOn}
+        labelOn={labelOn}
+        label={
+          <TwoLineLabel lineTop={<>AAA00009999</>} lineDown="FDSFsssssss" />
+        }
+
+        // src="https://picsum.photos/200"
+        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
+
+        onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
+        //  onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
+        hoverContent={"aaa"}
+      /><br />
+
+      <AvatarChip personName="will"
+        bgColor="lightyellow"
         size={theme.textSizeArr}
-     
+
         logoOn={logoOn}
         labelOn={labelOn}
         label={
@@ -146,7 +164,7 @@ export default function DraftEditor() {
 
       <AvatarChip personName="will"
         bgColor="lightyellow"
-   
+
         logoOn={logoOn}
         labelOn={labelOn}
         label={
@@ -183,7 +201,7 @@ export default function DraftEditor() {
 
       <br />
       <AvatarChip size={["1.3rem", "2.6rem", "3.9rem", "5.2rem", "6.5rem"]} labelSize={["1rem", "2rem", "3rem", "4rem", "5rem"]}
-       bgColor="#959875" lift={0} logoOn={true} labelOn={true} personName="ewe"
+        bgColor="#959875" lift={0} logoOn={true} labelOn={true} personName="ewe"
         label={"dddseee就看发大水了dfewFDSFS"}
 
         onClick={function () { setLogoOn(pre => !pre) }}

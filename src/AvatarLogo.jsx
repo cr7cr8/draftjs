@@ -11,7 +11,7 @@ import styled from 'styled-components'
 
 
 import { Context } from "./ContextProvider";
-
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
   return {
@@ -64,14 +64,14 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         "& .MuiChip-label": {
           // fontWeight: "bold",
           userSelect: "text",
-          //     backgroundColor: "#a2c3b2",
+          //    backgroundColor: "#a2c3b2",
           lineHeight: "100%",
           margin: 0,
           padding: 0,
           ...breakpointsAttribute(["fontSize", labelSize_], ["paddingLeft", labelOn ? multiplyArr(labelSize_, 0.1) : [0]], ["paddingRight", labelOn ? multiplyArr(labelSize_, 0.3) : [0]]), // label size
         },
         "& .MuiChip-deleteIcon": {
-          ...breakpointsAttribute(["width", multiplyArr(labelSize_,0.8)], ["height", multiplyArr(labelSize_,0.8)])
+          ...breakpointsAttribute(["width", multiplyArr(labelSize_, 0.8)], ["height", multiplyArr(labelSize_, 0.8)])
         }
 
       }
@@ -89,12 +89,12 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 
 
       return {
-        lineHeight: "100%",
+        lineHeight: "115%",
         // backgroundColor:"pink",
         margin: 0,
         padding: 0,
         ...breakpointsAttribute(
-          ["fontSize", multiplyArr(size_, 60 / 100)],
+          ["fontSize", multiplyArr(size_, 65 / 100)],
           //   rightMarginOn ? ["marginRight", multiplyArr(size_, 40 / 100)] : [],
           //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
 
@@ -111,12 +111,15 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
           : textSizeArr
 
       return {
-        lineHeight: "100%",
+        lineHeight: "115%",
         //  backgroundColor:"lightblue",
         margin: 0,
         padding: 0,
         ...breakpointsAttribute(
-          ["fontSize", multiplyArr(size_, 40 / 100)],
+          ["fontSize", multiplyArr(size_, 35 / 100)],
+        //  ["lineHeight", "115%"]
+
+
           //    rightMarginOn ? ["marginRight", multiplyArr(size_, 40 / 100)] : [],
           //    ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : [] // not updating with props updating logoOn labelOn
         ),
