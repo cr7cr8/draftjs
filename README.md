@@ -7,8 +7,8 @@
   
       <AvatarChip personName="will"
         bgColor="lightyellow"
-        size={theme.textSizeArr}
-        labelSize={theme.lgTextSizeArr}
+        size={theme.lgTextSizeArr}
+        labelSize={theme.textSizeArr}
         logoOn={logoOn}
         labelOn={labelOn}
         label={
