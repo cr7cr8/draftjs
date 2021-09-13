@@ -92,16 +92,16 @@ export default function DraftEditor() {
 
 
       <AvatarChip personName="will"
-        bgColor="lightyellow"
-        size={theme.textSizeArr}
-      
+        bgColor="orange"
+        size={theme.lgTextSizeArr}
+        labelSize={theme.textSizeArr}
         logoOn={logoOn}
         labelOn={labelOn}
         label={
           <TwoLineLabel lineTop={<>AAA00009999</>} lineDown="FDSFsssssss" />
         }
 
-        // src="https://picsum.photos/200"
+        src="https://picsum.photos/200"
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
         onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
@@ -122,7 +122,7 @@ export default function DraftEditor() {
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
         onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
-        onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
+      //  onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
         hoverContent={"aaa"}
       /><br />
 
