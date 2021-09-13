@@ -9,12 +9,12 @@ import { withContext1 } from "./ContextProvider"
 
 
 
-export default withContext1(function DraftEditor({ ctx, ...props }) {
-  //const theme = useTheme()
+export default function DraftEditor({ ctx, ...props }) {
+const theme = useTheme()
   // const { typoUpCss, typoDownCss } = useStyles()
 
 
-  const theme = ctx.theme
+//  const theme = ctx.theme
 
   const [logoOn, setLogoOn] = useState(true)
   const [labelOn, setLabelOn] = useState(true)
@@ -235,4 +235,4 @@ export default withContext1(function DraftEditor({ ctx, ...props }) {
   )
 
 
-})
+}
