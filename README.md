@@ -5,6 +5,24 @@
       <AvatarChip size={theme.textSizeArr} bgColor="pink" personName="sdss" /> <br />
       <AvatarChip bgColor="pink" personName="sdss" /> <br />
   
+      <AvatarChip personName="will"
+        bgColor="lightyellow"
+        size={theme.textSizeArr}
+        labelSize={theme.lgTextSizeArr}
+        logoOn={logoOn}
+        labelOn={labelOn}
+        label={
+          <TwoLineLabel lineTop={<>AAA00009999</>} lineDown="FDSFsssssss" />
+        }
+
+        src="https://picsum.photos/200"
+        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
+
+        onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
+        onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
+        hoverContent={"aaa"}
+      /><br />
+  
   
   
   ### Import
