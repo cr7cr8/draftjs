@@ -165,7 +165,7 @@ const theme = useTheme()
 
       />
       <br />
-      <AvatarChip size="8rem" labelSize={["1rem", "2rem", "10rem", "56px"]} bgColor="#599875" lift={0} logoOn={logoOn}
+      <AvatarChip size="8rem" labelSize={["1rem", "2rem", "10rem", "8rem"]} bgColor="#599875" lift={0} logoOn={logoOn}
         labelOn={labelOn} personName="ewe"
         label={<b>红看来大家分离开了就看发大水了</b>}
 
