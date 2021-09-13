@@ -10,8 +10,11 @@ import classNames from 'classnames';
 import styled from 'styled-components'
 
 
-import { Context } from "./ContextProvider";
+import { Context, withContext1, withContext2, withContext3 as withContext, withContext4 } from "./ContextProvider";
+
+
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 
 function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
   return {
@@ -26,7 +29,7 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
       }
     },
-    chipCss: ({ size, personName, label, bgColor, lift = 3, logoOn = true, labelOn = true, labelSize, ...props }) => {
+    chipCss: ({ size, personName, label, bgColor, lift = 3, logoOn = true, labelOn = true, labelSize, onDelete, ...props }) => {
 
       const size_ = Array.isArray(size)
         ? size
@@ -68,17 +71,27 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
           lineHeight: "100%",
           margin: 0,
           padding: 0,
-          ...breakpointsAttribute(["fontSize", labelSize_], ["paddingLeft", labelOn ? multiplyArr(labelSize_, 0.1) : [0]], ["paddingRight", labelOn ? multiplyArr(labelSize_, 0.3) : [0]]), // label size
+          ...breakpointsAttribute(["fontSize", labelSize_],
+            ["paddingLeft", labelOn ? multiplyArr(labelSize_, logoOn ? 0.15 : 0.5) : [0]],
+
+
+
+            ["paddingRight", labelOn ? multiplyArr(labelSize_, onDelete ? 0.15 : 0.5) : [0]]), // label size
         },
         "& .MuiChip-deleteIcon": {
-          ...breakpointsAttribute(["width", multiplyArr(labelSize_, 0.8)], ["height", multiplyArr(labelSize_, 0.8)])
+          margin: 0,
+          ...breakpointsAttribute(
+            ["width", multiplyArr(labelSize_, 0.8)],
+            ["height", multiplyArr(labelSize_, 0.8)],
+
+          )
         }
 
       }
 
     },
 
-    typoUpCss: ({ size, rightMarginOn, logoOn, labelOn }) => {
+    typoUpCss: ({ size, logoOn, labelOn }) => {
 
 
       const size_ = Array.isArray(size)
@@ -95,14 +108,14 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         padding: 0,
         ...breakpointsAttribute(
           ["fontSize", multiplyArr(size_, 65 / 100)],
-          //   rightMarginOn ? ["marginRight", multiplyArr(size_, 40 / 100)] : [],
+
           //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
 
         ),
 
       }
     },
-    typoDownCss: ({ size, rightMarginOn, logoOn, labelOn }) => {
+    typoDownCss: ({ size, logoOn, labelOn }) => {
 
       const size_ = Array.isArray(size)
         ? size
@@ -117,10 +130,10 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         padding: 0,
         ...breakpointsAttribute(
           ["fontSize", multiplyArr(size_, 35 / 100)],
-        //  ["lineHeight", "115%"]
+          //  ["lineHeight", "115%"]
 
 
-          //    rightMarginOn ? ["marginRight", multiplyArr(size_, 40 / 100)] : [],
+
           //    ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : [] // not updating with props updating logoOn labelOn
         ),
       }
@@ -137,10 +150,10 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 class TwoLineLabel_ extends Component {
 
   static contextType = Context
-  static defaultProps = { rightMarginOn: true }
+  static defaultProps = {}
   constructor(props, ctx) {
     super(props, ctx)
-    console.log(ctx)
+    //   console.log(ctx)
 
   }
 
@@ -171,6 +184,7 @@ class TwoLineLabel_ extends Component {
 
 
 const TwoLineLabelWithTheme = withStyles(styleObj, { withTheme: true })(TwoLineLabel_)
+
 export const TwoLineLabel = styled(TwoLineLabelWithTheme)`
   ${function ({ logoOn, labelOn, breakpointsAttribute, multiplyArr, size, textSizeArr }) {
     const size_ = Array.isArray(size)
@@ -180,7 +194,7 @@ export const TwoLineLabel = styled(TwoLineLabelWithTheme)`
         : textSizeArr
     return {
       ...breakpointsAttribute(
-        ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
+        ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 0 / 100)] : []// not updating with props updating logoOn labelOn
       ),
     }
   }} 
@@ -190,7 +204,7 @@ export const TwoLineLabel = styled(TwoLineLabelWithTheme)`
 class AvatarLogo_ extends Component {
 
   render() {
-    const { classes, personName, src, ...rest } = this.props
+    const { classes, theme, personName, src, ...rest } = this.props
     const src_ = "data:image/svg+xml;base64," + btoa(personName && multiavatar(personName))
     return <Avatar classes={{ root: classes.avatarCss }} src={this.props.src || src_} {...rest} />
 
@@ -199,8 +213,13 @@ class AvatarLogo_ extends Component {
 
 class AvatarChip_ extends Component {
 
+
+  static contextType = this.props && this.props.ctx || null
+
+
   constructor(props) {
     super(props);
+    //  console.log(this.props.ctx)
     this.state = {
       open: false,
       transOriginH: "left",
@@ -248,7 +267,7 @@ class AvatarChip_ extends Component {
     return (
       // <Grow in={true} >
       <div style={{ width: "fit-content", display: "inline-block" }}    >
-
+        <Button onClick={() => { this.props.ctx.setIsLight(pre => !pre) }}>light</Button>
         <Chip
           classes={{ root: classes.chipCss }}
           {...logoOn && { avatar: <AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} /> }}
@@ -319,6 +338,7 @@ class AvatarChip_ extends Component {
 
 
 export const AvatarLogo = withStyles(styleObj, { withTheme: true })(AvatarLogo_);
-export const AvatarChip = withStyles(styleObj, { withTheme: true })(AvatarChip_);
+export const AvatarChip = withContext(withStyles(styleObj, { withTheme: true })(AvatarChip_));
+AvatarChip.contextType = Context
 
 

@@ -4,56 +4,17 @@ import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
 import { Avatar, Chip, Popover, Typography, Container, CssBaseline } from "@material-ui/core";
 import { makeStyles, styled, useTheme, } from '@material-ui/styles';
 
+import { withContext1 } from "./ContextProvider"
 
 
 
 
-
-const useStyles = makeStyles(function ({ textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
-
-
-  return {
-
-    typoUpCss: () => {
-
-      return {
-
-        lineHeight: "unset",
-        ...breakpointsAttribute(
-          ["fontSize", ...multiplyArr(textSizeArr, 60 / 100)],
-          //    ["marginRight", ...multiplyArr(textSizeArr, 40 / 100)]
-        ),
-
-      }
-    },
-    typoDownCss: () => {
-
-      return {
-
-        lineHeight: "unset",
-        ...breakpointsAttribute(
-          ["fontSize", ...multiplyArr(textSizeArr, 40 / 100)],
-          //   ["marginRight", ...multiplyArr(textSizeArr, 40 / 100)]
-        ),
-
-
-
-      }
-    }
-
-
-  }
-
-
-
-})
-
-
-
-
-export default function DraftEditor() {
-  const theme = useTheme()
+export default withContext1(function DraftEditor({ ctx, ...props }) {
+  //const theme = useTheme()
   // const { typoUpCss, typoDownCss } = useStyles()
+
+
+  const theme = ctx.theme
 
   const [logoOn, setLogoOn] = useState(true)
   const [labelOn, setLabelOn] = useState(true)
@@ -62,32 +23,27 @@ export default function DraftEditor() {
     <>
 
 
-      <div><br /></div>
 
-
-      {/* <AvatarChip
-        bgColor="green"
-        personName="ss5s"
-        label={<><Typography variant="body2">body2回的</Typography>
-          <Typography variant="body2">body2回的</Typography></>
-        }
-        hoverContent={"aaa"}
-      />
-
-
-      <AvatarChip bgColor="pink"
-        backgroundColor
-        personName="srers5s"
-        size="2rem"
-        label={<> <Typography variant="body2" style={{ fontSize: "1rem" }}>body2回的</Typography> <Typography variant="body2">body2回的</Typography></>}
-        hoverContent={"aaa"}
-      />
-      <div>&nbsp;</div>*/}
 
       <AvatarChip size={theme.textSizeArr} bgColor="pink" personName="" onDelete={function () { }} /> <br />
       <AvatarChip bgColor="pink" personName="sdss" onDelete={function () { }} /> <br />
       <AvatarChip size={theme.textSizeArr} bgColor="pink" label={<strong>ieowuei</strong>} /> <br />
-      <AvatarChip bgColor="pink" personName="sdss" /> <br />
+      <AvatarChip
+        size="6.5rem"
+        labelSize="1rem"
+        logoOn={logoOn}
+        labelOn={labelOn}
+        onDelete={function () { }}
+
+        bgColor="pink" personName="就看了sds看了反倒是s" /> <br />
+      <AvatarChip
+        size="6.5rem"
+        labelSize="5rem"
+        logoOn={logoOn}
+        labelOn={labelOn}
+        onDelete={function () { }}
+
+        bgColor="pink" personName="就看了sds看了反倒是s" /> <br />
 
 
 
@@ -101,7 +57,7 @@ export default function DraftEditor() {
           <TwoLineLabel lineTop={"毛噶飞"} lineDown="银行经理" />
         }
 
-     //   src="https://picsum.photos/200"
+        //   src="https://picsum.photos/200"
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
         onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
@@ -110,9 +66,9 @@ export default function DraftEditor() {
       /><br />
 
       <AvatarChip personName="will"
-      //  bgColor="lightpink"
-        size={theme.multiplyArr(theme.lgTextSizeArr,1.5)}
-        labelSize={theme.multiplyArr(theme.textSizeArr,3.5)}
+        //  bgColor="lightpink"
+        size={theme.multiplyArr(theme.textSizeArr, 2.6)}
+        labelSize={theme.multiplyArr(theme.textSizeArr, 2)}
         logoOn={logoOn}
         labelOn={labelOn}
         label={
@@ -123,7 +79,25 @@ export default function DraftEditor() {
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
         onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
-      //  onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
+        onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
+        hoverContent={"aaa"}
+      /><br />
+
+      <AvatarChip personName="will"
+        //  bgColor="lightpink"
+        size={theme.multiplyArr(theme.textSizeArr, 2.6)}
+        labelSize={theme.multiplyArr(theme.textSizeArr, 2)}
+        logoOn={logoOn}
+        labelOn={labelOn}
+        label={
+          <TwoLineLabel lineTop={"毛噶飞"} lineDown="银行经理" />
+        }
+
+        src="https://picsum.photos/200"
+        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
+
+        onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
+        //     onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
         hoverContent={"aaa"}
       /><br />
 
@@ -218,7 +192,7 @@ export default function DraftEditor() {
         labelOn={true}
         size="1.5rem"
         label={
-          <TwoLineLabel lineTop="textArrSize" lineDown="FDSFsssssss" rightMarginOn={false} />
+          <TwoLineLabel lineTop="textArrSize" lineDown="FDSFsssssss" />
 
         }
 
@@ -261,4 +235,4 @@ export default function DraftEditor() {
   )
 
 
-}
+})

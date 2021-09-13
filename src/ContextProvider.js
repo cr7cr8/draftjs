@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState, useReducer, useRef, useMemo, useCallback, useLayoutEffect } from 'react';
+import React, { createContext, useEffect, useState, useReducer, useRef, useMemo, useCallback, useLayoutEffect, useContext, Component } from 'react';
 
 import { createTheme, ThemeProvider, responsiveFontSizes } from "@material-ui/core";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -65,6 +65,50 @@ function multiplyArr(arr, factor) {
     return String(num * factor + unit)
   })
 }
+
+
+export function withContext1(Compo) {
+  return class extends Component {
+
+    static contextType = Context
+    constructor(props, context) {
+      super(props, context)
+    }
+    render() {
+      return (
+        <Compo {...this.props} ctx={this.context} />
+      )
+    }
+  }
+}
+
+export function withContext2(Compo) {
+  return class extends Component {
+    render() {
+      return (
+        <Context.Consumer>
+          {(ctx) => <Compo {...this.props} ctx={ctx} />}
+        </Context.Consumer>
+      )
+    }
+  }
+}
+
+export function withContext3(Compo) {
+
+  return function (props) {
+    const ctx = useContext(Context)
+    return <Compo {...props} ctx={ctx} />
+  }
+}
+
+export function withContext4(Compo) {
+  return function (props) {
+    return <Context.Consumer>{context => <Compo {...props} ctx={context} />}</Context.Consumer>
+  }
+
+}
+
 
 
 
