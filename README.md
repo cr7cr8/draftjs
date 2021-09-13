@@ -1,3 +1,12 @@
+  
+ ### AvatarChip
+      <AvatarChip size={theme.textSizeArr} bgColor="pink" personName="sdss" onDelete={function () { }} /> <br />
+      <AvatarChip bgColor="pink" personName="sdss" onDelete={function () { }} /> <br />
+      <AvatarChip size={theme.textSizeArr} bgColor="pink" personName="sdss" /> <br />
+      <AvatarChip bgColor="pink" personName="sdss" /> <br />
+  
+  
+  
   ### Import
        import { Context } from "./ContextProvider";
         
