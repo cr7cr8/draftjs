@@ -64,12 +64,16 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         "& .MuiChip-label": {
           // fontWeight: "bold",
           userSelect: "text",
-     //     backgroundColor: "#a2c3b2",
+          //     backgroundColor: "#a2c3b2",
           lineHeight: "100%",
           margin: 0,
           padding: 0,
-          ...breakpointsAttribute(["fontSize", labelSize_], ["paddingLeft", labelOn?multiplyArr(labelSize_,0.1):[0]], ["paddingRight", labelOn?multiplyArr(labelSize_,0.3):[0]]), // label size
+          ...breakpointsAttribute(["fontSize", labelSize_], ["paddingLeft", labelOn ? multiplyArr(labelSize_, 0.1) : [0]], ["paddingRight", labelOn ? multiplyArr(labelSize_, 0.3) : [0]]), // label size
         },
+        "& .MuiChip-deleteIcon": {
+          ...breakpointsAttribute(["width", multiplyArr(labelSize_,0.8)], ["height", multiplyArr(labelSize_,0.8)])
+        }
+
       }
 
     },
@@ -86,13 +90,13 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 
       return {
         lineHeight: "100%",
-       // backgroundColor:"pink",
-        margin:0,
-        padding:0,
+        // backgroundColor:"pink",
+        margin: 0,
+        padding: 0,
         ...breakpointsAttribute(
           ["fontSize", multiplyArr(size_, 60 / 100)],
-       //   rightMarginOn ? ["marginRight", multiplyArr(size_, 40 / 100)] : [],
-       //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
+          //   rightMarginOn ? ["marginRight", multiplyArr(size_, 40 / 100)] : [],
+          //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
 
         ),
 
@@ -108,13 +112,13 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 
       return {
         lineHeight: "100%",
-      //  backgroundColor:"lightblue",
-        margin:0,
-        padding:0,
+        //  backgroundColor:"lightblue",
+        margin: 0,
+        padding: 0,
         ...breakpointsAttribute(
           ["fontSize", multiplyArr(size_, 40 / 100)],
-      //    rightMarginOn ? ["marginRight", multiplyArr(size_, 40 / 100)] : [],
-      //    ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : [] // not updating with props updating logoOn labelOn
+          //    rightMarginOn ? ["marginRight", multiplyArr(size_, 40 / 100)] : [],
+          //    ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : [] // not updating with props updating logoOn labelOn
         ),
       }
     },

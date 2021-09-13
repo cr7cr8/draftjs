@@ -39,11 +39,8 @@ export const Context = createContext();
 
 const breakpoints = createBreakpoints({})
 function breakpointsAttribute(...args) {
-  let xs = {}
-  let sm = {}
-  let md = {}
-  let lg = {}
-  let xl = {}
+  let xs = {}, sm = {}, md = {}, lg = {}, xl = {};
+
   args.forEach(item_ => {
     const item = flatten(item_)
     xs = { ...xs, [item[0]]: item[1] }

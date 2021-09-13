@@ -94,7 +94,7 @@ export default function DraftEditor() {
       <AvatarChip personName="will"
         bgColor="lightyellow"
         size={theme.textSizeArr}
-        lift={9}
+      
         logoOn={logoOn}
         labelOn={labelOn}
         label={
@@ -111,7 +111,7 @@ export default function DraftEditor() {
 
       <AvatarChip personName="will"
         bgColor="lightyellow"
-        lift={9}
+      
         logoOn={logoOn}
         labelOn={labelOn}
         label={
@@ -129,7 +129,7 @@ export default function DraftEditor() {
       <AvatarChip personName="will"
         bgColor="lightyellow"
         size={theme.textSizeArr}
-        lift={9}
+     
         logoOn={logoOn}
         labelOn={labelOn}
         label={
@@ -146,7 +146,7 @@ export default function DraftEditor() {
 
       <AvatarChip personName="will"
         bgColor="lightyellow"
-        lift={9}
+   
         logoOn={logoOn}
         labelOn={labelOn}
         label={
@@ -182,11 +182,13 @@ export default function DraftEditor() {
       />
 
       <br />
-      <AvatarChip size={["1.3rem", "2.6rem", "3.9rem", "5.2rem", "6.5rem"]} labelSize={["1rem", "2rem", "3rem", "4rem", "5rem"]} bgColor="#959875" lift={0} logoOn={true} labelOn={true} personName="ewe"
+      <AvatarChip size={["1.3rem", "2.6rem", "3.9rem", "5.2rem", "6.5rem"]} labelSize={["1rem", "2rem", "3rem", "4rem", "5rem"]}
+       bgColor="#959875" lift={0} logoOn={true} labelOn={true} personName="ewe"
         label={"dddseee就看发大水了dfewFDSFS"}
 
         onClick={function () { setLogoOn(pre => !pre) }}
         onDelete={function () { }}
+        labelOn={false}
       />
       <br />
 
@@ -232,29 +234,7 @@ export default function DraftEditor() {
       />
 
 
-      {/* <AvatarChip personName="sdss"
-       logoOn={logoOn} labelOn={labelOn}
-        label={
-          <>
-            <Typography color="textPrimary" className={typoUpCss} >阿阿发阿发</Typography>
-            <Typography color="textSecondary" className={typoDownCss} >产业客户经经理</Typography>
-          </>
-        }
-        hoverContent={<>fdsfds</>}
-        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLogoOn(pre=>!pre)  } }}
 
-        onClick={function(){   setLabelOn(pre=>!pre)   }}
-        onDelete={function(){setLogoOn(true)}}
-      /> */}
-
-
-
-
-      {/* <Typography variant="body2">dfdsfsffsdfggg</Typography>
-      <AvatarLogo size={["4rem", "3rem", "2rem", "4.5rem"]} personName="ffdd" src={"https://picsum.photos/200/300/"} /> 
-      <AvatarChip bgColor="#faf" src="https://picsum.photos/200" personName="sssd5sss" />
-      <div>&nbsp;</div>
-      <AvatarChip bgColor="lightgreen" src="https://picsum.photos/200" personName="ssd5s" label={<><Typography variant="body2">body2回的</Typography>  </>} /> */}
 
 
     </>
