@@ -29,13 +29,36 @@
         }  
   
   
-  
-  
-  
-  
-  
-  
-  
+### define styled component first to receive all the passed-down props from the hoc 
+
+           export const TwoLineLabelWithStyled = styled(TwoLineLabel_).withConfig({
+              shouldForwardProp: (propName, defaultValidatorFn) => {
+                //filter the prop to pass down to the bottom component
+                 return propName.indexOf("ctx") !== 0
+              }
+           })`
+              ${ (props) => {
+                console.log(props) //pring all the received props, even if it gets filted later
+
+                const { theme: { textSizeArr, breakpointsAttribute, multiplyArr }, logoOn, labelOn, size, cssStyle} = props
+
+                const size_ = Array.isArray(size)
+                  ? size
+                  : typeof (size) === "string"
+                    ? [size]
+                    : textSizeArr
+                return {
+                  ...cssStyle
+                 // backgroundColor:"yellow"
+                  // ...breakpointsAttribute(
+                  //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 0 / 100)] : []// not updating with props updating logoOn labelOn
+                  // ),
+                }
+              }} 
+            `
+
+### first wrap gose to most inside
+            export const TwoLineLabel = withContext4(withContext3(withContext2(withContext1((withStyles(styleObj, { withTheme: true })(TwoLineLabelWithStyled))))))
   
   //////////////////////////// dev4
   
