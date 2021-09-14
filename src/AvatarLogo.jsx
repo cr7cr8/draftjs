@@ -144,8 +144,6 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
   }
 }
 
-
-
 class TwoLineLabel_ extends Component {
 
   static contextType = Context
@@ -179,23 +177,16 @@ class TwoLineLabel_ extends Component {
 }
 
 
-// define styled component first to receive all the passed-down props from the hoc 
+
 export const TwoLineLabelWithStyled = styled(TwoLineLabel_).withConfig({
   shouldForwardProp: (propName, defaultValidatorFn) => {
 
-    //filter the prop to pass down to the bottom component
-
-    // console.log(propName, propName.indexOf("ctx") === 0)
-    console.log(propName)
      return propName.indexOf("ctx") !== 0
-
-    
-
   }
 
 })`
   ${ (props) => {
-    console.log(props) //pring all the received props, even if it gets filted later
+  
 
     const { theme: { textSizeArr, breakpointsAttribute, multiplyArr }, logoOn, labelOn, size, cssStyle} = props
 
@@ -206,45 +197,15 @@ export const TwoLineLabelWithStyled = styled(TwoLineLabel_).withConfig({
         : textSizeArr
     return {
       ...cssStyle
-     // backgroundColor:"yellow"
-      // ...breakpointsAttribute(
-      //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 0 / 100)] : []// not updating with props updating logoOn labelOn
-      // ),
+     
     }
   }} 
 `
 
 
-export const TwoLineLabel = withContext4(withContext3(withContext2(withContext1((withStyles(styleObj, { withTheme: true })(TwoLineLabelWithStyled))))))
+export const TwoLineLabel = withStyles(styleObj, { withTheme: true })(TwoLineLabelWithStyled)
 
 
-
-
-// export const TwoLineLabel = styled(TwoLineLabelWithTheme).withConfig({
-//   shouldForwardProp: (prop, defaultValidatorFn) => {
-//     //console.log(prop)
-//     return true
-//   }
-
-//   // !['hidden'].includes(prop)
-//   // && defaultValidatorFn(prop),
-// })`
-//   ${function (props/*{ logoOn, labelOn, breakpointsAttribute, multiplyArr, size, textSizeArr, theme, ...props }  */) {
-
-//     console.log(props)
-
-//     // const size_ = Array.isArray(size)
-//     //   ? size
-//     //   : typeof (size) === "string"
-//     //     ? [size]
-//     //     : textSizeArr
-//     return {
-//       // ...breakpointsAttribute(
-//       //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 0 / 100)] : []// not updating with props updating logoOn labelOn
-//       // ),
-//     }
-//   }} 
-// `
 
 
 class AvatarLogo_ extends Component {
@@ -265,7 +226,7 @@ class AvatarChip_ extends Component {
 
   constructor(props) {
     super(props);
-    //  console.log(this.props.ctx)
+
     this.state = {
       open: false,
       transOriginH: "left",
@@ -313,7 +274,7 @@ class AvatarChip_ extends Component {
     return (
       // <Grow in={true} >
       <div style={{ width: "fit-content", display: "inline-block" }}    >
-        <Button onClick={() => { this.props.ctx.setIsLight(pre => !pre) }}>light</Button>
+       
         <Chip
           classes={{ root: classes.chipCss }}
           {...logoOn && { avatar: <AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} /> }}
@@ -330,7 +291,7 @@ class AvatarChip_ extends Component {
               {...this.props.label.props}
               logoOn={this.props.logoOn}
               labelOn={this.props.labelOn}
-              multiplyArr={theme.multiplyArr} breakpointsAttribute={theme.breakpointsAttribute} textSizeArr={theme.textSizeArr}
+            //  multiplyArr={theme.multiplyArr} breakpointsAttribute={theme.breakpointsAttribute} textSizeArr={theme.textSizeArr}
               {...(Array.isArray(this.props.labelSize) || (typeof (this.props.labelSize) === "string")) && { size: this.props.labelSize, }}
             />
           }}
@@ -343,7 +304,7 @@ class AvatarChip_ extends Component {
               {...this.props.children.props}
               logoOn={this.props.logoOn}
               labelOn={this.props.labelOn}
-              multiplyArr={theme.multiplyArr} breakpointsAttribute={theme.breakpointsAttribute} textSizeArr={theme.textSizeArr}
+              // multiplyArr={theme.multiplyArr} breakpointsAttribute={theme.breakpointsAttribute} textSizeArr={theme.textSizeArr}
               {...(Array.isArray(this.props.labelSize) || (typeof (this.props.labelSize) === "string")) && { size: this.props.labelSize, }}
             />
           }}

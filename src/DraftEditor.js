@@ -19,13 +19,13 @@ export default function DraftEditor({ ctx, ...props }) {
   const [logoOn, setLogoOn] = useState(true)
   const [labelOn, setLabelOn] = useState(true)
 
-//return(<TwoLineLabel lineTop={"毛噶飞"} lineDown="银aaaa行经理"  />)
+  //return(<TwoLineLabel lineTop={"毛噶飞"} lineDown="银aaaa行经理"  />)
 
 
   return (
     <>
 
-<TwoLineLabel lineTop={"毛噶飞"} lineDown="银aaaa行经理" cssStyle={{backgroundColor:"yellow"}} />
+      <TwoLineLabel lineTop={"毛噶飞"} lineDown="银aaaa行经理" cssStyle={{ backgroundColor: "yellow" }} />
 
 
       <AvatarChip size={theme.textSizeArr} bgColor="pink" personName="sdss" onDelete={function () { }} /> <br />
@@ -52,7 +52,7 @@ export default function DraftEditor({ ctx, ...props }) {
 
       <AvatarChip personName="will"
         // bgColor="orange"
-        size={theme.lgTextSizeArr}
+        size={"10rem"}
         labelSize={theme.textSizeArr}
         logoOn={logoOn}
         labelOn={labelOn}
