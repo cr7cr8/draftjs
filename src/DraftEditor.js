@@ -10,22 +10,25 @@ import { withContext1 } from "./ContextProvider"
 
 
 export default function DraftEditor({ ctx, ...props }) {
-const theme = useTheme()
+  const theme = useTheme()
   // const { typoUpCss, typoDownCss } = useStyles()
 
 
-//  const theme = ctx.theme
+  //  const theme = ctx.theme
 
   const [logoOn, setLogoOn] = useState(true)
   const [labelOn, setLabelOn] = useState(true)
 
+//return(<TwoLineLabel lineTop={"毛噶飞"} lineDown="银aaaa行经理"  />)
+
+
   return (
     <>
 
+<TwoLineLabel lineTop={"毛噶飞"} lineDown="银aaaa行经理" cssStyle={{backgroundColor:"yellow"}} />
 
 
-
-      <AvatarChip size={theme.textSizeArr} bgColor="pink" personName="" onDelete={function () { }} /> <br />
+      <AvatarChip size={theme.textSizeArr} bgColor="pink" personName="sdss" onDelete={function () { }} /> <br />
       <AvatarChip bgColor="pink" personName="sdss" onDelete={function () { }} /> <br />
       <AvatarChip size={theme.textSizeArr} bgColor="pink" label={<strong>ieowuei</strong>} /> <br />
       <AvatarChip
@@ -56,14 +59,32 @@ const theme = useTheme()
         label={
           <TwoLineLabel lineTop={"毛噶飞"} lineDown="银行经理" />
         }
-
         //   src="https://picsum.photos/200"
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
         onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
         onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
         hoverContent={"aaa"}
-      /><br />
+      >
+
+        <TwoLineLabel lineTop={<AvatarChip personName="will"
+          //  bgColor="lightpink"
+          size={theme.multiplyArr(theme.textSizeArr, 2.6)}
+          labelSize={theme.multiplyArr(theme.textSizeArr, 2)}
+          logoOn={logoOn}
+          labelOn={labelOn}
+          label={
+            <TwoLineLabel lineTop={"毛噶飞"} lineDown="银行经理" />
+          }
+
+          src="https://picsum.photos/200"
+          avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
+
+          onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
+          onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
+          hoverContent={"aaa"}
+        />} lineDown="银行sss理" />
+      </AvatarChip><br />
 
       <AvatarChip personName="will"
         //  bgColor="lightpink"
@@ -82,6 +103,8 @@ const theme = useTheme()
         onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
         hoverContent={"aaa"}
       /><br />
+
+
 
       <AvatarChip personName="will"
         //  bgColor="lightpink"
@@ -149,11 +172,11 @@ const theme = useTheme()
         avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
         onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
-onDelete={function(){}}
+        onDelete={function () { }}
         hoverContent={"aaa"}
       >
         <>FFFFFFFFDDD<br />FFFFFFFFDDD<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-      FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />dfdfwe</>
+          FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />dfdfwe</>
       </AvatarChip><br />
 
 

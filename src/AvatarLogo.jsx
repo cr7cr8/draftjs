@@ -10,10 +10,11 @@ import classNames from 'classnames';
 import styled from 'styled-components'
 
 
-import { Context, withContext1, withContext2, withContext3 as withContext, withContext4 } from "./ContextProvider";
+import { Context, withContext1, withContext2, withContext3, withContext4 } from "./ContextProvider";
 
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { CodeSharp } from "@material-ui/icons";
 
 
 function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
@@ -145,21 +146,19 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 
 
 
-
-
 class TwoLineLabel_ extends Component {
 
   static contextType = Context
-  static defaultProps = {}
+  static defaultProps = { ttt: "ttt" }
   constructor(props, ctx) {
     super(props, ctx)
-    //   console.log(ctx)
-
+    //   console.log(props)
   }
 
   render() {
 
-    const { lineTop, lineDown, className, } = this.props
+    const { lineTop, lineDown, className, theme, ...props } = this.props
+
 
     const { typoUpCss, typoDownCss } = this.props.classes
 
@@ -183,22 +182,72 @@ class TwoLineLabel_ extends Component {
 }
 
 
-const TwoLineLabelWithTheme = withStyles(styleObj, { withTheme: true })(TwoLineLabel_)
+// define styled component first to receive all the passed-down props from the hoc 
+export const TwoLineLabelWithTheme = styled(TwoLineLabel_).withConfig({
+  shouldForwardProp: (propName, defaultValidatorFn) => {
 
-export const TwoLineLabel = styled(TwoLineLabelWithTheme)`
-  ${function ({ logoOn, labelOn, breakpointsAttribute, multiplyArr, size, textSizeArr }) {
+    //filter the prop to pass down to the bottom component
+
+    // console.log(propName, propName.indexOf("ctx") === 0)
+    console.log(propName)
+     return propName.indexOf("ctx") !== 0
+
+    
+
+  }
+
+})`
+  ${ (props) => {
+    console.log(props) //pring all the received props, even if it gets filted later
+
+    const { theme: { textSizeArr, breakpointsAttribute, multiplyArr }, logoOn, labelOn, size, cssStyle} = props
+
     const size_ = Array.isArray(size)
       ? size
       : typeof (size) === "string"
         ? [size]
         : textSizeArr
     return {
-      ...breakpointsAttribute(
-        ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 0 / 100)] : []// not updating with props updating logoOn labelOn
-      ),
+      ...cssStyle
+     // backgroundColor:"yellow"
+      // ...breakpointsAttribute(
+      //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 0 / 100)] : []// not updating with props updating logoOn labelOn
+      // ),
     }
   }} 
 `
+
+
+export const TwoLineLabel = withContext4(withContext3(withContext2(withContext1((withStyles(styleObj, { withTheme: true })(TwoLineLabelWithTheme))))))
+
+
+
+
+// export const TwoLineLabel = styled(TwoLineLabelWithTheme).withConfig({
+//   shouldForwardProp: (prop, defaultValidatorFn) => {
+//     //console.log(prop)
+//     return true
+//   }
+
+//   // !['hidden'].includes(prop)
+//   // && defaultValidatorFn(prop),
+// })`
+//   ${function (props/*{ logoOn, labelOn, breakpointsAttribute, multiplyArr, size, textSizeArr, theme, ...props }  */) {
+
+//     console.log(props)
+
+//     // const size_ = Array.isArray(size)
+//     //   ? size
+//     //   : typeof (size) === "string"
+//     //     ? [size]
+//     //     : textSizeArr
+//     return {
+//       // ...breakpointsAttribute(
+//       //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 0 / 100)] : []// not updating with props updating logoOn labelOn
+//       // ),
+//     }
+//   }} 
+// `
 
 
 class AvatarLogo_ extends Component {
@@ -275,6 +324,8 @@ class AvatarChip_ extends Component {
           label={personName}
           {...rest}
 
+
+
           {...(this.props.label && this.props.label.type && this.props.label.type.Naked && this.props.label.type.Naked.name === "TwoLineLabel_")
           && labelOn && {
 
@@ -287,9 +338,21 @@ class AvatarChip_ extends Component {
             />
           }}
 
+          {...this.props.children && { label: this.props.children }}
+
+          {...(this.props.children && this.props.children.type && this.props.children.type.Naked && this.props.children.type.Naked.name === "TwoLineLabel_")
+          && labelOn && {
+            label: <TwoLineLabel
+              {...this.props.children.props}
+              logoOn={this.props.logoOn}
+              labelOn={this.props.labelOn}
+              multiplyArr={theme.multiplyArr} breakpointsAttribute={theme.breakpointsAttribute} textSizeArr={theme.textSizeArr}
+              {...(Array.isArray(this.props.labelSize) || (typeof (this.props.labelSize) === "string")) && { size: this.props.labelSize, }}
+            />
+          }}
 
           {...(!labelOn) && { label: null }}
-          {...this.props.children && { label: this.props.children }}
+
           {...this.props.hoverContent && { onMouseEnter: this.handlePopoverOpen }}
           {...this.props.hoverContent && { onMouseLeave: this.handlePopoverClose }}
           // aria-owns={this.state.open ? 'mouse-over-popover' : undefined}
@@ -340,7 +403,7 @@ class AvatarChip_ extends Component {
 
 
 export const AvatarLogo = withStyles(styleObj, { withTheme: true })(AvatarLogo_);
-export const AvatarChip = withContext(withStyles(styleObj, { withTheme: true })(AvatarChip_));
+export const AvatarChip = withContext1(withStyles(styleObj, { withTheme: true })(AvatarChip_));
 AvatarChip.contextType = Context
 
 

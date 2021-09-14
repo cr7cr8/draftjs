@@ -70,13 +70,13 @@ function multiplyArr(arr, factor) {
 export function withContext1(Compo) {
   return class extends Component {
 
-    static contextType = Context
+    static contextType = Context;
     constructor(props, context) {
       super(props, context)
     }
     render() {
       return (
-        <Compo {...this.props} ctx={this.context} />
+        <Compo {...this.props} ctx1={this.context} />
       )
     }
   }
@@ -87,7 +87,7 @@ export function withContext2(Compo) {
     render() {
       return (
         <Context.Consumer>
-          {(ctx) => <Compo {...this.props} ctx={ctx} />}
+          {(ctx) => <Compo {...this.props} ctx2={ctx} />}
         </Context.Consumer>
       )
     }
@@ -96,15 +96,17 @@ export function withContext2(Compo) {
 
 export function withContext3(Compo) {
 
-  return function (props) {
+  return function ({ ...props}) {
+    
     const ctx = useContext(Context)
-    return <Compo {...props} ctx={ctx} />
+   
+    return <Compo { ...props} ctx3={ctx}  />
   }
 }
 
 export function withContext4(Compo) {
   return function (props) {
-    return <Context.Consumer>{context => <Compo {...props} ctx={context} />}</Context.Consumer>
+    return <Context.Consumer>{context => <Compo {...props} ctx4={context} />}</Context.Consumer>
   }
 
 }
