@@ -149,17 +149,14 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 class TwoLineLabel_ extends Component {
 
   static contextType = Context
-  static defaultProps = { ttt: "ttt" }
+  static defaultProps = {  }
   constructor(props, ctx) {
     super(props, ctx)
     //   console.log(props)
   }
-
   render() {
 
     const { lineTop, lineDown, className, theme, ...props } = this.props
-
-
     const { typoUpCss, typoDownCss } = this.props.classes
 
     const allClassNamesTop = classNames({
@@ -183,7 +180,7 @@ class TwoLineLabel_ extends Component {
 
 
 // define styled component first to receive all the passed-down props from the hoc 
-export const TwoLineLabelWithTheme = styled(TwoLineLabel_).withConfig({
+export const TwoLineLabelWithStyled = styled(TwoLineLabel_).withConfig({
   shouldForwardProp: (propName, defaultValidatorFn) => {
 
     //filter the prop to pass down to the bottom component
@@ -218,7 +215,7 @@ export const TwoLineLabelWithTheme = styled(TwoLineLabel_).withConfig({
 `
 
 
-export const TwoLineLabel = withContext4(withContext3(withContext2(withContext1((withStyles(styleObj, { withTheme: true })(TwoLineLabelWithTheme))))))
+export const TwoLineLabel = withContext4(withContext3(withContext2(withContext1((withStyles(styleObj, { withTheme: true })(TwoLineLabelWithStyled))))))
 
 
 
