@@ -1,3 +1,44 @@
+### define TwoLineLabel_ class
+      class TwoLineLabel_ extends Component {
+
+          static contextType = Context
+          static defaultProps = {  }
+          constructor(props, ctx) {
+            super(props, ctx)
+          }
+          render() {
+            const { lineTop, lineDown, className, theme, ...props } = this.props
+            const { typoUpCss, typoDownCss } = this.props.classes
+
+            const allClassNamesTop = classNames({
+              [typoUpCss]: true,
+              [className]: true
+            })
+            const allClassNamesDown = classNames({
+              [typoDownCss]: true,
+              [className]: true
+            })
+            return (
+              <>
+                <Typography color="textPrimary" className={allClassNamesTop} >{lineTop}</Typography>
+                <Typography color="textSecondary" className={allClassNamesDown} >{lineDown}</Typography>
+              </>
+            )
+          }
+
+        }  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  //////////////////////////// dev4
+  
   ### Import
        import { Context } from "./ContextProvider";
         
