@@ -10,6 +10,8 @@ import { makeStyles, styled, useTheme, withStyles } from '@material-ui/core/styl
 import { Typography, Button, ButtonGroup, Container, Paper, Avatar, Box, Chip, Grow } from "@material-ui/core";
 import { Image, AlternateEmailSharp } from "@material-ui/icons";
 
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 import {
   isMobile,
   isFirefox,
@@ -22,6 +24,49 @@ import {
 //import { axios, avatarUrl } from "./config";
 
 import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
+
+const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => {
+
+
+  return {
+
+    longMention_HEAD_Css: () => {
+      return {
+        backgroundColor: "skyblue",
+        display: "inline-block",
+        lineHeight: "115%",
+        //  transform: "scale(0.8)",
+        //   boxShadow: theme.shadows[3],
+        borderTopLeftRadius:"1000px",
+        borderBottomLeftRadius:"1000px",
+        ...breakpointsAttribute(
+          ["width", theme.multiplyArr(theme.textSizeArr, 1.15)],
+
+          //   ["transform", theme.multiplyArr(theme.textSizeArr, 0.1).map(item => { return `translateX(${item}) scale(0.9)` })],
+
+        )
+      }
+    },
+    longMention_BODY_Css: () => {
+      return {
+        backgroundColor: "skyblue",
+        paddingLeft: "0rem",
+        lineHeight: "100%",
+        borderTopRightRadius:"1000px",
+        borderBottomRightRadius:"1000px",
+        //   boxShadow: theme.shadows[3],
+        ...breakpointsAttribute(["paddingRight", theme.multiplyArr(theme.textSizeArr, 0.5)])
+
+      }
+    }
+
+
+
+
+  }
+})
+
+
 
 export default function createMentionPlugin() {
 
@@ -44,6 +89,11 @@ export default function createMentionPlugin() {
 
     const theme = useTheme()
 
+    const textSizeArr = theme.textSizeArr
+
+    const { longMention_HEAD_Css, longMention_BODY_Css } = useStyles()
+
+
     const { contentState, entityKey, blockKey, offsetKey, start, end, decoratedText, children } = props;
     const { mentionHeadKey, mentionBodyKey, person, imgurl, mentionType } = contentState.getEntity(entityKey).getData()
 
@@ -51,14 +101,45 @@ export default function createMentionPlugin() {
     console.log(theme)
 
 
-    if (mentionType.indexOf("longMentionOff") < 0) {
-      return <sapn style={{backgroundColor:"skyblue"}}>{children}</sapn>
+    if (mentionType === "longMentionOnAt_HEAD") {
+      //    return <></>                                                      //2+2*0.15
+      return <sapn className={longMention_HEAD_Css}>@</sapn>
     }
-    else if(mentionType.indexOf("longMentionOff_HEAD") >= 0){
+    else if (mentionType === "longMentionOnAt_BODY") {                                   //2*0.5
+      return <sapn className={longMention_BODY_Css}>{children}</sapn>
+    }
+
+    else if (mentionType === "longMentionOnOther_HEAD") {
+      //    return <></>
+      //    return <sapn style={{ backgroundColor: "skyblue", paddingRight: "0" }}>{children}</sapn>
+      return <sapn className={longMention_HEAD_Css}>@</sapn>
+    }
+    else if (mentionType === "longMentionOnOther_BODY") {
+      return <sapn className={longMention_BODY_Css}>{children}</sapn>
+    }
+
+
+
+    // else if (mentionType === "shortMentionOn") {
+    //   return <sapn style={{ backgroundColor: "skyblue", width: "2rem" }}>{children}</sapn>
+    // }
+
+    // else if (mentionType === "shortMentionOff") {
+    //   return <sapn style={{ backgroundColor: "skyblue", width: "2rem" }}>{children}</sapn>
+    // }
+
+
+    else if (mentionType === "longMentionOff_HEAD") {
       return <></>
+      // return <sapn className={longMention_HEAD_Css}>@</sapn>
+    }
+    else if (mentionType === "longMentionOff_BODY") {
+
+      //  return <sapn className={longMention_BODY_Css}>{children}</sapn>
+      return <AvatarChip  hoverContent={<>{decoratedText}</>}  size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
     }
     else {
-      return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
+      return children
     }
 
 

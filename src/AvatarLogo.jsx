@@ -49,7 +49,7 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         height: "auto",
         // paddingTop: labelOn ? "2px" : "4px",
         // paddingBottom: labelOn ? "2px" : "4px",
-        verticalAlign: "text-bottom",
+        verticalAlign: "text-top",
         padding: 0,
         margin: 0,
 
