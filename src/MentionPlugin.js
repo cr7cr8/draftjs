@@ -136,7 +136,8 @@ export default function createMentionPlugin() {
     else if (mentionType === "longMentionOff_BODY") {
 
       //  return <sapn className={longMention_BODY_Css}>{children}</sapn>
-      return <AvatarChip  hoverContent={<>{decoratedText}</>}  size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
+      return <AvatarChip 
+        size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
     }
     else {
       return children
