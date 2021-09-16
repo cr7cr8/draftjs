@@ -37,8 +37,8 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => {
         lineHeight: "115%",
         //  transform: "scale(0.8)",
         //   boxShadow: theme.shadows[3],
-        borderTopLeftRadius:"1000px",
-        borderBottomLeftRadius:"1000px",
+        borderTopLeftRadius: "1000px",
+        borderBottomLeftRadius: "1000px",
         ...breakpointsAttribute(
           ["width", theme.multiplyArr(theme.textSizeArr, 1.15)],
 
@@ -52,8 +52,8 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => {
         backgroundColor: "skyblue",
         paddingLeft: "0rem",
         lineHeight: "100%",
-        borderTopRightRadius:"1000px",
-        borderBottomRightRadius:"1000px",
+        borderTopRightRadius: "1000px",
+        borderBottomRightRadius: "1000px",
         //   boxShadow: theme.shadows[3],
         ...breakpointsAttribute(["paddingRight", theme.multiplyArr(theme.textSizeArr, 0.5)])
 
@@ -131,13 +131,12 @@ export default function createMentionPlugin() {
 
     else if (mentionType === "longMentionOff_HEAD") {
       return <></>
-      // return <sapn className={longMention_HEAD_Css}>@</sapn>
+      //return <sapn className={longMention_HEAD_Css}>@</sapn>
     }
     else if (mentionType === "longMentionOff_BODY") {
 
-      //  return <sapn className={longMention_BODY_Css}>{children}</sapn>
-      return <AvatarChip 
-        size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
+      return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
+      //return <sapn className={longMention_BODY_Css}>{children}</sapn>
     }
     else {
       return children

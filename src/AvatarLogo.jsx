@@ -68,6 +68,8 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         "& .MuiChip-label": {
           // fontWeight: "bold",
           userSelect: "text",
+          whiteSpace: "pre-line",
+          lineBreak: "anywhere",
           //    backgroundColor: "#a2c3b2",
           lineHeight: "100%",
           margin: 0,
