@@ -1,264 +1,146 @@
-import React, { useState } from "react"
-
-import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
-import { Avatar, Chip, Popover, Typography, Container, CssBaseline } from "@material-ui/core";
-import { makeStyles, styled, useTheme, } from '@material-ui/styles';
-
-import { withContext1 } from "./ContextProvider"
+import { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
+import { Context } from "./ContextProvider"
 
 
+import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
+import Editor from "draft-js-plugins-editor";
+import Immutable from 'immutable';
 
 
-export default function DraftEditor({ ctx, ...props }) {
+
+
+
+//import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
+import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper } from "@material-ui/core";
+import { makeStyles, styled, useTheme, ThemeProvider, withTheme } from '@material-ui/styles';
+
+import { withContext } from "./ContextProvider"
+
+
+
+import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
+
+
+import createMentionPlugin from './MentionPlugin';
+
+
+
+const initialState = {
+  entityMap: {},
+  blocks: []
+};
+const { mentionPlugin } = createMentionPlugin()
+
+
+export default withContext(function DraftEditor({ ctx, ...props }) {
   const theme = useTheme()
-  // const { typoUpCss, typoDownCss } = useStyles()
+  const editor = useRef()
 
-
-  //  const theme = ctx.theme
-
-  const [logoOn, setLogoOn] = useState(true)
-  const [labelOn, setLabelOn] = useState(true)
-
-  //return(<TwoLineLabel lineTop={"毛噶飞"} lineDown="银aaaa行经理"  />)
-
+  const [editorState, setEditorState] = useState(EditorState.createWithContent(convertFromRaw(initialState)))
 
   return (
+
     <>
-
-      <TwoLineLabel lineTop={"毛噶飞"} lineDown="银aaaa行经理" cssStyle={{ backgroundColor: "yellow" }} />
-
-
-      <AvatarChip size={theme.textSizeArr} bgColor="pink" personName="sdss" onDelete={function () { }} /> <br />
-      <AvatarChip bgColor="pink" personName="sdss" onDelete={function () { }} /> <br />
-      <AvatarChip size={theme.textSizeArr} bgColor="pink" label={<strong>ieowuei</strong>} /> <br />
-      <AvatarChip
-        size="6.5rem"
-        labelSize="1rem"
-        logoOn={logoOn}
-        labelOn={labelOn}
-        onDelete={function () { }}
-
-        bgColor="pink" personName="就看了sds看了反倒是s" /> <br />
-      <AvatarChip
-        size="6.5rem"
-        labelSize="5rem"
-        logoOn={logoOn}
-        labelOn={labelOn}
-        onDelete={function () { }}
-
-        bgColor="pink" personName="就看了sds看了反倒是s" /> <br />
+      <Paper>
+        <Editor
+          ref={function (element) { editor.current = element; }}
+          editorState={editorState}
 
 
+          onChange={function (newState, { ...props }) {
 
-      <AvatarChip personName="will"
-        // bgColor="orange"
-        size={"10rem"}
-        labelSize={theme.textSizeArr}
-        logoOn={logoOn}
-        labelOn={labelOn}
-        label={
-          <TwoLineLabel lineTop={"毛噶飞"} lineDown="银行经理" />
-        }
-        //   src="https://picsum.photos/200"
-        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
-        onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
-        onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
-        hoverContent={"aaa"}
-      >
+            setEditorState(newState)
 
-        <TwoLineLabel lineTop={<AvatarChip personName="will"
-          //  bgColor="lightpink"
-          size={theme.multiplyArr(theme.textSizeArr, 2.6)}
-          labelSize={theme.multiplyArr(theme.textSizeArr, 2)}
-          logoOn={logoOn}
-          labelOn={labelOn}
-          label={
-            <TwoLineLabel lineTop={"毛噶飞"} lineDown="银行经理" />
+          }}
+
+          plugins={
+            [
+              mentionPlugin
+            ]
+
           }
 
-          src="https://picsum.photos/200"
-          avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
 
-          onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
-          onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
-          hoverContent={"aaa"}
-        />} lineDown="银行sss理" />
-      </AvatarChip><br />
+          // placeholder="hihihi"
+          preserveSelectionOnBlur={true}
 
-      <AvatarChip personName="will"
-        //  bgColor="lightpink"
-        size={theme.multiplyArr(theme.textSizeArr, 2.6)}
-        labelSize={theme.multiplyArr(theme.textSizeArr, 2)}
-        logoOn={logoOn}
-        labelOn={labelOn}
-        label={
-          <TwoLineLabel lineTop={"毛噶飞"} lineDown="银行经理" />
-        }
+          customStyleMap={
+            Immutable.Map({
+              // stylename1_: {
+              //   color: "rgba(200,0,0,1)",
 
-        src="https://picsum.photos/200"
-        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
+            })
+          }
 
-        onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
-        onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
-        hoverContent={"aaa"}
-      /><br />
+          customStyleFn={function (style, block) {
 
+            const styleNames = style.toObject();
 
+          }}
 
-      <AvatarChip personName="will"
-        //  bgColor="lightpink"
-        size={theme.multiplyArr(theme.textSizeArr, 2.6)}
-        labelSize={theme.multiplyArr(theme.textSizeArr, 2)}
-        logoOn={logoOn}
-        labelOn={labelOn}
-        label={
-          <TwoLineLabel lineTop={"毛噶飞"} lineDown="银行经理" />
-        }
+          blockRenderMap={
+            Immutable.Map({
+              // 'unstyled': { 
+              //   element: 'h3',
+              //   wrapper: <Typography variant='body2'/>,
+              //  }
 
-        src="https://picsum.photos/200"
-        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
-
-        onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
-        //     onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
-        hoverContent={"aaa"}
-      /><br />
-
-      <AvatarChip personName="will"
-        bgColor="lightyellow"
-
-        logoOn={logoOn}
-        labelOn={labelOn}
-        label={
-          <TwoLineLabel lineTop={<>AAA00009999</>} lineDown="FDSFsssssss" />
-        }
-
-        // src="https://picsum.photos/200"
-        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
-
-        onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
-        //  onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
-        hoverContent={"aaa"}
-      /><br />
-
-      <AvatarChip personName="will"
-        bgColor="lightyellow"
-        size={theme.textSizeArr}
-
-        logoOn={logoOn}
-        labelOn={labelOn}
-        label={
-          <TwoLineLabel lineTop={<>AAA00009999</>} lineDown="FDSFsssssss" />
-        }
-
-        // src="https://picsum.photos/200"
-        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
-
-        onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
-
-        hoverContent={"aaa"}
-      /><br />
-
-      <AvatarChip personName="will"
-        bgColor="lightyellow"
-
-        logoOn={logoOn}
-        labelOn={labelOn}
-        label={
-          <TwoLineLabel lineTop={<>AAA00009999</>} lineDown="FDSFsssssss" />
-        }
-
-        // src="https://picsum.photos/200"
-        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
-
-        onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
-        onDelete={function () { }}
-        hoverContent={"aaa"}
-      >
-        <>FFFFFFFFDDD<br />FFFFFFFFDDD<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-          FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />FFFFFFFFDDD<br />dfdfwe</>
-      </AvatarChip><br />
+              // "colorBlock": {
+              //   style: "backgournd-color:red"
+              // }
+            })
+          }
 
 
 
+          blockStyleFn={function (block) {
 
-      <AvatarChip bgColor="lightblue" personName="sdssf" label={"dddsd了就看发大"} size="11.7rem" labelSize="9rem"
-        onDelete={function () { }}
-      />
-      <AvatarChip bgColor="lightpink" lift={0} labelOn={false} personName="ewe" label={"dddsdfew"}
+          }}
 
-        avatarProps={{ onClick: function () { alert("ss") } }}
-
-      />
-      <br />
-      <AvatarChip size="8rem" labelSize={["1rem", "2rem", "10rem", "8rem"]} bgColor="#599875" lift={0} logoOn={logoOn}
-        labelOn={labelOn} personName="ewe"
-        label={<b>红看来大家分离开了就看发大水了</b>}
-
-        onClick={function () { setLogoOn(pre => !pre) }}
-      //  onDelete={function () { }}
-      />
-
-      <br />
-      <AvatarChip size={["1.3rem", "2.6rem", "3.9rem", "5.2rem", "6.5rem"]} labelSize={["1rem", "2rem", "3rem", "4rem", "5rem"]}
-        bgColor="#959875" lift={0} logoOn={true} labelOn={true} personName="ewe"
-        label={"dddseee就看发大水了dfewFDSFS"}
-
-        onClick={function () { setLogoOn(pre => !pre) }}
-        onDelete={function () { }}
-        labelOn={false}
-      />
-      <br />
-
-      <AvatarChip personName="d"
-        // bgColor="blue"
-        // size="5.5rem"
-        lift={0}
-        logoOn={true}
-        labelOn={true}
-        size="1.5rem"
-        label={
-          <TwoLineLabel lineTop="textArrSize" lineDown="FDSFsssssss" />
-
-        }
-
-
-        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
-
-        onClick={function () { setLogoOn(pre => !pre) }}
-        //  onDelete={function(){setLabelOn(pre=>!pre) ; setLogoOn(pre=>!pre)   }}
-        hoverContent={"aaa"}
-      />
-      <br />
-      <AvatarChip personName="will"
-        bgColor="lightyellow"
-        //  size={["15rem", "4rem", "3rem", "2rem", "12rem"]}
-        size={theme.textSizeArr}
-        lift={9}
-        logoOn={logoOn}
-        labelOn={labelOn}
-        //   labelSize={["15rem", "4rem", "3rem", "2rem", "11rem"]}
-        label={
-          <TwoLineLabel lineTop={<>AAA00009999</>} lineDown="FDSFsssssss" />
-
-        }
-
-        // src="https://picsum.photos/200"
-        avatarProps={{ onClick: function (e) { e.stopPropagation(); setLabelOn(pre => !pre) } }}
-
-        onClick={function (e) { e.stopPropagation(); setLogoOn(pre => !pre) }}
-        onDelete={function (e) { e.stopPropagation(); setLabelOn(pre => !pre); setLogoOn(pre => !pre) }}
-        hoverContent={"aaa"}
-      />
+          blockRendererFn={function (block) {
 
 
 
+          }}
+          handleKeyCommand={function (command, editorState, evenTimeStamp, { getEditorState }) {
 
+            if (command === "bold") {
+
+
+              setEditorState(RichUtils.handleKeyCommand(editorState, command))
+            }
+            else if (command === "italic") {
+
+
+              setEditorState(RichUtils.handleKeyCommand(editorState, command))
+            }
+            else if (command === "underline") {
+
+
+              setEditorState(RichUtils.handleKeyCommand(editorState, command))
+            }
+          }}
+
+          stripPastedStyles={true}
+          handlePastedText={function (text, html, editorState, props) {
+            return true
+
+          }}
+        />
+      </Paper>
+
+      <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
+        <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
+        <hr />
+        <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</div>
+      </div>
 
     </>
-
-
   )
 
 
-}
+
+})
+
+

@@ -2,19 +2,50 @@ import React, { Component, useContext } from "react"
 
 import { withStyles, makeStyles, useTheme } from '@material-ui/styles'
 
-import { Avatar, Chip, Popover, Typography, Button, } from "@material-ui/core";
-import Grow from '@material-ui/core/Grow';
+import { Avatar, Chip, Popover, Typography, } from "@material-ui/core";
+import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 
 import multiavatar from '@multiavatar/multiavatar';
 import classNames from 'classnames';
 import styled from 'styled-components'
 
 
-import { Context, withContext1, withContext2, withContext3, withContext4 } from "./ContextProvider";
+
+const breakpoints = createBreakpoints({})
+function breakpointsAttribute(...args) {
+  let xs = {}, sm = {}, md = {}, lg = {}, xl = {};
+
+  args.forEach(item_ => {
+    const item = flatten(item_)
+    xs = { ...xs, [item[0]]: item[1] }
+    sm = { ...sm, [item[0]]: item[2] || item[1] }
+    md = { ...md, [item[0]]: item[3] || item[2] || item[1] }
+    lg = { ...lg, [item[0]]: item[4] || item[3] || item[2] || item[1] }
+    xl = { ...xl, [item[0]]: item[5] || item[4] || item[3] || item[2] || item[1] }
+  })
+  return {
+    [breakpoints.only('xs')]: { ...xs },
+    [breakpoints.only('sm')]: { ...sm },
+    [breakpoints.only('md')]: { ...md },
+    [breakpoints.only('lg')]: { ...lg },
+    [breakpoints.only('xl')]: { ...xl },
+  }
+}
+
+function multiplyArr(arr, factor) {
+  return arr.map((item) => {
+    const num = Number(item.replace(/[^\d\.]/g, ''))
+    const unit = String(item.replace(/[\d\.]/g, ''))
+    return String(num * factor + unit)
+  })
+}
+function flatten(arr) {
+  return arr.reduce(function (flat, toFlatten) {
+    return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+  }, []);
+}
 
 
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { CodeSharp } from "@material-ui/icons";
 
 
 function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
@@ -47,14 +78,13 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
       return {
 
         height: "auto",
-        // paddingTop: labelOn ? "2px" : "4px",
-        // paddingBottom: labelOn ? "2px" : "4px",
-        verticalAlign: "text-bottom",
+
+        backgroundColor: bgColor,
         padding: 0,
         margin: 0,
-
         boxShadow: theme.shadows[lift],
-        backgroundColor: bgColor ? bgColor : theme.isLight ? "#b7e1fc" : theme.palette.primary.light,
+
+
         overflow: "hidden",
 
         ...breakpointsAttribute(["borderRadius", "999999px"]),
@@ -74,9 +104,6 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
           padding: 0,
           ...breakpointsAttribute(["fontSize", labelSize_],
             ["paddingLeft", labelOn ? multiplyArr(labelSize_, logoOn ? 0.15 : 0.5) : [0]],
-
-
-
             ["paddingRight", labelOn ? multiplyArr(labelSize_, onDelete ? 0.15 : 0.5) : [0]]), // label size
         },
         "& .MuiChip-deleteIcon": {
@@ -87,7 +114,6 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 
           )
         }
-
       }
 
     },
@@ -100,8 +126,6 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         : typeof (size) === "string"
           ? [size]
           : textSizeArr
-
-
       return {
         lineHeight: "115%",
         // backgroundColor:"pink",
@@ -109,9 +133,6 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         padding: 0,
         ...breakpointsAttribute(
           ["fontSize", multiplyArr(size_, 65 / 100)],
-
-          //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
-
         ),
 
       }
@@ -123,7 +144,6 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         : typeof (size) === "string"
           ? [size]
           : textSizeArr
-
       return {
         lineHeight: "115%",
         //  backgroundColor:"lightblue",
@@ -131,24 +151,20 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
         padding: 0,
         ...breakpointsAttribute(
           ["fontSize", multiplyArr(size_, 35 / 100)],
-          //  ["lineHeight", "115%"]
-
-          //    ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : [] // not updating with props updating logoOn labelOn
         ),
       }
     },
     popover: () => { return { pointerEvents: 'none', } },
-    paper: () => { return { pointerEvents: "auto", padding: theme.spacing(1), } },
+    paper: () => { return { pointerEvents: "auto", padding: "8px", } },
   }
 }
 
 class TwoLineLabel_ extends Component {
 
-  static contextType = Context
-  static defaultProps = {}
+
   constructor(props, ctx) {
     super(props, ctx)
-    //  console.log(props)
+    //   console.log(props)
   }
   render() {
 
@@ -157,13 +173,11 @@ class TwoLineLabel_ extends Component {
 
     const allClassNamesTop = classNames({
       [typoUpCss]: false,
-      [className]: true,
+      [className]: true
     })
     const allClassNamesDown = classNames({
       [typoDownCss]: false,
-      [className]: true,
-
-
+      [className]: true
     })
     return (
 
@@ -179,79 +193,76 @@ class TwoLineLabel_ extends Component {
 
 
 export const TwoLineLabelWithStyled = styled(TwoLineLabel_).withConfig({
-  shouldForwardProp: (propName, defaultValidatorFn) => {
-    return true
-    //return propName.indexOf("ctx") !== 0
-  }
-
+  shouldForwardProp: (propName, defaultValidatorFn) => { return true }
 })`
-   ${ (props) => {
+    ${ (props) => {
 
 
-    const { theme: { textSizeArr, breakpointsAttribute, multiplyArr }, size, ...rest } = props
+const { theme: { textSizeArr, breakpointsAttribute, multiplyArr }, size, ...rest } = props
 
 
 
-    const size_ = Array.isArray(size)
-      ? size
-      : typeof (size) === "string"
-        ? [size]
-        : textSizeArr
+const size_ = Array.isArray(size)
+  ? size
+  : typeof (size) === "string"
+    ? [size]
+    : textSizeArr
 
 
-    return {
-      "&:first-of-type": {
-        lineHeight: "115%",
-        // backgroundColor:"pink",
-        margin: 0,
-        padding: 0,
-        ...breakpointsAttribute(
-          ["fontSize", multiplyArr(size_, 65 / 100)],
+return {
+  "&:first-of-type": {
+    lineHeight: "115%",
+    // backgroundColor:"pink",
+    margin: 0,
+    padding: 0,
+    ...breakpointsAttribute(
+      ["fontSize", multiplyArr(size_, 65 / 100)],
 
-          //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
+      //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
 
-        ),
-      },
-      "&:first-of-type ~ &": {
-        lineHeight: "115%",
-        // backgroundColor:"pink",
-        margin: 0,
-        padding: 0,
-        ...breakpointsAttribute(
-          ["fontSize", multiplyArr(size_, 35 / 100)],
+    ),
+  },
+  "&:first-of-type ~ &": {
+    lineHeight: "115%",
+    // backgroundColor:"pink",
+    margin: 0,
+    padding: 0,
+    ...breakpointsAttribute(
+      ["fontSize", multiplyArr(size_, 35 / 100)],
 
-          //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
+      //   ((!logoOn) && labelOn) ? ["marginLeft", multiplyArr(size_, 40 / 100)] : []// not updating with props updating logoOn labelOn
 
-        ),
-      }
-    }
+    ),
+  }
+}
 
 
-  }} 
+}} 
 `
 
 
 export const TwoLineLabel = withStyles(styleObj, { withTheme: true })(TwoLineLabelWithStyled)
 
-
-
-
 class AvatarLogo_ extends Component {
-
   render() {
-    const { classes, theme, personName, src, ...rest } = this.props
+    const { classes, personName, src, ...rest } = this.props
     const src_ = "data:image/svg+xml;base64," + btoa(personName && multiavatar(personName))
     return <Avatar classes={{ root: classes.avatarCss }} src={this.props.src || src_} {...rest} />
-
   }
 }
 
 class AvatarChip_ extends Component {
 
+  static defaultProps = {
+    textSizeArr: ["1.5rem", "2rem", "2.5rem", "3rem", "3.5rem"],
+    factor: 1.3,
+    get lgTextSizeArr() { return this.multiplyArr(this.textSizeArr, this.factor) },
 
-  static contextType = this.props && this.props.ctx || null
+    multiplyArr,
 
-  static defaultProps = { logoOn: true, labelOn: true }
+    breakpointsAttribute,
+
+  }
 
   constructor(props) {
     super(props);
@@ -294,27 +305,26 @@ class AvatarChip_ extends Component {
   };
 
 
-
   render() {
     const { classes, theme, size, personName, avatarProps, logoOn = true, labelOn = true, children, ...rest } = this.props
 
     const { src, ...avatarRest } = this.props.avatarProps || {}
-
-    // console.log(this.props && this.props.label && this.props.label.type && this.props.label.type.Naked && this.props.label.type.Naked.render.displayName)
-    //Styled(TwoLineLabel_)
+    console.log(theme)
     return (
-      // <Grow in={true} >
+
       <div style={{ width: "fit-content", display: "inline-block" }}    >
 
         <Chip
           classes={{ root: classes.chipCss }}
           {...logoOn && { avatar: <AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} /> }}
-          // avatar={<AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} />}
+
           label={personName}
           {...rest}
 
 
 
+          // {...(this.props.label && this.props.label.type && this.props.label.type.Naked && this.props.label.type.Naked.name === "TwoLineLabel_")
+          // && labelOn && {
           {...(this.props && this.props.label && this.props.label.type && this.props.label.type.Naked && this.props.label.type.Naked.render.displayName === "Styled(TwoLineLabel_)")
           && labelOn && {
 
@@ -322,28 +332,20 @@ class AvatarChip_ extends Component {
               {...this.props.label.props}
               logoOn={this.props.logoOn}
               labelOn={this.props.labelOn}
-              size={this.props.labelSize}
 
-            //  multiplyArr={theme.multiplyArr} breakpointsAttribute={theme.breakpointsAttribute} textSizeArr={theme.textSizeArr}
-            // {...(Array.isArray(this.props.labelSize) || (typeof (this.props.labelSize) === "string")) && { size: this.props.labelSize, }}
+              {...(Array.isArray(this.props.labelSize) || (typeof (this.props.labelSize) === "string")) && { size: this.props.labelSize, }}
             />
-
           }}
 
           {...this.props.children && { label: this.props.children }}
 
-          //   {...(this.props.children && this.props.children.type && this.props.children.type.Naked && this.props.children.type.Naked.name === "TwoLineLabel_")
-          //   && labelOn && {
-          {...(this.props && this.props.children && this.props.children.type && this.props.children.type.Naked && this.props.children.type.Naked.render.displayName === "Styled(TwoLineLabel_)")
+          {...(this.props.children && this.props.children.type && this.props.children.type.Naked && this.props.children.type.Naked.name === "TwoLineLabel_")
           && labelOn && {
-
-
             label: <TwoLineLabel
               {...this.props.children.props}
               logoOn={this.props.logoOn}
               labelOn={this.props.labelOn}
-              size={this.props.labelSize}
-              // multiplyArr={theme.multiplyArr} breakpointsAttribute={theme.breakpointsAttribute} textSizeArr={theme.textSizeArr}
+
               {...(Array.isArray(this.props.labelSize) || (typeof (this.props.labelSize) === "string")) && { size: this.props.labelSize, }}
             />
           }}
@@ -352,24 +354,21 @@ class AvatarChip_ extends Component {
 
           {...this.props.hoverContent && { onMouseEnter: this.handlePopoverOpen }}
           {...this.props.hoverContent && { onMouseLeave: this.handlePopoverClose }}
-          // aria-owns={this.state.open ? 'mouse-over-popover' : undefined}
-          // aria-haspopup="true"
-          // innerRef={this.state.anchorEl}
-          //  ref={this.anchorRef}
+
           ref={(element) => { this.anchorRef = element }}
         />
 
         {this.props.hoverContent && <Popover
 
           marginThreshold={0}
-          //id="mouse-over-popover"
+
           className={classes.popover}
           classes={{
             paper: classes.paper,
           }}
           open={this.state.open}
           anchorReference="anchorPosition"
-          // anchorEl={this.anchorRef.current}
+
           anchorEl={this.anchorRef}
           anchorOrigin={{
             horizontal: "left",
@@ -389,18 +388,13 @@ class AvatarChip_ extends Component {
         </Popover>}
 
       </div>
-      // </Grow>
+
     )
   }
 }
 
-
-
-
-
-
 export const AvatarLogo = withStyles(styleObj, { withTheme: true })(AvatarLogo_);
-export const AvatarChip = withContext1(withStyles(styleObj, { withTheme: true })(AvatarChip_));
-AvatarChip.contextType = Context
+export const AvatarChip = withStyles(styleObj, { withTheme: true })(AvatarChip_);
+
 
 

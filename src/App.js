@@ -9,14 +9,17 @@ import { AvatarChip, AvatarLogo } from "./AvatarLogo"
 
 function App() {
   return (
+
     <>
+      <CssBaseline />
 
-      <Container>
-        <CssBaseline />
+
+      <Container disableGutters={true} fixed={false} maxWidth={window.innerWidth >= 3000 ? false : "lg"} style={{ backgroundColor: "pink" }} >
+
         <DraftEditor />
-
       </Container>
     </>
+
 
 
 

@@ -1,8 +1,8 @@
 import React, { createContext, useEffect, useState, useReducer, useRef, useMemo, useCallback, useLayoutEffect, useContext, Component } from 'react';
 
-import { createTheme, ThemeProvider, responsiveFontSizes } from "@material-ui/core";
+import { createTheme, ThemeProvider, responsiveFontSizes, } from "@material-ui/core";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import primaryColor from '@material-ui/core/colors/indigo';
+import colorIndigo from '@material-ui/core/colors/indigo';
 
 import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 
@@ -33,7 +33,7 @@ function flatten(arr) {
   }, []);
 }
 
-export const Context = createContext();
+
 
 
 
@@ -67,6 +67,13 @@ function multiplyArr(arr, factor) {
 }
 
 
+export function withContext(Compo) {
+  return function (props) {
+    return <Context.Consumer>{context => <Compo {...props} ctx={context} />}</Context.Consumer>
+  }
+
+}
+
 export function withContext1(Compo) {
   return class extends Component {
 
@@ -96,11 +103,11 @@ export function withContext2(Compo) {
 
 export function withContext3(Compo) {
 
-  return function ({ ...props}) {
-    
+  return function ({ ...props }) {
+
     const ctx = useContext(Context)
-   
-    return <Compo { ...props} ctx3={ctx}  />
+
+    return <Compo {...props} ctx3={ctx} />
   }
 }
 
@@ -111,26 +118,22 @@ export function withContext4(Compo) {
 
 }
 
+export const Context = createContext();
 
 
+function createMyTheme({ textSizeArr, isLight, setIsLight }) {
 
-export default function ContextProvider(props) {
-
-  const textSizeArr = ["1rem", "2rem", "4rem", "6rem", "2rem"]
-  const [isLight, setIsLight] = useState(true)
-
-  const theme = useMemo(function () {
-
-    let muiTheme = createTheme({
+  return responsiveFontSizes(createTheme(
+    {
       textSizeArr,
       factor: 1.3,
       get lgTextSizeArr() { return this.multiplyArr(this.textSizeArr, this.factor) },
-
       multiplyArr,
       isLight,
+      setIsLight,
       breakpointsAttribute,
       palette: {
-        primary: primaryColor,
+        primary: colorIndigo,
         type: isLight ? 'light' : "dark",
       },
       typography: {
@@ -146,24 +149,37 @@ export default function ContextProvider(props) {
           }
         }
       }
-    })
-    return muiTheme
-  }, [isLight])
+
+    }))
+}
 
 
 
+
+
+
+export default function ContextProvider(props) {
+
+  const textSizeArr = ["1rem", "2rem", "4rem", "6rem", "2rem"]
+  const [isLight, setIsLight] = useState(true)
+
+
+  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight }), [textSizeArr, isLight, setIsLight])
 
 
 
 
   return (
-    <Context.Provider value={{
-      isLight, setIsLight, theme, breakpointsAttribute,
-    }}>
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <Context.Provider value={{
+        
+        // isLight, setIsLight, theme, breakpointsAttribute,
+      }}>
+
         {props.children}
-      </ThemeProvider>
-    </Context.Provider>
+
+      </Context.Provider>
+    </ThemeProvider>
   )
 
 
