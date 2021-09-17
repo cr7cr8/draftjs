@@ -76,49 +76,6 @@ export function withContext(Compo) {
 
 }
 
-export function withContext1(Compo) {
-  return class extends Component {
-
-    static contextType = Context;
-    constructor(props, context) {
-      super(props, context)
-    }
-    render() {
-      return (
-        <Compo {...this.props} ctx1={this.context} />
-      )
-    }
-  }
-}
-
-export function withContext2(Compo) {
-  return class extends Component {
-    render() {
-      return (
-        <Context.Consumer>
-          {(ctx) => <Compo {...this.props} ctx2={ctx} />}
-        </Context.Consumer>
-      )
-    }
-  }
-}
-
-export function withContext3(Compo) {
-
-  return function ({ ...props }) {
-
-    const ctx = useContext(Context)
-
-    return <Compo {...props} ctx3={ctx} />
-  }
-} 
-
-export function withContext4(Compo) {
-  return function (props) {
-    return <Context.Consumer>{context => <Compo {...props} ctx4={context} />}</Context.Consumer>
-  }
-
-}
 
 
 
@@ -173,7 +130,7 @@ export default function ContextProvider(props) {
     <ThemeProvider theme={theme}>
       <Context.Provider value={{
 
-         isLight, setIsLight, theme, breakpointsAttribute,
+        isLight, setIsLight, theme, breakpointsAttribute,
       }}>
 
         {props.children}
@@ -182,5 +139,54 @@ export default function ContextProvider(props) {
     </ThemeProvider>
   )
 
+
+}
+
+
+
+
+
+export function withContext1(Compo) {
+
+  return class extends Component {
+
+    //static contextType = Context // Cannot be accessed 
+    constructor(props, context) {
+      super(props, context)
+    }
+    render() {
+      return (
+        <Compo {...this.props} ctx1={Context} />
+      )
+    }
+  }
+}
+
+export function withContext2(Compo) {
+  return class extends Component {
+    render() {
+      return (
+        <Context.Consumer>
+          {(ctx) => <Compo {...this.props} ctx2={ctx} />}
+        </Context.Consumer>
+      )
+    }
+  }
+}
+
+export function withContext3(Compo) {
+
+  return function ({ ...props }) {
+
+    const ctx = useContext(Context)
+
+    return <Compo {...props} ctx3={ctx} />
+  }
+}
+
+export function withContext4(Compo) {
+  return function (props) {
+    return <Context.Consumer>{context => <Compo {...props} ctx4={context} />}</Context.Consumer>
+  }
 
 }

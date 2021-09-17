@@ -284,7 +284,7 @@ export default function createMentionPlugin() {
 
 
 
-
+ 
 
 
       let matchArr;

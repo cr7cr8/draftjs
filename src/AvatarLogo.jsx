@@ -402,7 +402,7 @@ class AvatarChip_ extends Component {
 
 
 export const AvatarLogo = withStyles(styleObj, { withTheme: true })(AvatarLogo_);
-export const AvatarChip = withStyles(styleObj, { withTheme: true })(AvatarChip_);
+export const AvatarChip = withContext1(withStyles(styleObj, { withTheme: true })(AvatarChip_));
 //AvatarChip.contextType = Context
 
 
