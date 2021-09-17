@@ -41,6 +41,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
   return (
 
     <>
+
       <Paper>
         <Editor
           ref={function (element) { editor.current = element; }}

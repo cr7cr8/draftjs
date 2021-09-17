@@ -25,7 +25,8 @@ import {
 
 import yellow from '@material-ui/core/colors/yellow';
 import { PhoneMissed } from '@material-ui/icons';
-
+import DraftEditor from './DraftEditor';
+import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo";
 
 function flatten(arr) {
   return arr.reduce(function (flat, toFlatten) {
@@ -66,6 +67,7 @@ function multiplyArr(arr, factor) {
   })
 }
 
+export const Context = createContext();
 
 export function withContext(Compo) {
   return function (props) {
@@ -118,7 +120,6 @@ export function withContext4(Compo) {
 
 }
 
-export const Context = createContext();
 
 
 function createMyTheme({ textSizeArr, isLight, setIsLight }) {
@@ -155,7 +156,27 @@ function createMyTheme({ textSizeArr, isLight, setIsLight }) {
 
 
 
+export function AvatarChipWithTheme(props) {
 
+  const textSizeArr = ["1rem", "2rem", "4rem", "6rem", "2rem"]
+  const [isLight, setIsLight] = useState(true)
+
+
+  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight }), [textSizeArr, isLight, setIsLight])
+
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Context.Provider value={{}}>
+        <AvatarChip {...props} />
+      </Context.Provider>
+
+
+    </ThemeProvider>
+
+  )
+
+}
 
 
 export default function ContextProvider(props) {
@@ -169,10 +190,24 @@ export default function ContextProvider(props) {
 
 
 
+
   return (
     <ThemeProvider theme={theme}>
       <Context.Provider value={{
-        
+
+        // isLight, setIsLight, theme, breakpointsAttribute,
+      }}>
+
+        <DraftEditor />
+
+      </Context.Provider>
+    </ThemeProvider>
+  )
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Context.Provider value={{
+
         // isLight, setIsLight, theme, breakpointsAttribute,
       }}>
 

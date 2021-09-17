@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import DraftEditor from "./DraftEditor"
+import ContextProvider from "./ContextProvider"
 import { Avatar, Chip, Popover, Typography, Container, CssBaseline } from "@material-ui/core";
 
 
@@ -11,7 +12,7 @@ function App() {
   return (
 
     <>
-      <CssBaseline />
+      {/* <CssBaseline /> */}
 
 
       <Container disableGutters={true} fixed={false} maxWidth={window.innerWidth >= 3000 ? false : "lg"} style={{ backgroundColor: "pink" }} >

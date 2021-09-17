@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
-import { Context } from "./ContextProvider"
+import { Context ,AvatarChipWithTheme as AvatarChip } from "./ContextProvider"
 
 
 import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
@@ -23,7 +23,7 @@ import {
 //import axios from "axios";
 //import { axios, avatarUrl } from "./config";
 
-import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
+//import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
 
 const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => {
 
