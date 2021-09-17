@@ -148,6 +148,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
 
+  const [show,setShow]=useState(false)
 
   return (
     <ThemeProvider theme={theme}>
@@ -158,7 +159,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
       }}>
 
         <DraftEditor />
-        <Content />
+        {show&&<Content />}
+        <div><button onClick={function(){setShow(pre=>!pre)}}>show</button></div>
       </Context.Provider>
     </ThemeProvider>
   )
