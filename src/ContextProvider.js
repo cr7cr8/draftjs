@@ -111,7 +111,7 @@ export function withContext3(Compo) {
 
     return <Compo {...props} ctx3={ctx} />
   }
-}
+} 
 
 export function withContext4(Compo) {
   return function (props) {
