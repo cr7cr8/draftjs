@@ -54,10 +54,8 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => {
         lineHeight: "100%",
         borderTopRightRadius: "1000px",
         borderBottomRightRadius: "1000px",
-        borderTopLeftRadius: "1000px",
-        borderBottomLeftRadius: "1000px",
         //   boxShadow: theme.shadows[3],
-        ...breakpointsAttribute(["paddingRight", theme.multiplyArr(theme.textSizeArr, 0.5)], ["paddingLeft", theme.multiplyArr(theme.textSizeArr, 1.15)])
+        ...breakpointsAttribute(["paddingRight", theme.multiplyArr(theme.textSizeArr, 0.5)])
 
       }
     }
@@ -70,15 +68,11 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => {
 
 
 
-
 export default function createMentionPlugin() {
 
 
   let externalES = null;
   let externalSetEditorState = null;
-  let newContent = null;
-
-  const entityKeyObj = {}
 
   function mentionStrategy(contentBlock, callback, contentState) {
 
@@ -108,24 +102,20 @@ export default function createMentionPlugin() {
 
 
     if (mentionType === "longMentionOnAt_HEAD") {
-      return <></>                                                      //2+2*0.15
+      //    return <></>                                                      //2+2*0.15
       return <sapn className={longMention_HEAD_Css}>@</sapn>
     }
     else if (mentionType === "longMentionOnAt_BODY") {                                   //2*0.5
       return <sapn className={longMention_BODY_Css}>{children}</sapn>
-
-      //    return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
     }
 
     else if (mentionType === "longMentionOnOther_HEAD") {
-      return <></>
+      //    return <></>
       //    return <sapn style={{ backgroundColor: "skyblue", paddingRight: "0" }}>{children}</sapn>
       return <sapn className={longMention_HEAD_Css}>@</sapn>
     }
     else if (mentionType === "longMentionOnOther_BODY") {
       return <sapn className={longMention_BODY_Css}>{children}</sapn>
-
-    //   return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
     }
 
 
@@ -141,12 +131,12 @@ export default function createMentionPlugin() {
 
     else if (mentionType === "longMentionOff_HEAD") {
       return <></>
-      //    return <sapn className={longMention_HEAD_Css}>@</sapn>
+      //return <sapn className={longMention_HEAD_Css}>@</sapn>
     }
     else if (mentionType === "longMentionOff_BODY") {
 
       return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
-  //     return <sapn className={longMention_BODY_Css}>{children}</sapn>
+      //return <sapn className={longMention_BODY_Css}>{children}</sapn>
     }
     else {
       return children
@@ -155,64 +145,6 @@ export default function createMentionPlugin() {
 
 
   }
-
-  function createTag({ tagName, newSelection, blockKey, start, end }) {
-
-    // newContent = newContent.createEntity(`${tagName}_HEAD`, "MUTABLE", { mentionType: `${tagName}_HEAD` });
-    // let mentionHeadKey = newContent.getLastCreatedEntityKey();
-
-    newSelection = newSelection.merge({
-      anchorKey: blockKey,
-      focusKey: blockKey,
-      anchorOffset: start,
-      focusOffset: start + 2,
-      isBackward: false,
-      hasFocus: false,
-    })
-
-    //  newContent = Modifier.applyEntity(newContent, newSelection, mentionHeadKey)
-    newContent = Modifier.applyEntity(newContent, newSelection, entityKeyObj[`${tagName}_HEAD`])
-
-
-    // newContent = newContent.createEntity(`${tagName}_BODY`, "MUTABLE", { mentionType: `${tagName}_BODY` });
-    // let mentionBodyKey = newContent.getLastCreatedEntityKey();
-    newSelection = newSelection.merge({
-      anchorKey: blockKey,
-      focusKey: blockKey,
-      anchorOffset: start + 2,
-      focusOffset: end,
-      isBackward: false,
-      hasFocus: false,
-    })
-
-    //  newContent = Modifier.applyEntity(newContent, newSelection, mentionBodyKey)
-    //    newContent = Modifier.applyEntity(newContent, newSelection, entityKeyObj.mentionHeadKey)
-    newContent = Modifier.applyEntity(newContent, newSelection, entityKeyObj[`${tagName}_BODY`])
-
-
-    // newContent = newContent.mergeEntityData(
-    //   mentionHeadKey,
-    //   {
-    //     mentionHeadKey, mentionBodyKey,
-    //     person: blockText.substring(start, end).replace(" @", ""),
-    //     //  imgurl: `url(${url}/avatar/downloadavatar/${blockText.substring(start, end).replace(" @", "")})`
-    //     // imgurl: `${url}/${blockText.substring(start, end).replace(" @", "")}).svg`
-
-    //   }
-    // )
-
-    // newContent = newContent.mergeEntityData(
-    //   mentionBodyKey,
-    //   {
-    //     mentionHeadKey, mentionBodyKey,
-    //     person: blockText.substring(start, end).replace(" @", ""),
-    //     //     imgurl: `url(${url}/avatar/downloadavatar/${blockText.substring(start, end).replace(" @", "")})`
-    //     //   imgurl: `${url}/${blockText.substring(start, end).replace(" @", "")}).svg`
-
-    //   }
-    // )
-  }
-
 
   function taggingMention() {
 
@@ -224,7 +156,7 @@ export default function createMentionPlugin() {
 
     const oldSelection = externalES.getSelection();
     let newSelection = externalES.getSelection();
-    newContent = externalES.getCurrentContent();
+    let newContent = externalES.getCurrentContent();
 
     externalES.getCurrentContent().getBlocksAsArray().forEach(function (block) {
 
@@ -252,41 +184,6 @@ export default function createMentionPlugin() {
       })
 
 
-      if (!entityKeyObj.longMentionOnAt_HEAD) {
-        newContent = newContent.createEntity(`longMentionOnAt_HEAD`, "MUTABLE", { mentionType: `longMentionOnAt_HEAD` });
-        entityKeyObj.longMentionOnAt_HEAD = newContent.getLastCreatedEntityKey();
-      }
-
-      if (!entityKeyObj.longMentionOnAt_BODY) {
-        newContent = newContent.createEntity(`longMentionOnAt_BODY`, "MUTABLE", { mentionType: `longMentionOnAt_BODY` });
-        entityKeyObj.longMentionOnAt_BODY = newContent.getLastCreatedEntityKey();
-      }
-
-      if (!entityKeyObj.longMentionOnOther_HEAD) {
-        newContent = newContent.createEntity(`longMentionOnOther_HEAD`, "MUTABLE", { mentionType: `longMentionOnOther_HEAD` });
-        entityKeyObj.longMentionOnOther_HEAD = newContent.getLastCreatedEntityKey();
-      }
-
-      if (!entityKeyObj.longMentionOnOther_BODY) {
-        newContent = newContent.createEntity(`longMentionOnOther_BODY`, "MUTABLE", { mentionType: `longMentionOnOther_BODY` });
-        entityKeyObj.longMentionOnOther_BODY = newContent.getLastCreatedEntityKey();
-      }
-
-      if (!entityKeyObj.longMentionOff_HEAD) {
-        newContent = newContent.createEntity(`longMentionOff_HEAD`, "MUTABLE", { mentionType: `longMentionOff_HEAD` });
-        entityKeyObj.longMentionOff_HEAD = newContent.getLastCreatedEntityKey();
-      }
-
-      if (!entityKeyObj.longMentionOff_BODY) {
-        newContent = newContent.createEntity(`longMentionOff_BODY`, "MUTABLE", { mentionType: `longMentionOff_BODY` });
-        entityKeyObj.longMentionOff_BODY = newContent.getLastCreatedEntityKey();
-      }
-
-
-
-
-
-
       let matchArr;
       while ((matchArr = regx.exec(blockText)) !== null) {
 
@@ -295,12 +192,8 @@ export default function createMentionPlugin() {
         const contentLenth = end - start;
         const contentFocusAt = anchorFocusOffset - start;
 
-        // const shortMentionOn = (contentLenth === 2) && hasfocus && (blockKey === anchorFocusKey) && (contentFocusAt === 2)
-        // const shortMentionOff = (contentLenth === 2) && ((!hasfocus) || (blockKey !== anchorFocusKey) || (contentFocusAt !== 2))
-
-        const shortMentionOn = false
-        const shortMentionOff = false
-
+        const shortMentionOn = (contentLenth === 2) && hasfocus && (blockKey === anchorFocusKey) && (contentFocusAt === 2)
+        const shortMentionOff = (contentLenth === 2) && ((!hasfocus) || (blockKey !== anchorFocusKey) || (contentFocusAt !== 2))
 
         const longMentionOnAt = (contentLenth > 2) && hasfocus && (blockKey === anchorFocusKey) && (contentFocusAt === 2)
         const longMentionOnOther = (contentLenth > 2) && hasfocus && (blockKey === anchorFocusKey) && (contentFocusAt !== 2) && (contentFocusAt > 0) && (contentFocusAt <= contentLenth)
@@ -308,55 +201,103 @@ export default function createMentionPlugin() {
         const longMentionOff = (contentLenth > 2) && ((!hasfocus) || (blockKey !== anchorFocusKey) || (contentFocusAt <= 0) || (contentFocusAt > contentLenth))
 
 
-        // if (shortMentionOn) {
-        //   newContent = newContent.createEntity("shortMentionOn", "MUTABLE", { mentionType: "shortMentionOn" });
-        //   let entityKey = newContent.getLastCreatedEntityKey();
-        //   newSelection = newSelection.merge({
-        //     anchorKey: blockKey,
-        //     focusKey: blockKey,
-        //     anchorOffset: start,
-        //     focusOffset: end,
-        //     isBackward: false,
-        //     hasFocus: false,
-        //   })
+        if (shortMentionOn) {
+          newContent = newContent.createEntity("shortMentionOn", "MUTABLE", { mentionType: "shortMentionOn" });
+          let entityKey = newContent.getLastCreatedEntityKey();
+          newSelection = newSelection.merge({
+            anchorKey: blockKey,
+            focusKey: blockKey,
+            anchorOffset: start,
+            focusOffset: end,
+            isBackward: false,
+            hasFocus: false,
+          })
 
-        //   newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
+          newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
 
-        // }
-        // else if (shortMentionOff) {
-        //   newContent = newContent.createEntity("shortMentionOff", "MUTABLE", { mentionType: "shortMentionOff" });
-        //   let entityKey = newContent.getLastCreatedEntityKey();
-        //   newSelection = newSelection.merge({
-        //     anchorKey: blockKey,
-        //     focusKey: blockKey,
-        //     anchorOffset: start,
-        //     focusOffset: end,
-        //     isBackward: false,
-        //     hasFocus: false,
-        //   })
+        }
+        else if (shortMentionOff) {
+          newContent = newContent.createEntity("shortMentionOff", "MUTABLE", { mentionType: "shortMentionOff" });
+          let entityKey = newContent.getLastCreatedEntityKey();
+          newSelection = newSelection.merge({
+            anchorKey: blockKey,
+            focusKey: blockKey,
+            anchorOffset: start,
+            focusOffset: end,
+            isBackward: false,
+            hasFocus: false,
+          })
 
-        //   newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
+          newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
 
-        // }
-        if (longMentionOnAt) {
+        }
+        else if (longMentionOnAt) {
 
-          createTag({ tagName: "longMentionOnAt", newSelection, blockKey, start, end })
+          createTag("longMentionOnAt")
 
         }
         else if (longMentionOnOther) {
 
-          createTag({ tagName: "longMentionOnOther", newSelection, blockKey, start, end })
+          createTag("longMentionOnOther")
 
         }
         else if (longMentionOff) {
-
-          createTag({ tagName: "longMentionOff", newSelection, blockKey, start, end })
+          createTag("longMentionOff")
         }
 
 
 
+        function createTag(tagName) {
+
+          newContent = newContent.createEntity(`${tagName}_HEAD`, "MUTABLE", { mentionType: `${tagName}_HEAD` });
+          let mentionHeadKey = newContent.getLastCreatedEntityKey();
+          newSelection = newSelection.merge({
+            anchorKey: blockKey,
+            focusKey: blockKey,
+            anchorOffset: start,
+            focusOffset: start + 2,
+            isBackward: false,
+            hasFocus: false,
+          })
+
+          newContent = Modifier.applyEntity(newContent, newSelection, mentionHeadKey)
+
+          newContent = newContent.createEntity(`${tagName}_BODY`, "MUTABLE", { mentionType: `${tagName}_BODY` });
+          let mentionBodyKey = newContent.getLastCreatedEntityKey();
+          newSelection = newSelection.merge({
+            anchorKey: blockKey,
+            focusKey: blockKey,
+            anchorOffset: start + 2,
+            focusOffset: end,
+            isBackward: false,
+            hasFocus: false,
+          })
+
+          newContent = Modifier.applyEntity(newContent, newSelection, mentionBodyKey)
 
 
+          newContent = newContent.mergeEntityData(
+            mentionHeadKey,
+            {
+              mentionHeadKey, mentionBodyKey,
+              person: blockText.substring(start, end).replace(" @", ""),
+              //  imgurl: `url(${url}/avatar/downloadavatar/${blockText.substring(start, end).replace(" @", "")})`
+              // imgurl: `${url}/${blockText.substring(start, end).replace(" @", "")}).svg`
+
+            }
+          )
+
+          newContent = newContent.mergeEntityData(
+            mentionBodyKey,
+            {
+              mentionHeadKey, mentionBodyKey,
+              person: blockText.substring(start, end).replace(" @", ""),
+              //     imgurl: `url(${url}/avatar/downloadavatar/${blockText.substring(start, end).replace(" @", "")})`
+              //   imgurl: `${url}/${blockText.substring(start, end).replace(" @", "")}).svg`
+
+            }
+          )
+        }
 
 
 
