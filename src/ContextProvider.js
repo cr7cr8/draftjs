@@ -156,28 +156,6 @@ function createMyTheme({ textSizeArr, isLight, setIsLight }) {
 
 
 
-export function AvatarChipWithTheme(props) {
-
-  const textSizeArr = ["1rem", "2rem", "4rem", "6rem", "2rem"]
-  const [isLight, setIsLight] = useState(true)
-
-
-  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight }), [textSizeArr, isLight, setIsLight])
-
-
-  return (
-    <ThemeProvider theme={theme}>
-      <Context.Provider value={{}}>
-        <AvatarChip {...props} />
-      </Context.Provider>
-
-
-    </ThemeProvider>
-
-  )
-
-}
-
 
 export default function ContextProvider(props) {
 
@@ -195,20 +173,7 @@ export default function ContextProvider(props) {
     <ThemeProvider theme={theme}>
       <Context.Provider value={{
 
-        // isLight, setIsLight, theme, breakpointsAttribute,
-      }}>
-
-        <DraftEditor />
-
-      </Context.Provider>
-    </ThemeProvider>
-  )
-
-  return (
-    <ThemeProvider theme={theme}>
-      <Context.Provider value={{
-
-        // isLight, setIsLight, theme, breakpointsAttribute,
+         isLight, setIsLight, theme, breakpointsAttribute,
       }}>
 
         {props.children}

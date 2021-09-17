@@ -146,7 +146,7 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
 
 class TwoLineLabel_ extends Component {
 
-  static contextType = Context
+  //static contextType = Context
   static defaultProps = {}
   constructor(props, ctx) {
     super(props, ctx)
@@ -402,7 +402,7 @@ class AvatarChip_ extends Component {
 
 
 export const AvatarLogo = withStyles(styleObj, { withTheme: true })(AvatarLogo_);
-export const AvatarChip = withContext1(withStyles(styleObj, { withTheme: true })(AvatarChip_));
-AvatarChip.contextType = Context
+export const AvatarChip = withStyles(styleObj, { withTheme: true })(AvatarChip_);
+//AvatarChip.contextType = Context
 
 

@@ -6,13 +6,13 @@ import { Avatar, Chip, Popover, Typography, Container, CssBaseline } from "@mate
 
 
 
-import { AvatarChip, AvatarLogo } from "./AvatarLogo"
+import { AvatarChip, AvatarLogo , TwoLineLabel} from "./AvatarLogo"
 
 function App() {
   return (
 
     <>
-      {/* <CssBaseline /> */}
+      <CssBaseline />
 
 
       <Container disableGutters={true} fixed={false} maxWidth={window.innerWidth >= 3000 ? false : "lg"} style={{ backgroundColor: "pink" }} >

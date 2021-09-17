@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
-import { Context ,AvatarChipWithTheme as AvatarChip } from "./ContextProvider"
+import { Context ,withContext1 } from "./ContextProvider"
 
-
+import { AvatarChip, AvatarLogo , TwoLineLabel} from "./AvatarLogo"
 import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 import Editor from "draft-js-plugins-editor";
 import Immutable from 'immutable';
