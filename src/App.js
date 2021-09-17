@@ -6,7 +6,7 @@ import { Avatar, Chip, Popover, Typography, Container, CssBaseline } from "@mate
 
 
 
-import { AvatarChip, AvatarLogo , TwoLineLabel} from "./AvatarLogo"
+import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
 
 function App() {
   return (
@@ -15,9 +15,9 @@ function App() {
       <CssBaseline />
 
 
-      <Container disableGutters={true} fixed={false} maxWidth={window.innerWidth >= 3000 ? false : "lg"} style={{ backgroundColor: "pink" }} >
+      <Container disableGutters={true} fixed={false} maxWidth={window.innerWidth >= 3000 ? false : "lg"} >
 
-        <DraftEditor />
+        <ContextProvider />
       </Container>
     </>
 

@@ -1,6 +1,6 @@
 import React, { Component, useContext } from "react"
 
-import { withStyles, makeStyles, useTheme } from '@material-ui/styles'
+import { withStyles, makeStyles, useTheme , /*styled*/} from '@material-ui/styles'
 
 import { Avatar, Chip, Popover, Typography, Button, } from "@material-ui/core";
 import Grow from '@material-ui/core/Grow';
@@ -76,9 +76,6 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
           padding: 0,
           ...breakpointsAttribute(["fontSize", labelSize_],
             ["paddingLeft", labelOn ? multiplyArr(labelSize_, logoOn ? 0.15 : 0.5) : [0]],
-
-
-
             ["paddingRight", labelOn ? multiplyArr(labelSize_, onDelete ? 0.15 : 0.5) : [0]]), // label size
         },
         "& .MuiChip-deleteIcon": {
@@ -180,13 +177,14 @@ class TwoLineLabel_ extends Component {
 
 
 
-export const TwoLineLabelWithStyled = styled(TwoLineLabel_).withConfig({
+export const TwoLineLabelWithStyled = styled(TwoLineLabel_)
+.withConfig({
   shouldForwardProp: (propName, defaultValidatorFn) => {
     return true
     //return propName.indexOf("ctx") !== 0
   }
-
-})`
+})
+`
    ${ (props) => {
 
 

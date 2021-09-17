@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
-import { Context } from "./ContextProvider"
+//import { Context } from "./ContextProvider"
 
 
 import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 import Editor from "draft-js-plugins-editor";
 import Immutable from 'immutable';
 
+
+import { stateToHTML } from 'draft-js-export-html';
 
 
 
@@ -31,12 +33,27 @@ const initialState = {
 };
 const { mentionPlugin } = createMentionPlugin()
 
+// const useStyles = makeStyles(function (theme) {
+
+//   return {
+//     editorPaperCss: (props) => {
+//       return {
+//         ...theme.breakpointsAttribute(["fontSize", theme.textSizeArr])
+//       }
+//     }
+//   }
+// })
+
+
+
 
 export default withContext(function DraftEditor({ ctx, ...props }) {
-  const theme = useTheme()
+  //const theme = useTheme()
   const editor = useRef()
 
-  const [editorState, setEditorState] = useState(EditorState.createWithContent(convertFromRaw(initialState)))
+
+  const { editorState, setEditorState } = ctx
+  //console.log(editorState)
 
   return (
 
@@ -55,12 +72,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
           }}
 
-          plugins={
-            [
-              mentionPlugin
-            ]
-
-          }
+          plugins={[mentionPlugin]}
 
 
           // placeholder="hihihi"
@@ -104,6 +116,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
           }}
+
+
+
+
           handleKeyCommand={function (command, editorState, evenTimeStamp, { getEditorState }) {
 
             if (command === "bold") {
@@ -131,18 +147,25 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
         />
       </Paper>
 
-      <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
+      {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
+        {JSON.stringify(toPreHtml(editorState))}
+      </div> */}
+
+      {/* <AvatarChip personName="Fdsf"><TwoLineLabel lineTop="fdsff" lineDown="sdfe jdkljl ejkl" /></AvatarChip> */}
+      {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
         <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div>
-        {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div> */}
-        {/* <hr /> */}
-        {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
-      </div>
+        <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
+        <hr />
+        <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div>
+      </div> */}
 
     </>
   )
 
 
- 
+
 })
+
+
 
 

@@ -103,8 +103,8 @@ export default function createMentionPlugin() {
     const { contentState, entityKey, blockKey, offsetKey, start, end, decoratedText, children } = props;
     const { mentionHeadKey, mentionBodyKey, person, imgurl, mentionType } = contentState.getEntity(entityKey).getData()
 
-    console.log(mentionType)
-    console.log(theme)
+    // console.log(mentionType)
+    // console.log(theme)
 
 
     if (mentionType === "longMentionOnAt_HEAD") {
@@ -145,8 +145,8 @@ export default function createMentionPlugin() {
     }
     else if (mentionType === "longMentionOff_BODY") {
 
-      return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
-  //     return <sapn className={longMention_BODY_Css}>{children}</sapn>
+    //  return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
+       return <sapn className={longMention_BODY_Css}>{children}</sapn>
     }
     else {
       return children
