@@ -132,7 +132,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       </Paper>
 
       <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
-        {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
+        <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div>
         {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div> */}
         {/* <hr /> */}
         {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
