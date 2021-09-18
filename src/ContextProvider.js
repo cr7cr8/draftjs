@@ -10,6 +10,9 @@ import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionSt
 //import { makeStyles, styled, useTheme, } from '@material-ui/core/styles';
 import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 import { stateToHTML } from 'draft-js-export-html';
+
+import styled, { ThemeProvider as StyledThemeProvider } from "styled-components"
+
 // import {
 //   isMobile,
 //   isFirefox,
@@ -35,6 +38,7 @@ function flatten(arr) {
     return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
   }, []);
 }
+
 
 
 const breakpoints = createBreakpoints({})
@@ -101,8 +105,8 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }) {
         },
         MuiPaper: {
           root: {
-            
-            fontSize:"3rem",
+
+            fontSize: "3rem",
             ...breakpointsAttribute(["fontSize", textSizeArr])
           }
         }
@@ -117,17 +121,22 @@ function toPreHtml(editorState) {
     {
       defaultBlockTag: "div",
       entityStyleFn: (entity) => {
-        console.log(entity.getType())
+       // console.log(entity.getType())
 
         if (entity.getType().indexOf("HEAD") > 0) {
           return {
-            element: 'avatar_head',
-
+            element: 'object',
+            attributes:{
+              "data-type":"avatar_head"
+            }
           }
         }
         else if (entity.getType().indexOf("BODY") > 0) {
           return {
-            element: 'avatar_body',
+            element: 'object',
+            attributes:{
+              "data-type":"avatar_body"
+            }
 
           }
         }
@@ -148,20 +157,22 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
 
-  const [show,setShow]=useState(false)
+  const [show, setShow] = useState(false)
 
   return (
     <ThemeProvider theme={theme}>
-      <Context.Provider value={{
-        //isLight, setIsLight, theme, breakpointsAttribute,
-        editorState, setEditorState,toPreHtml
+      <StyledThemeProvider theme={theme}>
+        <Context.Provider value={{
+          //isLight, setIsLight, theme, breakpointsAttribute,
+          editorState, setEditorState, toPreHtml
 
-      }}>
+        }}>
 
-        <DraftEditor />
-        {show&&<Content />}
-        <div><button onClick={function(){setShow(pre=>!pre)}}>show</button></div>
-      </Context.Provider>
+          <DraftEditor />
+          {show && <Content /> }
+          <div><button onClick={function () { setShow(pre => !pre) }}>show</button></div>
+        </Context.Provider>
+      </StyledThemeProvider>
     </ThemeProvider>
   )
 

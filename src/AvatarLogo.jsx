@@ -296,7 +296,7 @@ class AvatarChip_ extends Component {
 
 
   render() {
-    const { classes, theme, size, personName, avatarProps, logoOn = true, labelOn = true, children, ...rest } = this.props
+    const { classes, theme, size, personName, avatarProps, logoOn = true, labelOn = true, children,  labelSize, ...rest } = this.props
 
     const { src, ...avatarRest } = this.props.avatarProps || {}
 
@@ -307,6 +307,7 @@ class AvatarChip_ extends Component {
       <div style={{ width: "fit-content", display: "inline-block" }}    >
 
         <Chip
+         
           classes={{ root: classes.chipCss }}
           {...logoOn && { avatar: <AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} /> }}
           // avatar={<AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} />}

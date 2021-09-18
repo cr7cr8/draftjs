@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
 //import { Context } from "./ContextProvider"
 
 
@@ -10,11 +10,9 @@ import Immutable from 'immutable';
 import { stateToHTML } from 'draft-js-export-html';
 
 
-
-
 //import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
 import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper } from "@material-ui/core";
-import { makeStyles, styled, useTheme, ThemeProvider, withTheme } from '@material-ui/styles';
+import { makeStyles, useTheme, ThemeProvider, withTheme } from '@material-ui/styles';
 
 import { withContext } from "./ContextProvider"
 
@@ -25,6 +23,31 @@ import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
 
 import createMentionPlugin from './MentionPlugin';
 
+
+import styled from "styled-components"
+
+
+
+const Div = styled.div.withConfig({
+
+  shouldForwardProp: (prop, htmlAttributeCheckFn) => { return true }
+
+})`
+
+${props => {
+
+    //  console.log(props)
+    return {
+      width: 100,
+      height: 200,
+      backgroundColor: "pink",
+    }
+
+  }}
+
+
+
+`
 
 
 const initialState = {
@@ -50,15 +73,16 @@ const { mentionPlugin } = createMentionPlugin()
 export default withContext(function DraftEditor({ ctx, ...props }) {
   //const theme = useTheme()
   const editor = useRef()
+  const key = useRef(Math.random()+"")
 
-
-  const { editorState, setEditorState } = ctx
+  const { editorState, setEditorState, toPreHtml } = ctx
   //console.log(editorState)
+
 
   return (
 
-    <>
-
+    <React.Fragment key={key.current}>
+      {/* <Div data-aaa="aaa" data-bbb="34343" id="99999" data-num="4343" /> */}
       <Paper>
         <Editor
           ref={function (element) { editor.current = element; }}
@@ -159,7 +183,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
         <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div>
       </div> */}
 
-    </>
+    </React.Fragment>
   )
 
 

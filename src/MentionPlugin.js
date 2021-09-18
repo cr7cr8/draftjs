@@ -109,10 +109,10 @@ export default function createMentionPlugin() {
 
     if (mentionType === "longMentionOnAt_HEAD") {
       return <></>                                                      //2+2*0.15
-      return <sapn className={longMention_HEAD_Css}>@</sapn>
+      return <span className={longMention_HEAD_Css}>@</span>
     }
     else if (mentionType === "longMentionOnAt_BODY") {                                   //2*0.5
-      return <sapn className={longMention_BODY_Css}>{children}</sapn>
+      return <span className={longMention_BODY_Css}>{children}</span>
 
       //    return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
     }
@@ -120,10 +120,10 @@ export default function createMentionPlugin() {
     else if (mentionType === "longMentionOnOther_HEAD") {
       return <></>
       //    return <sapn style={{ backgroundColor: "skyblue", paddingRight: "0" }}>{children}</sapn>
-      return <sapn className={longMention_HEAD_Css}>@</sapn>
+      return <span className={longMention_HEAD_Css}>@</span>
     }
     else if (mentionType === "longMentionOnOther_BODY") {
-      return <sapn className={longMention_BODY_Css}>{children}</sapn>
+      return <span className={longMention_BODY_Css}>{children}</span>
 
     //   return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
     }
@@ -146,7 +146,7 @@ export default function createMentionPlugin() {
     else if (mentionType === "longMentionOff_BODY") {
 
     //  return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
-       return <sapn className={longMention_BODY_Css}>{children}</sapn>
+       return <span className={longMention_BODY_Css}>{children}</span>
     }
     else {
       return children

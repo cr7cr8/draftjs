@@ -1,4 +1,6 @@
 
+
+import React from "react"
 import { stateToHTML } from 'draft-js-export-html';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2, } from 'react-html-parser';
 import { withTheme, Paper, ThemeProvider } from "@material-ui/core";
@@ -23,10 +25,10 @@ function toHtml({ preHtml, theme }) {
   const html = ReactHtmlParser(preHtml, {
     transform: function transformFn(node, index) {
       let personName = ""
-      if (node.name === "avatar_head") {
-        return <></>
+      if (node.name === "object" && node.attribs["data-type"] === "avatar_head") {
+        return <React.Fragment key={index}></React.Fragment>
       }
-      else if (node.name === "avatar_body") {
+      else if (node.name === "object" && node.attribs["data-type"] === "avatar_body") {
 
         const element = node.children.map((child, index) => {
 
@@ -35,7 +37,7 @@ function toHtml({ preHtml, theme }) {
           return convertNodeToElement(child, index, transformFn)
         })
 
-        return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={personName} >{element}</AvatarChip>
+        return <AvatarChip key={index} size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={personName} >{element}</AvatarChip>
 
       }
 
@@ -53,8 +55,7 @@ export default withTheme(withContext(function Content({ theme, ctx, ...props }) 
 
   return (
 
-    <Paper >{
-
+    <Paper>{
       toHtml({ preHtml: toPreHtml(editorState), theme })
     }
     </Paper>
