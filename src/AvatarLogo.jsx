@@ -190,14 +190,11 @@ export const TwoLineLabelWithStyled = styled(TwoLineLabel_)
 
     const { theme: { textSizeArr, breakpointsAttribute, multiplyArr }, size, ...rest } = props
 
-
-
     const size_ = Array.isArray(size)
       ? size
       : typeof (size) === "string"
         ? [size]
         : textSizeArr
-
 
     return {
       "&:first-of-type": {

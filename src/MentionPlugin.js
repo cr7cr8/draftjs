@@ -1,16 +1,16 @@
 import { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
-import { Context ,withContext1 } from "./ContextProvider"
+import { Context, withContext1 } from "./ContextProvider"
 
-import { AvatarChip, AvatarLogo , TwoLineLabel} from "./AvatarLogo"
+import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
 import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 import Editor from "draft-js-plugins-editor";
 import Immutable from 'immutable';
 
-import { makeStyles, styled, useTheme, withStyles } from '@material-ui/core/styles';
+import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
 import { Typography, Button, ButtonGroup, Container, Paper, Avatar, Box, Chip, Grow } from "@material-ui/core";
 import { Image, AlternateEmailSharp } from "@material-ui/icons";
+import { withContext } from "./ContextProvider";
 
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import {
   isMobile,
@@ -91,11 +91,12 @@ export default function createMentionPlugin() {
     );
   }
 
-  function Mention({ ...props }) {
+  function Mention({ ctx, theme, ...props }) {
 
-    const theme = useTheme()
+    //  const theme = ctx.theme
 
     const textSizeArr = theme.textSizeArr
+    const showMention = ctx.showMention
 
     const { longMention_HEAD_Css, longMention_BODY_Css } = useStyles()
 
@@ -125,7 +126,7 @@ export default function createMentionPlugin() {
     else if (mentionType === "longMentionOnOther_BODY") {
       return <span className={longMention_BODY_Css}>{children}</span>
 
-    //   return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
+      //   return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
     }
 
 
@@ -144,9 +145,9 @@ export default function createMentionPlugin() {
       //    return <sapn className={longMention_HEAD_Css}>@</sapn>
     }
     else if (mentionType === "longMentionOff_BODY") {
-
-    //  return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
-       return <span className={longMention_BODY_Css}>{children}</span>
+      return showMention
+        ? <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
+        : <span className={longMention_BODY_Css}>{children}</span>
     }
     else {
       return children
@@ -284,7 +285,7 @@ export default function createMentionPlugin() {
 
 
 
- 
+
 
 
       let matchArr;
@@ -386,7 +387,7 @@ export default function createMentionPlugin() {
       decorators: [
         {
           strategy: mentionStrategy,
-          component: Mention
+          component: withTheme(withContext(Mention))
         }
       ],
 

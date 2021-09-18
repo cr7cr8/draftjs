@@ -72,10 +72,13 @@ const { mentionPlugin } = createMentionPlugin()
 
 export default withContext(function DraftEditor({ ctx, ...props }) {
   //const theme = useTheme()
-  const editor = useRef()
-  const key = useRef(Math.random()+"")
 
-  const { editorState, setEditorState, toPreHtml } = ctx
+  const key = useRef(Math.random() + "")
+
+  const { editorState, setEditorState, editorRef } = ctx
+
+
+
   //console.log(editorState)
 
 
@@ -85,7 +88,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       {/* <Div data-aaa="aaa" data-bbb="34343" id="99999" data-num="4343" /> */}
       <Paper>
         <Editor
-          ref={function (element) { editor.current = element; }}
+          ref={function (element) { editorRef.current = element; }}
           editorState={editorState}
 
 

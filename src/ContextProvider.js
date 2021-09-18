@@ -39,8 +39,6 @@ function flatten(arr) {
   }, []);
 }
 
-
-
 const breakpoints = createBreakpoints({})
 function breakpointsAttribute(...args) {
   let xs = {}, sm = {}, md = {}, lg = {}, xl = {};
@@ -121,21 +119,21 @@ function toPreHtml(editorState) {
     {
       defaultBlockTag: "div",
       entityStyleFn: (entity) => {
-       // console.log(entity.getType())
+        // console.log(entity.getType())
 
         if (entity.getType().indexOf("HEAD") > 0) {
           return {
             element: 'object',
-            attributes:{
-              "data-type":"avatar_head"
+            attributes: {
+              "data-type": "avatar_head"
             }
           }
         }
         else if (entity.getType().indexOf("BODY") > 0) {
           return {
             element: 'object',
-            attributes:{
-              "data-type":"avatar_body"
+            attributes: {
+              "data-type": "avatar_body"
             }
 
           }
@@ -155,7 +153,12 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [isLight, setIsLight] = useState(true)
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }), [textSizeArr, isLight, setIsLight])
 
+
+  const editorRef = useRef()
   const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
+  const [showMention, setShowMention] = useState(false)
+
+
 
   const [show, setShow] = useState(false)
 
@@ -164,13 +167,24 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
       <StyledThemeProvider theme={theme}>
         <Context.Provider value={{
           //isLight, setIsLight, theme, breakpointsAttribute,
-          editorState, setEditorState, toPreHtml
-
+          toPreHtml,
+          editorRef,
+          editorState, setEditorState,
+          showMention, setShowMention,
         }}>
 
           <DraftEditor />
-          {show && <Content /> }
-          <div><button onClick={function () { setShow(pre => !pre) }}>show</button></div>
+          {show && <Content />}
+          <div>
+            <button onClick={function () {
+              setShow(pre => !pre);
+              setTimeout(() => {
+                editorRef.current.focus()
+              }, 0);
+            }}>showContent</button>
+            <button onClick={function () { setShowMention(pre => !pre); editorRef.current.focus() }}>showMention</button>
+
+          </div>
         </Context.Provider>
       </StyledThemeProvider>
     </ThemeProvider>
