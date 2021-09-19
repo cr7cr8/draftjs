@@ -1,6 +1,6 @@
 import React, { Component, useContext } from "react"
 
-import { withStyles, makeStyles, useTheme , /*styled*/} from '@material-ui/styles'
+import { withStyles, makeStyles, useTheme, /*styled*/ } from '@material-ui/styles'
 
 import { Avatar, Chip, Popover, Typography, Button, } from "@material-ui/core";
 import Grow from '@material-ui/core/Grow';
@@ -178,13 +178,13 @@ class TwoLineLabel_ extends Component {
 
 
 export const TwoLineLabelWithStyled = styled(TwoLineLabel_)
-.withConfig({
-  shouldForwardProp: (propName, defaultValidatorFn) => {
-    return true
-    //return propName.indexOf("ctx") !== 0
-  }
-})
-`
+  .withConfig({
+    shouldForwardProp: (propName, defaultValidatorFn) => {
+      return true
+      //return propName.indexOf("ctx") !== 0
+    }
+  })
+  `
    ${ (props) => {
 
 
@@ -293,19 +293,26 @@ class AvatarChip_ extends Component {
 
 
   render() {
-    const { classes, theme, size, personName, avatarProps, logoOn = true, labelOn = true, children,  labelSize, ...rest } = this.props
+    const { classes, className ,theme, size, personName, avatarProps, logoOn = true, labelOn = true, children, labelSize, ...rest } = this.props
 
     const { src, ...avatarRest } = this.props.avatarProps || {}
 
     // console.log(this.props && this.props.label && this.props.label.type && this.props.label.type.Naked && this.props.label.type.Naked.render.displayName)
     //Styled(TwoLineLabel_)
+
+    const allClassNames = classNames({
+      [classes.chipCss]: true,
+      [className]: true,
+    })
+
+
     return (
       // <Grow in={true} >
       <div style={{ width: "fit-content", display: "inline-block" }}    >
 
         <Chip
-         
-          classes={{ root: classes.chipCss }}
+
+          classes={{ root: allClassNames }}
           {...logoOn && { avatar: <AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} /> }}
           // avatar={<AvatarLogo size={size} personName={personName} src={this.props.src}{...avatarRest} />}
           label={personName}

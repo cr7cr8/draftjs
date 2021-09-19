@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState, useReducer, useRef, useMemo, useCallback, useLayoutEffect, useContext, Component } from 'react';
 
-import { createTheme, ThemeProvider, responsiveFontSizes, } from "@material-ui/core";
+import { createTheme, ThemeProvider, responsiveFontSizes, List, Avatar } from "@material-ui/core";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import colorIndigo from '@material-ui/core/colors/indigo';
 
@@ -32,9 +32,14 @@ import { PhoneMissed } from '@material-ui/icons';
 import DraftEditor from './DraftEditor';
 import Content from "./Content";
 import { Button, Switch, FormGroup, FormControlLabel } from '@material-ui/core';
+
+
+
 import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo";
 
 import SwitchBtn from "./SwitchBtn"
+import AvatarChipList from "./AvatarChipList"
+
 
 function flatten(arr) {
   return arr.reduce(function (flat, toFlatten) {
@@ -177,12 +182,25 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showMention, setShowMention,
         }}>
 
-          {/* <SwitchBtn/>
-          <Switch /> */}
+
+        <AvatarChipList />
+
+          
+
+
+
+          <AvatarChip personName="fdfs" style={{ borderRadius: 0 }}
+
+            onClick={function () {
+              alert("fddf")
+            }}
+
+          />
+
+
+
 
           <DraftEditor />
-          {showContent && <Content />}
-
 
           <FormGroup row >
             <FormControlLabel
@@ -192,15 +210,16 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
             />
 
-            <FormControlLabel style={{color:"orange",fontSize:"3rem"}}
-              control={<SwitchBtn factor={["2px", "2px", "2px", "1.8px", "1.5px"]}  checked={showMention} onChange={() => { setShowMention(pre => !pre) }} name="showMention" color="primary" />}
+            <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
+              control={<SwitchBtn factor={[2, 2, 2, 1.8, 3]} checked={showMention} onChange={() => { setShowMention(pre => !pre) }} name="showMention" color="primary" />}
               label="Mention"
               labelPlacement="start"
 
             />
-          </FormGroup> 
+          </FormGroup>
+          {showContent && <Content />}
 
-           {/* <div>
+          {/* <div>
             <Button variant="outlined" onClick={function () {
               setShowContent(pre => !pre);
               setTimeout(() => {

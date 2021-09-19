@@ -21,43 +21,34 @@ function styleObj({ textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) 
 
   return {
 
-    switchCss: ({ factor = ["2px", "2px", "2px", "1.8px", "1.5px"], ...props }) => {
+    switchCss: ({ factor = [2,2,2,2,2], ...props }) => {
+      const factor_ = factor.map(item=>item+"px")
       return {
         // width: 58 * factor,
         // height: 38 * factor,
         // padding: 12 * factor,
-
-
         ...breakpointsAttribute(
-          ["width", multiplyArr(factor, 58)],
-          ["height", multiplyArr(factor, 38)],
-          ["padding", multiplyArr(factor, 12)],
-
+          ["width", multiplyArr(factor_, 58)],
+          ["height", multiplyArr(factor_, 38)],
+          ["padding", multiplyArr(factor_, 12)],
         ),
-
         "& .MuiSwitch-thumb": {
           // width: 20 * factor,
           // height: 20 * factor,
-
           ...breakpointsAttribute(
-            ["width", multiplyArr(factor, 20)],
-            ["height", multiplyArr(factor, 20)]
+            ["width", multiplyArr(factor_, 20)],
+            ["height", multiplyArr(factor_, 20)]
           ),
         },
         "& .MuiSwitch-switchBase": {
-
           // padding: 9 * factor,
           ...breakpointsAttribute(
-            ["padding", multiplyArr(factor, 9)],
-
+            ["padding", multiplyArr(factor_, 9)],
           ),
-
-
         },
         "& .MuiSwitch-switchBase.Mui-checked": {
         //  transform: `translateX(${20 * factor}px)`,
-          ...breakpointsAttribute(["transform", multiplyArr(factor, 20).map(item => { return `translateX(${item})` })]),
-
+          ...breakpointsAttribute(["transform", multiplyArr(factor_, 20).map(item => { return `translateX(${item})` })]),
         },
         "& .MuiSwitch-track": {
           borderRadius: 1000,
