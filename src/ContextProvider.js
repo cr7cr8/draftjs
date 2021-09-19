@@ -123,8 +123,8 @@ function toPreHtml(editorState) {
       defaultBlockTag: "div",
       entityStyleFn: (entity) => {
         // console.log(entity.getType())
-       
-        
+
+
         if (entity.getType().indexOf("HEAD") > 0) {
           return {
             element: 'object',
@@ -177,7 +177,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showMention, setShowMention,
         }}>
 
-          {/* <SwitchBtn />
+          {/* <SwitchBtn/>
           <Switch /> */}
 
           <DraftEditor />
@@ -186,21 +186,21 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
           <FormGroup row >
             <FormControlLabel
-              control={<Switch size="medium"  checked={showContent} onChange={() => { setShowContent(pre => !pre) }} name="showContent" color="primary" />}
+              control={<SwitchBtn checked={showContent} onChange={() => { setShowContent(pre => !pre) }} name="showContent" color="primary" />}
               label="Content"
               labelPlacement="start"
 
             />
 
-            <FormControlLabel
-              control={<Switch size="medium" checked={showMention} onChange={() => { setShowMention(pre => !pre) }} name="showMention" color="primary" />}
+            <FormControlLabel style={{color:"orange",fontSize:"3rem"}}
+              control={<SwitchBtn factor={["2px", "2px", "2px", "1.8px", "1.5px"]}  checked={showMention} onChange={() => { setShowMention(pre => !pre) }} name="showMention" color="primary" />}
               label="Mention"
               labelPlacement="start"
-           
-            />
-          </FormGroup>
 
-          {/* <div>
+            />
+          </FormGroup> 
+
+           {/* <div>
             <Button variant="outlined" onClick={function () {
               setShowContent(pre => !pre);
               setTimeout(() => {

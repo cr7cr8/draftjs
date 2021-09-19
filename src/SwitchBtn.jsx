@@ -21,41 +21,68 @@ function styleObj({ textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) 
 
   return {
 
-    switchCss: (props) => {
+    switchCss: ({ factor = ["2px", "2px", "2px", "1.8px", "1.5px"], ...props }) => {
       return {
-        width:"6rem",
-        height: "2.5rem",
-     //   backgroundColor:"skyblue",
-       // ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 4)], ["height", multiplyArr(textSizeArr,2)]),
+        // width: 58 * factor,
+        // height: 38 * factor,
+        // padding: 12 * factor,
+
+
+        ...breakpointsAttribute(
+          ["width", multiplyArr(factor, 58)],
+          ["height", multiplyArr(factor, 38)],
+          ["padding", multiplyArr(factor, 12)],
+
+        ),
 
         "& .MuiSwitch-thumb": {
-          width:"2rem",
-          height:"2rem",
-          margin:0,
-        //  ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 1.25)], ["height", multiplyArr(textSizeArr, 1.25)]),
+          // width: 20 * factor,
+          // height: 20 * factor,
+
+          ...breakpointsAttribute(
+            ["width", multiplyArr(factor, 20)],
+            ["height", multiplyArr(factor, 20)]
+          ),
         },
-        "& .MuiSwitch-switchBase":{
-      //    backgroundColor:"lightgreen",
-          borderRadius:0,
-          padding:9,
-          top:1,
+        "& .MuiSwitch-switchBase": {
+
+          // padding: 9 * factor,
+          ...breakpointsAttribute(
+            ["padding", multiplyArr(factor, 9)],
+
+          ),
+
 
         },
         "& .MuiSwitch-switchBase.Mui-checked": {
-          transform:"translateX(41px)"
-       //   ...breakpointsAttribute(["transform", multiplyArr(textSizeArr,2).map(item=>{   return  `translateX(${item})`  })]),
-        
+        //  transform: `translateX(${20 * factor}px)`,
+          ...breakpointsAttribute(["transform", multiplyArr(factor, 20).map(item => { return `translateX(${item})` })]),
+
+        },
+        "& .MuiSwitch-track": {
+          borderRadius: 1000,
         }
       }
 
     }
   }
 }
+//const useStyles = makeStyles(styleObj)
+
+
+// export default function SwitchBtn({   ...props }) {
+//   const classes = useStyles({ factor: 5 })
+//   return (
+//     <Switch className={classes.switchCss}       {...props} />
+//   )
+
+
+// }
 
 
 
 export default withStyles(styleObj, { withTheme: true })(
-  function SwitchBtn({ classes, ...props }) {
+  function SwitchBtn({ classes, factor, size, ...props }) {
 
     return (
       <Switch className={classes.switchCss}       {...props} />
