@@ -31,7 +31,10 @@ import yellow from '@material-ui/core/colors/yellow';
 import { PhoneMissed } from '@material-ui/icons';
 import DraftEditor from './DraftEditor';
 import Content from "./Content";
+import { Button, Switch, FormGroup, FormControlLabel } from '@material-ui/core';
 import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo";
+
+import SwitchBtn from "./SwitchBtn"
 
 function flatten(arr) {
   return arr.reduce(function (flat, toFlatten) {
@@ -120,7 +123,8 @@ function toPreHtml(editorState) {
       defaultBlockTag: "div",
       entityStyleFn: (entity) => {
         // console.log(entity.getType())
-
+       
+        
         if (entity.getType().indexOf("HEAD") > 0) {
           return {
             element: 'object',
@@ -149,18 +153,18 @@ function toPreHtml(editorState) {
 
 export default function ContextProvider({ myTheme = {}, ...props }) {
 
-  const [textSizeArr, setTextSizeArr] = useState(["1rem", "2rem", "4rem", "6rem", "2rem"])
+  const [textSizeArr, setTextSizeArr] = useState(["1rem", "2rem", "4rem", "1rem", "2rem"])
   const [isLight, setIsLight] = useState(true)
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }), [textSizeArr, isLight, setIsLight])
 
 
   const editorRef = useRef()
   const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
-  const [showMention, setShowMention] = useState(false)
+  const [showMention, setShowMention] = useState(true)
 
 
 
-  const [show, setShow] = useState(false)
+  const [showContent, setShowContent] = useState(true)
 
   return (
     <ThemeProvider theme={theme}>
@@ -173,16 +177,37 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showMention, setShowMention,
         }}>
 
+          {/* <SwitchBtn />
+          <Switch /> */}
+
           <DraftEditor />
-          {show && <Content />}
+          {showContent && <Content />}
+
+
+          <FormGroup row >
+            <FormControlLabel
+              control={<Switch size="medium"  checked={showContent} onChange={() => { setShowContent(pre => !pre) }} name="showContent" color="primary" />}
+              label="Content"
+              labelPlacement="start"
+
+            />
+
+            <FormControlLabel
+              control={<Switch size="medium" checked={showMention} onChange={() => { setShowMention(pre => !pre) }} name="showMention" color="primary" />}
+              label="Mention"
+              labelPlacement="start"
+           
+            />
+          </FormGroup>
+
           <div>
-            <button onClick={function () {
-              setShow(pre => !pre);
+            <Button variant="outlined" onClick={function () {
+              setShowContent(pre => !pre);
               setTimeout(() => {
                 editorRef.current.focus()
               }, 0);
-            }}>showContent</button>
-            <button onClick={function () { setShowMention(pre => !pre); editorRef.current.focus() }}>showMention</button>
+            }}>showContent</Button>
+            <Button variant="outlined" onClick={function () { setShowMention(pre => !pre); editorRef.current.focus() }}>showMention</Button>
 
           </div>
         </Context.Provider>

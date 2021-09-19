@@ -8,13 +8,8 @@ import { withTheme, Paper, ThemeProvider } from "@material-ui/core";
 
 import { AvatarChip } from "./AvatarLogo";
 
-import { withContext } from "./ContextProvider"
-
-
-
-
-
-
+import { withContext } from "./ContextProvider";
+import reactElementToJSXString from 'react-element-to-jsx-string';
 
 
 
@@ -24,18 +19,27 @@ function toHtml({ preHtml, theme }) {
 
   const html = ReactHtmlParser(preHtml, {
     transform: function transformFn(node, index) {
-      let personName = ""
+
+
+
       if (node.name === "object" && node.attribs["data-type"] === "avatar_head") {
         return <React.Fragment key={index}></React.Fragment>
       }
       else if (node.name === "object" && node.attribs["data-type"] === "avatar_body") {
 
-        const element = node.children.map((child, index) => {
 
-          if (child.type === "text") { personName += child.data }
-          //  console.log(personName)
+
+       
+        const element = node.children.map((child, index) => {
           return convertNodeToElement(child, index, transformFn)
         })
+       // console.log(reactElementToJSXString(<span>{element}</span>))
+       // console.log(reactElementToJSXString(<span>{element}</span>).replace(/(<([^>]+)>)/ig, '').replace("\r", "").replace("\n", "").replace("\t", "").replace(/\s/g, '').trim())
+
+        const personName = reactElementToJSXString(<>{element}</>).replace(/(<([^>]*)>)/ig, '').replace(/\s/g, '').trim()
+
+        // getName(element)
+        //  console.log("---",<>{element}</>)
 
         return <AvatarChip key={index} size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={personName} >{element}</AvatarChip>
 
