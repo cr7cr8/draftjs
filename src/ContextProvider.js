@@ -200,7 +200,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
             />
           </FormGroup>
 
-          <div>
+          {/* <div>
             <Button variant="outlined" onClick={function () {
               setShowContent(pre => !pre);
               setTimeout(() => {
@@ -209,7 +209,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
             }}>showContent</Button>
             <Button variant="outlined" onClick={function () { setShowMention(pre => !pre); editorRef.current.focus() }}>showMention</Button>
 
-          </div>
+          </div> */}
         </Context.Provider>
       </StyledThemeProvider>
     </ThemeProvider>

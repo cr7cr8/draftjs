@@ -33,15 +33,20 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => {
     longMention_HEAD_Css: () => {
       return {
         backgroundColor: "skyblue",
-        display: "inline-block",
-        lineHeight: "115%",
+        display: "inline-flex",
+        lineHeight: "100%",
+        alignItems:"center",
+        
         //  transform: "scale(0.8)",
-        //   boxShadow: theme.shadows[3],
+       //    boxShadow: theme.shadows[5],
         borderTopLeftRadius: "1000px",
         borderBottomLeftRadius: "1000px",
+     
+        verticalAlign: "text-bottom",
         ...breakpointsAttribute(
           ["width", theme.multiplyArr(theme.textSizeArr, 1.15)],
-
+          ["height", theme.multiplyArr(theme.textSizeArr, 1.15).map(item => `calc( ${item} - 1px )`)],
+          ["fontSize", theme.multiplyArr(theme.textSizeArr, 0.8)],
           //   ["transform", theme.multiplyArr(theme.textSizeArr, 0.1).map(item => { return `translateX(${item}) scale(0.9)` })],
 
         )
@@ -52,13 +57,14 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => {
         backgroundColor: "skyblue",
         paddingLeft: "0rem",
         lineHeight: "100%",
+      //  boxShadow: theme.shadows[3],
         borderTopRightRadius: "1000px",
         borderBottomRightRadius: "1000px",
-        borderTopLeftRadius: "1000px",
-        borderBottomLeftRadius: "1000px",
+        //   borderTopLeftRadius: "1000px",
+        //   borderBottomLeftRadius: "1000px",
         //   boxShadow: theme.shadows[3],
-        ...breakpointsAttribute(["paddingRight", theme.multiplyArr(theme.textSizeArr, 0.5)], ["paddingLeft", theme.multiplyArr(theme.textSizeArr, 1.15)])
-
+        //   ...breakpointsAttribute(["paddingRight", theme.multiplyArr(theme.textSizeArr, 0.5)], ["paddingLeft", theme.multiplyArr(theme.textSizeArr, 1.15)])
+        ...breakpointsAttribute(["paddingRight", theme.multiplyArr(theme.textSizeArr, 0.5)], ["paddingLeft", theme.multiplyArr(theme.textSizeArr, 0)])
       }
     }
 
@@ -109,8 +115,8 @@ export default function createMentionPlugin() {
 
 
     if (mentionType === "longMentionOnAt_HEAD") {
-      return <></>                                                      //2+2*0.15
-      return <span className={longMention_HEAD_Css}>@</span>
+      // return <></>                                                      //2+2*0.15
+      return <span className={longMention_HEAD_Css}>{children}</span>
     }
     else if (mentionType === "longMentionOnAt_BODY") {                                   //2*0.5
       return <span className={longMention_BODY_Css}>{children}</span>
@@ -119,9 +125,9 @@ export default function createMentionPlugin() {
     }
 
     else if (mentionType === "longMentionOnOther_HEAD") {
-      return <></>
+      // return <></>
       //    return <sapn style={{ backgroundColor: "skyblue", paddingRight: "0" }}>{children}</sapn>
-      return <span className={longMention_HEAD_Css}>@</span>
+      return <span className={longMention_HEAD_Css}>{children}</span>
     }
     else if (mentionType === "longMentionOnOther_BODY") {
       return <span className={longMention_BODY_Css}>{children}</span>
@@ -141,10 +147,13 @@ export default function createMentionPlugin() {
 
 
     else if (mentionType === "longMentionOff_HEAD") {
-      return <></>
-      //    return <sapn className={longMention_HEAD_Css}>@</sapn>
+      return showMention
+      ? <></>
+      : <span className={longMention_HEAD_Css}>{children}</span>
     }
     else if (mentionType === "longMentionOff_BODY") {
+
+  
       return showMention
         ? <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
         : <span className={longMention_BODY_Css}>{children}</span>
