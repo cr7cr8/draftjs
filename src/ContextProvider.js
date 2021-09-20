@@ -31,7 +31,7 @@ import yellow from '@material-ui/core/colors/yellow';
 import { PhoneMissed } from '@material-ui/icons';
 import DraftEditor from './DraftEditor';
 import Content from "./Content";
-import { Button, Switch, FormGroup, FormControlLabel } from '@material-ui/core';
+import { Button, Switch, FormGroup, FormControlLabel,CssBaseline } from '@material-ui/core';
 
 
 
@@ -165,11 +165,11 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const editorRef = useRef()
   const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
-  const [showMention, setShowMention] = useState(true)
+  const [showMention, setShowMention] = useState(false)
 
 
 
-  const [showContent, setShowContent] = useState(true)
+  const [showContent, setShowContent] = useState(false)
 
   return (
     <ThemeProvider theme={theme}>
@@ -180,22 +180,16 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           editorRef,
           editorState, setEditorState,
           showMention, setShowMention,
+          showContent, setShowContent,
         }}>
 
 
-        <AvatarChipList />
-
-          
+          <CssBaseline />
 
 
 
-          <AvatarChip personName="fdfs" style={{ borderRadius: 0 }}
 
-            onClick={function () {
-              alert("fddf")
-            }}
 
-          />
 
 
 
@@ -217,7 +211,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
             />
           </FormGroup>
-          {showContent && <Content />}
+          <Content />
 
           {/* <div>
             <Button variant="outlined" onClick={function () {

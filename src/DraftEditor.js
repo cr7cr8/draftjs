@@ -91,7 +91,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           ref={function (element) { editorRef.current = element; }}
           editorState={editorState}
 
-
+    
           onChange={function (newState, { ...props }) {
 
 

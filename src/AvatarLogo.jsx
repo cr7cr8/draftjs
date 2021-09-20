@@ -373,6 +373,7 @@ class AvatarChip_ extends Component {
             paper: classes.paper,
           }}
           open={this.state.open}
+        
           anchorReference="anchorPosition"
           // anchorEl={this.anchorRef.current}
           anchorEl={this.anchorRef}

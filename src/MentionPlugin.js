@@ -11,7 +11,7 @@ import { Typography, Button, ButtonGroup, Container, Paper, Avatar, Box, Chip, G
 import { Image, AlternateEmailSharp } from "@material-ui/icons";
 import { withContext } from "./ContextProvider";
 
-import AvatraChipList from "./AvatarChipList";
+import AvatarChipList from "./AvatarChipList";
 
 import {
   isMobile,
@@ -33,7 +33,7 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => {
 
     longMention_HEAD_Css: () => {
       return {
-        backgroundColor: "skyblue",
+        backgroundColor: "rgba(183,225,252,0.8)",//"skyblue",
         display: "inline-flex",
         lineHeight: "100%",
         alignItems: "center",
@@ -55,7 +55,9 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => {
     },
     longMention_BODY_Css: () => {
       return {
-        backgroundColor: "skyblue",
+        position: "relative",
+        backgroundColor: "rgba(183,225,252,0.8)",//"rgba( 200,156,212,0.5)",
+        //  backgroundColor: "skyblue",
         paddingLeft: "0rem",
         lineHeight: "100%",
         //  boxShadow: theme.shadows[3],
@@ -83,14 +85,28 @@ export default function createMentionPlugin() {
 
   const friendListArr = ["aaa", "bbb", "ccc"]
 
-  const friendList = <AvatraChipList />
-
 
   let externalES = null;
   let externalSetEditorState = null;
   let newContent = null;
 
   const entityKeyObj = {}
+
+  let isShowing = false
+  function setShowing(bool) {
+    isShowing = bool
+  }
+  let matchFriendArr = []
+  function setMatchFriendArr(arr) {
+    matchFriendArr = arr
+  }
+
+  let inputingName = ""
+  let tagStartPos = 0
+  let tagEndPos = 0
+
+  let tabIndex = 1000;
+
 
   function mentionStrategy(contentBlock, callback, contentState) {
 
@@ -103,84 +119,7 @@ export default function createMentionPlugin() {
     );
   }
 
-  function Mention({ ctx, theme, ...props }) {
 
-    //  const theme = ctx.theme
-
-    const textSizeArr = theme.textSizeArr
-    const showMention = ctx.showMention
-
-    const { longMention_HEAD_Css, longMention_BODY_Css } = useStyles()
-
-
-    const { contentState, entityKey, blockKey, offsetKey, start, end, decoratedText, children } = props;
-    const { mentionHeadKey, mentionBodyKey, person, imgurl, mentionType } = contentState.getEntity(entityKey).getData()
-
-    // console.log(mentionType)
-    // console.log(theme)
-
-
-    if (mentionType === "longMentionOnAt_HEAD") {
-      // return <></>                                                      //2+2*0.15
-      return (
-        <span className={longMention_HEAD_Css}>{children}</span>
-      )
-    }
-    else if (mentionType === "longMentionOnAt_BODY") {                                   //2*0.5
-      return (
-        <>
-          <span className={longMention_BODY_Css}>{children}</span>
-          {friendList}
-        </>
-      )
-
-      //    return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
-    }
-
-    else if (mentionType === "longMentionOnOther_HEAD") {
-      // return <></>
-      //    return <sapn style={{ backgroundColor: "skyblue", paddingRight: "0" }}>{children}</sapn>
-      return <span className={longMention_HEAD_Css}>{children}</span>
-    }
-    else if (mentionType === "longMentionOnOther_BODY") {
-      return <>
-        <span className={longMention_BODY_Css}>{children}</span>
-        {friendList}
-      </>
-
-      //   return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
-    }
-
-
-
-    // else if (mentionType === "shortMentionOn") {
-    //   return <sapn style={{ backgroundColor: "skyblue", width: "2rem" }}>{children}</sapn>
-    // }
-
-    // else if (mentionType === "shortMentionOff") {
-    //   return <sapn style={{ backgroundColor: "skyblue", width: "2rem" }}>{children}</sapn>
-    // }
-
-
-    else if (mentionType === "longMentionOff_HEAD") {
-      return showMention
-        ? <></>
-        : <span className={longMention_HEAD_Css}>{children}</span>
-    }
-    else if (mentionType === "longMentionOff_BODY") {
-
-
-      return showMention
-        ? <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
-        : <span className={longMention_BODY_Css}>{children}</span>
-    }
-    else {
-      return children
-    }
-
-
-
-  }
 
   function createTag({ tagName, newSelection, blockKey, start, end }) {
 
@@ -238,7 +177,6 @@ export default function createMentionPlugin() {
     //   }
     // )
   }
-
 
   function taggingMention() {
 
@@ -311,8 +249,6 @@ export default function createMentionPlugin() {
 
 
 
-
-
       let matchArr;
       while ((matchArr = regx.exec(blockText)) !== null) {
 
@@ -320,6 +256,8 @@ export default function createMentionPlugin() {
         const end = matchArr.index + matchArr[0].length;
         const contentLenth = end - start;
         const contentFocusAt = anchorFocusOffset - start;
+
+        //console.log(" contentFocusAt ", contentFocusAt, " contentLength: ", contentLenth, " start: ", start, " end: ", end)
 
         // const shortMentionOn = (contentLenth === 2) && hasfocus && (blockKey === anchorFocusKey) && (contentFocusAt === 2)
         // const shortMentionOff = (contentLenth === 2) && ((!hasfocus) || (blockKey !== anchorFocusKey) || (contentFocusAt !== 2))
@@ -366,11 +304,15 @@ export default function createMentionPlugin() {
         // }
         if (longMentionOnAt) {
 
+          tagStartPos = start
+          tagEndPos = end
           createTag({ tagName: "longMentionOnAt", newSelection, blockKey, start, end })
+
 
         }
         else if (longMentionOnOther) {
-
+          tagStartPos = start
+          tagEndPos = end
           createTag({ tagName: "longMentionOnOther", newSelection, blockKey, start, end })
 
         }
@@ -397,9 +339,194 @@ export default function createMentionPlugin() {
 
   }
 
+  function insertMention(friendName, mentionHeadKey, mentionBodyKey, entityKey) {
+
+
+    const text = " @" + friendName + " "
+    const contentState = externalES.getCurrentContent();
+    const selection = externalES.getSelection();
+
+
+    // const mentionBodyText = mentionBodyKey
+    //   ? contentState.getEntity(mentionBodyKey).getData().person.replace(" @", "")
+    //   : ""
+
+    const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = selection.toArray()
+    const [anchorStartKey, anchorStartOffset, anchorFocusKey, anchorFocusOffset, isAnchorBackward, isAnchorFocused]
+      = [!isBackward ? anchorKey : focusKey, !isBackward ? anchorOffset : focusOffset, isBackward ? anchorKey : focusKey, isBackward ? anchorOffset : focusOffset,]
+
+
+    let newSelection = selection.merge({
+      anchorKey: anchorStartKey,
+      anchorOffset: tagStartPos,
+      focusKey: anchorStartKey,
+      focusOffset: tagEndPos,
+      isBackward: false,
+      hasFocus: true,
+
+    })
+
+
+    let newContent = Modifier.replaceText(
+      contentState,
+      newSelection,
+      text,
+    )
+
+    newSelection = externalES.getSelection().merge({
+
+      anchorKey: anchorStartKey,
+      anchorOffset: tagStartPos + text.length,
+      focusKey: anchorStartKey,
+      focusOffset: tagStartPos + text.length,
+      isBackward: false,
+      hasFocus: true,
+    })
+
+    externalES = EditorState.push(externalES, newContent, "insert-characters");
+    externalES = EditorState.acceptSelection(externalES, newSelection)
+
+
+    externalSetEditorState(externalES)
+
+
+  }
+  function Mention({  ctx, theme, ...props }) {
+
+    //  const theme = ctx.theme
+
+    const textSizeArr = theme.textSizeArr
+    const showMention = ctx.showMention
+
+    const { longMention_HEAD_Css, longMention_BODY_Css } = useStyles()
+
+
+    const { contentState, entityKey, blockKey, offsetKey, start, end, decoratedText, children } = props;
+    const { mentionHeadKey, mentionBodyKey, person, imgurl, mentionType } = contentState.getEntity(entityKey).getData()
+
+    //const [personTabIndex,setPersonTabIndex] = useState()
+    // console.log(mentionType)
+    // console.log(theme)
+
+    inputingName = decoratedText
+
+
+    if (mentionType === "longMentionOnAt_HEAD") {
+      // return <></>                                                      //2+2*0.15
+      return (
+        <span className={longMention_HEAD_Css}>{children}</span>
+      )
+    }
+    else if (mentionType === "longMentionOnAt_BODY") {                                   //2*0.5
+      return (
+
+        <span className={longMention_BODY_Css} >
+          <AvatarChipList insertMention={insertMention} tabIndex={tabIndex} nameOnTyping={decoratedText} setShowing={setShowing} setMatchFriendArr={setMatchFriendArr} />{children}
+        </span>
+
+
+      )
+
+      //    return <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
+    }
+
+    else if (mentionType === "longMentionOnOther_HEAD") {
+      // return <></>
+      //    return <sapn style={{ backgroundColor: "skyblue", paddingRight: "0" }}>{children}</sapn>
+      return <span className={longMention_HEAD_Css}>{children}</span>
+    }
+    else if (mentionType === "longMentionOnOther_BODY") {
+
+      return (
+
+
+        <span className={longMention_BODY_Css} onKeyDown={function () { alert("fdf") }}>
+          <AvatarChipList insertMention={insertMention} tabIndex={tabIndex} nameOnTyping={decoratedText} setShowing={setShowing} setMatchFriendArr={setMatchFriendArr} />{children}
+        </span>
+
+
+
+
+
+      )
+      //   return <AvatarChip hoverContent="fdsfsf" size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
+    }
+
+
+
+    // else if (mentionType === "shortMentionOn") {
+    //   return <sapn style={{ backgroundColor: "skyblue", width: "2rem" }}>{children}</sapn>
+    // }
+
+    // else if (mentionType === "shortMentionOff") {
+    //   return <sapn style={{ backgroundColor: "skyblue", width: "2rem" }}>{children}</sapn>
+    // }
+
+
+    else if (mentionType === "longMentionOff_HEAD") {
+      return showMention
+        ? <span style={{ fontSize: 0 }}>{children}</span>  //<></> works as well
+        : <span className={longMention_HEAD_Css}>{children}</span>
+    }
+    else if (mentionType === "longMentionOff_BODY") {
+      // return <span className={longMention_BODY_Css} contentEditable="true">
+      //   <AvatraChipList />{children}
+      // </span>
+
+      return showMention
+        ? <AvatarChip size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={props.decoratedText.replace(" @", "")} label={props.children} />
+        : <span className={longMention_BODY_Css}>{children}</span>
+    }
+    else {
+      return children
+    }
+
+
+
+  }
 
   return {
     mentionPlugin: {
+
+
+
+      handleReturn(e, newState, { setEditorState }) {
+        if (isShowing) { insertMention(matchFriendArr[tabIndex % matchFriendArr.length]); return "handled" }
+
+      },
+
+      keyBindingFn(e, { getEditorState, setEditorState, ...obj }) {
+
+        if ((e.keyCode === 40) && isShowing) {
+          tabIndex = tabIndex + 1;
+          return "fire-arrow";
+        }
+
+        else if ((e.keyCode === 38) && isShowing) {
+          tabIndex = tabIndex - 1;
+          return "fire-arrow";
+        }
+
+      },
+      handleKeyCommand(command, editorState, evenTimeStamp, { setEditorState }) {
+
+        if (command === "fire-arrow") {
+          externalSetEditorState(externalES)
+          return "handled"
+        }
+
+        // if (command === "fire-enter") {
+        //   alert("xxdd")
+        //   insertMention(...hasOnAtTag())
+        //   return "handled"
+        // }
+
+
+        return 'not-handled';
+      },
+
+
+
 
       onChange: function (editorState, { setEditorState }) {
         externalES = editorState

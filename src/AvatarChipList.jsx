@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles, withTheme } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -20,28 +20,25 @@ import Button from '@material-ui/core/Button';
 
 
 import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo";
-
+import { withContext } from "./ContextProvider"
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    maxWidth: 752,
-  },
-  demo: {
-    backgroundColor: theme.palette.background.paper,
-  },
-  title: {
-    margin: theme.spacing(4, 0, 2),
-  },
+
   listCss: {
     //paddingTop: theme.spacing(0.5),
+
     padding: 0,
 
-    backgroundColor: "wheat",
-    width: "fit-content",
+    backgroundColor: theme.palette.background.default,
+    width: "max-content",
     boxShadow: theme.shadows[3],
     borderRadius: 8,
     overflow: "hidden",
+    position: "absolute",
+    left: 0,
+    zIndex: 200,
+
+
     // "&:hover":{
     //   backgroundColor:"skyblue"
     // }
@@ -82,28 +79,90 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default withTheme(function AvatarChipList({ showList = true, theme, friendList = ["dfsfew", "Fewf", "fd放空间的s", "分割空间而"], ...props }) {
+export default withTheme(withContext(function AvatarChipList({
+
+
+  nameOnTyping = "",
+  ctx,
+  theme,
+  friendListArr = ["aaabsbbccdfsfew", "aassabbcFewf", "aaabfd放空间的s", "aaa分割空ss间而"],
+  setShowing,
+  setMatchFriendArr,
+  tabIndex = 0,
+  insertMention,
+  ...props }) {
+
+
+
+
+
   const classes = useStyles();
 
-  //const [show, setShow] = useState(true);
+  const matchFriendArr = friendListArr.filter(friendName => {
+
+    return friendName.toLowerCase().indexOf(nameOnTyping.toLowerCase()) >= 0
+
+  })
+  setMatchFriendArr(matchFriendArr)
+
+
+
+  useEffect(function () {
+    return function () { setShowing(false) }
+  }, [])
+
+  useEffect(function () {
+
+    if (matchFriendArr.length === 0) {
+      setShowing(false)
+    }
+
+  })
+
 
   return (
     <>
-      <Grow in={showList} timeout={{ appear: 200, enter: 200, exit: 1 }}>
-        <List dense={true} disablePadding={true} className={classes.listCss}>
+      <Grow in={matchFriendArr.length > 0} timeout={{ appear: 150, enter: 150, exit: 1000 }} unmountOnExit={true}
 
-          {friendList.map((friend, index) => {
 
-            return < ListItem key={index} className={classes.listItemCss} onClick={function () { alert("Hi, " + friend) }}>
-              <AvatarChip personName={friend} className={classes.avatarChipCss} lift={0} />
-            </ListItem>
+        onEntered={function () {
+          setShowing(true)
+        
+        }}
+        onExited={function () {
+          setShowing(false)
+        }}
+
+      >
+
+        <List dense={true} disablePadding={true} className={classes.listCss} contentEditable="false" suppressContentEditableWarning="true"
+
+       
+        >
+
+          {matchFriendArr.map((friend, index, arr) => {
+
+            return (
+              < ListItem
+                style={{ ...index === tabIndex % arr.length && { backgroundColor: "#b7e1fc" } }}
+                key={index}
+                className={classes.listItemCss}
+                onMouseDown={function () {
+                  insertMention(friend); setTimeout(ctx.editorRef.current.focus, 0);
+                }}
+
+              >
+                <AvatarChip personName={friend} className={classes.avatarChipCss} lift={0} />
+              </ListItem>
+            )
           })}
 
 
 
         </List >
+
       </Grow>
       {/* <Button variant="outlined" onClick={function () { setShow(pre => !pre) }}>show</Button> */}
     </>
   );
-})
+}))
