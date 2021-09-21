@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
-import { Context, withContext1 } from "./ContextProvider"
+import { Context, withContext } from "./ContextProvider"
 
 import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
 import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
@@ -9,7 +9,7 @@ import Immutable from 'immutable';
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
 import { Typography, Button, ButtonGroup, Container, Paper, Avatar, Box, Chip, Grow } from "@material-ui/core";
 import { Image, AlternateEmailSharp } from "@material-ui/icons";
-import { withContext } from "./ContextProvider";
+
 
 import AvatarChipList from "./AvatarChipList";
 
@@ -391,12 +391,15 @@ export default function createMentionPlugin() {
 
 
   }
-  function Mention({  ctx, theme, ...props }) {
+  function Mention({ ctx, theme, ...props }) {
 
     //  const theme = ctx.theme
 
-    const textSizeArr = theme.textSizeArr
+    //const textSizeArr = theme.textSizeArr
     const showMention = ctx.showMention
+    //const showMention = true
+    const showHint = ctx.showHint
+    //const showHint = true
 
     const { longMention_HEAD_Css, longMention_BODY_Css } = useStyles()
 
@@ -421,7 +424,8 @@ export default function createMentionPlugin() {
       return (
 
         <span className={longMention_BODY_Css} >
-          <AvatarChipList insertMention={insertMention} tabIndex={tabIndex} nameOnTyping={decoratedText} setShowing={setShowing} setMatchFriendArr={setMatchFriendArr} />{children}
+          {showHint && <AvatarChipList insertMention={insertMention} tabIndex={tabIndex} nameOnTyping={decoratedText} setShowing={setShowing} setMatchFriendArr={setMatchFriendArr} />}
+          {children}
         </span>
 
 
@@ -441,7 +445,8 @@ export default function createMentionPlugin() {
 
 
         <span className={longMention_BODY_Css} onKeyDown={function () { alert("fdf") }}>
-          <AvatarChipList insertMention={insertMention} tabIndex={tabIndex} nameOnTyping={decoratedText} setShowing={setShowing} setMatchFriendArr={setMatchFriendArr} />{children}
+          {showHint && <AvatarChipList insertMention={insertMention} tabIndex={tabIndex} nameOnTyping={decoratedText} setShowing={setShowing} setMatchFriendArr={setMatchFriendArr} />}
+          {children}
         </span>
 
 
@@ -525,9 +530,6 @@ export default function createMentionPlugin() {
         return 'not-handled';
       },
 
-
-
-
       onChange: function (editorState, { setEditorState }) {
         externalES = editorState
         externalSetEditorState = setEditorState
@@ -539,7 +541,7 @@ export default function createMentionPlugin() {
       decorators: [
         {
           strategy: mentionStrategy,
-          component: withTheme(withContext(Mention))
+          component: withContext(withTheme(Mention))
         }
       ],
 

@@ -3,18 +3,6 @@ import React, { Component, useContext } from "react"
 import { withStyles, makeStyles, useTheme, withTheme /*styled*/ } from '@material-ui/styles'
 
 import { Avatar, Chip, Popover, Typography, Button, Switch } from "@material-ui/core";
-import Grow from '@material-ui/core/Grow';
-
-import multiavatar from '@multiavatar/multiavatar';
-import classNames from 'classnames';
-import styled from 'styled-components'
-
-
-import { Context, withContext1, withContext2, withContext3, withContext4 } from "./ContextProvider";
-
-
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { CodeSharp } from "@material-ui/icons";
 
 
 function styleObj({ textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {

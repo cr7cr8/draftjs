@@ -1,5 +1,3 @@
-
-
 import React from "react"
 import { stateToHTML } from 'draft-js-export-html';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2, } from 'react-html-parser';
@@ -11,14 +9,21 @@ import { AvatarChip } from "./AvatarLogo";
 import { withContext } from "./ContextProvider";
 import reactElementToJSXString from 'react-element-to-jsx-string';
 
+import Emoji from "./Emoji"
 
+import {
+  isMobile,
+  isFirefox,
+  isChrome,
+  browserName,
+  engineName,
+} from "react-device-detect";
 
 
 function toHtml({ preHtml, theme }) {
 
   const html = ReactHtmlParser(preHtml, {
     transform: function transformFn(node, index) {
-
 
       if (node.name === "object" && node.attribs["data-type"] === "avatar_head") {
         return <React.Fragment key={index}></React.Fragment>
@@ -30,10 +35,23 @@ function toHtml({ preHtml, theme }) {
         })
 
         const personName = reactElementToJSXString(<>{element}</>).replace(/(<([^>]*)>)/ig, '').replace(/\s/g, '')
-
         return <AvatarChip hoverContent={personName} key={index} size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={personName} >{element}</AvatarChip>
+      }
+
+      else if (node.name === "object" && node.attribs["data-type"] === "emoji" && !isMobile) {
+
+        return <Emoji key={index}>{node.attribs["data-emoji_symbol"]}</Emoji>
 
       }
+      else if (node.name === "object" && node.attribs["data-type"] === "emoji" && isMobile) {
+        const element = node.children.map((child, index) => {
+          return convertNodeToElement(child, index, transformFn)
+        })
+        return <React.Fragment key={index}>{element}</React.Fragment>
+
+      }
+
+
 
     }
   });
@@ -43,9 +61,6 @@ function toHtml({ preHtml, theme }) {
 export default withTheme(withContext(function Content({ theme, ctx, ...props }) {
 
   const { editorState, setEditorState, toPreHtml } = ctx
-
-
-
 
   return (
     <Zoom in={ctx.showContent} unmountOnExit={true}>

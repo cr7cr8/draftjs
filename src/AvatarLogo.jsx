@@ -19,7 +19,7 @@ import { CodeSharp } from "@material-ui/icons";
 
 function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) {
   return {
-    avatarCss: ({ size, personName, ...props }) => {
+    avatarCss: ({ size, personName, radius, ...props }) => {
       const size_ = Array.isArray(size)
         ? size
         : typeof (size) === "string"
@@ -27,6 +27,8 @@ function styleObj({ lgTextSizeArr, textSizeArr, breakpointsAttribute, multiplyAr
           : lgTextSizeArr
 
       return {
+
+        borderRadius: radius || 0,
         ...breakpointsAttribute(["width", ...size_], ["height", ...size_]), //avatar size
       }
     },
@@ -293,7 +295,7 @@ class AvatarChip_ extends Component {
 
 
   render() {
-    const { classes, className ,theme, size, personName, avatarProps, logoOn = true, labelOn = true, children, labelSize, ...rest } = this.props
+    const { classes, className, theme, size, personName, avatarProps, logoOn = true, labelOn = true, children, labelSize, ...rest } = this.props
 
     const { src, ...avatarRest } = this.props.avatarProps || {}
 
@@ -373,7 +375,7 @@ class AvatarChip_ extends Component {
             paper: classes.paper,
           }}
           open={this.state.open}
-        
+
           anchorReference="anchorPosition"
           // anchorEl={this.anchorRef.current}
           anchorEl={this.anchorRef}
@@ -406,7 +408,8 @@ class AvatarChip_ extends Component {
 
 
 export const AvatarLogo = withStyles(styleObj, { withTheme: true })(AvatarLogo_);
-export const AvatarChip = withContext1(withStyles(styleObj, { withTheme: true })(AvatarChip_));
+//export const AvatarChip = withContext1(withStyles(styleObj, { withTheme: true })(AvatarChip_));
+export const AvatarChip = withStyles(styleObj, { withTheme: true })(AvatarChip_);
 //AvatarChip.contextType = Context
 
 

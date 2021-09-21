@@ -31,7 +31,7 @@ import yellow from '@material-ui/core/colors/yellow';
 import { PhoneMissed } from '@material-ui/icons';
 import DraftEditor from './DraftEditor';
 import Content from "./Content";
-import { Button, Switch, FormGroup, FormControlLabel,CssBaseline } from '@material-ui/core';
+import { Button, Switch, FormGroup, FormControlLabel, CssBaseline } from '@material-ui/core';
 
 
 
@@ -39,6 +39,7 @@ import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo";
 
 import SwitchBtn from "./SwitchBtn"
 import AvatarChipList from "./AvatarChipList"
+import { makeStyles } from '@material-ui/styles';
 
 
 function flatten(arr) {
@@ -80,7 +81,6 @@ export const Context = createContext();
 
 
 
-
 function createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }) {
 
   return responsiveFontSizes(createTheme(
@@ -101,7 +101,6 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }) {
         button: { textTransform: 'none' },
         body2: breakpointsAttribute(["fontSize", ...textSizeArr]),
       },
-
 
       overrides: {
         MuiChip: {
@@ -147,6 +146,19 @@ function toPreHtml(editorState) {
 
           }
         }
+        else if (entity.getType().indexOf("EMOJI") >= 0) {
+          return {
+            element: 'object',
+            attributes: {
+              "data-type": "emoji",
+              "data-emoji_symbol":entity.getData().symbol,
+              "data-emoji_url":entity.getData().url
+            }
+
+          }
+        }
+
+
       }
     }
   )
@@ -158,18 +170,22 @@ function toPreHtml(editorState) {
 
 export default function ContextProvider({ myTheme = {}, ...props }) {
 
+
   const [textSizeArr, setTextSizeArr] = useState(["1rem", "2rem", "4rem", "1rem", "2rem"])
   const [isLight, setIsLight] = useState(true)
-  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }), [textSizeArr, isLight, setIsLight])
-
 
   const editorRef = useRef()
   const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
-  const [showMention, setShowMention] = useState(false)
-
 
 
   const [showContent, setShowContent] = useState(false)
+  const [showMention, setShowMention] = useState(false)
+  const [showHint, setShowHint] = useState(false)
+  const [showEmoji, setShowEmoji] = useState(false)
+
+
+
+  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }), [textSizeArr, isLight, setIsLight])
 
   return (
     <ThemeProvider theme={theme}>
@@ -181,19 +197,12 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           editorState, setEditorState,
           showMention, setShowMention,
           showContent, setShowContent,
+          showHint, setShowHint,
+          showEmoji, setShowEmoji
         }}>
 
 
           <CssBaseline />
-
-
-
-
-
-
-
-
-
           <DraftEditor />
 
           <FormGroup row >
@@ -201,28 +210,34 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
               control={<SwitchBtn checked={showContent} onChange={() => { setShowContent(pre => !pre) }} name="showContent" color="primary" />}
               label="Content"
               labelPlacement="start"
-
             />
 
             <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
-              control={<SwitchBtn factor={[2, 2, 2, 1.8, 3]} checked={showMention} onChange={() => { setShowMention(pre => !pre) }} name="showMention" color="primary" />}
+              control={<SwitchBtn checked={showMention} factor={[2, 2, 2, 1.8, 3]}
+                onChange={() => { setShowMention(pre => !pre); editorRef.current.focus() }} name="showMention" color="primary" />}
               label="Mention"
               labelPlacement="start"
-
             />
+
+            <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
+              control={<SwitchBtn checked={showHint} factor={[2, 2, 2, 1.8, 2.2]}
+                onChange={() => { setShowHint(pre => !pre); editorRef.current.focus() }} name="showHint" color="primary" />}
+              label="Hint"
+              labelPlacement="start"
+            />
+
+            <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
+              control={<SwitchBtn checked={showEmoji} factor={[2, 2, 2, 1.8, 2.2]}
+                onChange={() => { setShowEmoji(pre => !pre); editorRef.current.focus() }} name="showHint" color="primary" />}
+              label="Emoji"
+              labelPlacement="start"
+            />
+
+
+
           </FormGroup>
           <Content />
 
-          {/* <div>
-            <Button variant="outlined" onClick={function () {
-              setShowContent(pre => !pre);
-              setTimeout(() => {
-                editorRef.current.focus()
-              }, 0);
-            }}>showContent</Button>
-            <Button variant="outlined" onClick={function () { setShowMention(pre => !pre); editorRef.current.focus() }}>showMention</Button>
-
-          </div> */}
         </Context.Provider>
       </StyledThemeProvider>
     </ThemeProvider>

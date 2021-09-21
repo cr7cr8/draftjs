@@ -22,6 +22,7 @@ import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
 
 
 import createMentionPlugin from './MentionPlugin';
+import createEmojiPlugin from './EmojiPlugin';
 
 
 import styled from "styled-components"
@@ -45,16 +46,14 @@ ${props => {
 
   }}
 
-
-
 `
-
 
 const initialState = {
   entityMap: {},
   blocks: []
 };
 const { mentionPlugin } = createMentionPlugin()
+const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 
 // const useStyles = makeStyles(function (theme) {
 
@@ -87,6 +86,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
     <React.Fragment key={key.current}>
       {/* <Div data-aaa="aaa" data-bbb="34343" id="99999" data-num="4343" /> */}
       <Paper>
+      <EmojiPanel />
         <Editor
           ref={function (element) { editorRef.current = element; }}
           editorState={editorState}
@@ -99,7 +99,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
           }}
 
-          plugins={[mentionPlugin]}
+          plugins={[ mentionPlugin,emojiPlugin, ]}
 
 
           // placeholder="hihihi"
@@ -180,7 +180,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
       {/* <AvatarChip personName="Fdsf"><TwoLineLabel lineTop="fdsff" lineDown="sdfe jdkljl ejkl" /></AvatarChip> */}
       {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
-        <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div>
+     
         <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
         <hr />
         <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div>
