@@ -41,6 +41,8 @@ import SwitchBtn from "./SwitchBtn"
 import AvatarChipList from "./AvatarChipList"
 import { makeStyles } from '@material-ui/styles';
 
+import createEmojiPlugin from './EmojiPlugin';
+const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 
 function flatten(arr) {
   return arr.reduce(function (flat, toFlatten) {
@@ -171,7 +173,7 @@ function toPreHtml(editorState) {
 export default function ContextProvider({ myTheme = {}, ...props }) {
 
 
-  const [textSizeArr, setTextSizeArr] = useState(["4rem", "4rem", "4rem", "4rem", "2rem"])
+  const [textSizeArr, setTextSizeArr] = useState(["4rem", "4rem", "1rem", "6rem", "2rem"])
   const [isLight, setIsLight] = useState(true)
 
   const editorRef = useRef()
@@ -203,8 +205,9 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
 
           <CssBaseline />
+         
           <DraftEditor />
-
+   
           <FormGroup row >
             <FormControlLabel
               control={<SwitchBtn checked={showContent} onChange={() => { setShowContent(pre => !pre) }} name="showContent" color="primary" />}

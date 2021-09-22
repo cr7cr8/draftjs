@@ -21,9 +21,9 @@ import {
 import { AvatarLogo } from './AvatarLogo';
 
 const emojiRegexRGI = require('emoji-regex/es2015/RGI_Emoji.js');
-const emojiRegex = require('emoji-regex/es2015/index.js');
-const emojiRegexText = require('emoji-regex/es2015/text.js');
-
+// const emojiRegex = require('emoji-regex/es2015/index.js');
+// const emojiRegexText = require('emoji-regex/es2015/text.js');
+const emojiRegex = emojiRegexRGI()
 
 
 const styleObj = function ({ breakpointsAttribute, ...theme }) {
@@ -33,6 +33,10 @@ const styleObj = function ({ breakpointsAttribute, ...theme }) {
       return {
         padding: 0,
         borderRadius: 0,
+        ...breakpointsAttribute(["fontSize", theme.textSizeArr]),
+        "& .MuiIconButton-label": {
+          display: "inline-block"
+        }
       }
     },
 
@@ -45,9 +49,9 @@ const styleObj = function ({ breakpointsAttribute, ...theme }) {
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center center",
         backgroundSize: "contain",
-        display: "inline-block",
+        // display: "inline-block",
         verticalAlign: "middle",
-        textAlign: "right",
+        // textAlign: "right",
         overflow: "hidden",
 
         ...breakpointsAttribute(["width", theme.textSizeArr], ["height", theme.textSizeArr]),
@@ -123,58 +127,83 @@ export default function createImagePlugin() {
 
 
 
+      let matchArr;
+      while ((matchArr = emojiRegex.exec(blockText)) !== null) {
 
+        const emojiKey = matchArr[0]
+        const start = matchArr.index;
+        const end = matchArr.index + matchArr[0].length;
+        const contentLength = end - start;
+        const contentFocusAt = anchorFocusOffset - start;
+        // array.push(start)
 
-      Object.keys(emoji).forEach(function (emojiKey) {
+        newSelection = newSelection.merge({
+          anchorKey: blockKey,
+          anchorOffset: start,
+          focusKey: blockKey,
+          focusOffset: start + emojiKey.length,
+          isBackward: false,
+          hasFocus: false,
 
-        const regx = new RegExp(`${emojiKey}`, "g")
-        const array = []
-        let matchArr;
-        while ((matchArr = regx.exec(blockText)) !== null) {
+        })
 
-          const start = matchArr.index;
-          const end = matchArr.index + matchArr[0].length;
-          const contentLength = end - start;
-          const contentFocusAt = anchorFocusOffset - start;
-          // array.push(start)
+        newContent = newContent.createEntity("EMOJI", "IMMUTABLE", { url: emoji[emojiKey], symbol: emojiKey });
+        const entityKey = newContent.getLastCreatedEntityKey();
 
-          newSelection = newSelection.merge({
-            anchorKey: blockKey,
-            anchorOffset: start,
-            focusKey: blockKey,
-            focusOffset: start + emojiKey.length,
-            isBackward: false,
-            hasFocus: false,
-
-          })
-
-          newContent = newContent.createEntity("EMOJI", "IMMUTABLE", { url: emoji[emojiKey], symbol: emojiKey });
-          const entityKey = newContent.getLastCreatedEntityKey();
-
-          newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
+        newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
+      }
 
 
 
-        }
 
 
-        // array.forEach(function (offset) {
-        //   newSelection = newSelection.merge({
-        //     anchorKey: blockKey,
-        //     anchorOffset: offset,
-        //     focusKey: blockKey,
-        //     focusOffset: offset + emojiKey.length,
-        //     isBackward: false,
-        //     hasFocus: false,
+      // Object.keys(emoji).forEach(function (emojiKey) {
 
-        //   })
+      //   const regx = new RegExp(`${emojiKey}`, "g")
+      //   const array = []
+      //   let matchArr;
+      //   while ((matchArr = regx.exec(blockText)) !== null) {
 
-        //   newContent = Modifier.applyEntity(newContent, newSelection, emojiEntity)
+      //     const start = matchArr.index;
+      //     const end = matchArr.index + matchArr[0].length;
+      //     const contentLength = end - start;
+      //     const contentFocusAt = anchorFocusOffset - start;
+      //     // array.push(start)
+
+      //     newSelection = newSelection.merge({
+      //       anchorKey: blockKey,
+      //       anchorOffset: start,
+      //       focusKey: blockKey,
+      //       focusOffset: start + emojiKey.length,
+      //       isBackward: false,
+      //       hasFocus: false,
+
+      //     })
+
+      //     newContent = newContent.createEntity("EMOJI", "IMMUTABLE", { url: emoji[emojiKey], symbol: emojiKey });
+      //     const entityKey = newContent.getLastCreatedEntityKey();
+
+      //     newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
+      //   }
 
 
-        // })
+      // array.forEach(function (offset) {
+      //   newSelection = newSelection.merge({
+      //     anchorKey: blockKey,
+      //     anchorOffset: offset,
+      //     focusKey: blockKey,
+      //     focusOffset: offset + emojiKey.length,
+      //     isBackward: false,
+      //     hasFocus: false,
 
-      })
+      //   })
+
+      //   newContent = Modifier.applyEntity(newContent, newSelection, emojiEntity)
+
+
+      // })
+
+      // })
 
 
 
@@ -190,7 +219,7 @@ export default function createImagePlugin() {
     return externalES
   }
 
-  function insertEmoji(text, refa) {
+  function insertEmoji(text) {
 
     const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = externalES.getSelection().toArray()
     const [anchorStartKey, anchorStartOffset, anchorFocusKey, anchorFocusOffset, isAnchorBackward, isAnchorFocused]
@@ -217,12 +246,29 @@ export default function createImagePlugin() {
     externalES = EditorState.acceptSelection(externalES, newSelection)
 
     externalSetEditorState(externalES)
-    //refa.current.focus()
-    //console.log(refa)
+
   }
 
   function EmojiComp(props) {
-    const { ctx, theme, contentState, entityKey, blockKey, offsetKey, start, end, decoratedText } = props;
+    const { ctx, theme, contentState, entityKey, blockKey, offsetKey, start, end, decoratedText, classes } = props;
+
+
+    return (
+      <span
+        className={classes.emojiCss}
+        style={{
+          //  backgroundImage: emoji[item],
+
+        }}
+      >
+        <span //style={{ clipPath: "circle(0% at 50% 50%)", }}
+        >
+          {props.children}
+        </span>
+
+      </span>
+    )
+
 
     return (
 
@@ -240,11 +286,11 @@ export default function createImagePlugin() {
     const emojiArr1 = `
     😃 😄 😁 😆 😅 😂 ☺️ 😊 😇 😉 😌 😍 😘 😚 😋 😝 😜 😎 😏 😒 😞 😔 ☹️ 😣 😖 😫 😩 😢 😭 😤 😠 😡 😳 😱 😨 😰 😥 😓 😶 😐 😲 😪 😵 😷 😈 👿 👹 👺 
     💩 👻 💀 ☠️ 👽 👾 🎃 😺 😸 😹 😻 😼 😽 🙀 😿 😾 
-    `.split(" ")
+    `
 
 
     const emojiArr2 = `👋 ✋ 👌 ✌️ 👈 👉 👆 👇 ☝️ 👍 👎 ✊ 👊 👏 🙌 👐 🙏 ✍️ 💅 💪 👣 👂 👃 👀 👅 👄 💋 
-    `.split(" ")
+    `
 
     const emojiArr3 = `👶 👧 🧒 👦 👩 🧑 👨 👩‍🦱 🧑‍🦱 👨‍🦱 👩‍🦰 🧑‍🦰 👨‍🦰 👱‍♀️ 👱 👱‍♂️ 👩‍🦳 🧑‍🦳 👨‍🦳 👩‍🦲 🧑‍🦲 👨‍🦲 🧔 👵 🧓 👴 👲 👳‍♀️ 👳 👳‍♂️ 🧕 👮‍♀️ 👮 👮‍♂️ 👷‍♀️ 
     👷 👷‍♂️ 💂‍♀️ 💂 💂‍♂️ 🕵️‍♀️ 🕵️ 🕵️‍♂️ 👩‍⚕️ 🧑‍⚕️ 👨‍⚕️ 👩‍🌾 🧑‍🌾 👨‍🌾 👩‍🍳 🧑‍🍳 👨‍🍳 👩‍🎓 🧑‍🎓 👨‍🎓 👩‍🎤 🧑‍🎤 👨‍🎤 👩‍🏫 🧑‍🏫 👨‍🏫 👩‍🏭 🧑‍🏭 👨‍🏭 👩‍💻 🧑‍💻 👨‍💻 👩‍💼 🧑‍💼 
@@ -257,10 +303,10 @@ export default function createImagePlugin() {
 
 
 
-    const regex = emojiRegexRGI()
+
     let match;
     const arr = [];
-    while (match = regex.exec(emojiArr3)) {
+    while (match = emojiRegex.exec(emojiArr3)) {
       const emoji = match[0];
       arr.push(emoji)
       console.log(`Matched sequence ${emoji} — code points: ${[...emoji].length}`);
@@ -269,11 +315,11 @@ export default function createImagePlugin() {
 
 
     return (
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", backgroundColor: "pink" }}>
         {arr.map(item => {
 
           return (
-            <IconButton key={item}
+            <IconButton key={item} disableRipple
               className={classes.emojiButtonCss}
               onClick={function () {
                 insertEmoji(item)
@@ -282,11 +328,11 @@ export default function createImagePlugin() {
             >
 
               <span
-              // className={classes.emojiCss}
-              // style={{
-              //   backgroundImage: emoji[item],
+                className={classes.emojiCss}
+                style={{
+                  // backgroundImage: emoji[item],
 
-              // }}
+                }}
               >
                 <span //style={{ clipPath: "circle(0% at 50% 50%)", }}
                 >
@@ -306,61 +352,6 @@ export default function createImagePlugin() {
 
 
 
-    return (
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
-        {Object.keys(emoji).map(item => {
-
-          return (
-            <IconButton key={item}
-              className={classes.emojiButtonCss}
-              onClick={function () {
-                insertEmoji(item)
-              }}
-
-            >
-
-
-              <span
-                className={classes.emojiCss}
-                style={{
-                  backgroundImage: emoji[item],
-
-                }}
-              >
-                <span style={{ clipPath: "circle(0% at 50% 50%)", }}>
-                  {item}
-                </span>
-
-              </span>
-
-
-
-            </IconButton>
-          )
-        })}
-      </div >
-    )
-
-
-
-    return emojiArr1.filter(item => item.length > 0).map(item => {
-      //  console.log(item,item.length)
-
-      return (
-        <Button variant="outline" key={"" + Math.random()}
-
-          //  style={{ padding: 0, borderRadius: 0, }}
-
-          onClick={function () {
-            console.log(item)
-            insertEmoji("v")
-            // setTimeout(
-            //   ctx.editorRef.current.focus
-            //   , 10);
-          }}
-        >{"a"}</Button>
-      )
-    })
 
 
   }
@@ -371,7 +362,7 @@ export default function createImagePlugin() {
       onChange: function (editorState, { setEditorState }) {
         externalES = editorState
         externalSetEditorState = setEditorState
-        //externalES = taggingEmoji()
+        externalES = taggingEmoji()
 
         return externalES
       },
@@ -379,7 +370,7 @@ export default function createImagePlugin() {
       decorators: [{
 
         strategy: emojiStrategy,
-        component: withTheme(withContext(EmojiComp))
+        component: withStyles(styleObj, { withTheme: true })(withContext(EmojiComp))                       //withTheme(withContext(EmojiComp))
       }],
     },
     EmojiPanel: withStyles(styleObj, { withTheme: true })(withContext(EmojiPanel))
