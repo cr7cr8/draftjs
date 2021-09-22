@@ -128,7 +128,7 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }) {
         //     visibility: "hidden",
         //     opacity: 0,
         //   }
-          
+
 
         // }
       },
@@ -245,8 +245,15 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
             <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
               control={<SwitchBtn checked={showEmojiPanel} factor={[2, 2, 2, 1.8, 2.2]}
-                onChange={() => { setShowEmojiPanel(pre => !pre); editorRef.current.focus() }} name="showHint" color="primary" />}
+                onChange={() => { setShowEmojiPanel(pre => !pre); editorRef.current.focus() }} name="showEmojiPanel" color="primary" />}
               label="EmojiPanel"
+              labelPlacement="start"
+            />
+
+            <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
+              control={<SwitchBtn checked={!isLight} factor={[2, 2, 2, 1.8, 2.2]}
+                onChange={() => { setIsLight(pre => !pre);/* editorRef.current.focus()*/ }} name="lightDark" color="primary" />}
+              label="LightDark"
               labelPlacement="start"
             />
 

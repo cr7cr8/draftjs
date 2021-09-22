@@ -206,9 +206,11 @@ export default function createImagePlugin() {
 
   
 
+    return props.children
+
     return (
       <span 
-        className={classes.emojiCss}
+      //  className={classes.emojiCss}
         style={{
           //  backgroundImage: emoji[item],
         }}

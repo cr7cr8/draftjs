@@ -26,7 +26,15 @@ function toHtml({ preHtml, theme }) {
     transform: function transformFn(node, index) {
 
       if (node.name === "object" && node.attribs["data-type"] === "avatar_head") {
-        return <React.Fragment key={index}></React.Fragment>
+
+       
+        const element = node.children.map((child, index) => {
+          return convertNodeToElement(child, index, transformFn)
+        })
+       
+        return <span key={index} style={{ fontSize: 0, width: 0, height: 0, display: "inline-block" }}><span><span>{element}</span></span></span>
+
+        return <React.Fragment key={index}></React.Fragment>  // work as well
       }
       else if (node.name === "object" && node.attribs["data-type"] === "avatar_body") {
 
@@ -47,7 +55,8 @@ function toHtml({ preHtml, theme }) {
         const element = node.children.map((child, index) => {
           return convertNodeToElement(child, index, transformFn)
         })
-        return <React.Fragment key={index}>{element}</React.Fragment>
+        //  return <React.Fragment key={index}>{element}</React.Fragment>
+        return <span key={index}><span>{element}</span></span>
 
       }
 
