@@ -116,7 +116,21 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }) {
             fontSize: "3rem",
             ...breakpointsAttribute(["fontSize", textSizeArr])
           }
-        }
+        },
+        // MuiCollapse: {
+
+        //   root:{
+        //     transitionProperty:"height, opacity",
+        //     opacity:1,
+        //   },
+
+        //   hidden: {
+        //     visibility: "hidden",
+        //     opacity: 0,
+        //   }
+          
+
+        // }
       },
 
     }, myTheme))
@@ -153,8 +167,8 @@ function toPreHtml(editorState) {
             element: 'object',
             attributes: {
               "data-type": "emoji",
-              "data-emoji_symbol":entity.getData().symbol,
-              "data-emoji_url":entity.getData().url
+              "data-emoji_symbol": entity.getData().symbol,
+              "data-emoji_url": entity.getData().url
             }
 
           }
@@ -183,7 +197,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [showContent, setShowContent] = useState(false)
   const [showMention, setShowMention] = useState(false)
   const [showHint, setShowHint] = useState(false)
-  const [showEmojiPanel, setShowEmojiPanel] = useState(true)
+  const [showEmojiPanel, setShowEmojiPanel] = useState(false)
 
 
 
@@ -205,9 +219,9 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
 
           <CssBaseline />
-         
-          <DraftEditor />
-   
+
+
+
           <FormGroup row >
             <FormControlLabel
               control={<SwitchBtn checked={showContent} onChange={() => { setShowContent(pre => !pre) }} name="showContent" color="primary" />}
@@ -236,9 +250,10 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
               labelPlacement="start"
             />
 
-
-
           </FormGroup>
+
+          <DraftEditor />
+
           <Content />
 
         </Context.Provider>

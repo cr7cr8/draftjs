@@ -10,6 +10,7 @@ import { height } from '@material-ui/system';
 
 import { withContext } from "./ContextProvider"
 import Emoji, { emoji } from "./Emoji"
+import classNames  from "classnames"
 
 import {
   isMobile,
@@ -32,52 +33,36 @@ const styleObj = function ({ breakpointsAttribute, ...theme }) {
   console.log(theme.palette.action.hover)
 
   return {
-    emojiButtonCss: (props) => {
+  
+
+    emojiCss: (props) => {
       return {
-        cursor: "pointer",
+      //  cursor: "pointer",
         borderWidth: 0,
-        margin: 1,
+        margin: 0,
         padding: 0,
         borderRadius: 0,
-        backgroundColor: theme.palette.background.default,
-
-
+        //backgroundColor: theme.palette.background.default,
+        display:"inline-block",
+       // backgroundColor:"wheat",
         ...breakpointsAttribute(["fontSize", theme.textSizeArr]),
-        "& :hover": {
-          //   backgroundColor:"blue",
+      
+      }
+    },
+    emojiButtonCss: (props) => {
+      return {
+        margin: 1,
+        cursor: "pointer",
+        //backgroundColor: theme.palette.background.default,
+        "&:hover": {
           backgroundColor: theme.palette.action.hover
         },
-        "& :active": {
-
-       //   color:"red",//theme.palette.action.selected,
+        "&:active": {
           backgroundColor: theme.palette.action.selected,
         }
 
       }
     },
-
-    emojiCss: (props) => {
-
-      const { ctx, contentState, entityKey, blockKey, offsetKey, start, end, decoratedText } = props;
-
-      return {
-
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center center",
-        backgroundSize: "contain",
-        // display: "inline-block",
-        verticalAlign: "middle",
-        // textAlign: "right",
-        overflow: "hidden",
-
-        ...breakpointsAttribute(["width", theme.textSizeArr], ["height", theme.textSizeArr]),
-
-
-
-      }
-
-    },
-
 
   }
 }
@@ -219,19 +204,19 @@ export default function createImagePlugin() {
   function EmojiComp(props) {
     const { ctx, theme, contentState, entityKey, blockKey, offsetKey, start, end, decoratedText, classes } = props;
 
-
+  
 
     return (
-      <span
+      <span 
         className={classes.emojiCss}
         style={{
           //  backgroundImage: emoji[item],
         }}
       >
-        <span //style={{ clipPath: "circle(0% at 50% 50%)", }}
-        >
+        {/* <span //style={{ clipPath: "circle(0% at 50% 50%)", }}
+        > */}
           {props.children}
-        </span>
+        {/* </span> */}
 
       </span>
     )
@@ -273,7 +258,11 @@ export default function createImagePlugin() {
       arr.push(emoji)
       //  console.log(`Matched sequence ${emoji} — code points: ${[...emoji].length}`);
     }
+    const allClassNames = classNames({
+      [classes.emojiCss]:true,
+      [classes.emojiButtonCss]:true
 
+    })
 
 
 
@@ -284,24 +273,24 @@ export default function createImagePlugin() {
 
           return (
             <button key={item} //disableRipple
-              className={classes.emojiButtonCss}
+              className={allClassNames}
               onClick={function () {
                 insertEmoji(item)
               }}
 
             >
-              <span
+              {/* <span
                 className={classes.emojiCss}
                 style={{
                   // backgroundImage: emoji[item],
                 }}
               >
                 <span //style={{ clipPath: "circle(0% at 50% 50%)", }}
-                >
+                > */}
                   {item}
-                </span>
+                {/* </span> */}
 
-              </span>
+              {/* </span> */}
 
 
 

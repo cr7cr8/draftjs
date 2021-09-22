@@ -38,12 +38,12 @@ function toHtml({ preHtml, theme }) {
         return <AvatarChip hoverContent={personName} key={index} size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={personName} >{element}</AvatarChip>
       }
 
-      else if (node.name === "object" && node.attribs["data-type"] === "emoji" && !isMobile) {
+      // else if (node.name === "object" && node.attribs["data-type"] === "emoji" && !isMobile) {
 
-        return <Emoji key={index}>{node.attribs["data-emoji_symbol"]}</Emoji>
+      //   return <Emoji key={index}>{node.attribs["data-emoji_symbol"]}</Emoji>
 
-      }
-      else if (node.name === "object" && node.attribs["data-type"] === "emoji" && isMobile) {
+      // }
+      else if (node.name === "object" && node.attribs["data-type"] === "emoji") {
         const element = node.children.map((child, index) => {
           return convertNodeToElement(child, index, transformFn)
         })
