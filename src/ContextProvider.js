@@ -171,7 +171,7 @@ function toPreHtml(editorState) {
 export default function ContextProvider({ myTheme = {}, ...props }) {
 
 
-  const [textSizeArr, setTextSizeArr] = useState(["1rem", "2rem", "4rem", "1rem", "2rem"])
+  const [textSizeArr, setTextSizeArr] = useState(["4rem", "4rem", "4rem", "4rem", "2rem"])
   const [isLight, setIsLight] = useState(true)
 
   const editorRef = useRef()

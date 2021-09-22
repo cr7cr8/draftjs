@@ -9,7 +9,7 @@ import { InsertEmoticon } from "@material-ui/icons";
 import { height } from '@material-ui/system';
 
 import { withContext } from "./ContextProvider"
-import Emoji,{emoji} from "./Emoji"
+import Emoji, { emoji } from "./Emoji"
 
 import {
   isMobile,
@@ -198,14 +198,46 @@ export default function createImagePlugin() {
   function EmojiButton({ theme, ctx, classes, ...props }) {
 
 
+    const smileysEmojiArr = `
+    😃 😄 😁 😆 😅 😂 ☺️ 😊 😇 😉 😌 😍 😘 😚 😋 😝 😜 😎 😏 😒 😞 😔 ☹️ 😣 😖 😫 😩 😢 😭 😤 😠 😡 😳 😱 😨 😰 😥 😓 😶 😐 😲 😪 😵 😷 😈 👿 👹 👺 
+    💩 👻 💀 ☠️ 👽 👾 🎃 😺 😸 😹 😻 😼 😽 🙀 😿 😾 
+    `
+    
+    
+    
+
 
     return (
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", backgroundColor: "pink" }}>
+
+
+
+
+        {/* {emorjiArr.map(emoji => {
+
+          return (
+            <IconButton key={emoji}
+
+              style={{ padding: 0, borderRadius: 0, }}
+
+              onClick={function () {
+                insertEmoji(emoji.trim())
+              }}
+            >{emoji.trim()}</IconButton>
+
+
+          )
+        })} */}
+
+
+
+
+
         {Object.keys(emoji).map(item => {
 
           return (
             <IconButton key={item}
-              
+
               style={{ padding: 0, borderRadius: 0, }}
 
               onClick={function () {
@@ -214,13 +246,7 @@ export default function createImagePlugin() {
             >
               <Emoji>{item}</Emoji>
 
-              {/* <span
-                className={theme.emojiCss}
-                style={{
-                  backgroundImage: emoji[item],
 
-                }}
-              /> */}
 
             </IconButton>
           )
