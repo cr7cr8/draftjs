@@ -19,6 +19,7 @@
     "draft-js-import-html": "^1.4.1",
     "draft-js-plugins-chainable": "0.0.2",
     "draft-js-plugins-editor": "^3.0.0",
+    "emoji-regex": "^9.2.2",
     "immutable": "^4.0.0-rc.14",
     "react": "^17.0.2",
     "react-detectable-overflow": "^0.6.1",

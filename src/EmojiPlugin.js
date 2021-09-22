@@ -20,7 +20,47 @@ import {
 } from "react-device-detect";
 import { AvatarLogo } from './AvatarLogo';
 
-//<img src="/emoji/❤.png" />
+const emojiRegexRGI = require('emoji-regex/es2015/RGI_Emoji.js');
+const emojiRegex = require('emoji-regex/es2015/index.js');
+const emojiRegexText = require('emoji-regex/es2015/text.js');
+
+
+
+const styleObj = function ({ breakpointsAttribute, ...theme }) {
+
+  return {
+    emojiButtonCss: (props) => {
+      return {
+        padding: 0,
+        borderRadius: 0,
+      }
+    },
+
+    emojiCss: (props) => {
+
+      const { ctx, contentState, entityKey, blockKey, offsetKey, start, end, decoratedText } = props;
+
+      return {
+
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center center",
+        backgroundSize: "contain",
+        display: "inline-block",
+        verticalAlign: "middle",
+        textAlign: "right",
+        overflow: "hidden",
+
+        ...breakpointsAttribute(["width", theme.textSizeArr], ["height", theme.textSizeArr]),
+
+
+
+      }
+
+    },
+
+
+  }
+}
 
 
 
@@ -150,7 +190,7 @@ export default function createImagePlugin() {
     return externalES
   }
 
-  function insertEmoji(text) {
+  function insertEmoji(text, refa) {
 
     const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = externalES.getSelection().toArray()
     const [anchorStartKey, anchorStartOffset, anchorFocusKey, anchorFocusOffset, isAnchorBackward, isAnchorFocused]
@@ -177,6 +217,8 @@ export default function createImagePlugin() {
     externalES = EditorState.acceptSelection(externalES, newSelection)
 
     externalSetEditorState(externalES)
+    //refa.current.focus()
+    //console.log(refa)
   }
 
   function EmojiComp(props) {
@@ -192,59 +234,66 @@ export default function createImagePlugin() {
 
   }
 
+  function EmojiPanel({ theme, ctx, classes, ...props }) {
 
 
-
-  function EmojiButton({ theme, ctx, classes, ...props }) {
-
-
-    const smileysEmojiArr = `
+    const emojiArr1 = `
     😃 😄 😁 😆 😅 😂 ☺️ 😊 😇 😉 😌 😍 😘 😚 😋 😝 😜 😎 😏 😒 😞 😔 ☹️ 😣 😖 😫 😩 😢 😭 😤 😠 😡 😳 😱 😨 😰 😥 😓 😶 😐 😲 😪 😵 😷 😈 👿 👹 👺 
     💩 👻 💀 ☠️ 👽 👾 🎃 😺 😸 😹 😻 😼 😽 🙀 😿 😾 
+    `.split(" ")
+
+
+    const emojiArr2 = `👋 ✋ 👌 ✌️ 👈 👉 👆 👇 ☝️ 👍 👎 ✊ 👊 👏 🙌 👐 🙏 ✍️ 💅 💪 👣 👂 👃 👀 👅 👄 💋 
+    `.split(" ")
+
+    const emojiArr3 = `👶 👧 🧒 👦 👩 🧑 👨 👩‍🦱 🧑‍🦱 👨‍🦱 👩‍🦰 🧑‍🦰 👨‍🦰 👱‍♀️ 👱 👱‍♂️ 👩‍🦳 🧑‍🦳 👨‍🦳 👩‍🦲 🧑‍🦲 👨‍🦲 🧔 👵 🧓 👴 👲 👳‍♀️ 👳 👳‍♂️ 🧕 👮‍♀️ 👮 👮‍♂️ 👷‍♀️ 
+    👷 👷‍♂️ 💂‍♀️ 💂 💂‍♂️ 🕵️‍♀️ 🕵️ 🕵️‍♂️ 👩‍⚕️ 🧑‍⚕️ 👨‍⚕️ 👩‍🌾 🧑‍🌾 👨‍🌾 👩‍🍳 🧑‍🍳 👨‍🍳 👩‍🎓 🧑‍🎓 👨‍🎓 👩‍🎤 🧑‍🎤 👨‍🎤 👩‍🏫 🧑‍🏫 👨‍🏫 👩‍🏭 🧑‍🏭 👨‍🏭 👩‍💻 🧑‍💻 👨‍💻 👩‍💼 🧑‍💼 
+    👨‍💼 👩‍🔧 🧑‍🔧 👨‍🔧 👩‍🔬 🧑‍🔬 👨‍🔬 👩‍🎨 🧑‍🎨 👨‍🎨 👩‍🚒 🧑‍🚒 👨‍🚒 👩‍✈️ 🧑‍✈️ 👨‍✈️ 👩‍🚀 🧑‍🚀 👨‍🚀 👩‍⚖️ 🧑‍⚖️ 👨‍⚖️ 👰‍♀️ 👰 👰‍♂️ 🤵‍♀️ 🤵 🤵‍♂️ 👸 🤴 🥷 🦸‍♀️ 🦸 🦸‍♂️ 🦹‍♀️ 🦹 
+    🦹‍♂️ 🤶 🧑‍🎄 🎅 🧙‍♀️ 🧙 🧙‍♂️ 🧝‍♀️ 🧝 🧝‍♂️ 🧛‍♀️ 🧛 🧛‍♂️ 🧟‍♀️ 🧟 🧟‍♂️ 🧞‍♀️ 🧞 🧞‍♂️ 🧜‍♀️ 🧜 🧜‍♂️ 🧚‍♀️ 🧚 🧚‍♂️ 👼 🤰 🤱 👩‍🍼 🧑‍🍼 👨‍🍼 🙇‍♀️ 🙇 🙇‍♂️ 💁‍♀️ 💁 💁‍♂️ 🙅‍♀️ 🙅 🙅‍♂️ 🙆‍♀️ 🙆 🙆‍♂️ 
+    🙋‍♀️ 🙋 🙋‍♂️ 🧏‍♀️ 🧏 🧏‍♂️ 🤦‍♀️ 🤦 🤦‍♂️ 🤷‍♀️ 🤷 🤷‍♂️ 🙎‍♀️ 🙎 🙎‍♂️ 🙍‍♀️ 🙍 🙍‍♂️ 💇‍♀️ 💇 💇‍♂️ 💆‍♀️ 💆 💆‍♂️ 🧖‍♀️ 🧖 🧖‍♂️ 💅 🤳 💃 🕺 👯‍♀️ 👯 👯‍♂️ 🕴 👩‍🦽 🧑‍🦽 👨‍🦽 👩‍🦼 🧑‍🦼 👨‍🦼 
+    🚶‍♀️ 🚶 🚶‍♂️ 👩‍🦯 🧑‍🦯 👨‍🦯 🧎‍♀️ 🧎 🧎‍♂️ 🏃‍♀️ 🏃 🏃‍♂️ 🧍‍♀️ 🧍 🧍‍♂️ 👭 🧑‍🤝‍🧑 👬 👫 👩‍❤️‍👩 💑 👨‍❤️‍👨 👩‍❤️‍👨 👩‍❤️‍💋‍👩 💏 👨‍❤️‍💋‍👨 👩‍❤️‍💋‍👨 👪 👨‍👩‍👦 👨‍👩‍👧 👨‍👩‍👧‍👦 👨‍👩‍👦‍👦 
+    👨‍👩‍👧‍👧 👨‍👨‍👦 👨‍👨‍👧 👨‍👨‍👧‍👦 👨‍👨‍👦‍👦 👨‍👨‍👧‍👧 👩‍👩‍👦 👩‍👩‍👧 👩‍👩‍👧‍👦 👩‍👩‍👦‍👦 👩‍👩‍👧‍👧 👨‍👦 👨‍👦‍👦 👨‍👧 👨‍👧‍👦 👨‍👧‍👧 👩‍👦 👩‍👦‍👦 👩‍👧 👩‍👧‍👦 👩‍👧‍👧 🗣 👤 👥 🫂 
     `
-    
-    
-    
+
+
+
+    const regex = emojiRegexRGI()
+    let match;
+    const arr = [];
+    while (match = regex.exec(emojiArr3)) {
+      const emoji = match[0];
+      arr.push(emoji)
+      console.log(`Matched sequence ${emoji} — code points: ${[...emoji].length}`);
+    }
+
 
 
     return (
-      <div style={{ display: "flex", flexWrap: "wrap", backgroundColor: "pink" }}>
-
-
-
-
-        {/* {emorjiArr.map(emoji => {
-
-          return (
-            <IconButton key={emoji}
-
-              style={{ padding: 0, borderRadius: 0, }}
-
-              onClick={function () {
-                insertEmoji(emoji.trim())
-              }}
-            >{emoji.trim()}</IconButton>
-
-
-          )
-        })} */}
-
-
-
-
-
-        {Object.keys(emoji).map(item => {
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {arr.map(item => {
 
           return (
             <IconButton key={item}
-
-              style={{ padding: 0, borderRadius: 0, }}
-
+              className={classes.emojiButtonCss}
               onClick={function () {
                 insertEmoji(item)
               }}
+
             >
-              <Emoji>{item}</Emoji>
+
+              <span
+              // className={classes.emojiCss}
+              // style={{
+              //   backgroundImage: emoji[item],
+
+              // }}
+              >
+                <span //style={{ clipPath: "circle(0% at 50% 50%)", }}
+                >
+                  {item}
+                </span>
+
+              </span>
 
 
 
@@ -253,14 +302,76 @@ export default function createImagePlugin() {
         })}
       </div >
     )
+
+
+
+
+    return (
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {Object.keys(emoji).map(item => {
+
+          return (
+            <IconButton key={item}
+              className={classes.emojiButtonCss}
+              onClick={function () {
+                insertEmoji(item)
+              }}
+
+            >
+
+
+              <span
+                className={classes.emojiCss}
+                style={{
+                  backgroundImage: emoji[item],
+
+                }}
+              >
+                <span style={{ clipPath: "circle(0% at 50% 50%)", }}>
+                  {item}
+                </span>
+
+              </span>
+
+
+
+            </IconButton>
+          )
+        })}
+      </div >
+    )
+
+
+
+    return emojiArr1.filter(item => item.length > 0).map(item => {
+      //  console.log(item,item.length)
+
+      return (
+        <Button variant="outline" key={"" + Math.random()}
+
+          //  style={{ padding: 0, borderRadius: 0, }}
+
+          onClick={function () {
+            console.log(item)
+            insertEmoji("v")
+            // setTimeout(
+            //   ctx.editorRef.current.focus
+            //   , 10);
+          }}
+        >{"a"}</Button>
+      )
+    })
+
+
   }
+
   return {
 
     emojiPlugin: {
       onChange: function (editorState, { setEditorState }) {
         externalES = editorState
         externalSetEditorState = setEditorState
-        externalES = taggingEmoji()
+        //externalES = taggingEmoji()
 
         return externalES
       },
@@ -271,7 +382,7 @@ export default function createImagePlugin() {
         component: withTheme(withContext(EmojiComp))
       }],
     },
-    EmojiPanel: withTheme(withContext(EmojiButton))
+    EmojiPanel: withStyles(styleObj, { withTheme: true })(withContext(EmojiPanel))
 
 
   }

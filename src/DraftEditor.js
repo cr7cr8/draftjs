@@ -179,12 +179,12 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       </div> */}
 
       {/* <AvatarChip personName="Fdsf"><TwoLineLabel lineTop="fdsff" lineDown="sdfe jdkljl ejkl" /></AvatarChip> */}
-      {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
+      <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
      
         <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
         <hr />
         <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div>
-      </div> */}
+      </div>
 
     </React.Fragment>
   )
