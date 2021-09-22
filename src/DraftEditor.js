@@ -11,7 +11,7 @@ import { stateToHTML } from 'draft-js-export-html';
 
 
 //import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
-import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper } from "@material-ui/core";
+import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse } from "@material-ui/core";
 import { makeStyles, useTheme, ThemeProvider, withTheme } from '@material-ui/styles';
 
 import { withContext } from "./ContextProvider"
@@ -84,10 +84,12 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
   return (
 
     <React.Fragment key={key.current}>
-      {ctx.showEmoji && <EmojiPanel />}
+
       {/* <Div data-aaa="aaa" data-bbb="34343" id="99999" data-num="4343" /> */}
       <Paper>
-
+        <Grow in={ctx.showEmojiPanel} unmountOnExit={true} >
+          <EmojiPanel />
+        </Grow>
         <Editor
           ref={function (element) { editorRef.current = element; }}
           editorState={editorState}

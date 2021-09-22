@@ -183,7 +183,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [showContent, setShowContent] = useState(false)
   const [showMention, setShowMention] = useState(false)
   const [showHint, setShowHint] = useState(false)
-  const [showEmoji, setShowEmoji] = useState(false)
+  const [showEmojiPanel, setShowEmojiPanel] = useState(true)
 
 
 
@@ -200,7 +200,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showMention, setShowMention,
           showContent, setShowContent,
           showHint, setShowHint,
-          showEmoji, setShowEmoji
+          showEmojiPanel, setShowEmojiPanel
         }}>
 
 
@@ -230,9 +230,9 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
             />
 
             <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
-              control={<SwitchBtn checked={showEmoji} factor={[2, 2, 2, 1.8, 2.2]}
-                onChange={() => { setShowEmoji(pre => !pre); editorRef.current.focus() }} name="showHint" color="primary" />}
-              label="Emoji"
+              control={<SwitchBtn checked={showEmojiPanel} factor={[2, 2, 2, 1.8, 2.2]}
+                onChange={() => { setShowEmojiPanel(pre => !pre); editorRef.current.focus() }} name="showHint" color="primary" />}
+              label="EmojiPanel"
               labelPlacement="start"
             />
 

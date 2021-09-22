@@ -4,7 +4,7 @@ import { EditorState, KeyBindingUtil, convertToRaw, convertFromRaw, RichUtils, M
 
 
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
-import { Typography, Button, ButtonGroup, Container, Paper, Avatar, IconButton } from "@material-ui/core";
+import { Typography, Button, ButtonGroup, Container, Paper, Avatar, IconButton, Box } from "@material-ui/core";
 import { InsertEmoticon } from "@material-ui/icons";
 import { height } from '@material-ui/system';
 
@@ -28,15 +28,31 @@ const emojiRegex = emojiRegexRGI()
 
 const styleObj = function ({ breakpointsAttribute, ...theme }) {
 
+
+  console.log(theme.palette.action.hover)
+
   return {
     emojiButtonCss: (props) => {
       return {
+        cursor: "pointer",
+        borderWidth: 0,
+        margin: 1,
         padding: 0,
         borderRadius: 0,
+        backgroundColor: theme.palette.background.default,
+
+
         ...breakpointsAttribute(["fontSize", theme.textSizeArr]),
-        "& .MuiIconButton-label": {
-          display: "inline-block"
+        "& :hover": {
+          //   backgroundColor:"blue",
+          backgroundColor: theme.palette.action.hover
+        },
+        "& :active": {
+
+       //   color:"red",//theme.palette.action.selected,
+          backgroundColor: theme.palette.action.selected,
         }
+
       }
     },
 
@@ -157,55 +173,6 @@ export default function createImagePlugin() {
 
 
 
-      // Object.keys(emoji).forEach(function (emojiKey) {
-
-      //   const regx = new RegExp(`${emojiKey}`, "g")
-      //   const array = []
-      //   let matchArr;
-      //   while ((matchArr = regx.exec(blockText)) !== null) {
-
-      //     const start = matchArr.index;
-      //     const end = matchArr.index + matchArr[0].length;
-      //     const contentLength = end - start;
-      //     const contentFocusAt = anchorFocusOffset - start;
-      //     // array.push(start)
-
-      //     newSelection = newSelection.merge({
-      //       anchorKey: blockKey,
-      //       anchorOffset: start,
-      //       focusKey: blockKey,
-      //       focusOffset: start + emojiKey.length,
-      //       isBackward: false,
-      //       hasFocus: false,
-
-      //     })
-
-      //     newContent = newContent.createEntity("EMOJI", "IMMUTABLE", { url: emoji[emojiKey], symbol: emojiKey });
-      //     const entityKey = newContent.getLastCreatedEntityKey();
-
-      //     newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
-      //   }
-
-
-      // array.forEach(function (offset) {
-      //   newSelection = newSelection.merge({
-      //     anchorKey: blockKey,
-      //     anchorOffset: offset,
-      //     focusKey: blockKey,
-      //     focusOffset: offset + emojiKey.length,
-      //     isBackward: false,
-      //     hasFocus: false,
-
-      //   })
-
-      //   newContent = Modifier.applyEntity(newContent, newSelection, emojiEntity)
-
-
-      // })
-
-      // })
-
-
 
     })
 
@@ -253,12 +220,12 @@ export default function createImagePlugin() {
     const { ctx, theme, contentState, entityKey, blockKey, offsetKey, start, end, decoratedText, classes } = props;
 
 
+
     return (
       <span
         className={classes.emojiCss}
         style={{
           //  backgroundImage: emoji[item],
-
         }}
       >
         <span //style={{ clipPath: "circle(0% at 50% 50%)", }}
@@ -270,17 +237,12 @@ export default function createImagePlugin() {
     )
 
 
-    return (
 
-      ctx.showEmoji
-        ? <Emoji decoratedText={decoratedText} >{props.children}</Emoji>
-        : <span style={{ ...!isFirefox && { backgroundColor: "wheat" } }}>{props.children}</span>
-
-    )
 
   }
 
   function EmojiPanel({ theme, ctx, classes, ...props }) {
+
 
 
     const emojiArr1 = `
@@ -309,29 +271,29 @@ export default function createImagePlugin() {
     while (match = emojiRegex.exec(emojiArr3)) {
       const emoji = match[0];
       arr.push(emoji)
-      console.log(`Matched sequence ${emoji} — code points: ${[...emoji].length}`);
+      //  console.log(`Matched sequence ${emoji} — code points: ${[...emoji].length}`);
     }
 
 
 
+
     return (
-      <div style={{ display: "flex", flexWrap: "wrap", backgroundColor: "pink" }}>
+      <div style={{ ...props.style, display: "flex", flexWrap: "wrap", }}>
+
         {arr.map(item => {
 
           return (
-            <IconButton key={item} disableRipple
+            <button key={item} //disableRipple
               className={classes.emojiButtonCss}
               onClick={function () {
                 insertEmoji(item)
               }}
 
             >
-
               <span
                 className={classes.emojiCss}
                 style={{
                   // backgroundImage: emoji[item],
-
                 }}
               >
                 <span //style={{ clipPath: "circle(0% at 50% 50%)", }}
@@ -343,7 +305,7 @@ export default function createImagePlugin() {
 
 
 
-            </IconButton>
+            </button>
           )
         })}
       </div >
@@ -373,6 +335,7 @@ export default function createImagePlugin() {
         component: withStyles(styleObj, { withTheme: true })(withContext(EmojiComp))                       //withTheme(withContext(EmojiComp))
       }],
     },
+
     EmojiPanel: withStyles(styleObj, { withTheme: true })(withContext(EmojiPanel))
 
 
