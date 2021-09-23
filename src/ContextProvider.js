@@ -13,7 +13,7 @@ import { stateToHTML } from 'draft-js-export-html';
 
 import styled, { ThemeProvider as StyledThemeProvider } from "styled-components"
 
-import EmojiPanel2 from "./EmojiSets"
+
 
 // import {
 //   isMobile,
@@ -199,7 +199,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [showContent, setShowContent] = useState(false)
   const [showMention, setShowMention] = useState(false)
   const [showHint, setShowHint] = useState(false)
-  const [showEmojiPanel, setShowEmojiPanel] = useState(false)
+  const [showEmojiPanel, setShowEmojiPanel] = useState(true)
 
 
 
@@ -241,7 +241,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
           <CssBaseline />
 
-          <EmojiPanel2 />
+        
 
           <FormGroup row >
             <FormControlLabel

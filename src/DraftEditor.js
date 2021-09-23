@@ -11,7 +11,7 @@ import { stateToHTML } from 'draft-js-export-html';
 
 
 //import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
-import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade } from "@material-ui/core";
+import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade,Slide } from "@material-ui/core";
 import { makeStyles, useTheme, ThemeProvider, withTheme } from '@material-ui/styles';
 
 import { withContext } from "./ContextProvider"
@@ -87,7 +87,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
       {/* <Div data-aaa="aaa" data-bbb="34343" id="99999" data-num="4343" /> */}
       {/* <Fade in={ctx.showEmojiPanel} unmountOnExit={false}> */}
-         <Collapse in={ctx.showEmojiPanel} unmountOnExit={true}  style={{opacity:ctx.showEmojiPanel?1:0, transitionProperty:"height, opacity",}}> 
+         <Collapse    in={ctx.showEmojiPanel} unmountOnExit={true}  style={{opacity:ctx.showEmojiPanel?1:0,transitionProperty:"height, opacity",}}> 
           <EmojiPanel />
          </Collapse> 
       {/* </Fade> */}
