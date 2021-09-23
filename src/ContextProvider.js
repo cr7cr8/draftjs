@@ -204,7 +204,26 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
 
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }), [textSizeArr, isLight, setIsLight])
+//   return (
+//     <ThemeProvider theme={theme}>
+//       <StyledThemeProvider theme={theme}>
+//         <Context.Provider value={{
+//           //isLight, setIsLight, theme, breakpointsAttribute,
+//           toPreHtml,
+//           editorRef,
+//           editorState, setEditorState,
+//           showMention, setShowMention,
+//           showContent, setShowContent,
+//           showHint, setShowHint,
+//           showEmojiPanel, setShowEmojiPanel
+//         }}>
 
+// <EmojiPanel2 />
+
+//         </Context.Provider>
+//       </StyledThemeProvider>
+//     </ThemeProvider>
+//   )
   return (
     <ThemeProvider theme={theme}>
       <StyledThemeProvider theme={theme}>
