@@ -260,7 +260,7 @@ export default function FullWidthTabs() {
       </AppBar>
 
 
-      <div style={{ overflow: "hidden", backgroundColor: "wheat", position:"relative",  width: "100%", height:100 }}>
+      <div style={{ overflow: "hidden", backgroundColor: "wheat", position:"relative",  width: "100%", height:100,overflowX:"hidden", overflowY:"auto" }}>
 
         <Slide in={slideOn1} unmountOnExit={true} timeout={3150} direction="right">
 
@@ -292,7 +292,7 @@ export default function FullWidthTabs() {
 
         <Slide in={slideOn3} unmountOnExit={true} timeout={3150} direction="left">
 
-          <div style={{ backgroundColor: "lightblue",  overflowWrap: "anywhere",width:"100%",position:"absolute" }}
+          <div style={{ backgroundColor: "lightblue",  overflowWrap: "anywhere",width:"100%",position:"absolute", }}
             onClick={function () {
                setSlideOn1(true)
               setSlideOn2(false)
@@ -300,6 +300,24 @@ export default function FullWidthTabs() {
             }}
           >
             Item Three
+            <br />
+            Item Three
+            <br />
+            Item Three
+            <br />
+            Item Three
+            <br />
+            Item Three
+            <br />
+            Item Three
+            <br />
+            Item Three
+            <br />
+
+            Item Three
+            <br />
+            Item Three
+            <br />
           </div>
 
         </Slide>
