@@ -13,6 +13,8 @@ import { stateToHTML } from 'draft-js-export-html';
 
 import styled, { ThemeProvider as StyledThemeProvider } from "styled-components"
 
+import EmojiPanel2 from "./EmojiSets"
+
 // import {
 //   isMobile,
 //   isFirefox,
@@ -220,7 +222,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
           <CssBaseline />
 
-
+          <EmojiPanel2 />
 
           <FormGroup row >
             <FormControlLabel
