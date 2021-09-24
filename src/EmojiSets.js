@@ -230,6 +230,9 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => ({
 
 
     },
+    "& .MuiTab-root:hover":{
+      backgroundColor:theme.palette.action.selected,
+    },
 
     "& .MuiTabs-flexContainer": {
       flexWrap: "wrap",
@@ -270,7 +273,8 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => ({
       cursor: "pointer",
       color: isChrome ? theme.palette.text.secondary : theme.palette.text.primary,
       backgroundColor: theme.palette.action.hover,
-      "&:hover": {
+      //backgroundColor:theme.palette.action.selected, 
+     "&:hover": {
         backgroundColor: theme.palette.action.selected,
       },
       "&:active": {
