@@ -200,7 +200,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [showMention, setShowMention] = useState(false)
   const [showHint, setShowHint] = useState(false)
   const [showEmojiPanel, setShowEmojiPanel] = useState(true)
-
+  const [emojiCtxStr, setEmojiCtxStr ] = useState("😃😄😁😆😅😂")
 
 
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }), [textSizeArr, isLight, setIsLight])
@@ -235,7 +235,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showMention, setShowMention,
           showContent, setShowContent,
           showHint, setShowHint,
-          showEmojiPanel, setShowEmojiPanel
+          showEmojiPanel, setShowEmojiPanel,
+          emojiCtxStr, setEmojiCtxStr
         }}>
 
 

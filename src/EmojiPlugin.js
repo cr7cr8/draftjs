@@ -237,7 +237,7 @@ export default function createImagePlugin() {
   function EmojiPanel({ theme, ctx, classes, ...props }) {
 
 
-    return <EmojieSets {...{ theme,  ctx, classes, insertEmoji, ...props ,  }} />
+    return <EmojieSets {...{ theme,  ctx, classes,  ...props ,  }}  clickFn={insertEmoji} />
 
 
   }

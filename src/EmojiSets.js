@@ -173,7 +173,8 @@ export const emojiArr14Chrome = `🏁 🚩 🇧🇸 🇧🇩 🇧🇧 🇧🇪 �
 
 
 const emojiArr = [
-  { symbolStr: emojiArr1, category: "😃", slideOn: true },
+  { symbolStr: "", category: "🌟", slideOn: true },
+  { symbolStr: emojiArr1, category: "😃", },
   { symbolStr: emojiArr2, category: "👋" },
 
   isChrome ? { symbolStr: emojiArr3Chrome, category: "👨" } : { symbolStr: emojiArr3, category: "🧑‍⚕️" },
@@ -195,7 +196,7 @@ const emojiArr = [
   isChrome ? { symbolStr: emojiArr12Chrome, category: "🅰️" } : { symbolStr: emojiArr12, category: "🅰️" },
   isChrome ? { symbolStr: emojiArr13Chrome, category: "✤" } : { symbolStr: emojiArr13, category: "✤" },
   isChrome ? { symbolStr: emojiArr14, category: "🏁" } : { symbolStr: emojiArr14, category: "🏁" },
-]
+].filter(item => (Boolean(item)))
 
 const tabSymbolArr = [
 
@@ -209,24 +210,30 @@ const tabSymbolArr = [
 
 
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => ({
   root: {
     // backgroundColor: theme.palette.background.paper,
     // overflow: "hidden",
     //position: "relative",
-  
-   
-    
+
+
+    // color:theme.palette.text.secondary,
+
     "& .MuiTab-root": {
       minWidth: "unset",
       padding: 0,
       lineHeight: 1,
+      color: theme.palette.text.secondary,
+      //  ...theme,
+
+      ...breakpointsAttribute(["fontSize", [theme.textSizeArr]])
+
 
     },
 
     "& .MuiTabs-flexContainer": {
       flexWrap: "wrap",
-     
+
     },
 
     "& .MuiTab-fullWidth": {
@@ -239,6 +246,7 @@ const useStyles = makeStyles((theme) => ({
       padding: 0,
       margin: 0,
       overflow: "hidden",
+
     },
     //  width: 500,
   },
@@ -252,7 +260,7 @@ const useStyles = makeStyles((theme) => ({
       //backgroundColor: theme.palette.background.default,
       display: "inline-block",
       // backgroundColor:"wheat",
-      ...theme.breakpointsAttribute(["fontSize", theme.textSizeArr]),
+      ...breakpointsAttribute(["fontSize", theme.textSizeArr]),
 
     }
   },
@@ -260,7 +268,7 @@ const useStyles = makeStyles((theme) => ({
     return {
       margin: 1,
       cursor: "pointer",
-      color: theme.palette.text.primary,
+      color: isChrome ? theme.palette.text.secondary : theme.palette.text.primary,
       backgroundColor: theme.palette.action.hover,
       "&:hover": {
         backgroundColor: theme.palette.action.selected,
@@ -278,10 +286,19 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function FullWidthTabs({ insertEmoji, theme, ...props }) {
+export default function FullWidthTabs({ clickFn, ctx, theme, ...props }) {
   const classes = useStyles();
 
-  const [dataArr, setDataArr] = useState(emojiArr.filter(item => Boolean(item)).map(item => {
+  const insertEmoji = clickFn || function () { }
+
+  const emojiCtxStr = ctx && ctx.emojiCtxStr;
+  const setEmojiCtxStr = ctx && ctx.setEmojiCtxStr;
+  if (ctx) {
+    emojiArr[0].symbolStr = emojiCtxStr
+
+  }
+
+  const [dataArr, setDataArr] = useState(emojiArr.map(item => {
 
     return { slideOn: false, direction: "right", ...item }
 
@@ -290,6 +307,7 @@ export default function FullWidthTabs({ insertEmoji, theme, ...props }) {
   const [tabValue, setTabValue] = React.useState(0);
 
   // const [direction, setDirection] = React.useState("right")
+
 
 
   return (
@@ -311,9 +329,11 @@ export default function FullWidthTabs({ insertEmoji, theme, ...props }) {
         //scrollButtons="on"
 
         >
+
+
           {
             dataArr.map((item, index) => {
-              return <Tab value={index} label={<span style={{ fontSize: "2rem" }}>{item.category}</span>} key={index} onClick={() => {
+              return <Tab value={index} style={{}} label={<span style={{}}>{item.category}</span>} key={index} onClick={() => {
 
 
                 setDataArr(pre => {
@@ -352,21 +372,53 @@ export default function FullWidthTabs({ insertEmoji, theme, ...props }) {
 
           return <Slide
 
-            in={item.slideOn} unmountOnExit={true} timeout={300} direction={item.direction} key={index} >
+            in={item.slideOn} unmountOnExit={true} timeout={{ exit: 150, enter: 300 }} direction={item.direction} key={index} >
 
             <div style={{ /*backgroundColor: "pink",*/ overflowWrap: "anywhere", width: "100%", position: "absolute" }}  >
 
               {arr.map(item => {
                 return (
-                  <button key={item} //disableRipple
-                    className={allClassNames}
-                    onClick={function () {
-                      insertEmoji(item)
-                    }}
-                  >{item}</button>
+                  <>
+                    <button key={item} //disableRipple
+                      className={allClassNames}
+                      onClick={function () {
+                        if (index > 0) {
+                          setDataArr(pre => {
+                            pre[0].symbolStr = pre[0].symbolStr.replace(item + " ", "")
+                            pre[0].symbolStr = item + " " + pre[0].symbolStr
+                            if (ctx) {
+
+                              setEmojiCtxStr(pre[0].symbolStr)
+                            }
+                            return pre
+                          })
+
+                        }
+                        insertEmoji(item)
+                      }}
+                    >{item}</button>
+
+                  </>
                 )
               })}
+
+              {index === 0 && dataArr[0].symbolStr.length > 0 && <button className={allClassNames} style={{ float: "right", backgroundColor: "transparent" }}
+                onClick={function () {
+                  setDataArr(pre => {
+
+                    pre[0].symbolStr = ""
+                    if (ctx) { setEmojiCtxStr("") }
+
+
+
+                    return pre
+                  })
+                }}
+
+
+              >✖</button>}
             </div>
+
           </Slide>
         })}
 
