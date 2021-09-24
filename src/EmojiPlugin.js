@@ -11,7 +11,8 @@ import { height } from '@material-ui/system';
 import { withContext } from "./ContextProvider"
 import Emoji, { emoji } from "./Emoji"
 
-import EmojieSets from "./EmojiSets"
+import EmojiPanel from "./EmojiPanel"
+import { emojiRegex } from "./EmojiConfig"
 
 import classNames from "classnames"
 
@@ -22,18 +23,15 @@ import {
   browserName,
   engineName,
 } from "react-device-detect";
-import { AvatarLogo } from './AvatarLogo';
 
-//const emojiRegexRGI = require('emoji-regex/es2015/RGI_Emoji.js');
-// const emojiRegex = require('emoji-regex/es2015/index.js');
-const emojiRegexText = require('emoji-regex/es2015/text.js');
-const emojiRegex = emojiRegexText()
+
+
 
 
 const styleObj = function ({ breakpointsAttribute, ...theme }) {
 
 
-  console.log(theme.palette.action.hover)
+
 
   return {
 
@@ -209,35 +207,13 @@ export default function createImagePlugin() {
 
   function EmojiComp(props) {
     const { ctx, theme, contentState, entityKey, blockKey, offsetKey, start, end, decoratedText, classes } = props;
-
-
-
     return props.children
-
-    return (
-      <span
-        //  className={classes.emojiCss}
-        style={{
-          //  backgroundImage: emoji[item],
-        }}
-      >
-        {/* <span //style={{ clipPath: "circle(0% at 50% 50%)", }}
-        > */}
-        {props.children}
-        {/* </span> */}
-
-      </span>
-    )
-
-
-
-
   }
 
-  function EmojiPanel({ theme, ctx, classes, ...props }) {
+  function EmojiPanelComp({ theme, ctx, classes, ...props }) {
 
 
-    return <EmojieSets {...{ theme,  ctx, classes,  ...props ,  }}  clickFn={insertEmoji} />
+    return <EmojiPanel {...{ theme, ctx, classes, ...props, }} clickFn={insertEmoji} />
 
 
   }
@@ -260,7 +236,7 @@ export default function createImagePlugin() {
       }],
     },
 
-    EmojiPanel: withStyles(styleObj, { withTheme: true })(withContext(EmojiPanel))
+    EmojiPanel: withStyles(styleObj, { withTheme: true })(withContext(EmojiPanelComp))
 
 
   }
