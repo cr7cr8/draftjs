@@ -1,8 +1,10 @@
 ### Dev9
+
 ### EmojiPlugin is done in this branch
 Use built-in pain text as emoji, no pictures 
 
 ### MentionPlugin is done in this branch
+Render mention hint function ?
 
 ### import
       import styled from 'styled-components'
