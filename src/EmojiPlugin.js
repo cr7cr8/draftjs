@@ -9,20 +9,13 @@ import { InsertEmoticon } from "@material-ui/icons";
 import { height } from '@material-ui/system';
 
 import { withContext } from "./ContextProvider"
-import Emoji, { emoji } from "./Emoji"
+
 
 import EmojiPanel from "./EmojiPanel"
 import { emojiRegex } from "./EmojiConfig"
 
-import classNames from "classnames"
 
-import {
-  isMobile,
-  isFirefox,
-  isChrome,
-  browserName,
-  engineName,
-} from "react-device-detect";
+
 
 
 
@@ -140,7 +133,7 @@ export default function createImagePlugin() {
         const end = matchArr.index + matchArr[0].length;
         const contentLength = end - start;
         const contentFocusAt = anchorFocusOffset - start;
-        // array.push(start)
+
 
         newSelection = newSelection.merge({
           anchorKey: blockKey,
@@ -152,7 +145,7 @@ export default function createImagePlugin() {
 
         })
 
-        newContent = newContent.createEntity("EMOJI", "IMMUTABLE", { url: emoji[emojiKey], symbol: emojiKey });
+        newContent = newContent.createEntity("EMOJI", "IMMUTABLE", { emojiKey });
         const entityKey = newContent.getLastCreatedEntityKey();
 
         newContent = Modifier.applyEntity(newContent, newSelection, entityKey)

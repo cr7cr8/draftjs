@@ -9,7 +9,7 @@ import { AvatarChip } from "./AvatarLogo";
 import { withContext } from "./ContextProvider";
 import reactElementToJSXString from 'react-element-to-jsx-string';
 
-import Emoji from "./Emoji"
+
 
 import {
   isMobile,

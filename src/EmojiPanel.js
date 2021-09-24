@@ -9,7 +9,7 @@ import { Typography, Button, ButtonGroup, Container, Paper, Avatar, IconButton, 
 import { height } from '@material-ui/system';
 
 import { withContext } from "./ContextProvider"
-import Emoji, { emoji } from "./Emoji"
+
 import classNames from "classnames"
 
 
