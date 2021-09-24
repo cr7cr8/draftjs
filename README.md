@@ -1,5 +1,6 @@
 
 #### EmojiPlugin is done in this branch
+png image is used to render emoji
 #### MentionPlugin is done in this branch
 
 #### import
