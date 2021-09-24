@@ -127,7 +127,7 @@ export default withTheme(withContext(function AvatarChipList({
 
         onEntered={function () {
           setShowing(true)
-        
+
         }}
         onExited={function () {
           setShowing(false)
@@ -137,7 +137,7 @@ export default withTheme(withContext(function AvatarChipList({
 
         <List dense={true} disablePadding={true} className={classes.listCss} contentEditable="false" suppressContentEditableWarning="true"
 
-       
+
         >
 
           {matchFriendArr.map((friend, index, arr) => {
@@ -152,7 +152,13 @@ export default withTheme(withContext(function AvatarChipList({
                 }}
 
               >
-                <AvatarChip personName={friend} className={classes.avatarChipCss} lift={0} />
+                {ctx.avatarHint
+                  ? <AvatarChip personName={friend} className={classes.avatarChipCss} lift={0} />
+                  : <>{friend}</>
+
+
+                }
+
               </ListItem>
             )
           })}

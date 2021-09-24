@@ -43,8 +43,6 @@ import SwitchBtn from "./SwitchBtn"
 import AvatarChipList from "./AvatarChipList"
 import { makeStyles } from '@material-ui/styles';
 
-import createEmojiPlugin from './EmojiPlugin';
-const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 
 function flatten(arr) {
   return arr.reduce(function (flat, toFlatten) {
@@ -199,31 +197,34 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [showContent, setShowContent] = useState(false)
   const [showMention, setShowMention] = useState(false)
   const [showHint, setShowHint] = useState(false)
+  const [avatarHint, setAvatarHint] = useState(false)
+
+
   const [showEmojiPanel, setShowEmojiPanel] = useState(true)
-  const [emojiCtxStr, setEmojiCtxStr ] = useState("😃😄😁😆😅😂")
+  const [emojiCtxStr, setEmojiCtxStr] = useState("😃😄😁😆😅😂")
 
 
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }), [textSizeArr, isLight, setIsLight])
-//   return (
-//     <ThemeProvider theme={theme}>
-//       <StyledThemeProvider theme={theme}>
-//         <Context.Provider value={{
-//           //isLight, setIsLight, theme, breakpointsAttribute,
-//           toPreHtml,
-//           editorRef,
-//           editorState, setEditorState,
-//           showMention, setShowMention,
-//           showContent, setShowContent,
-//           showHint, setShowHint,
-//           showEmojiPanel, setShowEmojiPanel
-//         }}>
+  //   return (
+  //     <ThemeProvider theme={theme}>
+  //       <StyledThemeProvider theme={theme}>
+  //         <Context.Provider value={{
+  //           //isLight, setIsLight, theme, breakpointsAttribute,
+  //           toPreHtml,
+  //           editorRef,
+  //           editorState, setEditorState,
+  //           showMention, setShowMention,
+  //           showContent, setShowContent,
+  //           showHint, setShowHint,
+  //           showEmojiPanel, setShowEmojiPanel
+  //         }}>
 
-// <EmojiPanel2 />
+  // <EmojiPanel2 />
 
-//         </Context.Provider>
-//       </StyledThemeProvider>
-//     </ThemeProvider>
-//   )
+  //         </Context.Provider>
+  //       </StyledThemeProvider>
+  //     </ThemeProvider>
+  //   )
   return (
     <ThemeProvider theme={theme}>
       <StyledThemeProvider theme={theme}>
@@ -235,6 +236,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showMention, setShowMention,
           showContent, setShowContent,
           showHint, setShowHint,
+          avatarHint, setAvatarHint,
           showEmojiPanel, setShowEmojiPanel,
           emojiCtxStr, setEmojiCtxStr
         }}>
@@ -242,7 +244,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
           <CssBaseline />
 
-        
+
 
           <FormGroup row >
             <FormControlLabel
@@ -254,7 +256,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
             <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
               control={<SwitchBtn checked={showMention} factor={[2, 2, 2, 1.8, 3]}
                 onChange={() => { setShowMention(pre => !pre); editorRef.current.focus() }} name="showMention" color="primary" />}
-              label="Mention"
+              label="AvatarMention"
               labelPlacement="start"
             />
 
@@ -262,6 +264,13 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
               control={<SwitchBtn checked={showHint} factor={[2, 2, 2, 1.8, 2.2]}
                 onChange={() => { setShowHint(pre => !pre); editorRef.current.focus() }} name="showHint" color="primary" />}
               label="Hint"
+              labelPlacement="start"
+            />
+
+            <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
+              control={<SwitchBtn checked={avatarHint} factor={[2, 2, 2, 1.8, 2.2]} disabled={!showHint}
+                onChange={() => { setAvatarHint(pre => !pre); editorRef.current.focus() }} name="showHint" color="primary" />}
+              label="AvatarHint"
               labelPlacement="start"
             />
 
