@@ -1,13 +1,13 @@
 
-### EmojiPlugin is done in this branch
-### MentionPlugin is done in this branch
+#### EmojiPlugin is done in this branch
+#### MentionPlugin is done in this branch
 
-### import
+#### import
       import styled from 'styled-components'
       import { Context, withContext1, withContext2, withContext3, withContext4 } from "./ContextProvider";
 
 
-### define TwoLineLabel_ class
+#### define TwoLineLabel_ class
       class TwoLineLabel_ extends Component {
 
           static contextType = Context
@@ -38,7 +38,7 @@
         }  
   
   
-### define styled component first to receive all the passed-down props from the hoc 
+#### define styled component first to receive all the passed-down props from the hoc 
 
            export const TwoLineLabelWithStyled = styled(TwoLineLabel_).withConfig({
               shouldForwardProp: (propName, defaultValidatorFn) => {
@@ -66,7 +66,7 @@
               }} 
             `
 
-### first wrap gose to most inside
+#### first wrap gose to most inside
             export const TwoLineLabel = withContext4(withContext3(withContext2(withContext1((withStyles(styleObj, { withTheme: true })(TwoLineLabelWithStyled))))))
   
   //////////////////////////// dev4
