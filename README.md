@@ -67,9 +67,9 @@
             `
 
 #### first wrap gose to most inside
-            export const TwoLineLabel = withContext4(withContext3(withContext2(withContext1((withStyles(styleObj, { withTheme: true })(TwoLineLabelWithStyled))))))
+        export const TwoLineLabel = withContext4(withContext3(withContext2(withContext1((withStyles(styleObj, { withTheme: true })(TwoLineLabelWithStyled))))))
   
-
+####
        import { Context } from "./ContextProvider";
 
        function withContext(Compo) {
@@ -87,7 +87,7 @@
         }
 
 ####
-        function withContext2(Compo) {
+       function withContext2(Compo) {
           return class BBB extends Component {
 
             render() {
@@ -103,7 +103,7 @@
         }
 
 ####
-        export function withContext3(Component) {
+       export function withContext3(Component) {
           return function (props) {
             return (
               <Context.Consumer>
