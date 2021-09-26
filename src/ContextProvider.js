@@ -43,6 +43,10 @@ import SwitchBtn from "./SwitchBtn"
 import AvatarChipList from "./AvatarChipList"
 import { makeStyles } from '@material-ui/styles';
 
+import BasicImageList from "./ImageComp"
+
+
+
 
 function flatten(arr) {
   return arr.reduce(function (flat, toFlatten) {
@@ -203,28 +207,12 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [showEmojiPanel, setShowEmojiPanel] = useState(true)
   const [emojiCtxStr, setEmojiCtxStr] = useState("😃😄😁😆😅😂")
 
+  const [imageBlockArr, setImageBlockArr] = useState([[], [], []])
+
+
 
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }), [textSizeArr, isLight, setIsLight])
-  //   return (
-  //     <ThemeProvider theme={theme}>
-  //       <StyledThemeProvider theme={theme}>
-  //         <Context.Provider value={{
-  //           //isLight, setIsLight, theme, breakpointsAttribute,
-  //           toPreHtml,
-  //           editorRef,
-  //           editorState, setEditorState,
-  //           showMention, setShowMention,
-  //           showContent, setShowContent,
-  //           showHint, setShowHint,
-  //           showEmojiPanel, setShowEmojiPanel
-  //         }}>
 
-  // <EmojiPanel2 />
-
-  //         </Context.Provider>
-  //       </StyledThemeProvider>
-  //     </ThemeProvider>
-  //   )
   return (
     <ThemeProvider theme={theme}>
       <StyledThemeProvider theme={theme}>
@@ -238,13 +226,12 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showHint, setShowHint,
           avatarHint, setAvatarHint,
           showEmojiPanel, setShowEmojiPanel,
-          emojiCtxStr, setEmojiCtxStr
+          emojiCtxStr, setEmojiCtxStr,
+          imageBlockArr, setImageBlockArr,
         }}>
 
-
           <CssBaseline />
-
-
+          <BasicImageList />
 
           <FormGroup row >
             <FormControlLabel
@@ -283,15 +270,12 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
             <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
               control={<SwitchBtn checked={!isLight} factor={[2, 2, 2, 1.8, 2.2]}
-                onChange={() => { setIsLight(pre => !pre);/* editorRef.current.focus()*/ }} name="lightDark" color="primary" />}
+                onChange={() => { setIsLight(pre => !pre) }} name="lightDark" color="primary" />}
               label="LightDark"
               labelPlacement="start"
             />
-
           </FormGroup>
-
           <DraftEditor />
-
           <Content />
 
         </Context.Provider>

@@ -6,12 +6,11 @@ import {
   engineName,
 } from "react-device-detect";
 
-
-// const emojiRegexRGI = require('emoji-regex/es2015/RGI_Emoji.js');
+ const emojiRegexRGI = require('emoji-regex/es2015/RGI_Emoji.js');
 // const emojiRegex = require('emoji-regex/es2015/index.js');
-const emojiRegexText = require('emoji-regex/es2015/text.js');
+// const emojiRegexText = require('emoji-regex/es2015/text.js');
 
-export const emojiRegex = emojiRegexText()
+export const emojiRegex = emojiRegexRGI()
 
 export const emojiArr1 = `
     😃 😄 😁 😆 😅 😂 ☺️ 😊 😇 😉 😌 😍 😘 😚 😋 😝 😜 😎 😏 😒 😞 😔 ☹️ 😣 😖 😫 😩 😢 😭 😤 😠 😡 😳 😱 😨 😰 😥 😓 😶 😐 😲 😪 😵 😷 😈 👿 👹 👺
@@ -29,7 +28,7 @@ export const emojiArr3 = `👶 👧 🧒 👦 👩 🧑 👨 👩‍🦱 🧑‍
     `
 export const emojiArr3Chrome = `👶 👧 👦 👩 👨 👱‍♀️ 👱 👱‍♂️ 👵 👴 👲 👳‍♀️ 👳 👳‍♂️ 👮‍♀️ 👮 👮‍♂️ 👷‍♀️
     👷 👷‍♂️ 💂‍♀️ 💂 💂‍♂️ 👩‍⚕️ 👨‍⚕️ 👩‍🌾 👨‍🌾 👩‍🍳 👨‍🍳 👩‍🎓 👨‍🎓 👩‍🎤 👨‍🎤 👩‍🏫 👨‍🏫 👩‍🏭 👨‍🏭 👩‍💻 👨‍💻 👩‍💼
-    👨‍💼 👩‍🔧 👨‍🔧 👨‍🔬 👩‍🎨 👨‍🎨 👩‍🚒 👨‍🚒 👩‍✈️ 👨‍✈️ 👩‍🚀 👨‍🚀 👩‍⚖️ 👨‍⚖️ 👰‍♀️ 👰 👰‍♂️ 👸
+    👨‍💼 👩‍🔧 👨‍🔧 👩‍🎨 👨‍🎨 👩‍🚒 👨‍🚒 👩‍✈️ 👨‍✈️ 👩‍🚀 👨‍🚀 👩‍⚖️ 👨‍⚖️ 👰‍♀️ 👰 👰‍♂️ 👸
     🎅 👼 🙇‍♀️ 🙇 🙇‍♂️ 💁‍♀️ 💁 💁‍♂️ 🙅‍♀️ 🙅 🙅‍♂️ 🙆‍♀️ 🙆 🙆‍♂️
     🙋‍♀️ 🙋 🙋‍♂️ 🙎‍♀️ 🙎 🙎‍♂️ 🙍‍♀️ 🙍 🙍‍♂️ 💇‍♀️ 💇 💇‍♂️ 💆‍♀️ 💆 💆‍♂️ 💅 💃 👯‍♀️ 👯 👯‍♂️
     🚶‍♀️ 🚶 🚶‍♂️ 🏃‍♀️ 🏃 🏃‍♂️ 👫 👩‍❤️‍👩 💑 👨‍❤️‍👨 👩‍❤️‍👨 👩‍❤️‍💋‍👩 💏 👨‍❤️‍💋‍👨 👩‍❤️‍💋‍👨 👪 👨‍👩‍👦 👨‍👩‍👧 👨‍👩‍👧‍👦 👨‍👩‍👦‍👦
@@ -158,7 +157,7 @@ export const emojiArr14Chrome = `🏁 🚩 🇧🇸 🇧🇩 🇧🇧 🇧🇪 �
   isChrome ? { symbolStr: emojiArr10Chrome, category: "🚗" } : { symbolStr: emojiArr10, category: "🚗" },
   isChrome ? { symbolStr: emojiArr11Chrome, category: "🎁" } : { symbolStr: emojiArr11, category: "🎁" },
   isChrome ? { symbolStr: emojiArr12Chrome, category: "🅰️" } : { symbolStr: emojiArr12, category: "🅰️" },
-  isChrome ? { symbolStr: emojiArr13Chrome, category: "✤" } : { symbolStr: emojiArr13, category: "✤" },
+ // isChrome ? { symbolStr: emojiArr13Chrome, category: "✤" } : { symbolStr: emojiArr13, category: "✤" },
   isChrome ? { symbolStr: emojiArr14, category: "🏁" } : { symbolStr: emojiArr14, category: "🏁" },
 ].filter(item => (Boolean(item)))
 

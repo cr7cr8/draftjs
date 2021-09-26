@@ -175,7 +175,7 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
       </AppBar>
 
 
-      <div style={{ overflow: "hidden", /*backgroundColor: "wheat",*/ position: "relative", width: "100%", height: "30vh", overflowX: "hidden", overflowY: "auto" }}>
+      <div key="slide" style={{ overflow: "hidden", /*backgroundColor: "wheat",*/ position: "relative", width: "100%", height: "30vh", overflowX: "hidden", overflowY: "auto" }}>
 
 
         {dataArr.map((item, index) => {
@@ -201,44 +201,32 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
 
               {arr.map(item => {
                 return (
-                  <>
-                    <button key={item} //disableRipple
-                      className={allClassNames}
-                      onClick={function () {
-                        if (index > 0) {
-                          setDataArr(pre => {
-                            pre[0].symbolStr = pre[0].symbolStr.replace(item + " ", "")
-                            pre[0].symbolStr = item + " " + pre[0].symbolStr
-                            if (ctx) {
-
-                              setEmojiCtxStr(pre[0].symbolStr)
-                            }
-                            return pre
-                          })
-
-                        }
-                        insertEmoji(item)
-                      }}
-                    >{item}</button>
-
-                  </>
+                  <button key={item} //disableRipple
+                    className={allClassNames}
+                    onClick={function () {
+                      if (index > 0) {
+                        setDataArr(pre => {
+                          pre[0].symbolStr = pre[0].symbolStr.replace(item + " ", "")
+                          pre[0].symbolStr = item + " " + pre[0].symbolStr
+                          if (ctx) { setEmojiCtxStr(pre[0].symbolStr) }
+                          return pre
+                        })
+                      }
+                      insertEmoji(item)
+                    }}
+                    children={item}
+                  />
                 )
               })}
 
               {index === 0 && dataArr[0].symbolStr.length > 0 && <button className={allClassNames} style={{ float: "right", backgroundColor: "transparent" }}
                 onClick={function () {
                   setDataArr(pre => {
-
                     pre[0].symbolStr = ""
                     if (ctx) { setEmojiCtxStr("") }
-
-
-
                     return pre
                   })
                 }}
-
-
               >✖</button>}
             </div>
 
