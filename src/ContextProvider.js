@@ -43,7 +43,7 @@ import SwitchBtn from "./SwitchBtn"
 import AvatarChipList from "./AvatarChipList"
 import { makeStyles } from '@material-ui/styles';
 
-import BasicImageList from "./ImageComp"
+import BasicImageList from "./ImagePanel"
 
 
 
@@ -180,6 +180,7 @@ function toPreHtml(editorState) {
 
 
       }
+      
     }
   )
   return preHtml
@@ -200,18 +201,32 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [showContent, setShowContent] = useState(false)
   const [showMention, setShowMention] = useState(false)
-  const [showHint, setShowHint] = useState(false)
+  const [showHint, setShowHint] = useState(true)
   const [avatarHint, setAvatarHint] = useState(false)
 
 
-  const [showEmojiPanel, setShowEmojiPanel] = useState(true)
+  const [showEmojiPanel, setShowEmojiPanel] = useState(false)
   const [emojiCtxStr, setEmojiCtxStr] = useState("😃😄😁😆😅😂")
 
-  const [imageBlockArr, setImageBlockArr] = useState([[], [], []])
+  const [imageBlockObj, setImageBlockObj] = useState({})
 
+
+  const [imageArr, setImageArr] = useState([
+    // "https://picsum.photos/200/300",
+    // "https://picsum.photos/199/600",
+    // "https://picsum.photos/201/300",
+    //  "https://picsum.photos/200/301",
+  ])
 
 
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }), [textSizeArr, isLight, setIsLight])
+
+
+useEffect(function(){
+
+  //console.log(imageBlockObj)
+
+},[imageBlockObj])
 
   return (
     <ThemeProvider theme={theme}>
@@ -227,11 +242,12 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           avatarHint, setAvatarHint,
           showEmojiPanel, setShowEmojiPanel,
           emojiCtxStr, setEmojiCtxStr,
-          imageBlockArr, setImageBlockArr,
+          imageBlockObj, setImageBlockObj,
+          imageArr, setImageArr,
         }}>
 
           <CssBaseline />
-          <BasicImageList />
+          {/* <BasicImageList /> */}
 
           <FormGroup row >
             <FormControlLabel

@@ -11,7 +11,7 @@ import { stateToHTML } from 'draft-js-export-html';
 
 
 //import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
-import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide } from "@material-ui/core";
+import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button } from "@material-ui/core";
 import { makeStyles, useTheme, ThemeProvider, withTheme } from '@material-ui/styles';
 
 import { withContext } from "./ContextProvider"
@@ -23,6 +23,7 @@ import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
 
 import createMentionPlugin from './MentionPlugin';
 import createEmojiPlugin from './EmojiPlugin';
+import createImagePlugin from './ImagePlugin';
 
 
 import styled from "styled-components"
@@ -54,6 +55,7 @@ const initialState = {
 };
 const { mentionPlugin } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
+const { imagePlugin, ImageButton, ImagePanel, deleteImageBlock } = createImagePlugin()
 
 // const useStyles = makeStyles(function (theme) {
 
@@ -74,7 +76,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   const key = useRef(Math.random() + "")
 
-  const { editorState, setEditorState, editorRef } = ctx
+  const { editorState, setEditorState, editorRef, imageArr, setImageArr, imageBlockObj, setImageBlockObj } = ctx
 
 
 
@@ -84,9 +86,16 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
   return (
 
     <React.Fragment key={key.current}>
+      {/* <ImagePanel
+        imageArr={imageArr} setImageArr={setImageArr} editor={editorRef}
 
+        editorState={editorState} setEditorState={setEditorState}
+      
+      /> */}
       {/* <Div data-aaa="aaa" data-bbb="34343" id="99999" data-num="4343" /> */}
       {/* <Fade in={ctx.showEmojiPanel} unmountOnExit={false}> */}
+
+      <ImageButton editor={editorRef} />
       <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}>
         <EmojiPanel />
       </Collapse>
@@ -97,15 +106,11 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           ref={function (element) { editorRef.current = element; }}
           editorState={editorState}
 
-
           onChange={function (newState, { ...props }) {
-
-
             setEditorState(newState)
-
           }}
 
-          plugins={[mentionPlugin, emojiPlugin,]}
+          plugins={[mentionPlugin, emojiPlugin, imagePlugin]}
 
 
           // placeholder="hihihi"
@@ -146,7 +151,37 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
           blockRendererFn={function (block) {
 
+            const text = block.getText()
+            const data = block.getData().toObject()
+            const type = block.getType()
+            //   const entityId = editorState.getCurrentContent().getEntityAt(0);
+            if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
+              //   console.log(JSON.stringify(data))
+              return {
+                // component: function (props) {
+                //   const {children,aonClick} = props.blockProps
+                //   return <Button variant="contained" onMouseDown={aonClick}>{children}</Button>
+                // },
 
+                component: ImagePanelWrap,
+
+                editable: false,
+                props: {
+                  imageArr,
+                  setImageArr,
+                  imageBlockObj,
+                  setImageBlockObj,
+                  editor: editorRef,
+                  blockKey: block.getKey(),
+                  deleteImageBlock: deleteImageBlock.bind(null, block.getKey()),
+            
+                },
+              }
+            }
+
+            else {
+              return null
+            }
 
           }}
 
@@ -177,6 +212,17 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             return true
 
           }}
+
+
+
+        // handleBeforeInput={function (chars, editorState, evenTimeStamp, { setEditorState }) {
+        //   const selectionState = editorState.getSelection();
+        //   const contentState = editorState.getCurrentContent();
+        //   const block = contentState.getBlockForKey(selectionState.getStartKey());
+        //     console.log(chars.length)
+        // }}
+
+
         />
       </Paper>
 
@@ -185,13 +231,18 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       </div> */}
 
       {/* <AvatarChip personName="Fdsf"><TwoLineLabel lineTop="fdsff" lineDown="sdfe jdkljl ejkl" /></AvatarChip> */}
-      {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
-     
+      <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
+
         <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
         <hr />
         <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div>
-      </div> */}
+      </div>
+      {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
 
+        <div>{JSON.stringify(imageBlockObj, null, 2)}</div>
+        <hr />
+        <div>{JSON.stringify(imageArr, null, 2)}</div>
+      </div> */}
     </React.Fragment>
   )
 
@@ -202,3 +253,17 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
 
+function ImagePanelWrap(props) {
+  //const {children,aonClick} = props.blockProps
+  // alert("a")
+
+  useEffect(function () {
+    //console.log(Date.now())
+
+  }, [])
+
+
+
+
+  return <ImagePanel  {...{ ...props.blockProps }} />
+}

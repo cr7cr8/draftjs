@@ -470,7 +470,7 @@ export default function createMentionPlugin() {
 
     else if (mentionType === "longMentionOff_HEAD") {
       return showMention
-        ? <span style={{ fontSize: 0, width:0, height:0, display:"inline-block" }}>{children}</span>  //<></> works as well
+        ? <span style={{ fontSize: 0, width: 0, height: 0, display: "inline-block" }}>{children}</span>  //<></> works as well
         : <span className={longMention_HEAD_Css}>{children}</span>
     }
     else if (mentionType === "longMentionOff_BODY") {
@@ -490,18 +490,30 @@ export default function createMentionPlugin() {
 
   }
 
+
+  const MentionWrapFn = withContext(withTheme(Mention))
+
+
   return {
     mentionPlugin: {
 
 
 
       handleReturn(e, newState, { setEditorState }) {
-        if (isShowing) { insertMention(matchFriendArr[tabIndex % matchFriendArr.length]); return "handled" }
+        if (isShowing) {
+          insertMention(matchFriendArr[tabIndex % matchFriendArr.length]);
+
+          return "handled"
+        }
+        // else {
+        //   setEditorState(RichUtils.insertSoftNewline(newState))
+        //   return "handled"
+        // }
 
       },
 
       keyBindingFn(e, { getEditorState, setEditorState, ...obj }) {
-
+      
         if ((e.keyCode === 40) && isShowing) {
           tabIndex = tabIndex + 1;
           return "fire-arrow";
@@ -541,7 +553,8 @@ export default function createMentionPlugin() {
       decorators: [
         {
           strategy: mentionStrategy,
-          component: withContext(withTheme(Mention))
+          component: MentionWrapFn,//withContext(withTheme(Mention))
+
         }
       ],
 

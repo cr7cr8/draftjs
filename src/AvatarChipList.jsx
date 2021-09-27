@@ -150,6 +150,9 @@ export default withTheme(withContext(function AvatarChipList({
                 onMouseDown={function () {
                   insertMention(friend); setTimeout(ctx.editorRef.current.focus, 0);
                 }}
+                // onClick={function () {
+                //   insertMention(friend); setTimeout(ctx.editorRef.current.focus, 0);
+                // }}
 
               >
                 {ctx.avatarHint

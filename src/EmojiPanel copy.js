@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import { EditorState, KeyBindingUtil, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, SelectionState, CharacterMetadata } from 'draft-js';
 
@@ -7,9 +7,12 @@ import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-u
 import { Typography, Button, ButtonGroup, Container, Paper, Avatar, IconButton, Box, Slide } from "@material-ui/core";
 
 import { height } from '@material-ui/system';
+
 import { withContext } from "./ContextProvider"
 
 import classNames from "classnames"
+
+
 
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
@@ -105,6 +108,9 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => ({
 }));
 
 
+
+
+
 export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
   const classes = useStyles();
 
@@ -124,22 +130,6 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
   }))
 
   const [tabValue, setTabValue] = React.useState(0);
-
-  const [height, setHeight] = useState(0)
-  const panelRef = useRef()
-
-  useEffect(function () {
-
-  //  panelRef.current && console.log("----", window.getComputedStyle( panelRef.current).height)
-
-    panelRef.current && window.getComputedStyle(panelRef.current).height !== height && setHeight(window.getComputedStyle(panelRef.current).height)
-
-  })
-
-
-
-
-
 
 
 
@@ -185,7 +175,7 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
       </AppBar>
 
 
-      <div key="slide" style={{ overflow: "hidden", /*backgroundColor: "wheat",*/ position: "relative", width: "100%", height, maxHeight:"30vh" ,overflowX: "hidden", overflowY: "auto" }}>
+      <div key="slide" style={{ overflow: "hidden", /*backgroundColor: "wheat",*/ position: "relative", width: "100%", height: "30vh", overflowX: "hidden", overflowY: "auto" }}>
 
 
         {dataArr.map((item, index) => {
@@ -205,9 +195,9 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
 
           return <Slide
 
-            in={item.slideOn} unmountOnExit={true} timeout={{ exit: 150, enter: 300 }} direction={item.direction} key={index} ref={panelRef}>
+            in={item.slideOn} unmountOnExit={true} timeout={{ exit: 150, enter: 300 }} direction={item.direction} key={index} >
 
-            <div style={{ /*backgroundColor: "pink",*/ overflowWrap: "anywhere", width: "100%", position: "absolute" }} >
+            <div style={{ /*backgroundColor: "pink",*/ overflowWrap: "anywhere", width: "100%", position: "absolute" }}  >
 
               {arr.map(item => {
                 return (

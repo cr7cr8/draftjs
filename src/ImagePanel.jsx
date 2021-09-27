@@ -116,17 +116,25 @@ const useStyles = makeStyles((theme) => {
 });
 
 
-export default function BasicImageList() {
+export default function ImagePanel({ blockKey,
+  deleteImageBlock, /*imageArr, setImageArr,*/ editor, editorState, setEditorState, imageBlockObj, setImageBlockObj, ...props }) {
 
 
-  const [imageArr, setImageArr] = useState([
-    "https://picsum.photos/200/300",
-    "https://picsum.photos/199/600",
-    "https://picsum.photos/201/300",
-    //  "https://picsum.photos/200/301",
-  ])
+  // const [imageArr, setImageArr] = useState([
+  //   "https://picsum.photos/200/300",
+  //   "https://picsum.photos/199/600",
+  //   "https://picsum.photos/201/300",
+  //   //  "https://picsum.photos/200/301",
+  // ])
 
-  const classes = useStyles({ numOfImage: imageArr.length });
+  // const [imageArr, setImageArr] = useState([
+  //   "https://picsum.photos/200/300",
+  //   "https://picsum.photos/199/600",
+  //   "https://picsum.photos/201/300",
+  //   //  "https://picsum.photos/200/301",
+  // ])
+
+  const classes = useStyles({ numOfImage: Array.isArray(imageBlockObj[blockKey]) ? imageBlockObj[blockKey].length : 0 });
   const target = React.useRef(null)
   const inputRef = React.useRef(null)
   const [imageIndex, setImageIndex] = useState()
@@ -134,54 +142,103 @@ export default function BasicImageList() {
   const size = useSize(target)
   const theme = useTheme()
 
+
+
+
+  function update(e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (e.currentTarget.files[0].name.trim().match(/\.(gif|jpe?g|tiff|png|webp|bmp)$/i)) {
+      // const file = e.currentTarget.files[0]
+      // file.localUrl = URL.createObjectURL(e.currentTarget.files[0])
+      //   console.log(e.currentTarget)
+
+
+      const files = e.currentTarget.files
+      const newFileArr = [
+        files[0] && URL.createObjectURL(files[0]),
+        files[1] && URL.createObjectURL(files[1]),
+        files[2] && URL.createObjectURL(files[2]),
+        files[3] && URL.createObjectURL(files[3]),
+
+      ]
+        .filter(item => Boolean(item))
+        .filter((item, index) => { return index < 4 })
+
+
+
+      // setImageArr(pre => {
+      //   const pre_ = [...pre]
+      //   pre_.splice(imageIndex + 1, 0, ...newFileArr)
+      //   return pre_
+      // })
+
+
+
+
+      setImageBlockObj(pre => {
+        //  alert("dsdf")
+
+        const pre_ = Array.isArray(pre[blockKey]) ? [...pre[blockKey]] : []
+        pre_.splice(imageIndex + 1, 0, ...newFileArr)
+
+        return {
+          ...pre,
+
+          [blockKey]: pre_
+        }
+
+      })
+
+
+      setTimeout(() => {
+        editor.current.focus()
+      }, 0);
+
+    }
+
+  }
+
   useEffect(function () {
-    //  console.log(size)
-  }, [size])
+
+  //  setTimeout(
+ //     function () {
+        inputRef.current.click()
+ //     }
+
+
+ //     , 0)
+
+    setImageBlockObj(pre => {
+      return {
+        ...pre,
+        [blockKey]: []
+      }
+
+    })
+
+  }, [])
+
+  useEffect(function () {
+    // console.log("+++", imageArr)
+    console.log("===", imageBlockObj[blockKey])
+    //  console.log(imageArr[0] === imageBlockObj[blockKey][0])
+  })
+
 
   return (
     <>
       <input ref={inputRef} type="file" multiple={true} style={{ display: "none" }}
         onClick={function (e) { e.currentTarget.value = null; }}
-        onChange={function (e) {
-          if (e.currentTarget.files[0].name.trim().match(/\.(gif|jpe?g|tiff|png|webp|bmp)$/i)) {
-            // const file = e.currentTarget.files[0]
-            // file.localUrl = URL.createObjectURL(e.currentTarget.files[0])
-            //   console.log(e.currentTarget)
-
-
-            const files = e.currentTarget.files
-            const newFileArr = [
-              files[0] && URL.createObjectURL(files[0]),
-              files[1] && URL.createObjectURL(files[1]),
-              files[2] && URL.createObjectURL(files[2]),
-              files[3] && URL.createObjectURL(files[3]),
-            ].filter(item => Boolean(item)).filter((item, index) => { return index < 4 })
-
-
-            setImageArr(pre => {
-
-              pre.splice(imageIndex + 1, 0, ...newFileArr)
-              return pre.filter(item => Boolean(item)).filter((item, index) => { return index < 4 })
-
-            })
-
-
-
-            console.log(e.currentTarget.files)
-            // setPicArr(pre => {
-            //   return [...pre, file]
-            // })
-            // if (!hasImageBlock()) { insertImageBlock(URL.createObjectURL(e.currentTarget.files[0])) }
-            // else {   editor.current.focus() }
-          }
-        }}
+        onChange={update}
       />
 
 
       <div className={classes.baseGridCss} ref={target} style={{ backgroundColor: "wheat", height: (size && size.width * 9 / 16) || 0 + "px", }}>
 
         {
-          imageArr.length === 0 &&
+          (Array.isArray(imageBlockObj[blockKey]) ? imageBlockObj[blockKey].length : 0) === 0 &&
           <div
             style={{
               position: "relative", gridColumn: "1/3", gridRow: "1/3", width: "100%",
@@ -189,29 +246,45 @@ export default function BasicImageList() {
             }}>
             <IconButton style={{ backgroundColor: theme.palette.background.paper, }}
               children={<AddIcon style={{ fontSize: "4rem" }} />}
-              onClick={function(){
+              onClick={function () {
                 setImageIndex(-1)
                 inputRef.current.click()
-
-
+                // console.log(Date.now())
               }}
             />
 
 
-            <IconButton style={{
-              backgroundColor: theme.palette.background.paper,
-              position: "absolute", top: 0, right: 0,
-            }}><DeleteIcon /></IconButton >
+            <IconButton
+              style={{
+                backgroundColor: theme.palette.background.paper,
+                position: "absolute", top: 0, right: 0,
+              }}
+              onClick={function () {
+                deleteImageBlock && deleteImageBlock()
+
+                setImageBlockObj(pre => {
+
+                  delete pre[blockKey]
+
+
+                  return { ...pre }
+
+                })
+
+
+              }}
+              children={<DeleteIcon />}
+            />
           </div>
         }
 
-        {imageArr.map((item, index) => {
-
+        {Array.isArray(imageBlockObj[blockKey]) && imageBlockObj[blockKey].map((item, index) => {
+          // {imageArr.map((item, index) => {
           return (
             <div key={index}>
               <div
                 className={classes.imageButtonPanelCss}>
-                {imageArr.length < 4 && <IconButton
+                {imageBlockObj[blockKey].length < 4 && <IconButton
                   style={{
                     backgroundColor: theme.palette.background.paper,
                   }}
@@ -219,6 +292,7 @@ export default function BasicImageList() {
                   onClick={function (e) {
                     setImageIndex(index)
                     inputRef.current.click()
+
                   }}
                 />}
 
@@ -228,25 +302,32 @@ export default function BasicImageList() {
                     position: "absolute", top: 0, right: 0,
                   }}
                   children={<DeleteIcon />}
-                  onClick={function () {
-                    setImageArr(pre => {
-                      return [...pre.filter((preItem, preIndex) => { return preIndex !== index })]
+                  onClick={function (e) {
+                    // e.preventDefault()
+                    // e.stopPropagation()
+
+                    setImageBlockObj(pre => {
+                      const arr = pre[blockKey].filter((preItem, preIndex) => { return preIndex !== index })
+                      //...pre.filter((preItem, preIndex) => { return preIndex !== index })]
+                      return {
+                        ...pre,
+
+                        [blockKey]: arr
+
+                      }
                     })
+
+                    setTimeout(() => {
+                      editor.current.focus()
+                    }, 0);
+
                   }}
                 />
               </div>
               <img src={item} style={{ position: "absolute", objectFit: "cover", width: "100%", height: "100%", }} />
             </div>
-
           )
-
         })}
-
-
-
-
-
-
       </div>
     </>
   );
