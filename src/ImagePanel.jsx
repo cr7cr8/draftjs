@@ -201,7 +201,7 @@ export default function ImagePanel({ blockKey, setImageBlockData,
 
       })
 
-
+      setImageBlockData("deleteAll", blockKey)
       setTimeout(() => {
         editor.current.focus()
       }, 0);
@@ -378,7 +378,7 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
 
               }
             })
-
+            setImageBlockData("deleteAll", blockKey)
             setTimeout(() => {
               editor.current.focus()
             }, 0);
@@ -397,11 +397,11 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
           onClick={
             function () {
               setVerticle(pre => {
-
+                setImageBlockData({ ["pos" + index]: { horizontal, verticle: Math.max(0, Math.min(pre - 25, 100)) } }, blockKey)
                 return Math.max(0, Math.min(pre - 25, 100))
 
               })
-              setImageBlockData({ ["pos"+index]: { horizontal, verticle } }, blockKey)
+
 
               //  setTimeout(() => {
               //   editor.current.focus()
@@ -420,11 +420,11 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
           onClick={
             function () {
               setVerticle(pre => {
-
+                setImageBlockData({ ["pos" + index]: { horizontal, verticle: Math.max(0, Math.min(pre + 25, 100)) } }, blockKey)
                 return Math.max(0, Math.min(pre + 25, 100))
 
               })
-              setImageBlockData({ ["pos"+index]: { horizontal, verticle } }, blockKey)
+
             }
           }
         />}
@@ -438,11 +438,11 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
           onClick={
             function () {
               setHorizontal(pre => {
-
+                setImageBlockData({ ["pos" + index]: { horizontal: Math.max(0, Math.min(pre - 25, 100)), verticle } }, blockKey)
                 return Math.max(0, Math.min(pre - 25, 100))
 
               })
-              setImageBlockData({ ["pos"+index]: { horizontal, verticle } }, blockKey)
+
             }
           }
         />}
@@ -457,12 +457,11 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
             function () {
 
               setHorizontal(pre => {
-
+                setImageBlockData({ ["pos" + index]: { horizontal: Math.max(0, Math.min(pre +25, 100)), verticle } }, blockKey)
                 return Math.max(0, Math.min(pre + 25, 100))
 
               })
-              setImageBlockData({ ["pos"+index]: { horizontal, verticle } }, blockKey)
-
+            
             }
           }
         />}

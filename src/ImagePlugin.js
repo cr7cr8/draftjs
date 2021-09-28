@@ -71,7 +71,7 @@ export default function createImagePlugin() {
       new ContentBlock({
         key: currentText ? newKey : currentKey,
         type: "imageBlock",
-        text: 'imageBlockText',
+        text: '',
         // data: Immutable.Map({ k: "aaa" })
           data: Immutable.Map({ })
       })
@@ -141,7 +141,7 @@ export default function createImagePlugin() {
     const newContent = Modifier.setBlockData(
       externalES.getCurrentContent(),
       externalES.getSelection(),//  SelectionState.createEmpty(newKey),
-      Immutable.Map({ ...(currentBlock.getData().toObject() || {}), ...obj })
+      Immutable.Map(  obj==="deleteAll"?{}:{ ...(currentBlock.getData().toObject() || {}), ...obj })
     );
 
     externalES = EditorState.push(externalES, newContent, 'change-block-data');
