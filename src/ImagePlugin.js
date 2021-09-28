@@ -214,36 +214,18 @@ export default function createImagePlugin() {
       hasFocus: false
     });
 
-    const currentData = currentBlock.getData().toObject()
 
-    if (String(obj).indexOf("delete_pos") >= 0) {
+    const newContent = Modifier.setBlockData(
+      externalES.getCurrentContent(),
+      newSelection,//  SelectionState.createEmpty(newKey),
+     
+      Immutable.Map(obj === "deleteAll" ? {} : { ...(currentBlock.getData().toObject() || {}), ...obj })
+    );
 
-   
-      delete currentData[obj.replace("delete_", "")]
-      const newContent = Modifier.setBlockData(
-        externalES.getCurrentContent(),
-        newSelection,//  SelectionState.createEmpty(newKey),
-        Immutable.Map(currentData)
-      );
+    externalES = EditorState.push(externalES, newContent, 'change-block-data');
+    //   EditorState.forceSelection(externalES, newSelection)
+    return externalSetEditorState(externalES)
 
-      externalES = EditorState.push(externalES, newContent, 'change-block-data');
-      //   EditorState.forceSelection(externalES, newSelection)
-      return externalSetEditorState(externalES)
-    }
-
-    else {
-      const newContent = Modifier.setBlockData(
-        externalES.getCurrentContent(),
-        newSelection,//  SelectionState.createEmpty(newKey),
-      //  Immutable.Map(obj === "deleteAll" ? {} : { ...(currentBlock.getData().toObject() || {}), ...obj })
-      //  Immutable.Map(obj === "refresh" ? currentData : { ...(currentBlock.getData().toObject() || {}), ...obj })
-        Immutable.Map(obj === "deleteAll" ? {} : { ...(currentBlock.getData().toObject() || {}), ...obj })
-      );
-
-      externalES = EditorState.push(externalES, newContent, 'change-block-data');
-      //   EditorState.forceSelection(externalES, newSelection)
-      return externalSetEditorState(externalES)
-    }
 
 
   }
