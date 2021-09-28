@@ -55,7 +55,7 @@ const initialState = {
 };
 const { mentionPlugin } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
-const { imagePlugin, ImageButton, ImagePanel, deleteImageBlock } = createImagePlugin()
+const { imagePlugin, ImageButton, ImagePanel, deleteImageBlock, setImageBlockData } = createImagePlugin()
 
 // const useStyles = makeStyles(function (theme) {
 
@@ -140,13 +140,30 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               // "colorBlock": {
               //   style: "backgournd-color:red"
               // }
+              // "imageBlock": {
+              //   element: "figure",
+              //   wrapper: <ImagePanel
+              //     imageArr
+              //     setImageArr
+              //     imageBlockObj
+              //     setImageBlockObj
+              //     editor={editorRef}
+              //     blockKey={"dsdd"}
+              //     deleteImageBlock={deleteImageBlock.bind(null, "dsdd")}
+              //     className="image-block" />
+              // }
             })
           }
 
 
 
           blockStyleFn={function (block) {
-
+            const text = block.getText()
+            const data = block.getData().toObject()
+            const type = block.getType()
+            if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
+              return "image-block-figure"
+            }
           }}
 
           blockRendererFn={function (block) {
@@ -174,7 +191,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   editor: editorRef,
                   blockKey: block.getKey(),
                   deleteImageBlock: deleteImageBlock.bind(null, block.getKey()),
-            
+                  className: "image-block",
+                  setImageBlockData,
+
                 },
               }
             }

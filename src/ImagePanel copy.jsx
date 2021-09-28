@@ -126,7 +126,7 @@ const useStyles = makeStyles((theme) => {
 });
 
 
-export default function ImagePanel({ blockKey, setImageBlockData,
+export default function ImagePanel({ blockKey,
   deleteImageBlock, /*imageArr, setImageArr,*/ editor, editorState, setEditorState, imageBlockObj, setImageBlockObj, className, ...props }) {
 
 
@@ -232,7 +232,7 @@ export default function ImagePanel({ blockKey, setImageBlockData,
 
   useEffect(function () {
     // console.log("+++", imageArr)
-    // console.log("===", imageBlockObj[blockKey])
+    console.log("===", imageBlockObj[blockKey])
     //  console.log(imageArr[0] === imageBlockObj[blockKey][0])
   })
 
@@ -293,25 +293,107 @@ export default function ImagePanel({ blockKey, setImageBlockData,
           </div>
         }
 
-        {Array.isArray(imageBlockObj[blockKey]) && imageBlockObj[blockKey].map((pic, index) => {
-
+        {Array.isArray(imageBlockObj[blockKey]) && imageBlockObj[blockKey].map((item, index) => {
+          // {imageArr.map((item, index) => {
           return (
-            // <ImagePic setImageBlockObj imageBlockObj editor blockKey theme index inputRef classes setImageIndex pic={pic} key={index} />
             <div key={index}>
-              <ImagePic setImageBlockObj={setImageBlockObj}
-                imageBlockObj={imageBlockObj}
-                editor={editor}
-                blockKey={blockKey}
-                theme={theme}
-                index={index}
-                inputRef={inputRef}
-                classes={classes}
-                setImageIndex={setImageIndex}
-                pic={pic}
-                setImageBlockData={setImageBlockData}
-              />
-            </div>
+              <div
+                className={classes.imageButtonPanelCss}>
+                {imageBlockObj[blockKey].length < 4 &&
+                  <IconButton
+                    style={{
+                      backgroundColor: theme.palette.background.paper,
+                    }}
+                    children={<AddIcon style={{ fontSize: "4rem" }} />}
+                    onClick={function (e) {
+                      setImageIndex(index)
+                      inputRef.current.click()
 
+                    }}
+                  />}
+
+                <IconButton
+                  style={{
+                    backgroundColor: theme.palette.background.paper,
+                    position: "absolute", top: 0, right: 0,
+                  }}
+                  children={<DeleteIcon />}
+                  onClick={function (e) {
+                    // e.preventDefault()
+                    // e.stopPropagation()
+
+                    setImageBlockObj(pre => {
+                      const arr = pre[blockKey].filter((preItem, preIndex) => { return preIndex !== index })
+                      //...pre.filter((preItem, preIndex) => { return preIndex !== index })]
+                      return {
+                        ...pre,
+
+                        [blockKey]: arr
+
+                      }
+                    })
+
+                    setTimeout(() => {
+                      editor.current.focus()
+                    }, 0);
+
+                  }}
+                />
+
+
+
+                <IconButton
+                  style={{
+                    backgroundColor: theme.palette.background.paper,
+                    position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)"
+                  }}
+                  children={<KeyboardArrowUpIcon />}
+                  onClick={
+                    function () {
+
+                    }
+                  }
+                />
+                <IconButton
+                  style={{
+                    backgroundColor: theme.palette.background.paper,
+                    position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)"
+                  }}
+                  children={<KeyboardArrowDownIcon />}
+                  onClick={
+                    function () {
+
+                    }
+                  }
+                />
+                <IconButton
+                  style={{
+                    backgroundColor: theme.palette.background.paper,
+                    position: "absolute", top: "50%", left: 0, transform: "translateY(-50%)"
+                  }}
+                  children={<KeyboardArrowLeftIcon />}
+                  onClick={
+                    function () {
+
+                    }
+                  }
+                />
+                <IconButton
+                  style={{
+                    backgroundColor: theme.palette.background.paper,
+                    position: "absolute", top: "50%", right: 0, transform: "translateY(-50%)"
+                  }}
+                  children={<KeyboardArrowRightIcon />}
+                  onClick={
+                    function () {
+
+                    }
+                  }
+                />
+
+              </div>
+              <img src={item} style={{ position: "absolute", objectFit: "cover", width: "100%", height: "100%", }} />
+            </div>
           )
         })}
       </div>
@@ -319,30 +401,11 @@ export default function ImagePanel({ blockKey, setImageBlockData,
   );
 }
 
+function ImagePic({ setImageBlockObj, imageBlockObj, editor, blockKey, theme, index, inputRef, classes, setImageIndex, item, ...props }) {
 
-
-
-function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, blockKey, theme, index, classes, inputRef, setImageIndex, pic, ...props }) {
-
-  const [horizontal, setHorizontal] = useState(50)
-  const [verticle, setVerticle] = useState(50)
-
-  const imageRef = React.useRef()
-  let width = 50;
-  let height = 50;
-
-  useEffect(function () {
-
-    //console.log(window.getComputedStyle(imageRef.current).width, window.getComputedStyle(imageRef.current).height)
-
-
-    // width = Number(window.getComputedStyle(imageRef.current).width.replace("px", ""))
-    //  height = Number(window.getComputedStyle(imageRef.current).height.replace("px", ""))
-
-  }, [])
 
   return (
-    <>
+    <div key={index}>
       <div
         className={classes.imageButtonPanelCss}>
         {imageBlockObj[blockKey].length < 4 &&
@@ -388,7 +451,7 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
 
 
 
-        {verticle > 0 && <IconButton
+        <IconButton
           style={{
             backgroundColor: theme.palette.background.paper,
             position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)"
@@ -396,22 +459,11 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
           children={<KeyboardArrowUpIcon />}
           onClick={
             function () {
-              setVerticle(pre => {
-
-                return Math.max(0, Math.min(pre - 25, 100))
-
-              })
-              setImageBlockData({ ["pos"+index]: { horizontal, verticle } }, blockKey)
-
-              //  setTimeout(() => {
-              //   editor.current.focus()
-              //  }, 0);
 
             }
           }
-        />}
-
-        {verticle < 100 && <IconButton
+        />
+        <IconButton
           style={{
             backgroundColor: theme.palette.background.paper,
             position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)"
@@ -419,17 +471,11 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
           children={<KeyboardArrowDownIcon />}
           onClick={
             function () {
-              setVerticle(pre => {
 
-                return Math.max(0, Math.min(pre + 25, 100))
-
-              })
-              setImageBlockData({ ["pos"+index]: { horizontal, verticle } }, blockKey)
             }
           }
-        />}
-
-        {horizontal > 0 && <IconButton
+        />
+        <IconButton
           style={{
             backgroundColor: theme.palette.background.paper,
             position: "absolute", top: "50%", left: 0, transform: "translateY(-50%)"
@@ -437,17 +483,11 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
           children={<KeyboardArrowLeftIcon />}
           onClick={
             function () {
-              setHorizontal(pre => {
 
-                return Math.max(0, Math.min(pre - 25, 100))
-
-              })
-              setImageBlockData({ ["pos"+index]: { horizontal, verticle } }, blockKey)
             }
           }
-        />}
-
-        {horizontal < 100 && <IconButton
+        />
+        <IconButton
           style={{
             backgroundColor: theme.palette.background.paper,
             position: "absolute", top: "50%", right: 0, transform: "translateY(-50%)"
@@ -456,20 +496,13 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
           onClick={
             function () {
 
-              setHorizontal(pre => {
-
-                return Math.max(0, Math.min(pre + 25, 100))
-
-              })
-              setImageBlockData({ ["pos"+index]: { horizontal, verticle } }, blockKey)
-
             }
           }
-        />}
+        />
 
       </div>
-      <img src={pic} ref={imageRef} style={{ position: "absolute", objectFit: "cover", width: "100%", height: "100%", objectPosition: horizontal + "%" + " " + verticle + "%" }} />
-    </>
+      <img src={item} style={{ position: "absolute", objectFit: "cover", width: "100%", height: "100%", }} />
+    </div>
 
   )
 } 

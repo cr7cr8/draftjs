@@ -44,6 +44,7 @@ export default function createImagePlugin() {
     externalSetEditorState(externalES)
   }
 
+
   function insertImageBlock() {
 
     const selection = externalES.getSelection()
@@ -70,7 +71,9 @@ export default function createImagePlugin() {
       new ContentBlock({
         key: currentText ? newKey : currentKey,
         type: "imageBlock",
-        text: 'ofdf',
+        text: 'imageBlockText',
+        // data: Immutable.Map({ k: "aaa" })
+          data: Immutable.Map({ })
       })
     )
 
@@ -96,6 +99,57 @@ export default function createImagePlugin() {
 
 
   };
+
+
+
+  function setImageBlockData0(obj, newKey) {
+
+
+    const selection = externalES.getSelection()
+    let contentState = externalES.getCurrentContent();
+    const currentKey = selection.getStartKey()  //selection.getEndKey()
+    const currentBlock = contentState.getBlockForKey(currentKey);
+    const currentText = currentBlock && currentBlock.getText()
+
+
+
+
+    const newData = currentBlock.data.set("locked", "Aaa")
+
+    // create a new selection with the block I want to change
+
+    const newContent = Modifier.setBlockData(externalES.getCurrentContent(), SelectionState.createEmpty(newKey), newData)
+
+
+
+    // return a new editor state, applying the selection we stored before
+    externalES = EditorState.push(externalES, newContent, 'change-block-data')
+    //EditorState.forceSelection(externalES, selection)
+    return externalSetEditorState(externalES)
+
+  }
+
+
+
+
+  function setImageBlockData(obj, newKey) {
+
+    const contentState = externalES.getCurrentContent();
+    const currentBlock = contentState.getBlockForKey(newKey);
+
+
+    const newContent = Modifier.setBlockData(
+      externalES.getCurrentContent(),
+      externalES.getSelection(),//  SelectionState.createEmpty(newKey),
+      Immutable.Map({ ...(currentBlock.getData().toObject() || {}), ...obj })
+    );
+
+    externalES = EditorState.push(externalES, newContent, 'change-block-data');
+    //   EditorState.forceSelection(externalES, newSelection)
+    return externalSetEditorState(externalES)
+
+  }
+
 
   function ImageButton({ children, picArr, setPicArr, editor, ...props }) {
 
@@ -176,7 +230,7 @@ export default function createImagePlugin() {
     ImageButton,
     ImagePanel,
     deleteImageBlock,
-
+    setImageBlockData
   }
 
 
