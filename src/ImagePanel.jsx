@@ -126,23 +126,24 @@ const useStyles = makeStyles((theme) => {
 });
 
 
-export default function ImagePanel({ blockKey, setImageBlockData,
-  deleteImageBlock, /*imageArr, setImageArr,*/ editor, editorState, setEditorState, imageBlockObj, setImageBlockObj, className, ...props }) {
+export default function ImagePanel(props) {
 
 
-  // const [imageArr, setImageArr] = useState([
-  //   "https://picsum.photos/200/300",
-  //   "https://picsum.photos/199/600",
-  //   "https://picsum.photos/201/300",
-  //   //  "https://picsum.photos/200/301",
-  // ])
+  const { block,
+    blockProps: {
+      setImageBlockData,
+      deleteImageBlock,
+      editor,
+      imageBlockObj,
+      setImageBlockObj,
+      className,
+    }
 
-  // const [imageArr, setImageArr] = useState([
-  //   "https://picsum.photos/200/300",
-  //   "https://picsum.photos/199/600",
-  //   "https://picsum.photos/201/300",
-  //   //  "https://picsum.photos/200/301",
-  // ])
+  } = props
+
+  const blockKey = block.getKey()
+
+
 
   const classes = useStyles({ numOfImage: Array.isArray(imageBlockObj[blockKey]) ? imageBlockObj[blockKey].length : 0 });
   const target = React.useRef(null)
@@ -202,9 +203,10 @@ export default function ImagePanel({ blockKey, setImageBlockData,
       })
 
       setImageBlockData("deleteAll", blockKey)
+      setRefreshAll(pre => !pre)
       setTimeout(() => {
         editor.current.focus()
-      }, 0);
+      }, 100);
 
     }
 
@@ -230,12 +232,7 @@ export default function ImagePanel({ blockKey, setImageBlockData,
 
   }, [])
 
-  useEffect(function () {
-    // console.log("+++", imageArr)
-    // console.log("===", imageBlockObj[blockKey])
-    //  console.log(imageArr[0] === imageBlockObj[blockKey][0])
-  })
-
+  const [refreshAll, setRefreshAll] = useState(false)
 
   return (
     <div className={className}>
@@ -275,17 +272,14 @@ export default function ImagePanel({ blockKey, setImageBlockData,
                 position: "absolute", top: 0, right: 0,
               }}
               onClick={function () {
-                deleteImageBlock && deleteImageBlock()
+
+                deleteImageBlock && deleteImageBlock(blockKey)
 
                 setImageBlockObj(pre => {
-
                   delete pre[blockKey]
-
-
                   return { ...pre }
-
                 })
-
+                console.log(blockKey)
 
               }}
               children={<DeleteIcon />}
@@ -309,6 +303,7 @@ export default function ImagePanel({ blockKey, setImageBlockData,
                 setImageIndex={setImageIndex}
                 pic={pic}
                 setImageBlockData={setImageBlockData}
+                refreshAll={refreshAll} setRefreshAll={setRefreshAll}
               />
             </div>
 
@@ -322,7 +317,7 @@ export default function ImagePanel({ blockKey, setImageBlockData,
 
 
 
-function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, blockKey, theme, index, classes, inputRef, setImageIndex, pic, ...props }) {
+function ImagePic({ refreshAll, setRefreshAll, setImageBlockData, setImageBlockObj, imageBlockObj, editor, blockKey, theme, index, classes, inputRef, setImageIndex, pic, ...props }) {
 
   const [horizontal, setHorizontal] = useState(50)
   const [verticle, setVerticle] = useState(50)
@@ -331,15 +326,25 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
   let width = 50;
   let height = 50;
 
+  const picName = React.useRef(pic.substr(pic.length - 6, 5))
+
   useEffect(function () {
 
+    setHorizontal(50)
+    setVerticle(50)
     //console.log(window.getComputedStyle(imageRef.current).width, window.getComputedStyle(imageRef.current).height)
 
 
     // width = Number(window.getComputedStyle(imageRef.current).width.replace("px", ""))
     //  height = Number(window.getComputedStyle(imageRef.current).height.replace("px", ""))
 
-  }, [])
+  }, [refreshAll])
+
+  // useEffect(function () {
+
+  //   setImageBlockData({ ["pos" + index]: { horizontal, verticle, }, blockKey})
+  // },[horizontal,verticle])
+
 
   return (
     <>
@@ -378,7 +383,9 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
 
               }
             })
+            // setImageBlockData("delete_pos" + index, blockKey)
             setImageBlockData("deleteAll", blockKey)
+            setRefreshAll(pre => !pre)
             setTimeout(() => {
               editor.current.focus()
             }, 0);
@@ -398,6 +405,7 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
             function () {
               setVerticle(pre => {
                 setImageBlockData({ ["pos" + index]: { horizontal, verticle: Math.max(0, Math.min(pre - 25, 100)) } }, blockKey)
+                // setImageBlockData({ [picName.current]: { horizontal, verticle: Math.max(0, Math.min(pre - 25, 100)) } }, blockKey)
                 return Math.max(0, Math.min(pre - 25, 100))
 
               })
@@ -421,6 +429,7 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
             function () {
               setVerticle(pre => {
                 setImageBlockData({ ["pos" + index]: { horizontal, verticle: Math.max(0, Math.min(pre + 25, 100)) } }, blockKey)
+                // setImageBlockData({ [picName.current]: { horizontal, verticle: Math.max(0, Math.min(pre + 25, 100)) } }, blockKey)
                 return Math.max(0, Math.min(pre + 25, 100))
 
               })
@@ -455,13 +464,13 @@ function ImagePic({ setImageBlockData, setImageBlockObj, imageBlockObj, editor, 
           children={<KeyboardArrowRightIcon />}
           onClick={
             function () {
-
+              console.log(pic)
               setHorizontal(pre => {
-                setImageBlockData({ ["pos" + index]: { horizontal: Math.max(0, Math.min(pre +25, 100)), verticle } }, blockKey)
+                setImageBlockData({ ["pos" + index]: { horizontal: Math.max(0, Math.min(pre + 25, 100)), verticle } }, blockKey)
                 return Math.max(0, Math.min(pre + 25, 100))
 
               })
-            
+
             }
           }
         />}

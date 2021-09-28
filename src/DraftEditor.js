@@ -82,6 +82,25 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   //console.log(editorState)
 
+  useEffect(function () {
+
+    // document.getElementsByClassName("unstyled-text-draft-block::before")[0].addEventListener("click", function () {
+    //   // alert("fdsf")
+    // })
+
+    // console.log(window.getComputedStyle(
+    //   document.querySelector('.unstyled-text-draft-block'), ':before'
+    // ).backgroundColor);
+
+
+    // document.querySelector('.unstyled-text-draft-block').addEventListener("click",function(e){
+
+    //  console.log(e)
+    // })
+
+
+  }, [])
+
 
   return (
 
@@ -95,7 +114,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       {/* <Div data-aaa="aaa" data-bbb="34343" id="99999" data-num="4343" /> */}
       {/* <Fade in={ctx.showEmojiPanel} unmountOnExit={false}> */}
 
-      <ImageButton editor={editorRef} />
+      {/* <ImageButton editor={editorRef} /> */}
       <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}>
         <EmojiPanel />
       </Collapse>
@@ -164,13 +183,29 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
               return "image-block-figure"
             }
+            if ((!text) && (type === "unstyled")) {
+              return "unstyled-text-draft-block"
+            }
           }}
 
           blockRendererFn={function (block) {
 
             const text = block.getText()
             const data = block.getData().toObject()
-            const type = block.getType()
+            const type = block.getType() 
+
+            if ((!text) && (type === "unstyled")) {
+              return {
+                component: ImageButton,
+                editable: true,
+                props: {
+                  editor: editorRef
+                }
+              }
+            }
+
+
+
             //   const entityId = editorState.getCurrentContent().getEntityAt(0);
             if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
               //   console.log(JSON.stringify(data))
@@ -180,8 +215,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                 //   return <Button variant="contained" onMouseDown={aonClick}>{children}</Button>
                 // },
 
-                component: ImagePanelWrap,
-
+                component: ImagePanel,
                 editable: false,
                 props: {
                   imageArr,
@@ -189,8 +223,8 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   imageBlockObj,
                   setImageBlockObj,
                   editor: editorRef,
-                  blockKey: block.getKey(),
-                  deleteImageBlock: deleteImageBlock.bind(null, block.getKey()),
+                  //blockKey: block.getKey(),
+                  deleteImageBlock,
                   className: "image-block",
                   setImageBlockData,
 

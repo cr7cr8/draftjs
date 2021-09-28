@@ -23,3 +23,19 @@ figure {
 .image-block-figure + .image-block-figure{
   margin-top: 4px;
 }
+
+.unstyled-text-draft-block{
+  position: static;
+  /* z-index: 100; */
+}
+/* .unstyled-text-draft-block::before{
+  content:"+";
+  color: #E2202D;
+  position: absolute;
+  right:0;
+  background-color:pink;
+}
+
+.unstyled-text-draft-block:hover::before{
+cursor: pointer;
+} */

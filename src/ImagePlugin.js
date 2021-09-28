@@ -2,12 +2,12 @@ import { useState, useRef, useEffect, useContext, useCallback, createContext, us
 import { Context, withContext } from "./ContextProvider"
 
 import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
-import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
+import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 import Editor from "draft-js-plugins-editor";
 import Immutable from 'immutable';
 
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
-import { Typography, Button, ButtonGroup, Container, Paper, Avatar, Box, Chip, Grow } from "@material-ui/core";
+import { Typography, Button, ButtonGroup, Container, Paper, Avatar, Box, Chip, Grow, Zoom, Slide } from "@material-ui/core";
 import { Image, AlternateEmailSharp } from "@material-ui/icons";
 
 
@@ -30,7 +30,7 @@ export default function createImagePlugin() {
   let externalSetEditorState = null;
   let newContent = null;
 
-  function deleteImageBlock(blockKey) {
+  function deleteImageBlock0(blockKey) {
 
 
     // const block = contentState.getBlockForKey(blockKey);
@@ -45,57 +45,126 @@ export default function createImagePlugin() {
   }
 
 
-  function insertImageBlock() {
+  function deleteImageBlock(blockKey) {
 
-    const selection = externalES.getSelection()
+
+    let newSelection = SelectionState.createEmpty(blockKey)
+    newSelection = newSelection.merge({
+      focusKey: blockKey,
+      focusOffset: 0,
+      anchorOffset: blockKey,
+      anchorOffset: 0,
+      hasFocus: true
+    });
+
+    // newSelection.getAnchorKey()
+    // newSelection.getFocusKey();
+
+    let newContent = Modifier.setBlockType(
+      externalES.getCurrentContent(),
+      newSelection,
+      "unstyled"
+    );
+
+    newContent = Modifier.setBlockData(
+      newContent,
+      newSelection,//  SelectionState.createEmpty(newKey),
+      Immutable.Map({})
+    );
+
+
+    externalES = EditorState.push(externalES, newContent, 'change-block-type');
+    //   EditorState.forceSelection(externalES, newSelection)
+    return externalSetEditorState(externalES)
+
+  }
+
+  function deleteImageBlock0(blockKey) {
+
+
+    // const block = contentState.getBlockForKey(blockKey);
     let contentState = externalES.getCurrentContent();
-    const currentKey = selection.getStartKey()  //selection.getEndKey()
+    let newContentBlockArr = contentState.getBlocksAsArray().filter(function (item) {
+      return item.getKey() !== blockKey
+    })
+
+    const newContentState = ContentState.createFromBlockArray(newContentBlockArr)
+    externalES = EditorState.createWithContent(newContentState)
+    externalSetEditorState(externalES)
+  }
 
 
-    const currentBlock = contentState.getBlockForKey(currentKey);
-    const currentText = currentBlock && currentBlock.getText()
+
+  function insertImageBlock(blockKey) {
+
+    let newSelection = SelectionState.createEmpty(blockKey)
+    newSelection = newSelection.merge({
+      focusKey: blockKey,
+      focusOffset: 0,
+      anchorOffset: blockKey,
+      anchorOffset: 0,
+      hasFocus: false
+    });
+
+    const newContent = Modifier.setBlockType(
+      externalES.getCurrentContent(),
+      newSelection,
+      "imageBlock"
+    );
+
+    externalES = EditorState.push(externalES, newContent, 'change-block-type');
+    //   EditorState.forceSelection(externalES, newSelection)
+    return externalSetEditorState(externalES)
+
+    // const selection = externalES.getSelection()
+    // let contentState = externalES.getCurrentContent();
+    // const currentKey = selection.getStartKey()  //selection.getEndKey()
+
+
+    // const currentBlock = contentState.getBlockForKey(currentKey);
+    // const currentText = currentBlock && currentBlock.getText()
 
     //console.log(selection, currentKey, contentState.getBlockForKey(currentKey), currentText)
 
-    let newContentBlockArr = contentState.getBlocksAsArray()
-    const selectionBefore = contentState.getSelectionBefore()
-    const selectionAfter = contentState.getSelectionAfter()
+    // let newContentBlockArr = contentState.getBlocksAsArray()
+    // const selectionBefore = contentState.getSelectionBefore()
+    // const selectionAfter = contentState.getSelectionAfter()
 
-    let currentIndex = newContentBlockArr.findIndex(item => { return item.key === currentKey })
-    currentIndex = currentIndex >= 0 ? currentIndex : newContentBlockArr.length - 1
-    //  console.log(currentIndex)
-
-
-    const newKey = genKey()
-    newContentBlockArr.splice(currentText ? (currentIndex + 1) : currentIndex, currentText ? 0 : 1,
-      new ContentBlock({
-        key: currentText ? newKey : currentKey,
-        type: "imageBlock",
-        text: '',
-        // data: Immutable.Map({ k: "aaa" })
-          data: Immutable.Map({ })
-      })
-    )
-
-    let newSelection;
-    if (currentText) {
-      newSelection = SelectionState.createEmpty(newKey)
-    }
-
-    contentState = ContentState.createFromBlockArray(newContentBlockArr)
-    contentState = contentState.merge(
-      {
-        selectionAfter, //newBlockMap,
-        selectionBefore,
-
-      }
-    )
+    // let currentIndex = newContentBlockArr.findIndex(item => { return item.key === currentKey })
+    // currentIndex = currentIndex >= 0 ? currentIndex : newContentBlockArr.length - 1
+    // //  console.log(currentIndex)
 
 
-    // externalES = EditorState.createWithContent(contentState)
-    externalES = EditorState.push(externalES, contentState, 'insert-fragment');
-    if (newSelection) { externalES = EditorState.acceptSelection(externalES, newSelection) }
-    externalSetEditorState(externalES)
+    // const newKey = genKey()
+    // newContentBlockArr.splice(currentText ? (currentIndex + 1) : currentIndex, currentText ? 0 : 1,
+    //   new ContentBlock({
+    //     key: currentText ? newKey : currentKey,
+    //     type: "imageBlock",
+    //     text: '',
+    //     // data: Immutable.Map({ k: "aaa" })
+    //     data: Immutable.Map({})
+    //   })
+    // )
+
+    // let newSelection;
+    // if (currentText) {
+    //   newSelection = SelectionState.createEmpty(newKey)
+    // }
+
+    // contentState = ContentState.createFromBlockArray(newContentBlockArr)
+    // contentState = contentState.merge(
+    //   {
+    //     selectionAfter, //newBlockMap,
+    //     selectionBefore,
+
+    //   }
+    // )
+
+
+    // // externalES = EditorState.createWithContent(contentState)
+    // externalES = EditorState.push(externalES, contentState, 'insert-fragment');
+    // if (newSelection) { externalES = EditorState.acceptSelection(externalES, newSelection) }
+    // externalSetEditorState(externalES)
 
 
   };
@@ -132,50 +201,149 @@ export default function createImagePlugin() {
 
 
 
-  function setImageBlockData(obj, newKey) {
+  function setImageBlockData(obj, blockKey) {
 
     const contentState = externalES.getCurrentContent();
-    const currentBlock = contentState.getBlockForKey(newKey);
+    const currentBlock = contentState.getBlockForKey(blockKey);
+    let newSelection = SelectionState.createEmpty(blockKey)
+    newSelection = newSelection.merge({
+      focusKey: blockKey,
+      focusOffset: 0,
+      anchorOffset: blockKey,
+      anchorOffset: 0,
+      hasFocus: false
+    });
 
+    const currentData = currentBlock.getData().toObject()
 
-    const newContent = Modifier.setBlockData(
-      externalES.getCurrentContent(),
-      externalES.getSelection(),//  SelectionState.createEmpty(newKey),
-      Immutable.Map(  obj==="deleteAll"?{}:{ ...(currentBlock.getData().toObject() || {}), ...obj })
-    );
+    if (String(obj).indexOf("delete_pos") >= 0) {
 
-    externalES = EditorState.push(externalES, newContent, 'change-block-data');
-    //   EditorState.forceSelection(externalES, newSelection)
-    return externalSetEditorState(externalES)
+   
+      delete currentData[obj.replace("delete_", "")]
+      const newContent = Modifier.setBlockData(
+        externalES.getCurrentContent(),
+        newSelection,//  SelectionState.createEmpty(newKey),
+        Immutable.Map(currentData)
+      );
+
+      externalES = EditorState.push(externalES, newContent, 'change-block-data');
+      //   EditorState.forceSelection(externalES, newSelection)
+      return externalSetEditorState(externalES)
+    }
+
+    else {
+      const newContent = Modifier.setBlockData(
+        externalES.getCurrentContent(),
+        newSelection,//  SelectionState.createEmpty(newKey),
+      //  Immutable.Map(obj === "deleteAll" ? {} : { ...(currentBlock.getData().toObject() || {}), ...obj })
+      //  Immutable.Map(obj === "refresh" ? currentData : { ...(currentBlock.getData().toObject() || {}), ...obj })
+        Immutable.Map(obj === "deleteAll" ? {} : { ...(currentBlock.getData().toObject() || {}), ...obj })
+      );
+
+      externalES = EditorState.push(externalES, newContent, 'change-block-data');
+      //   EditorState.forceSelection(externalES, newSelection)
+      return externalSetEditorState(externalES)
+    }
+
 
   }
 
 
-  function ImageButton({ children, picArr, setPicArr, editor, ...props }) {
+  function ImageButton(props) {
+
+    const { children, picArr, setPicArr, editor } = props
 
 
-    const inputRef = useRef()
+
+    const { block } = props
+    const blockKey = block.getKey()
+
+
     const theme = useTheme()
 
 
+    const [hover, setHover] = useState(true)
+
+
     return (
-      <>
-        <Button {...props}
-          style={{
-            color: theme.palette.type === "dark" ? theme.palette.text.secondary : theme.palette.primary.main
-          }}
-          //  disabled={picArr.length >= 4}
-          onClick={function (e) {
-            insertImageBlock()
-            // setTimeout(() => {
-            //   editor.current.focus()
-            // }, 0);
-          }}
-        >
-          <AddPhotoAlternateOutlined />
-        </Button>
-      </>
+
+
+      <div onMouseEnter={function () { setHover(true) }} onMouseLeave={function () { setHover(false) }} style={{ overflow: "hidden", position: "relative" }}>
+
+        <Slide in={hover} direction="left">
+          <Button
+            style={{
+              color: theme.palette.type === "dark" ? theme.palette.text.secondary : theme.palette.primary.main,
+              // transform: "translateX(-100%)",
+              backgroundColor: "pink",
+              position: "absolute",
+              right: 0,
+              //    opacity: 0.5,
+              display: "inline-block"
+
+            }}
+            //  disabled={picArr.length >= 4}
+            onClick={function (e) {
+              insertImageBlock(blockKey)
+              // setTimeout(() => {
+              //   editor.current.focus()
+              // }, 0);
+            }}
+          >
+            <AddPhotoAlternateOutlined />
+          </Button>
+        </Slide>
+        <EditorBlock    {...{ ...props }} />
+
+      </div>
     )
+
+
+    // return (
+    //   <>
+
+
+
+
+    //     <div data-offset-key={offsetKey} className="public-DraftStyleDefault-block public-DraftStyleDefault-ltr" style={{ position: "relative", minHeight: "2.2rem" }}>
+
+    //       <span data-offset-key={offsetKey}>
+    //         <span data-text="true">{text || ""}
+    //           <div style={{ backgroundColor: "pink", width: "2rem", height: "2.2rem", margin: 0, padding: 0 }}>
+
+    //           </div>
+
+
+    //           {/* <Button
+    //             style={{
+    //               color: theme.palette.type === "dark" ? theme.palette.text.secondary : theme.palette.primary.main,
+    //               // transform: "translateX(-100%)",
+    //               backgroundColor: "pink",
+    //               position: "absolute",
+    //               right: 0,
+    //               opacity: 0.5,
+
+    //             }}
+    //             //  disabled={picArr.length >= 4}
+    //             onClick={function (e) {
+    //               insertImageBlock()
+    //               // setTimeout(() => {
+    //               //   editor.current.focus()
+    //               // }, 0);
+    //             }}
+    //           >
+    //             <AddPhotoAlternateOutlined />
+    //           </Button> */}
+
+
+    //         </span>
+    //       </span>
+    //     </div>
+
+
+
+    //   </>
+    // )
   }
 
 
