@@ -1,4 +1,5 @@
 ### Dev10
+Image plugin is done,  image button on top bar 
 
 ### EmojiPlugin is done in this branch
 Use built-in pain text as emoji, no pictures 
