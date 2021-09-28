@@ -7,6 +7,25 @@ Use built-in pain text as emoji, no pictures
 ### MentionPlugin is done in this branch
 Render mention hint function 
 
+### setBlockData
+      function setImageBlockData(obj, newKey) {
+
+        const contentState = externalES.getCurrentContent();
+        const currentBlock = contentState.getBlockForKey(newKey);
+
+        const newContent = Modifier.setBlockData(
+          externalES.getCurrentContent(),
+          externalES.getSelection(),//  SelectionState.createEmpty(newKey),
+          Immutable.Map(  obj==="deleteAll"?{}:{ ...(currentBlock.getData().toObject() || {}), ...obj })
+        );
+
+        externalES = EditorState.push(externalES, newContent, 'change-block-data');
+        //   EditorState.forceSelection(externalES, newSelection)
+        return externalSetEditorState(externalES)
+
+      }
+
+
 ### import
       import styled from 'styled-components'
       import { Context, withContext1, withContext2, withContext3, withContext4 } from "./ContextProvider";
