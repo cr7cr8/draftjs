@@ -23,6 +23,10 @@ import {
 import ImagePanel from "./ImagePanel"
 
 import { CropOriginal, Brightness4, Brightness5, FormatBold, FormatItalic, AddPhotoAlternateOutlined } from "@material-ui/icons";
+import ToolButton from "./ToolButton"
+
+//const ToolButton = require("./ToolButton")
+
 
 export default function createImagePlugin() {
 
@@ -218,7 +222,7 @@ export default function createImagePlugin() {
     const newContent = Modifier.setBlockData(
       externalES.getCurrentContent(),
       newSelection,//  SelectionState.createEmpty(newKey),
-     
+
       Immutable.Map(obj === "deleteAll" ? {} : { ...(currentBlock.getData().toObject() || {}), ...obj })
     );
 
@@ -231,101 +235,60 @@ export default function createImagePlugin() {
   }
 
 
-  function ImageButton(props) {
+  function ToolBlock(props) {
 
-    const { children, picArr, setPicArr, editor } = props
+    const { children, picArr, setPicArr, } = props
 
+    //console.log(props)
 
-
-    const { block } = props
+    const { block, selection, contentState } = props
     const blockKey = block.getKey()
-
+    const { editor, setTop, setLeft } = props.blockProps
 
     const theme = useTheme()
+    const [hover, setHover] = useState(false)
+    const editorBlockRef = useRef()
 
+    const addImage = () => {
+      insertImageBlock(blockKey)
+      //   setTimeout(() => {
+      editor.current.focus()
+      //   }, 0);
+    }
 
-    const [hover, setHover] = useState(true)
+    const [backColor, setBackColor] = useState("pink")
 
+    const [focus, setFocus] = useState(selection.hasFocus)
+
+    useEffect(function () {
+
+      const [anchorKey, anchorOffset, focusKey] = selection.toArray()
+      const [anchorKey2, anchorOffset2, focusKey2, focusOffset2, isBackward2, hasfocus2] = externalES.getSelection().toArray()
+
+      //  console.log(focusKey, block.getKey())
+
+      // console.log("-=-=-=",window.getComputedStyle(editorBlockRef.current._node))
+
+     // console.log("-=-=-=", editorBlockRef.current._node.getBoundingClientRect())
+
+      if (focusKey === block.getKey()) {
+        //  setTop(editorBlockRef.current._node.getBoundingClientRect())
+        // setLeft(editorBlockRef.current._node.getBoundingClientRect().left)
+        //   setTop(0) 
+        setLeft(0)
+      }
+
+    })
 
     return (
+      <div style={{ backgroundColor: backColor }}>
 
 
-      <div onMouseEnter={function () { setHover(true) }} onMouseLeave={function () { setHover(false) }} style={{ overflow: "hidden", position: "relative" }}>
 
-        <Slide in={hover} direction="left">
-          <Button
-            style={{
-              color: theme.palette.type === "dark" ? theme.palette.text.secondary : theme.palette.primary.main,
-              // transform: "translateX(-100%)",
-              backgroundColor: "pink",
-              position: "absolute",
-              right: 0,
-              //    opacity: 0.5,
-              display: "inline-block"
-
-            }}
-            //  disabled={picArr.length >= 4}
-            onClick={function (e) {
-              insertImageBlock(blockKey)
-              // setTimeout(() => {
-              //   editor.current.focus()
-              // }, 0);
-            }}
-          >
-            <AddPhotoAlternateOutlined />
-          </Button>
-        </Slide>
-        <EditorBlock    {...{ ...props }} />
-
+        <EditorBlock    {...{ ...props }} ref={editorBlockRef} />
       </div>
     )
 
-
-    // return (
-    //   <>
-
-
-
-
-    //     <div data-offset-key={offsetKey} className="public-DraftStyleDefault-block public-DraftStyleDefault-ltr" style={{ position: "relative", minHeight: "2.2rem" }}>
-
-    //       <span data-offset-key={offsetKey}>
-    //         <span data-text="true">{text || ""}
-    //           <div style={{ backgroundColor: "pink", width: "2rem", height: "2.2rem", margin: 0, padding: 0 }}>
-
-    //           </div>
-
-
-    //           {/* <Button
-    //             style={{
-    //               color: theme.palette.type === "dark" ? theme.palette.text.secondary : theme.palette.primary.main,
-    //               // transform: "translateX(-100%)",
-    //               backgroundColor: "pink",
-    //               position: "absolute",
-    //               right: 0,
-    //               opacity: 0.5,
-
-    //             }}
-    //             //  disabled={picArr.length >= 4}
-    //             onClick={function (e) {
-    //               insertImageBlock()
-    //               // setTimeout(() => {
-    //               //   editor.current.focus()
-    //               // }, 0);
-    //             }}
-    //           >
-    //             <AddPhotoAlternateOutlined />
-    //           </Button> */}
-
-
-    //         </span>
-    //       </span>
-    //     </div>
-
-
-
-    //   </>
-    // )
   }
 
 
@@ -377,7 +340,7 @@ export default function createImagePlugin() {
 
     insertImageBlock,
 
-    ImageButton,
+    ToolBlock,
     ImagePanel,
     deleteImageBlock,
     setImageBlockData

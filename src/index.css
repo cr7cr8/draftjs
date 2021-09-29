@@ -25,7 +25,8 @@ figure {
 }
 
 .unstyled-text-draft-block{
-  position: static;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
   /* z-index: 100; */
 }
 /* .unstyled-text-draft-block::before{

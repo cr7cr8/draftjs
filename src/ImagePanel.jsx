@@ -407,16 +407,11 @@ function ImagePic({ refreshAll, setRefreshAll, setImageBlockData, setImageBlockO
                 setImageBlockData({ ["pos" + index]: { horizontal, verticle: Math.max(0, Math.min(pre - 25, 100)) } }, blockKey)
                 // setImageBlockData({ [picName.current]: { horizontal, verticle: Math.max(0, Math.min(pre - 25, 100)) } }, blockKey)
                 return Math.max(0, Math.min(pre - 25, 100))
-
               })
-
-
               //  setTimeout(() => {
               //   editor.current.focus()
               //  }, 0);
-
-            }
-          }
+            }}
         />}
 
         {verticle < 100 && <IconButton
@@ -431,9 +426,7 @@ function ImagePic({ refreshAll, setRefreshAll, setImageBlockData, setImageBlockO
                 setImageBlockData({ ["pos" + index]: { horizontal, verticle: Math.max(0, Math.min(pre + 25, 100)) } }, blockKey)
                 // setImageBlockData({ [picName.current]: { horizontal, verticle: Math.max(0, Math.min(pre + 25, 100)) } }, blockKey)
                 return Math.max(0, Math.min(pre + 25, 100))
-
               })
-
             }
           }
         />}

@@ -19,7 +19,7 @@ import { withContext } from "./ContextProvider"
 
 
 import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
-
+import useResizeObserver from '@react-hook/resize-observer';
 
 import createMentionPlugin from './MentionPlugin';
 import createEmojiPlugin from './EmojiPlugin';
@@ -28,7 +28,7 @@ import createImagePlugin from './ImagePlugin';
 
 import styled from "styled-components"
 
-
+import { ToolButton2 } from "./ToolButton"
 
 const Div = styled.div.withConfig({
 
@@ -55,7 +55,7 @@ const initialState = {
 };
 const { mentionPlugin } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
-const { imagePlugin, ImageButton, ImagePanel, deleteImageBlock, setImageBlockData } = createImagePlugin()
+const { imagePlugin, ImagePanel, ToolBlock, deleteImageBlock, setImageBlockData } = createImagePlugin()
 
 // const useStyles = makeStyles(function (theme) {
 
@@ -68,7 +68,25 @@ const { imagePlugin, ImageButton, ImagePanel, deleteImageBlock, setImageBlockDat
 //   }
 // })
 
+const useSize = (target) => {
+  const [size, setSize] = React.useState()
 
+  React.useLayoutEffect(() => {
+    setSize(target.current && target.current.editor && target.current.editor.editor.getBoundingClientRect())
+  }, [target])
+
+  // Where the magic happens
+  useResizeObserver(target.current && target.current.editor && target.current.editor.editor, (entry) => {
+
+
+    console.log(entry);
+    // setSize(entry.contentRect)
+    setSize(target.current && target.current.editor && target.current.editor.editor.getBoundingClientRect())
+
+    setSize(window.getComputedStyle(target.current && target.current.editor && target.current.editor.editor).top)
+  })
+  return size
+}
 
 
 export default withContext(function DraftEditor({ ctx, ...props }) {
@@ -78,28 +96,35 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   const { editorState, setEditorState, editorRef, imageArr, setImageArr, imageBlockObj, setImageBlockObj } = ctx
 
+  const [top, setTop] = useState(0)
+  const [left, setLeft] = useState(0)
 
+  const editorSizeRef = useRef(null)
+  const editorSize = useSize(editorRef)
 
-  //console.log(editorState)
+  //const [containerTop, setContainerTop]
 
   useEffect(function () {
 
-    // document.getElementsByClassName("unstyled-text-draft-block::before")[0].addEventListener("click", function () {
-    //   // alert("fdsf")
-    // })
-
-    // console.log(window.getComputedStyle(
-    //   document.querySelector('.unstyled-text-draft-block'), ':before'
-    // ).backgroundColor);
-
-
-    // document.querySelector('.unstyled-text-draft-block').addEventListener("click",function(e){
-
-    //  console.log(e)
-    // })
-
-
   }, [])
+
+
+  useEffect(function () {
+
+    
+
+    return function(){
+    //  console.log(editorRef.current.editor.editor.getBoundingClientRect())
+
+    }
+
+    //  console.log("****",editorRef.current.editor)
+    // const contentState = editorState.getCurrentContent();
+    //   console.log("****",editorSize)
+    //  const selectionState = editorState.getSelection();
+    //   const contentState = editorState.getCurrentContent();
+
+  })
 
 
   return (
@@ -119,7 +144,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
         <EmojiPanel />
       </Collapse>
       {/* </Fade> */}
-      <Paper>
+
+      <Paper style={{ position: "relative" }} ref={editorSizeRef}>
+
+        <ToolButton2 top={top} left={left} />
 
         <Editor
           ref={function (element) { editorRef.current = element; }}
@@ -192,14 +220,30 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
             const text = block.getText()
             const data = block.getData().toObject()
-            const type = block.getType() 
+            const type = block.getType()
 
             if ((!text) && (type === "unstyled")) {
+
               return {
-                component: ImageButton,
+                component: ToolBlock,
                 editable: true,
                 props: {
-                  editor: editorRef
+                  editor: editorRef,
+                  setTop,
+                  setLeft,
+                }
+              }
+            }
+
+            if (type === "tool-block") {
+
+              return {
+                component: ToolBlock,
+                editable: true,
+                props: {
+                  editor: editorRef,
+                  setTop,
+                  setLeft,
                 }
               }
             }
@@ -227,6 +271,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   deleteImageBlock,
                   className: "image-block",
                   setImageBlockData,
+
 
                 },
               }
@@ -277,6 +322,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
         />
+
       </Paper>
 
       {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>

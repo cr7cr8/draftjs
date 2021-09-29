@@ -180,7 +180,7 @@ function toPreHtml(editorState) {
 
 
       }
-      
+
     }
   )
   return preHtml
@@ -222,11 +222,19 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }), [textSizeArr, isLight, setIsLight])
 
 
-useEffect(function(){
+  useEffect(function () {
 
-  //console.log(imageBlockObj)
+    //console.log(imageBlockObj)
 
-},[imageBlockObj])
+  }, [imageBlockObj])
+
+  // useEffect(function () {
+  //   setTimeout(() => {
+  //     console.log(editorRef.current.editor.editor.getBoundingClientRect())
+  //   }, 500)
+
+  // })
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -278,6 +286,7 @@ useEffect(function(){
             />
 
             <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
+            
               control={<SwitchBtn checked={showEmojiPanel} factor={[2, 2, 2, 1.8, 2.2]}
                 onChange={() => { setShowEmojiPanel(pre => !pre); editorRef.current.focus() }} name="showEmojiPanel" color="primary" />}
               label="EmojiPanel"

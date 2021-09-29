@@ -112,6 +112,8 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
 
   const emojiCtxStr = ctx && ctx.emojiCtxStr;
   const setEmojiCtxStr = ctx && ctx.setEmojiCtxStr;
+  const editorRef = ctx && ctx.editorRef
+
   if (ctx) {
     emojiArr[0].symbolStr = emojiCtxStr
 
@@ -130,7 +132,7 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
 
   useEffect(function () {
 
-  //  panelRef.current && console.log("----", window.getComputedStyle( panelRef.current).height)
+    //  panelRef.current && console.log("----", window.getComputedStyle( panelRef.current).height)
 
     panelRef.current && window.getComputedStyle(panelRef.current).height !== height && setHeight(window.getComputedStyle(panelRef.current).height)
 
@@ -166,18 +168,21 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
 
           {
             dataArr.map((item, index) => {
-              return <Tab value={index} style={{}} label={<span style={{}}>{item.category}</span>} key={index} onClick={() => {
+              return <Tab value={index} style={{}} label={<span style={{}}>{item.category}</span>} key={index}
 
 
-                setDataArr(pre => {
-                  const newDataArr = pre.map(oldItem => ({ ...oldItem, slideOn: false, direction: index > tabValue ? "right" : "left" }))
-                  newDataArr[index].slideOn = true
-                  newDataArr[index].direction = index > tabValue ? "left" : "right"
-                  return [...newDataArr]
-                })
-                setTabValue(index)
+                onClick={() => {
 
-              }} />
+
+                  setDataArr(pre => {
+                    const newDataArr = pre.map(oldItem => ({ ...oldItem, slideOn: false, direction: index > tabValue ? "right" : "left" }))
+                    newDataArr[index].slideOn = true
+                    newDataArr[index].direction = index > tabValue ? "left" : "right"
+                    return [...newDataArr]
+                  })
+                  setTabValue(index)
+
+                }} />
             })
           }
 
@@ -185,7 +190,7 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
       </AppBar>
 
 
-      <div key="slide" style={{ overflow: "hidden", /*backgroundColor: "wheat",*/ position: "relative", width: "100%", height, maxHeight:"30vh" ,overflowX: "hidden", overflowY: "auto" }}>
+      <div key="slide" style={{ overflow: "hidden", /*backgroundColor: "wheat",*/ position: "relative", width: "100%", height, maxHeight: "30vh", overflowX: "hidden", overflowY: "auto" }}>
 
 
         {dataArr.map((item, index) => {
@@ -204,8 +209,12 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
           })
 
           return <Slide
+            onEntered={function () { console.log(editorRef.current.editor.editor.getBoundingClientRect()) }}
+            onExited={function () { console.log(editorRef.current.editor.editor.getBoundingClientRect()) }}
+
 
             in={item.slideOn} unmountOnExit={true} timeout={{ exit: 150, enter: 300 }} direction={item.direction} key={index} ref={panelRef}>
+
 
             <div style={{ /*backgroundColor: "pink",*/ overflowWrap: "anywhere", width: "100%", position: "absolute" }} >
 
