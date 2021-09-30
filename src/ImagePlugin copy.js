@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
 import { Context, withContext } from "./ContextProvider"
-import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
+
 import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
 import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 import Editor from "draft-js-plugins-editor";
@@ -27,8 +27,7 @@ import ToolButton from "./ToolButton"
 import { add } from 'date-fns/esm';
 
 //const ToolButton = require("./ToolButton")
-// import createEmojiPlugin from './EmojiPlugin';
-// const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
+
 
 export default function createImagePlugin() {
 
@@ -243,7 +242,7 @@ export default function createImagePlugin() {
 
     const { block, selection, contentState } = props
     const blockKey = block.getKey()
-    const { editorRef, readOnly, setReadOnly, EmojiPanel } = props.blockProps
+    const { editorRef, readOnly, setReadOnly } = props.blockProps
 
     const theme = useTheme()
     const [hidden, setHidden] = useState(true)
@@ -287,7 +286,7 @@ export default function createImagePlugin() {
 
 
 
-      //  console.log(hasFocus, blockKey, focusKey)
+      console.log(hasFocus, blockKey, focusKey)
 
 
       let newSelection = SelectionState.createEmpty(blockKey)
@@ -310,17 +309,40 @@ export default function createImagePlugin() {
       return externalSetEditorState(externalES)
 
 
-
+      //   console.log("blockKey: ", blockKey, " focusKey: ", selection.focusKey, selection)
+      if ((!hasFocus) && (!hidden)) {
+        setHidden(true)
+      }
+      else if ((hasFocus) && (focusKey === blockKey) && (hidden)) {
+        setHidden(false)
+      }
+      else if ((hasFocus) && (focusKey !== blockKey) && (!hidden)) {
+        setHidden(true)
+      }
+      return externalSetEditorState(externalES)
+      //console.log(blockKey)
     }
 
+    function checkFocus3() {
+
+      const depth = block.getDepth();
+      const newBlock = block.set('depth', depth - 1);
+      const contentState = externalES.getCurrentContent();
+      const blockMap = contentState.getBlockMap();
+      const newBlockMap = blockMap.set(blockKey, newBlock);
+      EditorState.push(
+        externalES,
+        contentState.merge({ blockMap: newBlockMap }),
+        'adjust-depth'
+      );
+
+      return externalSetEditorState(externalES)
+    }
 
 
     return (
       <div
         style={{ position: "relative", backgroundColor: backColor }}
-
-
-
         onMouseDown={function () {
           // alert(blockKey)
           setHidden(false)
@@ -352,12 +374,6 @@ export default function createImagePlugin() {
           }}
 
         >aaa</Button>}
-
-
-        {/* <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}> */}
-          {/* {EmojiPanel} */}
-        {/* </Collapse> */}
-
         <EditorBlock     {...{ ...props }} ref={editorBlockRef} >  </EditorBlock>
 
         {/* <ToolButton blockKey={blockKey} clickFn={addImage} hidden={hidden} setHidden={setHidden} readOnly={readOnly} setReadOnly={setReadOnly} insertImageBlock={insertImageBlock} /> */}
@@ -379,50 +395,17 @@ export default function createImagePlugin() {
         const selectionState = editorState.getSelection();
         const contentState = editorState.getCurrentContent();
         const block = contentState.getBlockForKey(selectionState.getStartKey());
-
+        //    console.log(block.getType())
         if ((block.getType() === "imageBlock") && ((e.keyCode === 8) || (e.keyCode === 46))) {
           return "cancel-delete"
         }
-        if ((block.getType() === "unstyled") && ((e.keyCode === 37))) {
-          return "tool-block-left"
-        }
-        if ((block.getType() === "unstyled") && ((e.keyCode === 38))) {
-          return "tool-block-top"
-        }
-        return getDefaultKeyBinding(e);
-
-        // if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 37))) {
-        //   return "tool-block-back"
-        // }
-        // if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 38))) {
-        //   return "tool-block-back"
-        // }
-
-
-        // if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 39))) {
-        //   return "tool-block-next"
-        // }
-        // if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 40))) {
-        //   return "tool-block-next"
-        // }
-
 
       },
       handleKeyCommand(command, editorState, evenTimeStamp, { setEditorState }) {
-        // better to place each command detail in draft.js, not here
+
         if (command === "cancel-delete") {
           return "handled"
         }
-
-        if (command === "tool-block-left") {
-          return 'not-handled';
-        }
-
-        if (command === "tool-block-next") {
-
-        }
-
-
 
 
         return 'not-handled';

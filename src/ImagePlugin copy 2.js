@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
 import { Context, withContext } from "./ContextProvider"
-import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
+
 import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
 import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 import Editor from "draft-js-plugins-editor";
@@ -27,8 +27,7 @@ import ToolButton from "./ToolButton"
 import { add } from 'date-fns/esm';
 
 //const ToolButton = require("./ToolButton")
-// import createEmojiPlugin from './EmojiPlugin';
-// const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
+
 
 export default function createImagePlugin() {
 
@@ -243,7 +242,7 @@ export default function createImagePlugin() {
 
     const { block, selection, contentState } = props
     const blockKey = block.getKey()
-    const { editorRef, readOnly, setReadOnly, EmojiPanel } = props.blockProps
+    const { editorRef, readOnly, setReadOnly } = props.blockProps
 
     const theme = useTheme()
     const [hidden, setHidden] = useState(true)
@@ -352,12 +351,6 @@ export default function createImagePlugin() {
           }}
 
         >aaa</Button>}
-
-
-        {/* <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}> */}
-          {/* {EmojiPanel} */}
-        {/* </Collapse> */}
-
         <EditorBlock     {...{ ...props }} ref={editorBlockRef} >  </EditorBlock>
 
         {/* <ToolButton blockKey={blockKey} clickFn={addImage} hidden={hidden} setHidden={setHidden} readOnly={readOnly} setReadOnly={setReadOnly} insertImageBlock={insertImageBlock} /> */}
@@ -383,22 +376,12 @@ export default function createImagePlugin() {
         if ((block.getType() === "imageBlock") && ((e.keyCode === 8) || (e.keyCode === 46))) {
           return "cancel-delete"
         }
-        if ((block.getType() === "unstyled") && ((e.keyCode === 37))) {
-          return "tool-block-left"
+        if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 37))) {
+          return "tool-block-back"
         }
-        if ((block.getType() === "unstyled") && ((e.keyCode === 38))) {
-          return "tool-block-top"
+        if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 38))) {
+          return "tool-block-back"
         }
-        return getDefaultKeyBinding(e);
-
-        // if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 37))) {
-        //   return "tool-block-back"
-        // }
-        // if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 38))) {
-        //   return "tool-block-back"
-        // }
-
-
         // if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 39))) {
         //   return "tool-block-next"
         // }
@@ -409,14 +392,59 @@ export default function createImagePlugin() {
 
       },
       handleKeyCommand(command, editorState, evenTimeStamp, { setEditorState }) {
-        // better to place each command detail in draft.js, not here
+
         if (command === "cancel-delete") {
           return "handled"
         }
 
-        if (command === "tool-block-left") {
-          return 'not-handled';
+
+        if (command === "tool-block-back") {
+
+          let selectionState = editorState.getSelection();
+          const contentState = editorState.getCurrentContent();
+          const blockArr = contentState.getBlocksAsArray();
+          //   const block = contentState.getBlockForKey(selectionState.getStartKey());
+
+          // console.log(blockArr)
+          let currentIndex = blockArr.findIndex((item, index) => {
+            console.log(item.getKey())
+            return item.getKey() === selectionState.getStartKey()
+
+          })
+          //   console.log(currentIndex)
+
+          if (currentIndex > 0) {
+            currentIndex = currentIndex - 1;
+            if ((blockArr[currentIndex].getType() === "unstyled")) {
+
+              console.log(currentIndex)
+              selectionState = selectionState.merge({
+                focusKey: blockArr[currentIndex].getKey(),
+                focusOffset: 0,
+                anchorKey: blockArr[currentIndex].getKey(),
+                anchorOffset: 0,
+                hasFocus: true
+              });
+
+
+              editorState = EditorState.forceSelection(editorState, selectionState)
+              setEditorState(editorState)
+
+
+              return 'not-handled';
+
+
+            }
+
+
+          }
+
+
         }
+
+
+
+
 
         if (command === "tool-block-next") {
 
