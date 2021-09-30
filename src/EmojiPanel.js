@@ -113,6 +113,9 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
   const emojiCtxStr = ctx && ctx.emojiCtxStr;
   const setEmojiCtxStr = ctx && ctx.setEmojiCtxStr;
   const editorRef = ctx && ctx.editorRef
+  const editorTop = ctx && ctx.editorTop
+  const setEditorTop = ctx && ctx.setEditorTop
+
 
   if (ctx) {
     emojiArr[0].symbolStr = emojiCtxStr
@@ -209,8 +212,20 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
           })
 
           return <Slide
-            onEntered={function () { console.log(editorRef.current.editor.editor.getBoundingClientRect()) }}
-            onExited={function () { console.log(editorRef.current.editor.editor.getBoundingClientRect()) }}
+            onEntered={function () {
+            setEditorTop(editorRef.current.editor.editor.getBoundingClientRect().top);
+            setTimeout(() => {
+              editorRef.current.focus()
+            }, 0);
+            //  console.log(editorRef.current.editor.editor.getBoundingClientRect())
+            }}
+            onExited={function () {
+              setEditorTop(editorRef.current.editor.editor.getBoundingClientRect().top);
+              setTimeout(() => {
+                editorRef.current.focus()
+              }, 0);
+           //   console.log(editorRef.current.editor.editor.getBoundingClientRect())
+            }}
 
 
             in={item.slideOn} unmountOnExit={true} timeout={{ exit: 150, enter: 300 }} direction={item.direction} key={index} ref={panelRef}>

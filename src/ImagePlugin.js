@@ -243,7 +243,7 @@ export default function createImagePlugin() {
 
     const { block, selection, contentState } = props
     const blockKey = block.getKey()
-    const { editor, setTop, setLeft } = props.blockProps
+    const { editorRef, setTop, setLeft, editorTop, setEditorTop } = props.blockProps
 
     const theme = useTheme()
     const [hover, setHover] = useState(false)
@@ -252,24 +252,34 @@ export default function createImagePlugin() {
     const addImage = () => {
       insertImageBlock(blockKey)
       //   setTimeout(() => {
-      editor.current.focus()
+      editorRef.current.focus()
       //   }, 0);
     }
 
     const [backColor, setBackColor] = useState("pink")
 
     const [focus, setFocus] = useState(selection.hasFocus)
+    console.log("-=-=-=111", editorTop)
+  
+
 
     useEffect(function () {
+      setEditorTop(editorRef.current.editor.editor.getBoundingClientRect().top)
 
+    }, [])
+
+
+    useEffect(function () {
+      console.log(editorRef.current.editor.editor.getBoundingClientRect().top)
       const [anchorKey, anchorOffset, focusKey] = selection.toArray()
       const [anchorKey2, anchorOffset2, focusKey2, focusOffset2, isBackward2, hasfocus2] = externalES.getSelection().toArray()
 
       //  console.log(focusKey, block.getKey())
 
       // console.log("-=-=-=",window.getComputedStyle(editorBlockRef.current._node))
+      
+    
 
-     // console.log("-=-=-=", editorBlockRef.current._node.getBoundingClientRect())
 
       if (focusKey === block.getKey()) {
         //  setTop(editorBlockRef.current._node.getBoundingClientRect())
@@ -281,11 +291,11 @@ export default function createImagePlugin() {
     })
 
     return (
-      <div style={{ backgroundColor: backColor }}>
+      <div style={{ backgroundColor: backColor }} >
 
 
 
-        <EditorBlock    {...{ ...props }} ref={editorBlockRef} />
+        <EditorBlock     {...{ ...props }} ref={editorBlockRef}  />
       </div>
     )
 

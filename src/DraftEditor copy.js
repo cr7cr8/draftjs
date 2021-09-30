@@ -19,7 +19,7 @@ import { withContext } from "./ContextProvider"
 
 
 import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
-
+import useResizeObserver from '@react-hook/resize-observer';
 
 import createMentionPlugin from './MentionPlugin';
 import createEmojiPlugin from './EmojiPlugin';
@@ -68,6 +68,25 @@ const { imagePlugin, ImagePanel, ToolBlock, deleteImageBlock, setImageBlockData 
 //   }
 // })
 
+const useSize = (target) => {
+  const [size, setSize] = React.useState()
+
+  React.useLayoutEffect(() => {
+    setSize(target.current && target.current.editor && target.current.editor.editor.getBoundingClientRect())
+  }, [target])
+
+  // Where the magic happens
+  useResizeObserver(target.current && target.current.editor && target.current.editor.editor, (entry) => {
+
+
+  //  console.log(entry);
+    // setSize(entry.contentRect)
+    setSize(target.current && target.current.editor && target.current.editor.editor.getBoundingClientRect())
+
+    setSize(window.getComputedStyle(target.current && target.current.editor && target.current.editor.editor).top)
+  })
+  return size
+}
 
 
 export default withContext(function DraftEditor({ ctx, ...props }) {
@@ -75,13 +94,13 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   const key = useRef(Math.random() + "")
 
-  const { editorState, setEditorState, editorRef, imageArr, setImageArr, imageBlockObj, setImageBlockObj, editorTop, setEditorTop } = ctx
+  const { editorState, setEditorState, editorRef, imageArr, setImageArr, imageBlockObj, setImageBlockObj } = ctx
 
   const [top, setTop] = useState(0)
   const [left, setLeft] = useState(0)
 
-
-
+  const editorSizeRef = useRef(null)
+  const editorSize = useSize(editorRef)
 
   //const [containerTop, setContainerTop]
 
@@ -92,10 +111,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   useEffect(function () {
 
+    
 
-
-    return function () {
-      //  console.log(editorRef.current.editor.editor.getBoundingClientRect())
+    return function(){
+    //  console.log(editorRef.current.editor.editor.getBoundingClientRect())
 
     }
 
@@ -126,12 +145,11 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       </Collapse>
       {/* </Fade> */}
 
-      <Paper style={{ position: "relative" }} >
+      <Paper style={{ position: "relative" }} ref={editorSizeRef}>
 
         <ToolButton2 top={top} left={left} />
 
         <Editor
-          readOnly={false}
           ref={function (element) { editorRef.current = element; }}
           editorState={editorState}
 
@@ -208,13 +226,11 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
               return {
                 component: ToolBlock,
-                editable: false,
+                editable: true,
                 props: {
-                  editorRef,
+                  editor: editorRef,
                   setTop,
                   setLeft,
-                  editorTop,
-                  setEditorTop,
                 }
               }
             }

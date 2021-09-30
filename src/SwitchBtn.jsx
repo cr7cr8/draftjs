@@ -64,7 +64,7 @@ export default withStyles(styleObj, { withTheme: true })(
   function SwitchBtn({ classes, factor, size, ...props }) {
 
     return (
-      <Switch className={classes.switchCss}       {...props} />
+      <Switch className={classes.switchCss}       {...props}  onAnimationEnd />
     )
 
 
