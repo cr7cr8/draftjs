@@ -113,8 +113,8 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
   const emojiCtxStr = ctx && ctx.emojiCtxStr;
   const setEmojiCtxStr = ctx && ctx.setEmojiCtxStr;
   const editorRef = ctx && ctx.editorRef
-  const editorTop = ctx && ctx.editorTop
-  const setEditorTop = ctx && ctx.setEditorTop
+ // const editorTop = ctx && ctx.editorTop
+  //const setEditorTop = ctx && ctx.setEditorTop
 
 
   if (ctx) {
@@ -213,14 +213,14 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
 
           return <Slide
             onEntered={function () {
-            setEditorTop(editorRef.current.editor.editor.getBoundingClientRect().top);
+         //   setEditorTop(editorRef.current.editor.editor.getBoundingClientRect().top);
             setTimeout(() => {
               editorRef.current.focus()
             }, 0);
             //  console.log(editorRef.current.editor.editor.getBoundingClientRect())
             }}
             onExited={function () {
-              setEditorTop(editorRef.current.editor.editor.getBoundingClientRect().top);
+          //    setEditorTop(editorRef.current.editor.editor.getBoundingClientRect().top);
               setTimeout(() => {
                 editorRef.current.focus()
               }, 0);

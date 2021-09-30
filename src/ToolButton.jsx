@@ -88,116 +88,115 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export function ToolButton2({ addImage, hover, top =0, left=100, ...props }) {
+// export function ToolButton2({ addImage, hover, top = 0, left = 100, ...props }) {
+//   const classes = useStyles();
+
+//   const [open, setOpen] = React.useState(false);
+//   const [hidden, setHidden] = React.useState(false);
+
+
+//   const actions = useMemo(() => {
+
+
+//     return [
+//       { icon: <AddPhotoAlternateOutlined />, name: `Copy`, clickFn: addImage },
+//       { icon: <SaveIcon />, name: 'Save' },
+//       // { icon: <PrintIcon />, name: 'Print' },
+//       // { icon: <ShareIcon />, name: 'Share' },
+//       // { icon: <FavoriteIcon />, name: 'Like' },
+//     ]
+//   }, [addImage]);
+
+
+//   const handleClose = () => {
+//     setOpen(false);
+//   };
+
+//   const handleOpen = () => {
+//     setOpen(true);
+//   };
+
+//   return (
+
+
+//     <SpeedDial
+//       style={{ top, left, transitionProperty: "" }}
+//       ariaLabel="SpeedDial example"
+//       className={classes.speedDial2}
+
+//       icon={<SpeedDialIcon />}
+//       onClose={handleClose}
+//       onOpen={handleOpen}
+
+//       hidden={false} //hidden={!hover}
+//       open={open}//open={hover}
+//       direction={"right"}
+//     // hidden={!hover}
+
+//     >
+//       {actions.map((action) => (
+//         <SpeedDialAction
+//           key={action.name}
+//           icon={action.icon}
+//           //tooltipTitle={action.name}
+//           tooltipTitle={<></>}
+//           onClick={action.clickFn}
+//           tooltipPlacement="bottom"
+//           tooltipOpen={true}
+
+//         />
+//       ))}
+//     </SpeedDial>
+
+
+//   );
+// }
+
+
+
+export default function SpeedDials({  blockKey, clickFn, hidden, readOnly, setReadOnly, insertImageBlock, ...props }) {
   const classes = useStyles();
 
-  const [open, setOpen] = React.useState(false);
-  const [hidden, setHidden] = React.useState(false);
+  //const [open, setOpen] = React.useState(false);
+  // const [hidden, setHidden] = React.useState(false);
 
 
   const actions = useMemo(() => {
 
 
     return [
-      { icon: <AddPhotoAlternateOutlined />, name: `Copy`, clickFn: addImage },
+      { icon: <AddPhotoAlternateOutlined />, name: `Copy`, clickFn },
       { icon: <SaveIcon />, name: 'Save' },
       // { icon: <PrintIcon />, name: 'Print' },
       // { icon: <ShareIcon />, name: 'Share' },
       // { icon: <FavoriteIcon />, name: 'Like' },
     ]
-  }, [addImage]);
+  }, [clickFn]);
 
 
+  const [open, setOpen] = React.useState(false)
   const handleClose = () => {
     setOpen(false);
+    setReadOnly(false)
   };
 
   const handleOpen = () => {
     setOpen(true);
+    setReadOnly(true)
   };
 
   return (
-
-
-    <SpeedDial
-      style={{ top, left, transitionProperty:"" }}
-      ariaLabel="SpeedDial example"
-      className={classes.speedDial2}
-
-      icon={<SpeedDialIcon />}
-      onClose={handleClose}
-      onOpen={handleOpen}
-
-      hidden={false} //hidden={!hover}
-      open={open}//open={hover}
-      direction={"right"}
-    // hidden={!hover}
-
-    >
-      {actions.map((action) => (
-        <SpeedDialAction
-          key={action.name}
-          icon={action.icon}
-          //tooltipTitle={action.name}
-          tooltipTitle={<></>}
-          onClick={action.clickFn}
-          tooltipPlacement="bottom"
-          tooltipOpen={true}
-
-        />
-      ))}
-    </SpeedDial>
-
-
-  );
-}
-
-
-
-export default function SpeedDials({ addImage, hover, ...props }) {
-  const classes = useStyles();
-
-  //const [open, setOpen] = React.useState(false);
-  const [hidden, setHidden] = React.useState(false);
-
-
-  const actions = useMemo(() => {
-
-
-    return [
-      { icon: <AddPhotoAlternateOutlined />, name: `Copy`, clickFn: addImage },
-      { icon: <SaveIcon />, name: 'Save' },
-      // { icon: <PrintIcon />, name: 'Print' },
-      // { icon: <ShareIcon />, name: 'Share' },
-      // { icon: <FavoriteIcon />, name: 'Like' },
-    ]
-  }, [addImage]);
-
-
-  const handleClose = () => {
-    // setOpen(false);
-  };
-
-  const handleOpen = () => {
-    //  setOpen(true);
-  };
-
-  return (
-
 
     <SpeedDial
       ariaLabel="SpeedDial example"
       className={classes.speedDial}
-
       icon={<SpeedDialIcon />}
       onClose={handleClose}
       onOpen={handleOpen}
-
-      hidden={false} //hidden={!hover}
-      open={true}//open={hover}
+      hidden={true} //hidden={!hover}
+      open={!hidden}
       direction={"left"}
     // hidden={!hover}
-
     >
       {actions.map((action) => (
         <SpeedDialAction
@@ -205,7 +204,15 @@ export default function SpeedDials({ addImage, hover, ...props }) {
           icon={action.icon}
           //tooltipTitle={action.name}
           tooltipTitle={<></>}
-          onClick={action.clickFn}
+          //  onMouseDown={action.clickFn}
+       
+          onMouseDown={function () {
+       
+            setTimeout(() => {
+               insertImageBlock(blockKey)
+            }, 0);
+           
+          }}
           tooltipPlacement="bottom"
           tooltipOpen={true}
 

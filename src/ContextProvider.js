@@ -217,7 +217,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
     // "https://picsum.photos/201/300",
     //  "https://picsum.photos/200/301",
   ])
-  const [editorTop, setEditorTop] = useState(0)
+  //const [editorTop, setEditorTop] = useState(0)
 
 
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }), [textSizeArr, isLight, setIsLight])
@@ -253,7 +253,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           emojiCtxStr, setEmojiCtxStr,
           imageBlockObj, setImageBlockObj,
           imageArr, setImageArr,
-          editorTop, setEditorTop,
+        //  editorTop, setEditorTop,
         }}>
 
           <CssBaseline />
@@ -293,14 +293,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
                 <SwitchBtn
 
                   checked={showEmojiPanel} factor={[2, 2, 2, 1.8, 2.2]}
-                  onAnimationEnd={function () {
-                   
-                    setTimeout(() => {
-                      setEditorTop(editorRef.current.editor.editor.getBoundingClientRect().top);
-                      editorRef.current.focus()
-                    }, 0);
-
-                  }}
+               
                   onChange={() => {
                     setShowEmojiPanel(pre => !pre);
 

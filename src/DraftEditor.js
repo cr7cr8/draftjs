@@ -75,37 +75,12 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   const key = useRef(Math.random() + "")
 
-  const { editorState, setEditorState, editorRef, imageArr, setImageArr, imageBlockObj, setImageBlockObj, editorTop, setEditorTop } = ctx
-
-  const [top, setTop] = useState(0)
-  const [left, setLeft] = useState(0)
+  const { editorState, setEditorState, editorRef, imageArr, setImageArr, imageBlockObj, setImageBlockObj } = ctx
 
 
 
+  const [readOnly, setReadOnly] = useState(false)
 
-  //const [containerTop, setContainerTop]
-
-  useEffect(function () {
-
-  }, [])
-
-
-  useEffect(function () {
-
-
-
-    return function () {
-      //  console.log(editorRef.current.editor.editor.getBoundingClientRect())
-
-    }
-
-    //  console.log("****",editorRef.current.editor)
-    // const contentState = editorState.getCurrentContent();
-    //   console.log("****",editorSize)
-    //  const selectionState = editorState.getSelection();
-    //   const contentState = editorState.getCurrentContent();
-
-  })
 
 
   return (
@@ -128,10 +103,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
       <Paper style={{ position: "relative" }} >
 
-        <ToolButton2 top={top} left={left} />
 
         <Editor
-          readOnly={false}
+          readOnly={readOnly}
           ref={function (element) { editorRef.current = element; }}
           editorState={editorState}
 
@@ -208,29 +182,17 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
               return {
                 component: ToolBlock,
-                editable: false,
-                props: {
-                  editorRef,
-                  setTop,
-                  setLeft,
-                  editorTop,
-                  setEditorTop,
-                }
-              }
-            }
-
-            if (type === "tool-block") {
-
-              return {
-                component: ToolBlock,
                 editable: true,
                 props: {
-                  editor: editorRef,
-                  setTop,
-                  setLeft,
+                  editorRef,
+                  readOnly,
+                  setReadOnly,
+
                 }
               }
             }
+
+
 
 
 
@@ -316,9 +278,13 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       {/* <AvatarChip personName="Fdsf"><TwoLineLabel lineTop="fdsff" lineDown="sdfe jdkljl ejkl" /></AvatarChip> */}
       <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
 
-        <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
+        <div>{JSON.stringify(editorState.getCurrentContent().selectionBefore, null, 2)}</div>
+
+        <div>{JSON.stringify(editorState.getCurrentContent().selectionAfter, null, 2)}</div>
+
+        {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
         <hr />
-        <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div>
+        <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
       </div>
       {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
 

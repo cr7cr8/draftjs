@@ -24,6 +24,7 @@ import ImagePanel from "./ImagePanel"
 
 import { CropOriginal, Brightness4, Brightness5, FormatBold, FormatItalic, AddPhotoAlternateOutlined } from "@material-ui/icons";
 import ToolButton from "./ToolButton"
+import { add } from 'date-fns/esm';
 
 //const ToolButton = require("./ToolButton")
 
@@ -203,8 +204,6 @@ export default function createImagePlugin() {
   }
 
 
-
-
   function setImageBlockData(obj, blockKey) {
 
     const contentState = externalES.getCurrentContent();
@@ -243,59 +242,111 @@ export default function createImagePlugin() {
 
     const { block, selection, contentState } = props
     const blockKey = block.getKey()
-    const { editorRef, setTop, setLeft, editorTop, setEditorTop } = props.blockProps
+    const { editorRef, readOnly, setReadOnly } = props.blockProps
 
     const theme = useTheme()
-    const [hover, setHover] = useState(false)
+    const [hidden, setHidden] = useState(true)
     const editorBlockRef = useRef()
 
-    const addImage = () => {
+    function addImage() {
+
       insertImageBlock(blockKey)
-      //   setTimeout(() => {
-      editorRef.current.focus()
-      //   }, 0);
+      setTimeout(() => {
+        editorRef.current.focus()
+      }, 0);
     }
 
     const [backColor, setBackColor] = useState("pink")
 
-    const [focus, setFocus] = useState(selection.hasFocus)
-    console.log("-=-=-=111", editorTop)
-  
-
+    const [focusOn, setFocusOn] = useState(true)
 
     useEffect(function () {
-      setEditorTop(editorRef.current.editor.editor.getBoundingClientRect().top)
 
-    }, [])
+      // setFocusOn(selection.hasFocus)
 
-
-    useEffect(function () {
-      console.log(editorRef.current.editor.editor.getBoundingClientRect().top)
-      const [anchorKey, anchorOffset, focusKey] = selection.toArray()
-      const [anchorKey2, anchorOffset2, focusKey2, focusOffset2, isBackward2, hasfocus2] = externalES.getSelection().toArray()
-
-      //  console.log(focusKey, block.getKey())
-
-      // console.log("-=-=-=",window.getComputedStyle(editorBlockRef.current._node))
-      
-    
-
-
-      if (focusKey === block.getKey()) {
-        //  setTop(editorBlockRef.current._node.getBoundingClientRect())
-        // setLeft(editorBlockRef.current._node.getBoundingClientRect().left)
-        //   setTop(0) 
-        setLeft(0)
-      }
-
+      checkFocus()
     })
 
+    function checkFocus() {
+      if ((!selection.hasFocus) && (!hidden)) {
+        setHidden(true)
+      }
+      else if ((selection.hasFocus) && (selection.focusKey === blockKey) && (hidden)) {
+        setHidden(false)
+      }
+      else if ((selection.hasFocus) && (selection.focusKey !== blockKey) && (!hidden)) {
+        setHidden(true)
+      }
+      //console.log(blockKey)
+    }
+
+    function checkFocus2() {
+
+      const { hasFocus, focusKey } = externalES.getSelection() //contentState.getSelectionAfter()
+
+
+
+      console.log(hasFocus, blockKey, focusKey)
+
+
+      let newSelection = SelectionState.createEmpty(blockKey)
+      newSelection = newSelection.merge({
+        focusKey: blockKey,
+        focusOffset: 0,
+        anchorOffset: blockKey,
+        anchorOffset: 0,
+        hasFocus: true
+      });
+
+      newContent = Modifier.setBlockData(
+        contentState,
+        newSelection,//  SelectionState.createEmpty(newKey),
+        Immutable.Map({})
+      );
+
+
+
+      externalES = EditorState.push(externalES, newContent, 'change-block-type');
+      //   EditorState.forceSelection(externalES, newSelection)
+      return externalSetEditorState(externalES)
+
+
+      //   console.log("blockKey: ", blockKey, " focusKey: ", selection.focusKey, selection)
+      if ((!hasFocus) && (!hidden)) {
+        setHidden(true)
+      }
+      else if ((hasFocus) && (focusKey === blockKey) && (hidden)) {
+        setHidden(false)
+      }
+      else if ((hasFocus) && (focusKey !== blockKey) && (!hidden)) {
+        setHidden(true)
+      }
+      // return externalSetEditorState(externalES)
+      //console.log(blockKey)
+    }
+
+
     return (
-      <div style={{ backgroundColor: backColor }} >
+      <div
+        style={{ position: "relative", backgroundColor: backColor }}
+        onMouseDown={function () {
+          // alert(blockKey)
 
+          checkFocus2()
+          // setTimeout(() => {
 
+          //   editorRef.current.focus()
+          // }, 10);
 
-        <EditorBlock     {...{ ...props }} ref={editorBlockRef}  />
+        }}
+      // onMouseEnter={function () { setHidden(false) }}
+      // onMouseLeave={function () { setHidden(true) }}
+      // onMouseOut={function () { setHidden(true) }}
+      // onMouseOver={function () { setHidden(false) }}
+      >
+        <ToolButton blockKey={blockKey} clickFn={addImage} hidden={hidden} setHidden={setHidden} readOnly={readOnly} setReadOnly={setReadOnly} insertImageBlock={insertImageBlock} />
+        <EditorBlock     {...{ ...props }} ref={editorBlockRef} />
+
       </div>
     )
 
