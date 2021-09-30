@@ -235,7 +235,7 @@ export default function ImagePanel(props) {
   const [refreshAll, setRefreshAll] = useState(false)
 
   return (
-    <div className={className}>
+    <div className={className} contentEditable={false}>
       <input ref={inputRef} type="file" multiple={true} style={{ display: "none" }}
         onClick={function (e) { e.currentTarget.value = null; }}
         onChange={update}

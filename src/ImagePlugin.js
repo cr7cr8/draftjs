@@ -298,17 +298,20 @@ export default function createImagePlugin() {
         hasFocus: true
       });
 
-      newContent = Modifier.setBlockData(
+      let newContent = Modifier.setBlockData(
         contentState,
         newSelection,//  SelectionState.createEmpty(newKey),
         Immutable.Map({})
       );
 
 
+      //   newContent = newContent.getBlockForKey(blockKey).depth.set(2);
+
+      //  const newData = currentBlock.data.set("locked", "Aaa")
 
       externalES = EditorState.push(externalES, newContent, 'change-block-type');
       //   EditorState.forceSelection(externalES, newSelection)
-      return externalSetEditorState(externalES)
+      //return externalSetEditorState(externalES)
 
 
       //   console.log("blockKey: ", blockKey, " focusKey: ", selection.focusKey, selection)
@@ -321,8 +324,24 @@ export default function createImagePlugin() {
       else if ((hasFocus) && (focusKey !== blockKey) && (!hidden)) {
         setHidden(true)
       }
-      // return externalSetEditorState(externalES)
+      return externalSetEditorState(externalES)
       //console.log(blockKey)
+    }
+
+    function checkFocus3() {
+
+      const depth = block.getDepth();
+      const newBlock = block.set('depth', depth - 1);
+      const contentState = externalES.getCurrentContent();
+      const blockMap = contentState.getBlockMap();
+      const newBlockMap = blockMap.set(blockKey, newBlock);
+      EditorState.push(
+        externalES,
+        contentState.merge({ blockMap: newBlockMap }),
+        'adjust-depth'
+      );
+
+      return externalSetEditorState(externalES)
     }
 
 
@@ -331,7 +350,7 @@ export default function createImagePlugin() {
         style={{ position: "relative", backgroundColor: backColor }}
         onMouseDown={function () {
           // alert(blockKey)
-
+          setHidden(false)
           checkFocus2()
           // setTimeout(() => {
 
@@ -344,8 +363,26 @@ export default function createImagePlugin() {
       // onMouseOut={function () { setHidden(true) }}
       // onMouseOver={function () { setHidden(false) }}
       >
-        <ToolButton blockKey={blockKey} clickFn={addImage} hidden={hidden} setHidden={setHidden} readOnly={readOnly} setReadOnly={setReadOnly} insertImageBlock={insertImageBlock} />
-        <EditorBlock     {...{ ...props }} ref={editorBlockRef} />
+        {!hidden && <Button variant="contained" style={{ right: 0, top: 0, zIndex: 100, position: "absolute" }} contentEditable={false}
+          onMouseDown={function (e) {
+            e.preventDefault()
+
+            e.stopPropagation()
+
+          }}
+
+          onClick={function (e) {
+            e.preventDefault()
+
+            e.stopPropagation()
+
+          }}
+
+        >aaa</Button>}
+        <EditorBlock     {...{ ...props }} ref={editorBlockRef} >  </EditorBlock>
+
+        {/* <ToolButton blockKey={blockKey} clickFn={addImage} hidden={hidden} setHidden={setHidden} readOnly={readOnly} setReadOnly={setReadOnly} insertImageBlock={insertImageBlock} /> */}
+
 
       </div>
     )
