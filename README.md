@@ -1,7 +1,8 @@
 ### Dev12
+Arrow key is done, image button in the block, handleKeyComand-function is placed in the draft.js
 
 ### Dev11
-editor top
+editor top, deprecated.
 
 ### Dev10
 Image plugin is done,  image button on top bar 
