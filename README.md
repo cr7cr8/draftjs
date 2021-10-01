@@ -1,6 +1,6 @@
 ### Dev12
 Arrow key is done, image button in the block, handleKeyComand-function is placed in the draft.js
-
+Backspace key is done
 ### Dev11
 editor top, deprecated.
 
