@@ -270,6 +270,25 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                 return item.getKey() === selectionState.getStartKey()
               })
 
+
+              if (currentIndex === 0) {
+                selectionState = selectionState.merge({
+                  focusKey: blockArr[currentIndex].getKey(),
+                  focusOffset: Math.max(0,focusOffset-1),
+                  anchorKey: blockArr[currentIndex].getKey(),
+                  anchorOffset: Math.max(0,focusOffset-1),
+                  hasFocus: true
+                });
+
+                //   editorState = EditorState.acceptSelection(editorState, selectionState)
+                editorState = EditorState.forceSelection(editorState, selectionState)
+                setEditorState(editorState)
+                //   break
+                return 'handled';
+
+              }
+
+
               while (currentIndex > 0) {
                 currentIndex = currentIndex - 1;
                 if ((blockArr[currentIndex].getType() === "unstyled")) {
@@ -304,6 +323,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                 return item.getKey() === selectionState.getStartKey()
               })
+
+
+
 
               while ((currentIndex > 0) && (currentIndex < blockArr.length)) {
                 currentIndex = currentIndex + 1;

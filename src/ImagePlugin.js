@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
 import { Context, withContext } from "./ContextProvider"
-import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
+
 import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
 import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 import Editor from "draft-js-plugins-editor";
@@ -25,6 +25,10 @@ import ImagePanel from "./ImagePanel"
 import { CropOriginal, Brightness4, Brightness5, FormatBold, FormatItalic, AddPhotoAlternateOutlined } from "@material-ui/icons";
 import ToolButton from "./ToolButton"
 import { add } from 'date-fns/esm';
+
+
+import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
+const { hasCommandModifier } = KeyBindingUtil;
 
 //const ToolButton = require("./ToolButton")
 // import createEmojiPlugin from './EmojiPlugin';
@@ -355,7 +359,7 @@ export default function createImagePlugin() {
 
 
         {/* <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}> */}
-          {/* {EmojiPanel} */}
+        {/* {EmojiPanel} */}
         {/* </Collapse> */}
 
         <EditorBlock     {...{ ...props }} ref={editorBlockRef} >  </EditorBlock>
@@ -380,16 +384,39 @@ export default function createImagePlugin() {
         const contentState = editorState.getCurrentContent();
         const block = contentState.getBlockForKey(selectionState.getStartKey());
 
-        if ((block.getType() === "imageBlock") && ((e.keyCode === 8) || (e.keyCode === 46))) {
+
+        // if ((block.getType() === "imageBlock") && ((e.keyCode === 8) || (e.keyCode === 46))) {
+        //   return "cancel-delete"
+        // }
+        if ((block.getType() === "imageBlock")) {
           return "cancel-delete"
         }
-        if ((block.getType() === "unstyled") && ((e.keyCode === 37))) {
+        else if (e.shiftKey || hasCommandModifier(e) || e.altKey) {
+          return getDefaultKeyBinding(e);
+        }
+
+
+        else if ((block.getType() === "unstyled") && (e.keyCode === 37)) {
           return "tool-block-left"
         }
-        if ((block.getType() === "unstyled") && ((e.keyCode === 38))) {
-          return "tool-block-top"
+        else if ((block.getType() === "unstyled") && (e.keyCode === 38)) {
+          return "tool-block-up"
         }
+        else if ((block.getType() === "unstyled") && (e.keyCode === 39)) {
+          return "tool-block-right"
+        }
+        else if ((block.getType() === "unstyled") && (e.keyCode === 40)) {
+          return "tool-block-down"
+        }
+
+
+
         return getDefaultKeyBinding(e);
+
+        // if ((block.getType() === "unstyled") && ((e.keyCode === 38))) {
+        //   return "tool-block-top"
+        // }
+        //    return getDefaultKeyBinding(e);
 
         // if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 37))) {
         //   return "tool-block-back"
@@ -421,8 +448,6 @@ export default function createImagePlugin() {
         if (command === "tool-block-next") {
 
         }
-
-
 
 
         return 'not-handled';
