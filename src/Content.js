@@ -65,7 +65,7 @@ function toHtml({ preHtml, theme, ctx }) {
 
         const posData = JSON.parse(unescape(node.attribs["data-block_data"]))
         const key = node.attribs["data-block_key"]
-        const imageLinkArr = (ctx&&ctx.imageBlockObj&&ctx.imageBlockObj[key])||[]
+        const imageLinkArr = (ctx&&ctx.imageBlockObj&&ctx.imageBlockObj[key])||[] 
      
 
         return <span key={index}>
