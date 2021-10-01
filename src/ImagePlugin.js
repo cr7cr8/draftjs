@@ -239,6 +239,8 @@ export default function createImagePlugin() {
   }
 
 
+
+
   function ToolBlock(props) {
 
     const { children, picArr, setPicArr, } = props
@@ -256,9 +258,9 @@ export default function createImagePlugin() {
     function addImage() {
 
       insertImageBlock(blockKey)
-      // setTimeout(() => {
-      //   editorRef.current.focus()
-      // }, 0);
+      setTimeout(() => {
+        editorRef.current.focus()
+      }, 0);
     }
 
     const [backColor, setBackColor] = useState(getRandomColor())
@@ -438,7 +440,8 @@ export default function createImagePlugin() {
     ToolBlock,
     ImagePanel,
     deleteImageBlock,
-    setImageBlockData
+    setImageBlockData,
+  
   }
 
 

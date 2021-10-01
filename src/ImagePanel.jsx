@@ -137,6 +137,7 @@ export default function ImagePanel(props) {
       imageBlockObj,
       setImageBlockObj,
       className,
+     
     }
 
   } = props
@@ -152,6 +153,8 @@ export default function ImagePanel(props) {
 
   const size = useSize(target)
   const theme = useTheme()
+
+  const [refreshAll, setRefreshAll] = useState(false)
 
 
 
@@ -212,27 +215,7 @@ export default function ImagePanel(props) {
 
   }
 
-  useEffect(function () {
 
-    //  setTimeout(
-    //     function () {
-    inputRef.current.click()
-    //     }
-
-
-    //     , 0)
-
-    setImageBlockObj(pre => {
-      return {
-        ...pre,
-        [blockKey]: []
-      }
-
-    })
-
-  }, [])
-
-  const [refreshAll, setRefreshAll] = useState(false)
 
   return (
     <div className={className} contentEditable={false}>
@@ -304,6 +287,8 @@ export default function ImagePanel(props) {
                 pic={pic}
                 setImageBlockData={setImageBlockData}
                 refreshAll={refreshAll} setRefreshAll={setRefreshAll}
+           
+                block={block}
               />
             </div>
 
@@ -317,33 +302,38 @@ export default function ImagePanel(props) {
 
 
 
-function ImagePic({ refreshAll, setRefreshAll, setImageBlockData, setImageBlockObj, imageBlockObj, editor, blockKey, theme, index, classes, inputRef, setImageIndex, pic, ...props }) {
+function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData, 
+  setImageBlockObj, imageBlockObj, editor, blockKey, theme, index, classes, inputRef, setImageIndex, pic, ...props }) {
 
-  const [horizontal, setHorizontal] = useState(50)
-  const [verticle, setVerticle] = useState(50)
+
+
+  console.log(JSON.stringify(block.getData().toObject()), index)
+
+  const blockDataObj = block.getData().toObject() || {}
+
+
+  const [horizontal, setHorizontal] = useState(blockDataObj["pos" + index] ? blockDataObj["pos" + index].horizontal : 50)  //!!! should fetch from the block data first
+  const [verticle, setVerticle] = useState(blockDataObj["pos" + index] ? blockDataObj["pos" + index].verticle : 50)  //!!! should fetch from the block data first
+
+  useEffect(function () {
+    console.log(horizontal, verticle)
+  })
+
 
   const imageRef = React.useRef()
-  let width = 50;
-  let height = 50;
 
-  const picName = React.useRef(pic.substr(pic.length - 6, 5))
 
   useEffect(function () {
 
-    setHorizontal(50)
-    setVerticle(50)
-    //console.log(window.getComputedStyle(imageRef.current).width, window.getComputedStyle(imageRef.current).height)
 
+    const blockDataObj = block.getData().toObject() || {}
 
-    // width = Number(window.getComputedStyle(imageRef.current).width.replace("px", ""))
-    //  height = Number(window.getComputedStyle(imageRef.current).height.replace("px", ""))
+    setHorizontal(blockDataObj["pos" + index] ? blockDataObj["pos" + index].horizontal : 50)
+    setVerticle(blockDataObj["pos" + index] ? blockDataObj["pos" + index].verticle : 50)
+
 
   }, [refreshAll])
 
-  // useEffect(function () {
-
-  //   setImageBlockData({ ["pos" + index]: { horizontal, verticle, }, blockKey})
-  // },[horizontal,verticle])
 
 
   return (

@@ -217,7 +217,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   deleteImageBlock,
                   className: "image-block",
                   setImageBlockData,
-
+                
 
                 },
               }
