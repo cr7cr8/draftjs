@@ -289,10 +289,7 @@ export default function createImagePlugin() {
 
       const { hasFocus, focusKey } = externalES.getSelection() //contentState.getSelectionAfter()
 
-
-
       //  console.log(hasFocus, blockKey, focusKey)
-
 
       let newSelection = SelectionState.createEmpty(blockKey)
       newSelection = newSelection.merge({
@@ -323,18 +320,9 @@ export default function createImagePlugin() {
       <div
         style={{ position: "relative", backgroundColor: backColor }}
 
+        onMouseDown={function () { setHidden(false); checkFocus2() }}
 
 
-        onMouseDown={function () {
-          // alert(blockKey)
-          setHidden(false)
-          checkFocus2()
-          // setTimeout(() => {
-
-          //   editorRef.current.focus()
-          // }, 10);
-
-        }}
       // onMouseEnter={function () { setHidden(false) }}
       // onMouseLeave={function () { setHidden(true) }}
       // onMouseOut={function () { setHidden(true) }}
@@ -343,14 +331,12 @@ export default function createImagePlugin() {
         {!hidden && <Button variant="contained" style={{ right: 0, top: 0, zIndex: 100, position: "absolute" }} contentEditable={false}
           onMouseDown={function (e) {
             e.preventDefault()
-
             e.stopPropagation()
-
+            addImage()
           }}
 
           onClick={function (e) {
             e.preventDefault()
-
             e.stopPropagation()
 
           }}
@@ -409,29 +395,8 @@ export default function createImagePlugin() {
           return "tool-block-down"
         }
 
-
-
         return getDefaultKeyBinding(e);
 
-        // if ((block.getType() === "unstyled") && ((e.keyCode === 38))) {
-        //   return "tool-block-top"
-        // }
-        //    return getDefaultKeyBinding(e);
-
-        // if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 37))) {
-        //   return "tool-block-back"
-        // }
-        // if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 38))) {
-        //   return "tool-block-back"
-        // }
-
-
-        // if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 39))) {
-        //   return "tool-block-next"
-        // }
-        // if ((block.getType() === "unstyled") && (block.getText() === "") && ((e.keyCode === 40))) {
-        //   return "tool-block-next"
-        // }
 
 
       },
@@ -439,14 +404,6 @@ export default function createImagePlugin() {
         // better to place each command detail in draft.js, not here
         if (command === "cancel-delete") {
           return "handled"
-        }
-
-        if (command === "tool-block-left") {
-          return 'not-handled';
-        }
-
-        if (command === "tool-block-next") {
-
         }
 
 

@@ -341,8 +341,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               let aboveIndex = currentIndex
               while (aboveIndex > 0) {
                 aboveIndex = aboveIndex - 1;
-                if ((blockArr[currentIndex].getType() === "unstyled")) {
-
+            
+                if ((blockArr[aboveIndex].getType() === "unstyled")) {
+                 
                   selectionState = selectionState.merge({
                     focusKey: blockArr[aboveIndex].getKey(),
                     focusOffset: Math.min(focusOffset, blockArr[aboveIndex].getText().length),
@@ -359,6 +360,11 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   // return 'handled';        //return 'not-handled';
                 }
               }
+
+
+      
+              
+
 
 
             }
