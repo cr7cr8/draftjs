@@ -20,18 +20,18 @@ import {
 } from "react-device-detect";
 
 
-function toHtml({ preHtml, theme }) {
+function toHtml({ preHtml, theme, ctx }) {
 
   const html = ReactHtmlParser(preHtml, {
     transform: function transformFn(node, index) {
 
       if (node.name === "object" && node.attribs["data-type"] === "avatar_head") {
 
-       
+
         const element = node.children.map((child, index) => {
           return convertNodeToElement(child, index, transformFn)
         })
-       
+
         return <span key={index} style={{ fontSize: 0, width: 0, height: 0, display: "inline-block" }}><span><span>{element}</span></span></span>
 
         return <React.Fragment key={index}></React.Fragment>  // work as well
@@ -59,9 +59,25 @@ function toHtml({ preHtml, theme }) {
         return <span key={index}><span>{element}</span></span>
 
       }
+      else if (node.name === "object" && node.attribs["data-type"] === "image-block") {
+
+        //   console.log(JSON.parse(node.attribs["data-block_data"]))
+
+        const posData = JSON.parse(unescape(node.attribs["data-block_data"]))
+        const key = node.attribs["data-block_key"]
+        const imageLinkArr = (ctx&&ctx.imageBlockObj&&ctx.imageBlockObj[key])||[]
+     
+
+        return <span key={index}>
+          {imageLinkArr.map((imageSrc, index) => {
+
+            return <img key={index} src={imageSrc} />
+          })}
 
 
+        </span>
 
+      }
     }
   });
   return html
@@ -74,7 +90,7 @@ export default withTheme(withContext(function Content({ theme, ctx, ...props }) 
   return (
     <Zoom in={ctx.showContent} unmountOnExit={true}>
       <Paper>{
-        toHtml({ preHtml: toPreHtml(editorState), theme })
+        toHtml({ preHtml: toPreHtml(editorState), theme, ctx })
       }
       </Paper>
     </Zoom>

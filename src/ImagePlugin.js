@@ -256,9 +256,9 @@ export default function createImagePlugin() {
     function addImage() {
 
       insertImageBlock(blockKey)
-      setTimeout(() => {
-        editorRef.current.focus()
-      }, 0);
+      // setTimeout(() => {
+      //   editorRef.current.focus()
+      // }, 0);
     }
 
     const [backColor, setBackColor] = useState(getRandomColor())
@@ -318,7 +318,7 @@ export default function createImagePlugin() {
 
     return (
       <div
-        style={{ position: "relative", backgroundColor: backColor }}
+        style={{ position: "relative", backgroundColor: backColor, }}
 
         onMouseDown={function () { setHidden(false); checkFocus2() }}
 
@@ -394,7 +394,7 @@ export default function createImagePlugin() {
         else if ((block.getType() === "unstyled") && (e.keyCode === 40)) {
           return "tool-block-down"
         }
-        else if ((!block.getText())&&(block.getType() === "unstyled") && (e.keyCode === 8)) {
+        else if ((!block.getText()) && (block.getType() === "unstyled") && (e.keyCode === 8)) {
           return "tool-block-delete"
         }
 
@@ -459,10 +459,13 @@ function genKey(length = 4) {
 
 
 function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
+  // var letters = '0123456789ABCDEF';
+  // var color = '#';
+  // for (var i = 0; i < 6; i++) {
+  //   color += letters[Math.floor(Math.random() * 16)];
+  // }
+  // return color;
+
+  return "rgba(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + (",") + Math.floor(Math.random() * 255) + ",0.5)"
+
 }

@@ -545,7 +545,7 @@ export default function createMentionPlugin() {
       onChange: function (editorState, { setEditorState }) {
         externalES = editorState
         externalSetEditorState = setEditorState
-        externalES = taggingMention()
+       externalES = taggingMention()
         return externalES
 
       },

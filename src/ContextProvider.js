@@ -179,7 +179,26 @@ function toPreHtml(editorState) {
         }
 
 
-      }
+      },
+      blockRenderers: {
+        imageBlock: function (block) {
+          const text = block.getText()
+          const data = escape(JSON.stringify(block.getData().toObject()))
+          const type = block.getType()
+          const key = block.getKey()
+
+         // console.log(data)
+
+          //  return `<img src=${data.imgUrl} style=max-width:300px;display:block;margin-left:auto;margin-right:auto;/>`
+          //  return `<imgtag id=${data.imgId} style=max-width:100%;display:block;margin-left:auto;margin-right:auto;/>`
+          return `<object  data-type="image-block"  data-block_key="${key}" data-block_data="${data}" >` + escape(block.getText()) + '</object>'
+          // return `<div>ffd</div>`
+          // return '<imgtag />'
+        },
+        // colorBlock: function (block) {
+        //   return `<colorBlock>` + (block.getText()) + `</colorBlock>`
+        // },
+      },
 
     }
   )
@@ -253,7 +272,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           emojiCtxStr, setEmojiCtxStr,
           imageBlockObj, setImageBlockObj,
           imageArr, setImageArr,
-        //  editorTop, setEditorTop,
+          //  editorTop, setEditorTop,
         }}>
 
           <CssBaseline />
@@ -293,7 +312,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
                 <SwitchBtn
 
                   checked={showEmojiPanel} factor={[2, 2, 2, 1.8, 2.2]}
-               
+
                   onChange={() => {
                     setShowEmojiPanel(pre => !pre);
 
@@ -321,18 +340,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   )
 
 
-  return (
-    <ThemeProvider theme={theme}>
-      <Context.Provider value={{
-        isLight, setIsLight, theme, breakpointsAttribute,
-      }}>
-        {props.children}
-        <button onClick={function () {
-          setTextSizeArr(pre => multiplyArr(pre, 1.1))
-        }}>add</button>
-      </Context.Provider>
-    </ThemeProvider>
-  )
+
 }
 
 
