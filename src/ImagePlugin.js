@@ -261,7 +261,7 @@ export default function createImagePlugin() {
       }, 0);
     }
 
-    const [backColor, setBackColor] = useState("pink")
+    const [backColor, setBackColor] = useState(getRandomColor())
 
     const [focusOn, setFocusOn] = useState(true)
 
@@ -394,6 +394,9 @@ export default function createImagePlugin() {
         else if ((block.getType() === "unstyled") && (e.keyCode === 40)) {
           return "tool-block-down"
         }
+        else if ((!block.getText())&&(block.getType() === "unstyled") && (e.keyCode === 8)) {
+          return "tool-block-delete"
+        }
 
         return getDefaultKeyBinding(e);
 
@@ -452,4 +455,14 @@ function genKey(length = 4) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
+}
+
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }

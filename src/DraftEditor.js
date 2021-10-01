@@ -53,7 +53,7 @@ const initialState = {
   entityMap: {},
   blocks: []
 };
-const { mentionPlugin } = createMentionPlugin()
+const { mentionPlugin, taggingMention } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 const { imagePlugin, ImagePanel, ToolBlock, deleteImageBlock, setImageBlockData } = createImagePlugin()
 
@@ -262,11 +262,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               const contentState = editorState.getCurrentContent();
               const blockArr = contentState.getBlocksAsArray();
 
-
               //console.log(selectionState)
 
               let currentIndex = blockArr.findIndex((item, index) => {
-
                 return item.getKey() === selectionState.getStartKey()
               })
 
@@ -282,6 +280,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                 //   editorState = EditorState.acceptSelection(editorState, selectionState)
                 editorState = EditorState.forceSelection(editorState, selectionState)
+
                 setEditorState(editorState)
                 //   break
                 return 'not-handled';
@@ -291,8 +290,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               let aboveIndex = currentIndex
               while (aboveIndex > 0) {
                 aboveIndex = aboveIndex - 1;
-                if ((blockArr[aboveIndex].getType() === "unstyled")) {
-
+                if ((blockArr[aboveIndex].getType() === "unstyled") || (focusOffset > 0)) {
                   selectionState = selectionState.merge({
                     focusKey: focusOffset === 0 ? blockArr[aboveIndex].getKey() : blockArr[currentIndex].getKey(),
                     focusOffset: focusOffset === 0 ? blockArr[aboveIndex].getText().length : focusOffset - 1,
@@ -311,10 +309,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               }
             }
 
-
             if (command === "tool-block-up") {
-
-
 
               let selectionState = editorState.getSelection();
               const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = editorState.getSelection().toArray()
@@ -341,9 +336,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               let aboveIndex = currentIndex
               while (aboveIndex > 0) {
                 aboveIndex = aboveIndex - 1;
-            
+
                 if ((blockArr[aboveIndex].getType() === "unstyled")) {
-                 
+
                   selectionState = selectionState.merge({
                     focusKey: blockArr[aboveIndex].getKey(),
                     focusOffset: Math.min(focusOffset, blockArr[aboveIndex].getText().length),
@@ -360,15 +355,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   // return 'handled';        //return 'not-handled';
                 }
               }
-
-
-      
-              
-
-
-
             }
-
 
             if (command === "tool-block-right") {
 
@@ -401,7 +388,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               while (belowIndex < blockArr.length - 1) {
 
                 belowIndex = belowIndex + 1;
-                if ((blockArr[belowIndex].getType() === "unstyled")) {
+                if ((blockArr[belowIndex].getType() === "unstyled") || (focusOffset < blockArr[currentIndex].getText().length)) {
+
+
+
 
                   selectionState = selectionState.merge({
                     focusKey: focusOffset < blockArr[currentIndex].getText().length ? blockArr[currentIndex].getKey() : blockArr[belowIndex].getKey(),
@@ -421,7 +411,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
             }
-
 
             if (command === "tool-block-down") {
 
@@ -447,9 +436,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                   selectionState = selectionState.merge({
                     focusKey: blockArr[belowIndex].getKey(),
-                    focusOffset:  Math.min(focusOffset, blockArr[belowIndex].getText().length),
-                    anchorKey:  blockArr[belowIndex].getKey(),
-                    anchorOffset:  Math.min(focusOffset, blockArr[belowIndex].getText().length),
+                    focusOffset: Math.min(focusOffset, blockArr[belowIndex].getText().length),
+                    anchorKey: blockArr[belowIndex].getKey(),
+                    anchorOffset: Math.min(focusOffset, blockArr[belowIndex].getText().length),
                     hasFocus: true
                   });
 
@@ -459,10 +448,53 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   //   break
                   return 'not-handled';
                 }
-              
-              
-              
+
+
+
               }
+
+            }
+
+            if (command === "tool-block-delete") {
+
+
+              let selectionState = editorState.getSelection();
+              const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = editorState.getSelection().toArray()
+
+              const contentState = editorState.getCurrentContent();
+              const blockArr = contentState.getBlocksAsArray();
+
+
+              let currentIndex = blockArr.findIndex((item, index) => {
+                return item.getKey() === selectionState.getStartKey()
+              })
+
+
+              let newContentBlockArr = contentState.getBlocksAsArray().filter(function (item) {
+                return item.getKey() !== selectionState.getStartKey()
+              })
+
+
+              if (currentIndex === 0) { return 'not-handled'; }
+              // selectionState = selectionState.merge({
+              //   focusKey: blockArr[currentIndex - 1].getKey(),
+              //   focusOffset: blockArr[currentIndex - 1].getText().length,
+              //   anchorKey: blockArr[currentIndex - 1].getKey(),
+              //   anchorOffset: blockArr[currentIndex - 1].getText().length,
+              //   hasFocus: true
+              // });
+
+
+
+              const newContentState = ContentState.createFromBlockArray(newContentBlockArr)
+
+              editorState = EditorState.push(editorState, newContentState, 'move-block');
+
+
+              //   editorState = EditorState.createWithContent(newContentState)
+              //   editorState = EditorState.forceSelection(editorState, selectionState)
+              setEditorState(editorState)
+              return 'not-handled';
 
             }
 

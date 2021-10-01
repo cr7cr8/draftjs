@@ -558,7 +558,9 @@ export default function createMentionPlugin() {
         }
       ],
 
-    }
+    },
+    taggingMention,
+  
   }
 
 }
