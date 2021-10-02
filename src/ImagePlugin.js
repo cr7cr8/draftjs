@@ -40,19 +40,6 @@ export default function createImagePlugin() {
   let externalSetEditorState = null;
   let newContent = null;
 
-  function deleteImageBlock0(blockKey) {
-
-
-    // const block = contentState.getBlockForKey(blockKey);
-    let contentState = externalES.getCurrentContent();
-    let newContentBlockArr = contentState.getBlocksAsArray().filter(function (item) {
-      return item.getKey() !== blockKey
-    })
-
-    const newContentState = ContentState.createFromBlockArray(newContentBlockArr)
-    externalES = EditorState.createWithContent(newContentState)
-    externalSetEditorState(externalES)
-  }
 
 
   function deleteImageBlock(blockKey) {
@@ -89,23 +76,10 @@ export default function createImagePlugin() {
 
   }
 
-  function deleteImageBlock0(blockKey) {
-
-
-    // const block = contentState.getBlockForKey(blockKey);
-    let contentState = externalES.getCurrentContent();
-    let newContentBlockArr = contentState.getBlocksAsArray().filter(function (item) {
-      return item.getKey() !== blockKey
-    })
-
-    const newContentState = ContentState.createFromBlockArray(newContentBlockArr)
-    externalES = EditorState.createWithContent(newContentState)
-    externalSetEditorState(externalES)
-  }
 
 
 
-  function insertImageBlock(blockKey) {
+  function markingImageBlock(blockKey) {
 
     let newSelection = SelectionState.createEmpty(blockKey)
     newSelection = newSelection.merge({
@@ -126,87 +100,8 @@ export default function createImagePlugin() {
     //   EditorState.forceSelection(externalES, newSelection)
     return externalSetEditorState(externalES)
 
-    // const selection = externalES.getSelection()
-    // let contentState = externalES.getCurrentContent();
-    // const currentKey = selection.getStartKey()  //selection.getEndKey()
-
-
-    // const currentBlock = contentState.getBlockForKey(currentKey);
-    // const currentText = currentBlock && currentBlock.getText()
-
-    //console.log(selection, currentKey, contentState.getBlockForKey(currentKey), currentText)
-
-    // let newContentBlockArr = contentState.getBlocksAsArray()
-    // const selectionBefore = contentState.getSelectionBefore()
-    // const selectionAfter = contentState.getSelectionAfter()
-
-    // let currentIndex = newContentBlockArr.findIndex(item => { return item.key === currentKey })
-    // currentIndex = currentIndex >= 0 ? currentIndex : newContentBlockArr.length - 1
-    // //  console.log(currentIndex)
-
-
-    // const newKey = genKey()
-    // newContentBlockArr.splice(currentText ? (currentIndex + 1) : currentIndex, currentText ? 0 : 1,
-    //   new ContentBlock({
-    //     key: currentText ? newKey : currentKey,
-    //     type: "imageBlock",
-    //     text: '',
-    //     // data: Immutable.Map({ k: "aaa" })
-    //     data: Immutable.Map({})
-    //   })
-    // )
-
-    // let newSelection;
-    // if (currentText) {
-    //   newSelection = SelectionState.createEmpty(newKey)
-    // }
-
-    // contentState = ContentState.createFromBlockArray(newContentBlockArr)
-    // contentState = contentState.merge(
-    //   {
-    //     selectionAfter, //newBlockMap,
-    //     selectionBefore,
-
-    //   }
-    // )
-
-
-    // // externalES = EditorState.createWithContent(contentState)
-    // externalES = EditorState.push(externalES, contentState, 'insert-fragment');
-    // if (newSelection) { externalES = EditorState.acceptSelection(externalES, newSelection) }
-    // externalSetEditorState(externalES)
-
 
   };
-
-
-
-  function setImageBlockData0(obj, newKey) {
-
-
-    const selection = externalES.getSelection()
-    let contentState = externalES.getCurrentContent();
-    const currentKey = selection.getStartKey()  //selection.getEndKey()
-    const currentBlock = contentState.getBlockForKey(currentKey);
-    const currentText = currentBlock && currentBlock.getText()
-
-
-
-
-    const newData = currentBlock.data.set("locked", "Aaa")
-
-    // create a new selection with the block I want to change
-
-    const newContent = Modifier.setBlockData(externalES.getCurrentContent(), SelectionState.createEmpty(newKey), newData)
-
-
-
-    // return a new editor state, applying the selection we stored before
-    externalES = EditorState.push(externalES, newContent, 'change-block-data')
-    //EditorState.forceSelection(externalES, selection)
-    return externalSetEditorState(externalES)
-
-  }
 
 
   function setImageBlockData(obj, blockKey) {
@@ -239,124 +134,12 @@ export default function createImagePlugin() {
   }
 
 
+  function withImageBlogFn(Compo) {
 
+    return function (props) {
 
-  function ToolBlock(props) {
-
-    const { children, picArr, setPicArr, } = props
-
-    //console.log(props)
-
-    const { block, selection, contentState } = props
-    const blockKey = block.getKey()
-    const { editorRef, readOnly, setReadOnly, EmojiPanel } = props.blockProps
-
-    const theme = useTheme()
-    const [hidden, setHidden] = useState(true)
-    const editorBlockRef = useRef()
-
-    function addImage() {
-
-      insertImageBlock(blockKey)
-      setTimeout(() => {
-        editorRef.current.focus()
-      }, 0);
+      return <Compo {...{ ...props }} blockProps={{ ...props.blockProps, markingImageBlock, deleteImageBlock, setImageBlockData, }} />
     }
-
-    const [backColor, setBackColor] = useState(getRandomColor())
-
-    const [focusOn, setFocusOn] = useState(true)
-
-    useEffect(function () {
-
-      // setFocusOn(selection.hasFocus)
-
-      checkFocus()
-    })
-
-    function checkFocus() {
-      if ((!selection.hasFocus) && (!hidden)) {
-        setHidden(true)
-      }
-      else if ((selection.hasFocus) && (selection.focusKey === blockKey) && (hidden)) {
-        setHidden(false)
-      }
-      else if ((selection.hasFocus) && (selection.focusKey !== blockKey) && (!hidden)) {
-        setHidden(true)
-      }
-      //console.log(blockKey)
-    }
-
-    function checkFocus2() {
-
-      const { hasFocus, focusKey } = externalES.getSelection() //contentState.getSelectionAfter()
-
-      //  console.log(hasFocus, blockKey, focusKey)
-
-      let newSelection = SelectionState.createEmpty(blockKey)
-      newSelection = newSelection.merge({
-        focusKey: blockKey,
-        focusOffset: 0,
-        anchorOffset: blockKey,
-        anchorOffset: 0,
-        hasFocus: true
-      });
-
-      let newContent = Modifier.setBlockData(
-        contentState,
-        newSelection,//  SelectionState.createEmpty(newKey),
-        Immutable.Map({})
-      );
-
-      externalES = EditorState.push(externalES, newContent, 'change-block-type');
-      //   EditorState.forceSelection(externalES, newSelection)
-      return externalSetEditorState(externalES)
-
-
-
-    }
-
-
-
-    return (
-      <div
-        style={{ position: "relative", backgroundColor: backColor, }}
-
-        onMouseDown={function () { setHidden(false); checkFocus2() }}
-
-
-      // onMouseEnter={function () { setHidden(false) }}
-      // onMouseLeave={function () { setHidden(true) }}
-      // onMouseOut={function () { setHidden(true) }}
-      // onMouseOver={function () { setHidden(false) }}
-      >
-        {!hidden && <Button variant="contained" style={{ right: 0, top: 0, zIndex: 100, position: "absolute" }} contentEditable={false}
-          onMouseDown={function (e) {
-            e.preventDefault()
-            e.stopPropagation()
-            addImage()
-          }}
-
-          onClick={function (e) {
-            e.preventDefault()
-            e.stopPropagation()
-
-          }}
-
-        >aaa</Button>}
-
-
-        {/* <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}> */}
-        {/* {EmojiPanel} */}
-        {/* </Collapse> */}
-
-        <EditorBlock     {...{ ...props }} ref={editorBlockRef} >  </EditorBlock>
-
-        {/* <ToolButton blockKey={blockKey} clickFn={addImage} hidden={hidden} setHidden={setHidden} readOnly={readOnly} setReadOnly={setReadOnly} insertImageBlock={insertImageBlock} /> */}
-
-
-      </div>
-    )
 
   }
 
@@ -435,17 +218,20 @@ export default function createImagePlugin() {
       }
     },
 
-    insertImageBlock,
 
-    ToolBlock,
-    ImagePanel,
-    deleteImageBlock,
-    setImageBlockData,
-  
+
+
+    ImagePanel: withImageBlogFn(ImagePanel),
+    markingImageBlock,
+    // deleteImageBlock,
+    // setImageBlockData,
+
   }
 
 
 }
+
+
 
 
 

@@ -56,7 +56,7 @@ const initialState = {
 };
 const { mentionPlugin, taggingMention } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
-const { imagePlugin, ImagePanel, /*ToolBlock,*/insertImageBlock, deleteImageBlock, setImageBlockData } = createImagePlugin()
+const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setImageBlockData*/ } = createImagePlugin()
 
 // const useStyles = makeStyles(function (theme) {
 
@@ -76,10 +76,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   const key = useRef(Math.random() + "")
 
-  const { editorState, setEditorState, editorRef, imageArr, setImageArr, imageBlockObj, setImageBlockObj } = ctx
-
-
-
+  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
 
@@ -188,7 +185,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   editorRef,
                   readOnly,
                   setReadOnly,
-                  insertImageBlock,
+                  markingImageBlock,
                   editorState,
                   setEditorState,
 
@@ -197,31 +194,23 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             }
 
 
-
-
-
             //   const entityId = editorState.getCurrentContent().getEntityAt(0);
             if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
               //   console.log(JSON.stringify(data))
               return {
-                // component: function (props) {
-                //   const {children,aonClick} = props.blockProps
-                //   return <Button variant="contained" onMouseDown={aonClick}>{children}</Button>
-                // },
+
 
                 component: ImagePanel,
                 editable: false,
                 props: {
-                  imageArr,
-                  setImageArr,
+
                   imageBlockObj,
                   setImageBlockObj,
-                  editor: editorRef,
+                  editorRef,
                   //blockKey: block.getKey(),
-                  deleteImageBlock,
-                  className: "image-block",
-                  setImageBlockData,
                 
+                  className: "image-block",
+             
 
                 },
               }
@@ -305,7 +294,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                   //   editorState = EditorState.acceptSelection(editorState, selectionState)
                   editorState = EditorState.forceSelection(editorState, selectionState)
-                 
+
                   setEditorState(editorState)
                   //   break
                   return 'not-handled';

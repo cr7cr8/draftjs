@@ -33,25 +33,19 @@ import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
 
 export default function ToolBlock(props) {
 
-  const { children, picArr, setPicArr, } = props
 
-  //console.log(props)
+
+
 
   const { block, selection, contentState } = props
   const blockKey = block.getKey()
-  const { editorRef, readOnly, setReadOnly, EmojiPanel, insertImageBlock, editorState, setEditorState, } = props.blockProps
+  const { editorRef, readOnly, setReadOnly, EmojiPanel, markingImageBlock, editorState, setEditorState, } = props.blockProps
 
   const theme = useTheme()
   const [hidden, setHidden] = useState(true)
   const editorBlockRef = useRef()
 
-  function addImage() {
 
-    insertImageBlock(blockKey)
-    setTimeout(() => {
-      editorRef.current.focus()
-    }, 0);
-  }
 
   const [backColor, setBackColor] = useState(getRandomColor())
 
@@ -113,7 +107,10 @@ export default function ToolBlock(props) {
         onMouseDown={function (e) {
           e.preventDefault()
           e.stopPropagation()
-          addImage()
+          markingImageBlock(blockKey)
+          setTimeout(() => {
+            editorRef.current.focus()
+          }, 0);
         }}
 
         onClick={function (e) {

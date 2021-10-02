@@ -133,7 +133,7 @@ export default function ImagePanel(props) {
     blockProps: {
       setImageBlockData,
       deleteImageBlock,
-      editor,
+      editorRef,
       imageBlockObj,
       setImageBlockObj,
       className,
@@ -208,7 +208,7 @@ export default function ImagePanel(props) {
       setImageBlockData("deleteAll", blockKey)
       setRefreshAll(pre => !pre)
       setTimeout(() => {
-        editor.current.focus()
+        editorRef.current.focus()
       }, 100);
 
     }
@@ -262,7 +262,7 @@ export default function ImagePanel(props) {
                   delete pre[blockKey]
                   return { ...pre }
                 })
-                console.log(blockKey)
+              //  console.log(blockKey)
 
               }}
               children={<DeleteIcon />}
@@ -277,7 +277,7 @@ export default function ImagePanel(props) {
             <div key={index}>
               <ImagePic setImageBlockObj={setImageBlockObj}
                 imageBlockObj={imageBlockObj}
-                editor={editor}
+                editorRef={editorRef}
                 blockKey={blockKey}
                 theme={theme}
                 index={index}
@@ -303,11 +303,11 @@ export default function ImagePanel(props) {
 
 
 function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData, 
-  setImageBlockObj, imageBlockObj, editor, blockKey, theme, index, classes, inputRef, setImageIndex, pic, ...props }) {
+  setImageBlockObj, imageBlockObj, editorRef, blockKey, theme, index, classes, inputRef, setImageIndex, pic, ...props }) {
 
 
 
-  console.log(JSON.stringify(block.getData().toObject()), index)
+  //console.log(JSON.stringify(block.getData().toObject()), index)
 
   const blockDataObj = block.getData().toObject() || {}
 
@@ -315,9 +315,9 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
   const [horizontal, setHorizontal] = useState(blockDataObj["pos" + index] ? blockDataObj["pos" + index].horizontal : 50)  //!!! should fetch from the block data first
   const [verticle, setVerticle] = useState(blockDataObj["pos" + index] ? blockDataObj["pos" + index].verticle : 50)  //!!! should fetch from the block data first
 
-  useEffect(function () {
-    console.log(horizontal, verticle)
-  })
+  // useEffect(function () {
+  //   console.log(horizontal, verticle)
+  // })
 
 
   const imageRef = React.useRef()
@@ -377,7 +377,7 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
             setImageBlockData("deleteAll", blockKey)
             setRefreshAll(pre => !pre)
             setTimeout(() => {
-              editor.current.focus()
+              editorRef.current.focus()
             }, 0);
 
           }}
@@ -447,7 +447,7 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
           children={<KeyboardArrowRightIcon />}
           onClick={
             function () {
-              console.log(pic)
+            //  console.log(pic)
               setHorizontal(pre => {
                 setImageBlockData({ ["pos" + index]: { horizontal: Math.max(0, Math.min(pre + 25, 100)), verticle } }, blockKey)
                 return Math.max(0, Math.min(pre + 25, 100))

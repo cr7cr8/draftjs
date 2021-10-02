@@ -230,12 +230,12 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [imageBlockObj, setImageBlockObj] = useState({})
 
 
-  const [imageArr, setImageArr] = useState([
+ // const [imageArr, setImageArr] = useState([
     // "https://picsum.photos/200/300",
     // "https://picsum.photos/199/600",
     // "https://picsum.photos/201/300",
     //  "https://picsum.photos/200/301",
-  ])
+ // ])
   //const [editorTop, setEditorTop] = useState(0)
 
 
@@ -271,7 +271,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showEmojiPanel, setShowEmojiPanel,
           emojiCtxStr, setEmojiCtxStr,
           imageBlockObj, setImageBlockObj,
-          imageArr, setImageArr,
+     //     imageArr, setImageArr,
           //  editorTop, setEditorTop,
         }}>
 
