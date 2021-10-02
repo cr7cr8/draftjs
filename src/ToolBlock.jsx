@@ -84,7 +84,7 @@ export default function ToolBlock(props) {
     let newContent = Modifier.setBlockData(
       contentState,
       newSelection,//  SelectionState.createEmpty(newKey),
-      Immutable.Map({})
+      Immutable.Map(block.getData())
     );
 
     const newEditorState = EditorState.push(editorState, newContent, 'change-block-type');

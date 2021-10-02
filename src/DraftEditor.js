@@ -24,6 +24,7 @@ import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
 import createMentionPlugin from './MentionPlugin';
 import createEmojiPlugin from './EmojiPlugin';
 import createImagePlugin from './ImagePlugin';
+import createFontBarPlugin from './FontBarPlugin';
 
 import ToolBlock from "./ToolBlock";
 
@@ -57,6 +58,8 @@ const initialState = {
 const { mentionPlugin, taggingMention } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setImageBlockData*/ } = createImagePlugin()
+const { fontBarPlugin } = createFontBarPlugin
+
 
 // const useStyles = makeStyles(function (theme) {
 
@@ -111,7 +114,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             setEditorState(newState)
           }}
 
-          plugins={[mentionPlugin, emojiPlugin, imagePlugin]}
+          plugins={[mentionPlugin, emojiPlugin, imagePlugin, fontBarPlugin]}
 
 
           // placeholder="hihihi"
@@ -208,9 +211,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   setImageBlockObj,
                   editorRef,
                   //blockKey: block.getKey(),
-                
+
                   className: "image-block",
-             
+
 
                 },
               }
