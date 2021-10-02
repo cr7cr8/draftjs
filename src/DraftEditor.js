@@ -25,10 +25,11 @@ import createMentionPlugin from './MentionPlugin';
 import createEmojiPlugin from './EmojiPlugin';
 import createImagePlugin from './ImagePlugin';
 
+import ToolBlock from "./ToolBlock";
 
 import styled from "styled-components"
 
-import { ToolButton2 } from "./ToolButton"
+//import { ToolButton2 } from "./ToolButton"
 
 const Div = styled.div.withConfig({
 
@@ -55,7 +56,7 @@ const initialState = {
 };
 const { mentionPlugin, taggingMention } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
-const { imagePlugin, ImagePanel, ToolBlock, deleteImageBlock, setImageBlockData } = createImagePlugin()
+const { imagePlugin, ImagePanel, /*ToolBlock,*/insertImageBlock, deleteImageBlock, setImageBlockData } = createImagePlugin()
 
 // const useStyles = makeStyles(function (theme) {
 
@@ -187,6 +188,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   editorRef,
                   readOnly,
                   setReadOnly,
+                  insertImageBlock,
+                  editorState,
+                  setEditorState,
 
                 }
               }
