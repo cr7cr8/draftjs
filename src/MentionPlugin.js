@@ -190,9 +190,14 @@ export default function createMentionPlugin() {
     let newSelection = externalES.getSelection();
     newContent = externalES.getCurrentContent();
 
-    externalES.getCurrentContent().getBlocksAsArray().forEach(function (block) {
+   // externalES.getCurrentContent().getBlocksAsArray().forEach(function (block) {
+    externalES.getCurrentContent().getBlockMap().forEach(function (block) {
+      
+      const blockKey = block.getKey()
+      const blockText = block.getText()
+      const metaArr = block.getCharacterList()
 
-      const [blockKey, , blockText, metaArr] = block.toArray()
+     // const [blockKey, , blockText, metaArr] = block.toArray()
 
 
       metaArr.forEach(function (item, index) {

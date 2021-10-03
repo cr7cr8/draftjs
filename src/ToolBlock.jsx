@@ -39,7 +39,7 @@ export default function ToolBlock(props) {
 
   const { block, selection, contentState } = props
   const blockKey = block.getKey()
-  const { editorRef, readOnly, setReadOnly, EmojiPanel, markingImageBlock, editorState, setEditorState, } = props.blockProps
+  const { editorRef, readOnly, setReadOnly, EmojiPanel, markingImageBlock, editorState, setEditorState, markingFontBarBlock } = props.blockProps
 
   const theme = useTheme()
   const [hidden, setHidden] = useState(true)
@@ -52,6 +52,7 @@ export default function ToolBlock(props) {
   const [focusOn, setFocusOn] = useState(true)
 
   useEffect(function () {
+  //  markingFontBarBlock()
     if ((!selection.hasFocus) && (!hidden)) {
       setHidden(true)
     }
@@ -108,6 +109,7 @@ export default function ToolBlock(props) {
           e.preventDefault()
           e.stopPropagation()
           markingImageBlock(blockKey)
+       
           setTimeout(() => {
             editorRef.current.focus()
           }, 0);

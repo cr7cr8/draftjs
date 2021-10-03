@@ -98,9 +98,16 @@ export default function createImagePlugin() {
     let newContent = externalES.getCurrentContent();
     let newSelection = externalES.getSelection();
 
-    externalES.getCurrentContent().getBlocksAsArray().forEach(function (block) {
+    // externalES.getCurrentContent().getBlocksAsArray().forEach(function (block) {
 
-      const [blockKey, blockType, blockText, metaArr] = block.toArray()
+    externalES.getCurrentContent().getBlockMap().forEach(function (block) {
+
+      const blockKey = block.getKey()
+      const blockText = block.getText()
+      const metaArr = block.getCharacterList()
+
+
+      // const [blockKey, blockType, blockText, metaArr] = block.toArray()
 
       // metaArr.forEach(function (item, index) {
       //   const itemEntityKey = item.getEntity()
@@ -205,7 +212,7 @@ export default function createImagePlugin() {
 
   function EmojiPanelComp({ theme, ctx, classes, ...props }) {
 
-  
+
 
     return <EmojiPanel {...{ theme, ctx, classes, ...props, }} clickFn={insertEmoji} />
 

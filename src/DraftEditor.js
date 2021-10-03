@@ -58,7 +58,7 @@ const initialState = {
 const { mentionPlugin, taggingMention } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setImageBlockData*/ } = createImagePlugin()
-const { fontBarPlugin } = createFontBarPlugin
+const { fontBarPlugin, markingFontBarBlock } = createFontBarPlugin()
 
 
 // const useStyles = makeStyles(function (theme) {
@@ -82,7 +82,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
   const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
-
+  const startKey = useRef()
 
   return (
 
@@ -111,10 +111,16 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           editorState={editorState}
 
           onChange={function (newState, { ...props }) {
+           // console.log(Math.random())
+            
+          //   const selection = newState.getSelection()
+          //  // const startKey = selection && (!selection.isCollapsed())&&selection.getStartKey()
+          //   startKey.current = selection && (!selection.isCollapsed())&&selection.getStartKey()
+          //   console.log(startKey.current,"----")
             setEditorState(newState)
           }}
 
-          plugins={[mentionPlugin, emojiPlugin, imagePlugin, fontBarPlugin]}
+          plugins={[mentionPlugin, emojiPlugin, imagePlugin, fontBarPlugin,]}
 
 
           // placeholder="hihihi"
@@ -178,7 +184,14 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const text = block.getText()
             const data = block.getData().toObject()
             const type = block.getType()
+            const blockKey = block.getKey()
+            const selection = editorState.getSelection()
+           // const startKey = selection && (!selection.isCollapsed())&&selection.getStartKey()
+            // if (startKey.current === blockKey) {
 
+            //   console.log(blockKey)
+
+            // }
             if ((!text) && (type === "unstyled")) {
 
               return {
@@ -191,6 +204,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   markingImageBlock,
                   editorState,
                   setEditorState,
+                  markingFontBarBlock,
 
                 }
               }
@@ -532,7 +546,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
         <div>{JSON.stringify(editorState.getCurrentContent().selectionAfter, null, 2)}</div> */}
 
-        {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div> */}
+        <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
         {/*  <hr />
         <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
       </div>
