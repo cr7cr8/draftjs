@@ -145,6 +145,31 @@ function toPreHtml(editorState) {
     editorState.getCurrentContent(),
     {
       defaultBlockTag: "div",
+
+      inlineStyleFn: (styleName) => {
+
+
+
+        // let color = styleName.filter((value) => value.startsWith("BOLD")).first();
+    
+        // console.log(styleName.toArray())
+
+        // if (color) {
+        //   return {
+        //     element: 'p',
+        //     style: {
+        //       color: "red",
+        //     },
+        //     attributes:{
+        //       "data-type": "xxxx",
+        //     }
+        //   };
+        // }
+
+
+      },
+
+
       entityStyleFn: (entity) => {
         // console.log(entity.getType())
 
@@ -187,7 +212,7 @@ function toPreHtml(editorState) {
           const type = block.getType()
           const key = block.getKey()
 
-         // console.log(data)
+          // console.log(data)
 
           //  return `<img src=${data.imgUrl} style=max-width:300px;display:block;margin-left:auto;margin-right:auto;/>`
           //  return `<imgtag id=${data.imgId} style=max-width:100%;display:block;margin-left:auto;margin-right:auto;/>`
@@ -218,7 +243,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
 
 
-  const [showContent, setShowContent] = useState(false)
+  const [showContent, setShowContent] = useState(true)
   const [showMention, setShowMention] = useState(false)
   const [showHint, setShowHint] = useState(true)
   const [avatarHint, setAvatarHint] = useState(false)
@@ -230,12 +255,12 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [imageBlockObj, setImageBlockObj] = useState({})
 
 
- // const [imageArr, setImageArr] = useState([
-    // "https://picsum.photos/200/300",
-    // "https://picsum.photos/199/600",
-    // "https://picsum.photos/201/300",
-    //  "https://picsum.photos/200/301",
- // ])
+  // const [imageArr, setImageArr] = useState([
+  // "https://picsum.photos/200/300",
+  // "https://picsum.photos/199/600",
+  // "https://picsum.photos/201/300",
+  //  "https://picsum.photos/200/301",
+  // ])
   //const [editorTop, setEditorTop] = useState(0)
 
 
@@ -271,7 +296,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showEmojiPanel, setShowEmojiPanel,
           emojiCtxStr, setEmojiCtxStr,
           imageBlockObj, setImageBlockObj,
-     //     imageArr, setImageArr,
+          //     imageArr, setImageArr,
           //  editorTop, setEditorTop,
         }}>
 

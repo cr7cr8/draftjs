@@ -52,7 +52,7 @@ export default function ToolBlock(props) {
   const [focusOn, setFocusOn] = useState(true)
 
   useEffect(function () {
-  //  markingFontBarBlock()
+    //  markingFontBarBlock()
     if ((!selection.hasFocus) && (!hidden)) {
       setHidden(true)
     }
@@ -101,15 +101,38 @@ export default function ToolBlock(props) {
   return (
     <div
       style={{ position: "relative", backgroundColor: backColor, }}
-      onMouseDown={function () { setHidden(false); checkFocus() }}
+      onMouseDown={function () {
+        setHidden(false); checkFocus(); markingFontBarBlock(); setEditorState(editorState)
+      }}
 
     >
+
+      {!hidden && <Button variant="contained" style={{ right: 100, top: 0, zIndex: 100, position: "absolute" }} contentEditable={false}
+        onMouseDown={function (e) {
+          e.preventDefault()
+          e.stopPropagation()
+        //  markingImageBlock(blockKey)
+
+          setTimeout(() => {
+            editorRef.current.focus()
+          }, 0);
+        }}
+
+        onClick={function (e) {
+          e.preventDefault()
+          e.stopPropagation()
+
+        }}
+
+      >bbb</Button>}
+
+
       {!hidden && <Button variant="contained" style={{ right: 0, top: 0, zIndex: 100, position: "absolute" }} contentEditable={false}
         onMouseDown={function (e) {
           e.preventDefault()
           e.stopPropagation()
           markingImageBlock(blockKey)
-       
+
           setTimeout(() => {
             editorRef.current.focus()
           }, 0);

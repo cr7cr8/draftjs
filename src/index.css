@@ -29,6 +29,12 @@ figure {
   position: relative;
   /* z-index: 100; */
 }
+
+/* .font-bar-block{
+
+  background-color: brown;
+} */
+
 /* .unstyled-text-draft-block::before{
   content:"+";
   color: #E2202D;

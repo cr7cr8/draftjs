@@ -7,9 +7,8 @@ import Editor from "draft-js-plugins-editor";
 import Immutable from 'immutable';
 
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
-import { Typography, Chip, Popover, Button, ButtonGroup, Container, Paper, Avatar, Box, Grow, Zoom, Slide, IconButton } from "@material-ui/core";
+import { Typography, Chip, Popover, Button, ButtonGroup, Container, Paper, Avatar, Box, Grow, Zoom, Slide } from "@material-ui/core";
 import { Image, AlternateEmailSharp } from "@material-ui/icons";
-
 
 
 import AvatarChipList from "./AvatarChipList";
@@ -23,7 +22,7 @@ import {
 } from "react-device-detect";
 import ImagePanel from "./ImagePanel"
 
-import { CropOriginal, Brightness4, Brightness5, FormatBold, FormatItalic, FormatUnderlined, AddPhotoAlternateOutlined } from "@material-ui/icons";
+import { CropOriginal, Brightness4, Brightness5, FormatBold, FormatItalic, AddPhotoAlternateOutlined } from "@material-ui/icons";
 import ToolButton from "./ToolButton"
 import { add } from 'date-fns/esm';
 
@@ -31,9 +30,8 @@ import { add } from 'date-fns/esm';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 import DeleteIcon from '@material-ui/icons/Delete';
-
+import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import tinygradient from "tinygradient";
 
 
 import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
@@ -146,7 +144,7 @@ export default function createFontBarPlugin() {
     let newSelection = externalES.getSelection();
 
 
-   // console.log(oldSelection.serialize())
+    console.log(oldSelection.serialize())
     externalES.getCurrentContent().getBlocksAsArray().forEach(function (block) {
 
       const [blockKey, blockType, blockText, metaArr] = block.toArray()
@@ -202,9 +200,10 @@ export default function createFontBarPlugin() {
   function markingFontBarBlock() {
 
 
+
     let selection = externalES.getSelection()
     const allBlocks = externalES.getCurrentContent()
-    //  console.log(selection.isCollapsed())
+  //  console.log(selection.isCollapsed())
 
     allBlocks.getBlockMap().forEach(function (block) {
       if (block.getType() === "FontBarBlock") {
@@ -226,16 +225,24 @@ export default function createFontBarPlugin() {
       }
     })
 
+
+
+    //externalES = EditorState.forceSelection(externalES, selection)
+
+    //  return externalES
+
+
+
     if (!selection.isCollapsed()) {
       let startKey = selection && selection.getStartKey()
       const allBlocks = externalES.getCurrentContent()
 
-
-    //  console.log(allBlocks.getBlockForKey(startKey).getType())
+      console.log(allBlocks.getBlockForKey(startKey).getType())
       while (allBlocks.getBlockForKey(startKey).getType() !== "unstyled") {
-        startKey = allBlocks.getBlockAfter(startKey).getKey()
+        startKey = getBlockAfter(startKey).getKey()
 
       }
+
 
       if (startKey) {
         let newSelection = SelectionState.createEmpty(startKey)
@@ -260,62 +267,6 @@ export default function createFontBarPlugin() {
     externalES = EditorState.forceSelection(externalES, selection)
     return externalES
   }
-
-  function FontBarPanel(props) {
-
-    const theme = useTheme()
-
-    const { block, selection, contentState } = props
-    const blockKey = block.getKey()
-    const { editorRef, readOnly, setReadOnly, EmojiPanel, markingImageBlock, editorState, setEditorState, markingFontBarBlock } = props.blockProps
-    var gradient = tinygradient([{ color: '#d8e0de', pos: 0.5 }, {color:'rgba(35,68,124,8)',pos:0.75}, {color:'rgba(235,168,124,1)',pos:1}]);
-
-    //console.log(gradient.rgb(33))
-
-    return (
-      <>
-        {/* <Paper style={{ width: "100%", borderRadius: "1000px", backgroundColor:theme.isLight?"#fafafa":"#303030" ,marginBottom:"4px"}} > */}
-
-        <div style={{ backgroundImage: gradient.css('radial', 'farthest-corner ellipse at top left') }}>
-          <IconButton
-            style={{ boxShadow: theme.shadows[3], }}
-            onClick={function () {
-              externalES = RichUtils.toggleInlineStyle(externalES, "BOLD")
-              externalSetEditorState(externalES)
-            }}>
-            <FormatBold />
-          </IconButton>
-
-          <IconButton
-            style={{ boxShadow: theme.shadows[3], }}
-            onClick={function () {
-              externalES = RichUtils.toggleInlineStyle(externalES, "ITALIC")
-              externalSetEditorState(externalES)
-            }}>
-            <FormatItalic />
-          </IconButton>
-
-          <IconButton
-            style={{ boxShadow: theme.shadows[3], }}
-            onClick={function () {
-              externalES = RichUtils.toggleInlineStyle(externalES, "UNDERLINE")
-              externalSetEditorState(externalES)
-            }}>
-            <FormatUnderlined />
-          </IconButton>
-
-
-
-        </div>
-        {/* </Paper> */}
-        <EditorBlock   {...{ ...props }} />
-      </>
-    )
-
-  }
-
-
-
 
 
   return {
@@ -348,6 +299,7 @@ export default function createFontBarPlugin() {
 
 
       decorators: [{
+
         strategy: fontBarStrategy,
         component: withStyles(styleObj, { withTheme: true })(withContext(FontBarComp))                       //withTheme(withContext(EmojiComp))
       }],
@@ -357,7 +309,7 @@ export default function createFontBarPlugin() {
       },
     },
     markingFontBarBlock,
-    FontBarPanel
+
 
 
   }

@@ -58,7 +58,7 @@ const initialState = {
 const { mentionPlugin, taggingMention } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setImageBlockData*/ } = createImagePlugin()
-const { fontBarPlugin, markingFontBarBlock } = createFontBarPlugin()
+const { fontBarPlugin, markingFontBarBlock, FontBarPanel } = createFontBarPlugin()
 
 
 // const useStyles = makeStyles(function (theme) {
@@ -111,12 +111,13 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           editorState={editorState}
 
           onChange={function (newState, { ...props }) {
-           // console.log(Math.random())
-            
-          //   const selection = newState.getSelection()
-          //  // const startKey = selection && (!selection.isCollapsed())&&selection.getStartKey()
-          //   startKey.current = selection && (!selection.isCollapsed())&&selection.getStartKey()
-          //   console.log(startKey.current,"----")
+            // console.log(Math.random())
+
+            //   const selection = newState.getSelection()
+            //  // const startKey = selection && (!selection.isCollapsed())&&selection.getStartKey()
+            //   startKey.current = selection && (!selection.isCollapsed())&&selection.getStartKey()
+            //   console.log(startKey.current,"----")
+            //   newState = markingFontBarBlock(newState)
             setEditorState(newState)
           }}
 
@@ -136,7 +137,24 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
           customStyleFn={function (style, block) {
 
-            const styleNames = style.toObject();
+            const styleNames = style.toArray();
+            if (styleNames.includes("BOLD")) {
+
+              return {
+                // element: 'p',
+                // style: {
+                //   color: "red",
+                // },
+                // attributes: {
+                //   "data-type": "xxxx",
+                // }
+                color:"red"
+              }
+
+
+            }
+
+
 
           }}
 
@@ -177,6 +195,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             if ((!text) && (type === "unstyled")) {
               return "unstyled-text-draft-block"
             }
+            if (type === "FontBarBlock") {
+              return "font-bar-block"
+            }
+
           }}
 
           blockRendererFn={function (block) {
@@ -186,7 +208,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const type = block.getType()
             const blockKey = block.getKey()
             const selection = editorState.getSelection()
-           // const startKey = selection && (!selection.isCollapsed())&&selection.getStartKey()
+            // const startKey = selection && (!selection.isCollapsed())&&selection.getStartKey()
             // if (startKey.current === blockKey) {
 
             //   console.log(blockKey)
@@ -209,7 +231,28 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                 }
               }
             }
+            if (type === "FontBarBlock") {
 
+
+              return {
+                component: FontBarPanel,
+                editable: true,
+                props: {
+                  editorRef,
+                  readOnly,
+                  setReadOnly,
+                  markingImageBlock,
+                  editorState,
+                  setEditorState,
+                  markingFontBarBlock,
+
+                }
+              }
+
+
+
+
+            }
 
             //   const entityId = editorState.getCurrentContent().getEntityAt(0);
             if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
@@ -546,7 +589,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
         <div>{JSON.stringify(editorState.getCurrentContent().selectionAfter, null, 2)}</div> */}
 
-        <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
+        {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div> */}
         {/*  <hr />
         <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
       </div>
