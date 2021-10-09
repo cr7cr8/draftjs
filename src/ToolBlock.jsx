@@ -102,7 +102,8 @@ export default function ToolBlock(props) {
     <div
       style={{ position: "relative", backgroundColor: backColor, }}
       onMouseDown={function () {
-        setHidden(false); checkFocus(); markingFontBarBlock(); setEditorState(editorState)
+      
+        setHidden(false); checkFocus(); //markingFontBarBlock(); setEditorState(editorState)
       }}
 
     >

@@ -137,7 +137,8 @@ export default function createFontBarPlugin() {
 
 
 
-  function taggingFontBar() {
+
+  function taggingFontBar0() {
 
 
 
@@ -146,7 +147,7 @@ export default function createFontBarPlugin() {
     let newSelection = externalES.getSelection();
 
 
-   // console.log(oldSelection.serialize())
+    // console.log(oldSelection.serialize())
     externalES.getCurrentContent().getBlocksAsArray().forEach(function (block) {
 
       const [blockKey, blockType, blockText, metaArr] = block.toArray()
@@ -198,6 +199,115 @@ export default function createFontBarPlugin() {
 
   }
 
+  function taggingFontBar() {
+
+    const oldSelection = externalES.getSelection();
+    let allBlocks = externalES.getCurrentContent();
+    let newSelection = externalES.getSelection();
+    // Modifier.removeInlineStyle(
+    //   contentState: ContentState,
+    //   selectionState: SelectionState,
+    //   inlineStyle: string
+    // ): ContentState
+    // console.log(oldSelection.isCollapsed())
+
+    allBlocks.getBlockMap().forEach(function (block) {
+
+      const [blockKey, blockType, blockText, metaArr] = block.toArray()
+
+      metaArr.forEach(function (item, index) {
+
+        // console.log(item.getStyle().toArray(), item.hasStyle("BOLD"))
+        if (item.hasStyle("FONTBAR")) {
+          newSelection = newSelection.merge({
+            anchorKey: blockKey,
+            anchorOffset: index,
+            focusKey: blockKey,
+            focusOffset: index + 1,
+            isBackward: false,
+            hasFocus: false,
+          })
+          allBlocks = Modifier.removeInlineStyle(allBlocks, newSelection, "FONTBAR")
+
+        }
+      })
+    })
+
+
+    if (oldSelection.isCollapsed()) {
+
+      externalES = EditorState.push(externalES, allBlocks, "change-inline-style");
+      externalES = EditorState.forceSelection(externalES, oldSelection);
+      return externalES
+
+    }
+    else {
+
+      allBlocks = Modifier.applyInlineStyle(allBlocks, oldSelection, "FONTBAR")
+      externalES = EditorState.push(externalES, allBlocks, "change-inline-style");
+      externalES = EditorState.forceSelection(externalES, oldSelection);
+
+      return externalES
+    }
+
+  }
+
+  function taggingFontBar2(externalES) {
+
+    const oldSelection = externalES.getSelection();
+    let allBlocks = externalES.getCurrentContent();
+    let newSelection = externalES.getSelection();
+    // Modifier.removeInlineStyle(
+    //   contentState: ContentState,
+    //   selectionState: SelectionState,
+    //   inlineStyle: string
+    // ): ContentState
+    // console.log(oldSelection.isCollapsed())
+
+    allBlocks.getBlockMap().forEach(function (block) {
+
+      const [blockKey, blockType, blockText, metaArr] = block.toArray()
+
+      metaArr.forEach(function (item, index) {
+
+        // console.log(item.getStyle().toArray(), item.hasStyle("BOLD"))
+        if (item.hasStyle("FONTBAR")) {
+          newSelection = newSelection.merge({
+            anchorKey: blockKey,
+            anchorOffset: index,
+            focusKey: blockKey,
+            focusOffset: index + 1,
+            isBackward: false,
+            hasFocus: false,
+          })
+          allBlocks = Modifier.removeInlineStyle(allBlocks, newSelection, "FONTBAR")
+
+        }
+      })
+    })
+
+
+    if (oldSelection.isCollapsed()) {
+
+      externalES = EditorState.push(externalES, allBlocks, "change-inline-style");
+      externalES = EditorState.forceSelection(externalES, oldSelection);
+      return externalES
+
+    }
+    else {
+
+
+      allBlocks = Modifier.applyInlineStyle(allBlocks, oldSelection, "FONTBAR")
+      externalES = EditorState.push(externalES, allBlocks, "change-inline-style");
+      externalES = EditorState.forceSelection(externalES, oldSelection);
+
+      return externalES
+    }
+
+
+  }
+
+
 
   function markingFontBarBlock() {
 
@@ -231,7 +341,7 @@ export default function createFontBarPlugin() {
       const allBlocks = externalES.getCurrentContent()
 
 
-    //  console.log(allBlocks.getBlockForKey(startKey).getType())
+      //  console.log(allBlocks.getBlockForKey(startKey).getType())
       while (allBlocks.getBlockForKey(startKey).getType() !== "unstyled") {
         startKey = allBlocks.getBlockAfter(startKey).getKey()
 
@@ -268,7 +378,7 @@ export default function createFontBarPlugin() {
     const { block, selection, contentState } = props
     const blockKey = block.getKey()
     const { editorRef, readOnly, setReadOnly, EmojiPanel, markingImageBlock, editorState, setEditorState, markingFontBarBlock } = props.blockProps
-    var gradient = tinygradient([{ color: '#d8e0de', pos: 0.5 }, {color:'rgba(35,68,124,8)',pos:0.75}, {color:'rgba(235,168,124,1)',pos:1}]);
+    var gradient = tinygradient([{ color: '#d8e0de', pos: 0.5 }, { color: 'rgba(35,68,124,8)', pos: 0.75 }, { color: 'rgba(235,168,124,1)', pos: 1 }]);
 
     //console.log(gradient.rgb(33))
 
@@ -323,25 +433,73 @@ export default function createFontBarPlugin() {
 
     fontBarPlugin: {
 
-      keyBindingFn(e, { getEditorState, setEditorState, ...obj }) {
-        return getDefaultKeyBinding(e);
-      },
-      handleKeyCommand(command, editorState, evenTimeStamp, { setEditorState }) {
-        // better to place each command detail in draft.js, not here
-        if (command === "cancel-delete") {
+      // keyBindingFn(e, { getEditorState, setEditorState, ...obj }) {
+      //   return getDefaultKeyBinding(e);
+      // },
+      // handleKeyCommand(command, editorState, evenTimeStamp, { setEditorState }) {
+      //   // better to place each command detail in draft.js, not here
+      //   if (command === "cancel-delete") {
 
-        }
+      //   }
 
-        return 'not-handled';
-      },
+      //   return 'not-handled';
+      // },
+
+      // keyBindingFn(e, { getEditorState, setEditorState, ...obj }) {
+      //   const editorState = getEditorState()
+      //   const selectionState = editorState.getSelection();
+      //   const contentState = editorState.getCurrentContent();
+      //   const block = contentState.getBlockForKey(selectionState.getStartKey());
+
+
+      //   // if ((block.getType() === "imageBlock") && ((e.keyCode === 8) || (e.keyCode === 46))) {
+      //   //   return "cancel-delete"
+      //   // }
+     
+
+      //   if ((block.getType() === "imageBlock")) {
+      //     return "cancel-delete"
+      //   }
+      //   else if (e.shiftKey || hasCommandModifier(e) || e.altKey) {
+      //     return getDefaultKeyBinding(e);
+      //   }
+
+
+      //   else if ((block.getType() === "unstyled") && (e.keyCode === 37)) {
+      //     return "tool-block-left"
+      //   }
+      //   else if ((block.getType() === "unstyled") && (e.keyCode === 38)) {
+      //     return "tool-block-up"
+      //   }
+      //   else if ((block.getType() === "unstyled") && (e.keyCode === 39)) {
+      //     return "tool-block-right"
+      //   }
+      //   else if ((block.getType() === "unstyled") && (e.keyCode === 40)) {
+      //     return "tool-block-down"
+      //   }
+      //   else if ((!block.getText()) && (block.getType() === "unstyled") && (e.keyCode === 8)) {
+      //     return "tool-block-delete"
+      //   }
+
+      //   return getDefaultKeyBinding(e);
+
+
+
+      // },
+
 
 
 
       onChange: function (editorState, { setEditorState }) {
         externalES = editorState
         externalSetEditorState = setEditorState
-        //    externalES = taggingFontBar()
-        externalES = markingFontBarBlock()
+        externalES = taggingFontBar()
+      
+      
+        //externalES = markingFontBarBlock()
+
+
+
         return externalES
         // setEditorState
       },
@@ -357,7 +515,8 @@ export default function createFontBarPlugin() {
       },
     },
     markingFontBarBlock,
-    FontBarPanel
+    taggingFontBar2,
+    FontBarPanel,
 
 
   }

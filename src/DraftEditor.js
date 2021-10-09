@@ -3,6 +3,8 @@ import React, { useState, useRef, useEffect, useContext, useCallback, createCont
 
 
 import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
+
+
 import Editor from "draft-js-plugins-editor";
 import Immutable from 'immutable';
 
@@ -11,7 +13,7 @@ import { stateToHTML } from 'draft-js-export-html';
 
 
 //import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
-import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button } from "@material-ui/core";
+import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button, } from "@material-ui/core";
 import { makeStyles, useTheme, ThemeProvider, withTheme } from '@material-ui/styles';
 
 import { withContext } from "./ContextProvider"
@@ -29,6 +31,10 @@ import createFontBarPlugin from './FontBarPlugin';
 import ToolBlock from "./ToolBlock";
 
 import styled from "styled-components"
+
+import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
+const { hasCommandModifier } = KeyBindingUtil;
+
 
 //import { ToolButton2 } from "./ToolButton"
 
@@ -58,7 +64,7 @@ const initialState = {
 const { mentionPlugin, taggingMention } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setImageBlockData*/ } = createImagePlugin()
-const { fontBarPlugin, markingFontBarBlock, FontBarPanel } = createFontBarPlugin()
+const { fontBarPlugin, taggingFontBar2, markingFontBarBlock, FontBarPanel } = createFontBarPlugin()
 
 
 // const useStyles = makeStyles(function (theme) {
@@ -84,9 +90,63 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   const startKey = useRef()
 
+  const [top, setTop] = useState(0)
+  const [left, setLeft] = useState(0)
+
+  useEffect(function () {
+
+
+    // console.log(document.querySelectorAll('span[style*="color: red;"]'))
+
+    //  console.log(document.querySelectorAll('span[style*="--font-bar: red;"]'))
+
+
+    const fontBar = document.querySelector('span[style*="--font-bar"]')
+    // console.log(fontBarRef.current&&fontBarRef.current.innerHTML)
+    if (fontBar) {
+      const { x, y } = fontBar.getBoundingClientRect()
+
+      if ((x === left) && (y === top)) {
+
+      }
+      else {
+
+        // setTimeout(() => {
+        setLeft(x); setTop(y)
+        // }, 100);
+
+
+      }
+    }
+    else {
+      if ((left === 0) && (top === 0)) {
+
+      }
+      else {
+        // setTimeout(() => {
+        setLeft(0); setTop(0)
+        //  }, 100);
+
+
+      }
+
+    }
+
+  })
+
+
   return (
 
     <React.Fragment key={key.current}>
+
+      <Paper style={{
+        top, left,
+        width: "300px", height: "3rem", position: "fixed", backgroundColor: "#aaf", zIndex: 100, transform: "translateY(-100%)",
+
+
+
+      }} >afddsfsdf</Paper>
+
       {/* <ImagePanel
         imageArr={imageArr} setImageArr={setImageArr} editor={editorRef}
 
@@ -106,6 +166,18 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
         <Editor
+
+          // onFocus={function (e, two) {
+          //   console.log(two)
+          // }}
+          // onBlur={function (...args) {
+          //   console.log(args.length)
+          // }}
+
+
+
+
+
           readOnly={readOnly}
           ref={function (element) { editorRef.current = element; }}
           editorState={editorState}
@@ -138,22 +210,48 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           customStyleFn={function (style, block) {
 
             const styleNames = style.toArray();
-            if (styleNames.includes("BOLD")) {
+
+
+            if (styleNames.includes("FONTBAR")) {
+              //  console.log(block.getKey())
+
+              block.findStyleRanges(
+
+                (metaArr) => { return metaArr.hasStyle("FONTBAR") },
+
+                (start, end) => { /*console.log(start, end)*/ }
+              )
 
               return {
                 // element: 'p',
                 // style: {
                 //   color: "red",
                 // },
-                // attributes: {
-                //   "data-type": "xxxx",
-                // }
-                color:"red"
+                //  attributes: {
+                //    "data-type": "xxxx",
+                //  },
+                position: "relative",
+                "--font-bar": block.getKey()
               }
 
 
             }
+            // if (styleNames.includes("UNDERLINE")) {
 
+            //   return {
+            //     // element: 'p',
+            //     // style: {
+            //     //   color: "red",
+            //     // },
+            //      attributes: {
+            //        "data-type": "xxxx",
+            //      },
+            //      backgroundColor: "skyblue"
+            //     // color:"red",
+            //   }
+
+
+            // }
 
 
           }}
@@ -282,29 +380,66 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
           }}
 
+          keyBindingFn={function (e, { getEditorState, setEditorState, ...obj }) {
+            const editorState = getEditorState()
+            const selectionState = editorState.getSelection();
+            const contentState = editorState.getCurrentContent();
+            const block = contentState.getBlockForKey(selectionState.getStartKey());
 
 
+            // if ((block.getType() === "imageBlock") && ((e.keyCode === 8) || (e.keyCode === 46))) {
+            //   return "cancel-delete"
+            // }
+
+           
+
+
+            if ((block.getType() === "imageBlock")) {
+              return "cancel-delete"
+            }
+            else if (e.shiftKey || hasCommandModifier(e) || e.altKey) {
+              return getDefaultKeyBinding(e);
+            }
+
+
+            else if ((block.getType() === "unstyled") && (e.keyCode === 37)) {
+              // Todo: add clear the fontbar in handlecommander function
+              return "tool-block-left"
+            }
+            else if ((block.getType() === "unstyled") && (e.keyCode === 38)) {
+              return "tool-block-up"
+            }
+            else if ((block.getType() === "unstyled") && (e.keyCode === 39)) {
+              return "tool-block-right"
+            }
+            else if ((block.getType() === "unstyled") && (e.keyCode === 40)) {
+              return "tool-block-down"
+            }
+            else if ((!block.getText()) && (block.getType() === "unstyled") && (e.keyCode === 8)) {
+              return "tool-block-delete"
+            }
+
+            return getDefaultKeyBinding(e);
+
+
+
+          }}
 
           handleKeyCommand={function (command, editorState, evenTimeStamp, { getEditorState }) {
 
             if (command === "bold") {
 
+              setEditorState(RichUtils.handleKeyCommand(editorState, command))
+            }
+            if (command === "italic") {
 
               setEditorState(RichUtils.handleKeyCommand(editorState, command))
             }
-            else if (command === "italic") {
-
-
-              setEditorState(RichUtils.handleKeyCommand(editorState, command))
-            }
-            else if (command === "underline") {
-
+            if (command === "underline") {
 
               setEditorState(RichUtils.handleKeyCommand(editorState, command))
             }
-            else if (command === "underline") {
 
-            }
 
 
             if (command === "tool-block-left") {
@@ -333,7 +468,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                 //   editorState = EditorState.acceptSelection(editorState, selectionState)
                 editorState = EditorState.forceSelection(editorState, selectionState)
-
+                editorState=taggingFontBar2(editorState)
                 setEditorState(editorState)
                 //   break
                 return 'not-handled';
@@ -354,7 +489,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                   //   editorState = EditorState.acceptSelection(editorState, selectionState)
                   editorState = EditorState.forceSelection(editorState, selectionState)
-
+                  editorState=taggingFontBar2(editorState)
                   setEditorState(editorState)
                   //   break
                   return 'not-handled';
@@ -403,6 +538,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                   //   editorState = EditorState.acceptSelection(editorState, selectionState)
                   editorState = EditorState.forceSelection(editorState, selectionState)
+                  editorState=taggingFontBar2(editorState)
                   setEditorState(editorState)
                   //   break
                   return 'not-handled';
@@ -432,6 +568,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                 //   editorState = EditorState.acceptSelection(editorState, selectionState)
                 editorState = EditorState.forceSelection(editorState, selectionState)
+                editorState=taggingFontBar2(editorState)
                 setEditorState(editorState)
                 //   break
                 return 'not-handled';
@@ -457,6 +594,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                   //   editorState = EditorState.acceptSelection(editorState, selectionState)
                   editorState = EditorState.forceSelection(editorState, selectionState)
+                  editorState=taggingFontBar2(editorState)
                   setEditorState(editorState)
                   //   break
                   return 'not-handled';
@@ -498,8 +636,11 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                   //   editorState = EditorState.acceptSelection(editorState, selectionState)
                   editorState = EditorState.forceSelection(editorState, selectionState)
+                  editorState=taggingFontBar2(editorState)
                   setEditorState(editorState)
                   //   break
+
+
                   return 'not-handled';
                 }
 
@@ -550,9 +691,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               setEditorState(editorState)
               return 'not-handled';
 
+
             }
 
-
+            return 'not-handled';
 
           }}
 
@@ -589,9 +731,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
         <div>{JSON.stringify(editorState.getCurrentContent().selectionAfter, null, 2)}</div> */}
 
-        {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div> */}
-        {/*  <hr />
-        <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
+        <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
+        <hr />
+        <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div>
       </div>
       {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
 

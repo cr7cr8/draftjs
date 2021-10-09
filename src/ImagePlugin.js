@@ -149,58 +149,63 @@ export default function createImagePlugin() {
 
     imagePlugin: {
 
-      keyBindingFn(e, { getEditorState, setEditorState, ...obj }) {
-        const editorState = getEditorState()
-        const selectionState = editorState.getSelection();
-        const contentState = editorState.getCurrentContent();
-        const block = contentState.getBlockForKey(selectionState.getStartKey());
+      // keyBindingFn(e, { getEditorState, setEditorState, ...obj }) {
+      //   const editorState = getEditorState()
+      //   const selectionState = editorState.getSelection();
+      //   const contentState = editorState.getCurrentContent();
+      //   const block = contentState.getBlockForKey(selectionState.getStartKey());
 
 
-        // if ((block.getType() === "imageBlock") && ((e.keyCode === 8) || (e.keyCode === 46))) {
-        //   return "cancel-delete"
-        // }
-        if ((block.getType() === "imageBlock")) {
-          return "cancel-delete"
-        }
-        else if (e.shiftKey || hasCommandModifier(e) || e.altKey) {
-          return getDefaultKeyBinding(e);
-        }
+      //   // if ((block.getType() === "imageBlock") && ((e.keyCode === 8) || (e.keyCode === 46))) {
+      //   //   return "cancel-delete"
+      //   // }
 
 
-        else if ((block.getType() === "unstyled") && (e.keyCode === 37)) {
-          return "tool-block-left"
-        }
-        else if ((block.getType() === "unstyled") && (e.keyCode === 38)) {
-          return "tool-block-up"
-        }
-        else if ((block.getType() === "unstyled") && (e.keyCode === 39)) {
-          return "tool-block-right"
-        }
-        else if ((block.getType() === "unstyled") && (e.keyCode === 40)) {
-          return "tool-block-down"
-        }
-        else if ((!block.getText()) && (block.getType() === "unstyled") && (e.keyCode === 8)) {
-          return "tool-block-delete"
-        }
-
-        return getDefaultKeyBinding(e);
+      //   if ((block.getType() === "imageBlock")) {
+      //     return "cancel-delete"
+      //   }
+      //   else if (e.shiftKey || hasCommandModifier(e) || e.altKey) {
+      //     return getDefaultKeyBinding(e);
+      //   }
 
 
+      //   else if ((block.getType() === "unstyled") && (e.keyCode === 37)) {
+      //     return "tool-block-left"
+      //   }
+      //   else if ((block.getType() === "unstyled") && (e.keyCode === 38)) {
+      //     return "tool-block-up"
+      //   }
+      //   else if ((block.getType() === "unstyled") && (e.keyCode === 39)) {
+      //     return "tool-block-right"
+      //   }
+      //   else if ((block.getType() === "unstyled") && (e.keyCode === 40)) {
+      //     return "tool-block-down"
+      //   }
+      //   else if ((!block.getText()) && (block.getType() === "unstyled") && (e.keyCode === 8)) {
+      //     return "tool-block-delete"
+      //   }
 
-      },
-      handleKeyCommand(command, editorState, evenTimeStamp, { setEditorState }) {
-        // better to place each command detail in draft.js, not here
-        if (command === "cancel-delete") {
-          return "handled"
-        }
+      //   return getDefaultKeyBinding(e);
 
 
-        return 'not-handled';
-      },
+
+      // },
+
+
+      // handleKeyCommand(command, editorState, evenTimeStamp, { setEditorState }) {
+      //   // better to place each command detail in draft.js, not here
+      //   if (command === "cancel-delete") {
+      //     return "handled"
+      //   }
+
+
+      //   return 'not-handled';
+      // },
 
 
 
       onChange: function (editorState, { setEditorState }) {
+        console.log(Date.now())
         externalES = editorState
         externalSetEditorState = setEditorState
         return externalES

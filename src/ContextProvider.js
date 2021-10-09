@@ -243,7 +243,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
 
 
-  const [showContent, setShowContent] = useState(true)
+  const [showContent, setShowContent] = useState(false)
   const [showMention, setShowMention] = useState(false)
   const [showHint, setShowHint] = useState(true)
   const [avatarHint, setAvatarHint] = useState(false)
