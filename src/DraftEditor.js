@@ -63,7 +63,7 @@ const initialState = {
   entityMap: {},
   blocks: []
 };
-const { mentionPlugin, taggingMention } = createMentionPlugin()
+const { mentionPlugin, taggingMention, checkShowing } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setImageBlockData*/ } = createImagePlugin()
 //const { fontBarPlugin, taggingFontBar } = createFontBarPlugin()
@@ -307,8 +307,12 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             //   return "cancel-delete"
             // }
 
-
-
+            if (checkShowing() && e.keyCode === 38) {
+              return undefined
+            }
+            if (checkShowing() && e.keyCode === 40) {
+              return undefined
+            }
 
             if ((block.getType() === "imageBlock")) {
               return "cancel-delete"
@@ -316,8 +320,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             else if (e.shiftKey || hasCommandModifier(e) || e.altKey) {
               return getDefaultKeyBinding(e);
             }
-
-
             else if ((block.getType() === "unstyled") && (e.keyCode === 37)) {
               // Todo: add clear the fontbar in handlecommander function
               return "tool-block-left"
@@ -335,9 +337,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               return "tool-block-delete"
             }
 
-            return getDefaultKeyBinding(e);
+            // return getDefaultKeyBinding(e);
 
-
+            return undefined
 
           }}
 

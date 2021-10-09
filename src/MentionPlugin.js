@@ -21,6 +21,9 @@ import {
   engineName,
 } from "react-device-detect";
 
+import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
+const { hasCommandModifier } = KeyBindingUtil;
+
 //import axios from "axios";
 //import { axios, avatarUrl } from "./config";
 
@@ -93,9 +96,23 @@ export default function createMentionPlugin() {
   const entityKeyObj = {}
 
   let isShowing = false
+
+
+  function checkShowing() {
+
+
+
+    return isShowing
+  }
+
   function setShowing(bool) {
+
+
     isShowing = bool
   }
+
+
+
   let matchFriendArr = []
   function setMatchFriendArr(arr) {
     matchFriendArr = arr
@@ -190,14 +207,14 @@ export default function createMentionPlugin() {
     let newSelection = externalES.getSelection();
     newContent = externalES.getCurrentContent();
 
-   // externalES.getCurrentContent().getBlocksAsArray().forEach(function (block) {
+    // externalES.getCurrentContent().getBlocksAsArray().forEach(function (block) {
     externalES.getCurrentContent().getBlockMap().forEach(function (block) {
-      
+
       const blockKey = block.getKey()
       const blockText = block.getText()
       const metaArr = block.getCharacterList()
 
-     // const [blockKey, , blockText, metaArr] = block.toArray()
+      // const [blockKey, , blockText, metaArr] = block.toArray()
 
 
       metaArr.forEach(function (item, index) {
@@ -429,7 +446,7 @@ export default function createMentionPlugin() {
       return (
 
         <span className={longMention_BODY_Css} >
-          {showHint && <AvatarChipList insertMention={insertMention} tabIndex={tabIndex} nameOnTyping={decoratedText} setShowing={setShowing} setMatchFriendArr={setMatchFriendArr} />}
+          {(externalES.getSelection().isCollapsed()) && showHint && <AvatarChipList insertMention={insertMention} tabIndex={tabIndex} nameOnTyping={decoratedText} setShowing={setShowing} setMatchFriendArr={setMatchFriendArr} />}
           {children}
         </span>
 
@@ -450,7 +467,7 @@ export default function createMentionPlugin() {
 
 
         <span className={longMention_BODY_Css} onKeyDown={function () { alert("fdf") }}>
-          {showHint && <AvatarChipList insertMention={insertMention} tabIndex={tabIndex} nameOnTyping={decoratedText} setShowing={setShowing} setMatchFriendArr={setMatchFriendArr} />}
+          {(externalES.getSelection().isCollapsed()) && showHint && <AvatarChipList insertMention={insertMention} tabIndex={tabIndex} nameOnTyping={decoratedText} setShowing={setShowing} setMatchFriendArr={setMatchFriendArr} />}
           {children}
         </span>
 
@@ -505,6 +522,8 @@ export default function createMentionPlugin() {
 
 
       handleReturn(e, newState, { setEditorState }) {
+
+
         if (isShowing) {
           insertMention(matchFriendArr[tabIndex % matchFriendArr.length]);
 
@@ -518,22 +537,32 @@ export default function createMentionPlugin() {
       },
 
       keyBindingFn(e, { getEditorState, setEditorState, ...obj }) {
-      
+
+        console.log(e.keyCode)
+
         if ((e.keyCode === 40) && isShowing) {
+
           tabIndex = tabIndex + 1;
           return "fire-arrow";
         }
 
         else if ((e.keyCode === 38) && isShowing) {
+
+
           tabIndex = tabIndex - 1;
           return "fire-arrow";
+        }
+        else {
+          return getDefaultKeyBinding(e);
         }
 
       },
       handleKeyCommand(command, editorState, evenTimeStamp, { setEditorState }) {
 
         if (command === "fire-arrow") {
+
           externalSetEditorState(externalES)
+          // return undefined
           return "handled"
         }
 
@@ -543,14 +572,17 @@ export default function createMentionPlugin() {
         //   return "handled"
         // }
 
-
-        return 'not-handled';
+        return undefined
+        //return 'not-handled';
       },
 
       onChange: function (editorState, { setEditorState }) {
         externalES = editorState
         externalSetEditorState = setEditorState
-       externalES = taggingMention()
+        externalES = taggingMention()
+
+
+
         return externalES
 
       },
@@ -565,7 +597,7 @@ export default function createMentionPlugin() {
 
     },
     taggingMention,
-  
+    checkShowing,
   }
 
 }
