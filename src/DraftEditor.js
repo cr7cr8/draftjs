@@ -321,7 +321,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               return getDefaultKeyBinding(e);
             }
             else if ((block.getType() === "unstyled") && (e.keyCode === 37)) {
-              // Todo: add clear the fontbar in handlecommander function
+         
               return "tool-block-left"
             }
             else if ((block.getType() === "unstyled") && (e.keyCode === 38)) {

@@ -519,14 +519,10 @@ export default function createMentionPlugin() {
   return {
     mentionPlugin: {
 
-
-
       handleReturn(e, newState, { setEditorState }) {
-
 
         if (isShowing) {
           insertMention(matchFriendArr[tabIndex % matchFriendArr.length]);
-
           return "handled"
         }
         // else {
@@ -563,27 +559,19 @@ export default function createMentionPlugin() {
         if (command === "fire-arrow") {
 
           externalSetEditorState(externalES)
-          // return undefined
+      
           return "handled"
         }
 
-        // if (command === "fire-enter") {
-        //   alert("xxdd")
-        //   insertMention(...hasOnAtTag())
-        //   return "handled"
-        // }
-
+   
         return undefined // use undefiend rather than "not-handled " in plugin functions //ref: https://github.com/draft-js-plugins/draft-js-plugins/issues/1117
-        //return 'not-handled';
+       
       },
 
       onChange: function (editorState, { setEditorState }) {
         externalES = editorState
         externalSetEditorState = setEditorState
         externalES = taggingMention()
-
-
-
         return externalES
 
       },
@@ -592,7 +580,6 @@ export default function createMentionPlugin() {
         {
           strategy: mentionStrategy,
           component: MentionWrapFn,//withContext(withTheme(Mention))
-
         }
       ],
 
