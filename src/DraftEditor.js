@@ -98,7 +98,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
     <React.Fragment key={key.current}>
 
-      <FontBar />
 
 
       <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}>
@@ -109,6 +108,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       <Paper style={{ position: "relative" }} >
 
 
+        <FontBar editorRef={editorRef} />
         <Editor
 
           // onFocus={function (e, two) {
@@ -127,7 +127,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           editorState={editorState}
 
           onChange={function (newState, { ...props }) {
-          
+
             newState = taggingFontBar(newState)
             setEditorState(newState)
           }}

@@ -46,7 +46,7 @@ import { makeStyles } from '@material-ui/styles';
 import BasicImageList from "./ImagePanel"
 
 
-
+import { FontBar, taggingFontBar } from "./FontBar"
 
 function flatten(arr) {
   return arr.reduce(function (flat, toFlatten) {

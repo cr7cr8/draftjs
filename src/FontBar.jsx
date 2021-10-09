@@ -2,24 +2,69 @@ import React, { useState, useRef, useEffect, useContext, useCallback, createCont
 import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button, } from "@material-ui/core";
 import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 
+import ReactDOM from 'react-dom';
+import { transform } from '@babel/core';
 
 
-
-export function FontBar({ editorState, setEditorState, ...props }) {
+export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
   const [top, setTop] = useState(0)
   const [left, setLeft] = useState(0)
+  const [taggingWidth, setTaggingWidth] = useState(0)
 
   useEffect(function () {
 
+
+
+
+
     const fontBar = document.querySelector('span[style*="--font-bar"]')
 
+
+
+
+    // const div = document.createElement("div")
+    // div.innerText = "bbb"
+
+    // div.style.backgroundColor = "pink";
+    // div.style.position = "absolute";
+    // div.style.width = "fit-content";
+    // div.style.backgroundColor = "pink";
+    // div.style.transform = "translateY(-200%)";
+
+    // div.addEventListener("click", function (e) {
+    //   e.preventDefault()
+    //   e.stopPropagation()
+    //   alert("adfs")
+    // })
+
+    // if (fontBar) {
+    //   fontBar.parentNode.insertBefore(div, fontBar.nextSibling);
+    // }
+    // return function () {
+    //   div.remove()
+    // }
+
+
     if (fontBar) {
-      const { x, y } = fontBar.getBoundingClientRect()
-      if ((x === left) && (y === top)) {
-      }
-      else {
-        setLeft(x); setTop(y)
-      }
+      const { x: fontBarX, y: fontBarY, width } = fontBar.getBoundingClientRect()
+
+      console.log(width)
+
+      const { x: editorRefX, y: editorRefY } = editorRef.current.editor.editor.getBoundingClientRect()
+
+      const x = Number(fontBarX) - Number(editorRefX)
+      const y = Number(fontBarY) - Number(editorRefY)
+
+      //console.log(fontBar.getClientRects(), window.getComputedStyle(fontBar))
+
+
+      // if ((x === left) && (y === top)) {
+      // }
+      // else {
+
+
+        setLeft(x); setTop(y); setTaggingWidth(width)
+    //  }
     }
     else {
       if ((left === 0) && (top === 0)) {
@@ -35,14 +80,15 @@ export function FontBar({ editorState, setEditorState, ...props }) {
   return (
     <Paper style={{
       top, left,
-      width: "300px", height: "3rem", position: "fixed", backgroundColor: "#aaf", zIndex: 100, transform: "translateY(-100%)",
+      width: "300px", height: "3rem", position: "absolute", backgroundColor: "#aaf", zIndex: 100, transform: `translateX( calc( -50% + ${taggingWidth/2}px ) )   translateY(-100%)`,
+      transitionProperty: "top ,left",
+      display: (top === 0 && left === 0) ? "none" : "block",
 
 
+    }}
 
-    }} 
-    
-    onClick={function(e){ e.preventDefault();e.stopPropagation();  alert("fdsfa")}}
-    
+      onClick={function (e) { e.preventDefault(); e.stopPropagation(); alert("fdsfa") }}
+
     >afddsfsdf</Paper>
   )
 }
