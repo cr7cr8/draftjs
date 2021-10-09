@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
-//import { Context } from "./ContextProvider"
+
 
 
 import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
@@ -31,6 +31,8 @@ import createFontBarPlugin from './FontBarPlugin';
 import ToolBlock from "./ToolBlock";
 
 import styled from "styled-components"
+
+import { FontBar, taggingFontBar } from "./FontBar"
 
 import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
 const { hasCommandModifier } = KeyBindingUtil;
@@ -64,7 +66,7 @@ const initialState = {
 const { mentionPlugin, taggingMention } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setImageBlockData*/ } = createImagePlugin()
-const { fontBarPlugin, taggingFontBar2, markingFontBarBlock, FontBarPanel } = createFontBarPlugin()
+//const { fontBarPlugin, taggingFontBar } = createFontBarPlugin()
 
 
 // const useStyles = makeStyles(function (theme) {
@@ -88,75 +90,17 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
   const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
-  const startKey = useRef()
-
-  const [top, setTop] = useState(0)
-  const [left, setLeft] = useState(0)
-
-  useEffect(function () {
 
 
-    // console.log(document.querySelectorAll('span[style*="color: red;"]'))
-
-    //  console.log(document.querySelectorAll('span[style*="--font-bar: red;"]'))
-
-
-    const fontBar = document.querySelector('span[style*="--font-bar"]')
-    // console.log(fontBarRef.current&&fontBarRef.current.innerHTML)
-    if (fontBar) {
-      const { x, y } = fontBar.getBoundingClientRect()
-
-      if ((x === left) && (y === top)) {
-
-      }
-      else {
-
-        // setTimeout(() => {
-        setLeft(x); setTop(y)
-        // }, 100);
-
-
-      }
-    }
-    else {
-      if ((left === 0) && (top === 0)) {
-
-      }
-      else {
-        // setTimeout(() => {
-        setLeft(0); setTop(0)
-        //  }, 100);
-
-
-      }
-
-    }
-
-  })
 
 
   return (
 
     <React.Fragment key={key.current}>
 
-      <Paper style={{
-        top, left,
-        width: "300px", height: "3rem", position: "fixed", backgroundColor: "#aaf", zIndex: 100, transform: "translateY(-100%)",
+      <FontBar />
 
 
-
-      }} >afddsfsdf</Paper>
-
-      {/* <ImagePanel
-        imageArr={imageArr} setImageArr={setImageArr} editor={editorRef}
-
-        editorState={editorState} setEditorState={setEditorState}
-      
-      /> */}
-      {/* <Div data-aaa="aaa" data-bbb="34343" id="99999" data-num="4343" /> */}
-      {/* <Fade in={ctx.showEmojiPanel} unmountOnExit={false}> */}
-
-      {/* <ImageButton editor={editorRef} /> */}
       <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}>
         <EmojiPanel />
       </Collapse>
@@ -183,17 +127,12 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           editorState={editorState}
 
           onChange={function (newState, { ...props }) {
-            // console.log(Math.random())
-
-            //   const selection = newState.getSelection()
-            //  // const startKey = selection && (!selection.isCollapsed())&&selection.getStartKey()
-            //   startKey.current = selection && (!selection.isCollapsed())&&selection.getStartKey()
-            //   console.log(startKey.current,"----")
-            //   newState = markingFontBarBlock(newState)
+          
+            newState = taggingFontBar(newState)
             setEditorState(newState)
           }}
 
-          plugins={[mentionPlugin, emojiPlugin, imagePlugin, fontBarPlugin,]}
+          plugins={[mentionPlugin, emojiPlugin, imagePlugin,]}
 
 
           // placeholder="hihihi"
@@ -324,35 +263,12 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   markingImageBlock,
                   editorState,
                   setEditorState,
-                  markingFontBarBlock,
+                  taggingFontBar,
 
                 }
               }
             }
-            if (type === "FontBarBlock") {
 
-
-              return {
-                component: FontBarPanel,
-                editable: true,
-                props: {
-                  editorRef,
-                  readOnly,
-                  setReadOnly,
-                  markingImageBlock,
-                  editorState,
-                  setEditorState,
-                  markingFontBarBlock,
-
-                }
-              }
-
-
-
-
-            }
-
-            //   const entityId = editorState.getCurrentContent().getEntityAt(0);
             if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
               //   console.log(JSON.stringify(data))
               return {
@@ -391,7 +307,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             //   return "cancel-delete"
             // }
 
-           
+
 
 
             if ((block.getType() === "imageBlock")) {
@@ -468,7 +384,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                 //   editorState = EditorState.acceptSelection(editorState, selectionState)
                 editorState = EditorState.forceSelection(editorState, selectionState)
-                editorState=taggingFontBar2(editorState)
+                editorState = taggingFontBar(editorState)
                 setEditorState(editorState)
                 //   break
                 return 'not-handled';
@@ -489,7 +405,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                   //   editorState = EditorState.acceptSelection(editorState, selectionState)
                   editorState = EditorState.forceSelection(editorState, selectionState)
-                  editorState=taggingFontBar2(editorState)
+                  editorState = taggingFontBar(editorState)
                   setEditorState(editorState)
                   //   break
                   return 'not-handled';
@@ -538,7 +454,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                   //   editorState = EditorState.acceptSelection(editorState, selectionState)
                   editorState = EditorState.forceSelection(editorState, selectionState)
-                  editorState=taggingFontBar2(editorState)
+                  editorState = taggingFontBar(editorState)
                   setEditorState(editorState)
                   //   break
                   return 'not-handled';
@@ -568,7 +484,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                 //   editorState = EditorState.acceptSelection(editorState, selectionState)
                 editorState = EditorState.forceSelection(editorState, selectionState)
-                editorState=taggingFontBar2(editorState)
+                editorState = taggingFontBar(editorState)
                 setEditorState(editorState)
                 //   break
                 return 'not-handled';
@@ -594,7 +510,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                   //   editorState = EditorState.acceptSelection(editorState, selectionState)
                   editorState = EditorState.forceSelection(editorState, selectionState)
-                  editorState=taggingFontBar2(editorState)
+                  editorState = taggingFontBar(editorState)
                   setEditorState(editorState)
                   //   break
                   return 'not-handled';
@@ -636,7 +552,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                   //   editorState = EditorState.acceptSelection(editorState, selectionState)
                   editorState = EditorState.forceSelection(editorState, selectionState)
-                  editorState=taggingFontBar2(editorState)
+                  editorState = taggingFontBar(editorState)
                   setEditorState(editorState)
                   //   break
 
@@ -697,7 +613,16 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             return 'not-handled';
 
           }}
-
+          handleReturn={function (e, newState, { getEditorState, setEditorState }) {
+            const editorState = getEditorState()
+            const selectionState = editorState.getSelection();
+            const contentState = editorState.getCurrentContent();
+            const block = contentState.getBlockForKey(selectionState.getStartKey());
+            //    console.log(block.getType())
+            if (block.getType() === "imageBlock") {
+              return "handled"
+            }
+          }}
 
 
           stripPastedStyles={true}

@@ -39,7 +39,7 @@ export default function ToolBlock(props) {
 
   const { block, selection, contentState } = props
   const blockKey = block.getKey()
-  const { editorRef, readOnly, setReadOnly, EmojiPanel, markingImageBlock, editorState, setEditorState, markingFontBarBlock } = props.blockProps
+  const { editorRef, readOnly, setReadOnly, EmojiPanel, markingImageBlock, editorState, setEditorState, taggingFontBar } = props.blockProps
 
   const theme = useTheme()
   const [hidden, setHidden] = useState(true)
@@ -89,8 +89,9 @@ export default function ToolBlock(props) {
     );
 
     const newEditorState = EditorState.push(editorState, newContent, 'change-block-type');
+
     //   EditorState.forceSelection(externalES, newSelection)
-    return setEditorState(newEditorState)
+    return setEditorState(taggingFontBar(newEditorState))
 
 
 
@@ -102,8 +103,8 @@ export default function ToolBlock(props) {
     <div
       style={{ position: "relative", backgroundColor: backColor, }}
       onMouseDown={function () {
-      
-        setHidden(false); checkFocus(); //markingFontBarBlock(); setEditorState(editorState)
+
+        setHidden(false); checkFocus();   //markingFontBarBlock(); setEditorState(editorState)
       }}
 
     >
@@ -112,7 +113,7 @@ export default function ToolBlock(props) {
         onMouseDown={function (e) {
           e.preventDefault()
           e.stopPropagation()
-        //  markingImageBlock(blockKey)
+          //  markingImageBlock(blockKey)
 
           setTimeout(() => {
             editorRef.current.focus()

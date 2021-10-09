@@ -514,9 +514,9 @@ export default function createFontBarPlugin() {
 
       },
     },
-    markingFontBarBlock,
+   // markingFontBarBlock,
     taggingFontBar2,
-    FontBarPanel,
+  //  FontBarPanel,
 
 
   }
