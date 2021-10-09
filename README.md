@@ -2,7 +2,7 @@
 
 ### Dev13
 Font bar showing is done.
-Return undefined in plugins method if not-handled,
+Return `undefined` in plugins method if not-handled,
 ref:  [draft-js-plugins/draft-js-plugins/issues/1117](https://github.com/draft-js-plugins/draft-js-plugins/issues/1117).
 
 ### Dev12
