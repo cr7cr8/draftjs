@@ -534,11 +534,12 @@ export default function createMentionPlugin() {
         //   return "handled"
         // }
 
+        return undefined
       },
 
       keyBindingFn(e, { getEditorState, setEditorState, ...obj }) {
 
-        console.log(e.keyCode)
+     //   console.log(e.keyCode)
 
         if ((e.keyCode === 40) && isShowing) {
 
@@ -553,7 +554,7 @@ export default function createMentionPlugin() {
           return "fire-arrow";
         }
         else {
-          return getDefaultKeyBinding(e);
+          return undefined
         }
 
       },
@@ -572,7 +573,7 @@ export default function createMentionPlugin() {
         //   return "handled"
         // }
 
-        return undefined
+        return undefined // use undefiend rather than "not-handled " in plugin functions //ref: https://github.com/draft-js-plugins/draft-js-plugins/issues/1117
         //return 'not-handled';
       },
 

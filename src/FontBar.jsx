@@ -48,8 +48,7 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
     if (fontBar) {
       const { x: fontBarX, y: fontBarY, width } = fontBar.getBoundingClientRect()
 
-      console.log(width)
-
+     
       const { x: editorRefX, y: editorRefY } = editorRef.current.editor.editor.getBoundingClientRect()
 
       const x = Number(fontBarX) - Number(editorRefX)
@@ -80,7 +79,7 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
   return (
     <Paper style={{
       top, left,
-      width: "300px", height: "3rem", position: "absolute", backgroundColor: "#aaf", zIndex: 100, transform: `translateX( calc( -50% + ${taggingWidth/2}px ) )   translateY(-100%)`,
+      width: "fit-content",  position: "absolute", backgroundColor: "#aaf", zIndex: 100, transform: `translateX( calc( -50% + ${taggingWidth/2}px ) )   translateY(-100%)`,
       transitionProperty: "top ,left",
       display: (top === 0 && left === 0) ? "none" : "block",
 
