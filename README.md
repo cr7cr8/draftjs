@@ -2,9 +2,12 @@
 
 ### Dev13
 Font bar showing is done.
+Return undefined in plugins method if not-handled,
+ref:  [draft-js-plugins/draft-js-plugins/issues/1117](https://github.com/draft-js-plugins/draft-js-plugins/issues/1117).
 
 ### Dev12
-Arrow key is done, image button in the block, handleKeyComand-function is placed in the draft.js
+Arrow key is done, image button in the block, handleKeyComand-function is placed in the draft.js, 
+
 Backspace key is done, arrow key not trigering mention hint
 
 ### Dev11
