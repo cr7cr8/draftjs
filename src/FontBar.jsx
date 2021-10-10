@@ -1,10 +1,15 @@
 import React, { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
-import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button, } from "@material-ui/core";
+
 import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 
-import ReactDOM from 'react-dom';
-import { transform } from '@babel/core';
 
+import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button, IconButton } from "@material-ui/core";
+
+
+
+import FormatBoldIcon from '@material-ui/icons/FormatBold';
+import FormatItalicIcon from '@material-ui/icons/FormatItalic';
+import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
 
 export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
   const [top, setTop] = useState(0)
@@ -48,7 +53,7 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
     if (fontBar) {
       const { x: fontBarX, y: fontBarY, width } = fontBar.getBoundingClientRect()
 
-     
+
       const { x: editorRefX, y: editorRefY } = editorRef.current.editor.editor.getBoundingClientRect()
 
       const x = Number(fontBarX) - Number(editorRefX)
@@ -62,8 +67,8 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
       // else {
 
 
-        setLeft(x); setTop(y); setTaggingWidth(width)
-    //  }
+      setLeft(x); setTop(y); setTaggingWidth(width)
+      //  }
     }
     else {
       if ((left === 0) && (top === 0)) {
@@ -78,17 +83,45 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
 
   return (
     <Paper style={{
-      top, left,
-      width: "fit-content",  position: "absolute", backgroundColor: "#aaf", zIndex: 100, transform: `translateX( calc( -50% + ${taggingWidth/2}px ) )   translateY(-100%)`,
+      top, left, display: (top === 0 && left === 0) ? "none" : "block",
+
+
+      width: "fit-content",
+      backgroundColor: "#acf",
+      borderRadius: "1000px",
+
+
+
+      position: "absolute",
+      zIndex: 100,
+      transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
       transitionProperty: "top ,left",
-      display: (top === 0 && left === 0) ? "none" : "block",
+      transitionDuration: "100ms",
 
 
     }}
 
       onClick={function (e) { e.preventDefault(); e.stopPropagation(); alert("fdsfa") }}
 
-    >afddsfsdf</Paper>
+    >
+
+      <IconButton>
+        <FormatBoldIcon />
+      </IconButton>
+
+      <IconButton>
+        <FormatItalicIcon />
+      </IconButton>
+
+      <IconButton>
+        <FormatUnderlinedIcon />
+      </IconButton>
+
+
+
+
+
+    </Paper>
   )
 }
 

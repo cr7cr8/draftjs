@@ -8,9 +8,11 @@ import Editor from "draft-js-plugins-editor";
 import Immutable from 'immutable';
 
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
-import { Typography, Button, ButtonGroup, Container, Paper, Avatar, Box, Chip, Grow, Zoom, Slide } from "@material-ui/core";
+import { Typography, IconButton, Button, ButtonGroup, Container, Paper, Avatar, Box, Chip, Grow, Zoom, Slide } from "@material-ui/core";
 import { Image, AlternateEmailSharp } from "@material-ui/icons";
 
+
+import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
 
 import AvatarChipList from "./AvatarChipList";
 
@@ -101,7 +103,7 @@ export default function ToolBlock(props) {
 
   return (
     <div
-      style={{ position: "relative", backgroundColor: backColor, }}
+      style={{ position: "relative", backgroundColor: backColor }}
       onMouseDown={function () {
 
         setHidden(false); checkFocus();   //markingFontBarBlock(); setEditorState(editorState)
@@ -109,27 +111,22 @@ export default function ToolBlock(props) {
 
     >
 
-      {!hidden && <Button variant="contained" style={{ right: 100, top: 0, zIndex: 100, position: "absolute" }} contentEditable={false}
-        onMouseDown={function (e) {
-          e.preventDefault()
-          e.stopPropagation()
-          //  markingImageBlock(blockKey)
 
-          setTimeout(() => {
-            editorRef.current.focus()
-          }, 0);
+
+      <EditorBlock     {...{ ...props }} ref={editorBlockRef} >  </EditorBlock>
+
+
+
+      {!hidden && <IconButton
+        style={{
+          top: "50%",
+          transform: "translateY(-50%)",
+          position: "absolute",
+          right:0,
         }}
+        className={theme.sizeCss}
 
-        onClick={function (e) {
-          e.preventDefault()
-          e.stopPropagation()
-
-        }}
-
-      >bbb</Button>}
-
-
-      {!hidden && <Button variant="contained" style={{ right: 0, top: 0, zIndex: 100, position: "absolute" }} contentEditable={false}
+        contentEditable={false}
         onMouseDown={function (e) {
           e.preventDefault()
           e.stopPropagation()
@@ -145,16 +142,58 @@ export default function ToolBlock(props) {
           e.stopPropagation()
 
         }}
+      >
+        <AddPhotoAlternateOutlinedIcon className={theme.sizeCss} />
+      </IconButton>}
 
-      >aaa</Button>}
+
+      {!hidden && <IconButton
+        style={{
+          top: "50%",
+          transform: "translateX(-100%)  translateY(-50%)",
+         
+          position: "absolute",
+          right:0,
+        }}
+        className={theme.sizeCss}
+
+        contentEditable={false}
+        onMouseDown={function (e) {
+          e.preventDefault()
+          e.stopPropagation()
+          markingImageBlock(blockKey)
+
+          setTimeout(() => {
+            editorRef.current.focus()
+          }, 0);
+        }}
+
+        onClick={function (e) {
+          e.preventDefault()
+          e.stopPropagation()
+
+        }}
+      >
+        <AddPhotoAlternateOutlinedIcon className={theme.sizeCss} />
+      </IconButton>}
+
+
+
+
+
+
+
 
       {/* <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}> */}
       {/* {EmojiPanel} */}
       {/* </Collapse> */}
 
-      <EditorBlock     {...{ ...props }} ref={editorBlockRef} >  </EditorBlock>
+
 
       {/* <ToolButton blockKey={blockKey} clickFn={addImage} hidden={hidden} setHidden={setHidden} readOnly={readOnly} setReadOnly={setReadOnly} insertImageBlock={insertImageBlock} /> */}
+
+
+
     </div>
   )
 }

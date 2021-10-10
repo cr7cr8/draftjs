@@ -83,14 +83,34 @@ function multiplyArr(arr, factor) {
   })
 }
 
+const useStyles = makeStyles((theme) => {
+
+  return {
+    sizeCss: ({ textSizeArr }) => {
+      return {
+        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 1)], ["height", multiplyArr(textSizeArr, 1)]),
+      }
+    },
+    smSizeCss: ({ textSizeArr }) => {
+      return {
+        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 0.8)], ["height", multiplyArr(textSizeArr, 0.8)]),
+      }
+    },
+  }
+})
+
+
 export const Context = createContext();
 
 
 
-function createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }) {
+function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss,myTheme }) {
 
   return responsiveFontSizes(createTheme(
     {
+
+
+
       textSizeArr,
       factor: 1.3,
       get lgTextSizeArr() { return this.multiplyArr(this.textSizeArr, this.factor) },
@@ -98,6 +118,10 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }) {
       isLight,
       setIsLight,
       breakpointsAttribute,
+
+      sizeCss,
+      smSizeCss,
+
       palette: {
         primary: colorIndigo,
         type: isLight ? 'light' : "dark",
@@ -105,8 +129,10 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }) {
       typography: {
         fontSize: 14,
         button: { textTransform: 'none' },
-        body2: breakpointsAttribute(["fontSize", ...textSizeArr]),
+        body2: breakpointsAttribute(["fontSize", textSizeArr]),
       },
+
+
 
       overrides: {
         MuiChip: {
@@ -116,7 +142,6 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }) {
         },
         MuiPaper: {
           root: {
-
             fontSize: "3rem",
             ...breakpointsAttribute(["fontSize", textSizeArr])
           }
@@ -151,7 +176,7 @@ function toPreHtml(editorState) {
 
 
         // let color = styleName.filter((value) => value.startsWith("BOLD")).first();
-    
+
         // console.log(styleName.toArray())
 
         // if (color) {
@@ -238,7 +263,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [textSizeArr, setTextSizeArr] = useState(["4rem", "4rem", "1rem", "6rem", "2rem"])
   const [isLight, setIsLight] = useState(true)
-
+  const { sizeCss, smSizeCss } = useStyles({ textSizeArr })
   const editorRef = useRef()
   const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
 
@@ -255,16 +280,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [imageBlockObj, setImageBlockObj] = useState({})
 
 
-  // const [imageArr, setImageArr] = useState([
-  // "https://picsum.photos/200/300",
-  // "https://picsum.photos/199/600",
-  // "https://picsum.photos/201/300",
-  //  "https://picsum.photos/200/301",
-  // ])
-  //const [editorTop, setEditorTop] = useState(0)
-
-
-  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, myTheme }), [textSizeArr, isLight, setIsLight])
+  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme }), [textSizeArr, isLight, setIsLight, sizeCss, smSizeCss])
 
 
   useEffect(function () {
@@ -375,8 +391,6 @@ export function withContext(Compo) {
   }
 
 }
-
-
 
 export function withContext1(Compo) {
 
