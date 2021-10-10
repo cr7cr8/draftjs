@@ -208,6 +208,7 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
               characterList: blockList,
               text: blockText,
               key: startKey,
+              data: Immutable.Map({colorBlock:true})
             })
 
 

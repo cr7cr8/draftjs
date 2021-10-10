@@ -235,6 +235,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             if (type === "FontBarBlock") {
               return "font-bar-block"
             }
+            if (data.colorBlock){
+              return "font-bar-block"
+            }
 
           }}
 
