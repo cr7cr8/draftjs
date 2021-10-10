@@ -91,11 +91,24 @@ const useStyles = makeStyles((theme) => {
         ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 1)], ["height", multiplyArr(textSizeArr, 1)]),
       }
     },
+    widthCss: ({ textSizeArr }) => {
+      return {
+        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 1)]),
+      }
+    },
+
+    heightCss: ({ textSizeArr }) => {
+      return {
+        ...breakpointsAttribute(["height", multiplyArr(textSizeArr, 1)]),
+      }
+    },
+
     smSizeCss: ({ textSizeArr }) => {
       return {
         ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 0.8)], ["height", multiplyArr(textSizeArr, 0.8)]),
       }
     },
+
   }
 })
 
@@ -104,7 +117,7 @@ export const Context = createContext();
 
 
 
-function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss,myTheme }) {
+function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, heightCss, widthCss, myTheme }) {
 
   return responsiveFontSizes(createTheme(
     {
@@ -121,7 +134,8 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss,my
 
       sizeCss,
       smSizeCss,
-
+      heightCss, 
+      widthCss,
       palette: {
         primary: colorIndigo,
         type: isLight ? 'light' : "dark",
@@ -263,7 +277,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [textSizeArr, setTextSizeArr] = useState(["4rem", "4rem", "1rem", "6rem", "2rem"])
   const [isLight, setIsLight] = useState(true)
-  const { sizeCss, smSizeCss } = useStyles({ textSizeArr })
+
   const editorRef = useRef()
   const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
 
@@ -279,8 +293,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [imageBlockObj, setImageBlockObj] = useState({})
 
-
-  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme }), [textSizeArr, isLight, setIsLight, sizeCss, smSizeCss])
+  const { sizeCss, smSizeCss,heightCss, widthCss, } = useStyles({ textSizeArr })
+  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, }), [textSizeArr, isLight, setIsLight, ])
 
 
   useEffect(function () {
