@@ -121,7 +121,6 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
 
       {isAllTextBlock && <IconButton className={theme.sizeCss}
 
-
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation();
 
