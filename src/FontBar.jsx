@@ -68,16 +68,12 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
   return (
     <Paper
 
-
       style={{
         top, left, display: (top === 0 && left === 0) ? "none" : "block",
-
 
         width: "fit-content",
         backgroundColor: "#acf",
         borderRadius: "1000px",
-
-
 
         position: "absolute",
         zIndex: 100,
@@ -85,20 +81,16 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
         transitionProperty: "top ,left",
         transitionDuration: "100ms",
 
-
       }}
 
       onClick={function (e) { }}
-
     >
 
       <IconButton className={theme.sizeCss}
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation();
           setEditorState(RichUtils.toggleInlineStyle(editorState, "BOLD"))
-        }}
-
-      >
+        }}>
         <FormatBoldIcon className={theme.sizeCss} />
       </IconButton>
 
@@ -106,8 +98,7 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation();
           setEditorState(RichUtils.toggleInlineStyle(editorState, "ITALIC"))
-        }}
-      >
+        }}>
         <FormatItalicIcon className={theme.sizeCss} />
       </IconButton>
 
@@ -120,7 +111,6 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
       </IconButton>
 
       {isAllTextBlock && <IconButton className={theme.sizeCss}
-
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation();
 
@@ -131,7 +121,6 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
 
           let allBlocks = editorState.getCurrentContent()
 
-
           let blockList = Immutable.List()
           let blockText = ""
 
@@ -139,12 +128,9 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
           let shouldReturn = false;
           allBlocks = allBlocks.getBlockMap().filter(item => {
 
-
-
             if (item.getKey() === startKey) {
               shouldReturn = true
               return true
-
             }
             else if (item.getKey() === endKey) {
               shouldReturn = false
@@ -163,17 +149,8 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
             blockList = blockList.concat(characterList.push(CharacterMetadata.create()))
           })
 
-
-
-
-          // if (startKey !== endKey)
-
           blockText = blockText.substr(0, blockText.length - 1)
           blockList = blockList.pop()
-
-
-
-
 
           const singleBlock = editorState.getCurrentContent().getBlockForKey(startKey)
             .merge({
@@ -185,21 +162,17 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
 
           shouldReturn = true
           const arr = editorState.getCurrentContent().getBlocksAsArray().map(item => {
-
             return item.getKey() !== startKey ? item : singleBlock
-
           }).filter(item => {
             if (startKey === endKey) {
               return true
             }
-
             else if (item.getKey() === startKey) {
               shouldReturn = false
               return true
             }
             else if (item.getKey() === endKey) {
               shouldReturn = true
-
               // return false
               return !Boolean(item.getText())
             }
@@ -208,13 +181,10 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
             }
           })
 
-
-
           let es = EditorState.push(
             editorState,
             ContentState.createFromBlockArray(arr)
           )
-
 
           const newSelection = es.getSelection().merge({
 
@@ -227,13 +197,7 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
           })
 
           es = EditorState.acceptSelection(es, newSelection)
-
-
           setEditorState(es)
-
-
-
-
         }}
       >
         <ColorLensTwoToneIcon className={theme.sizeCss} />
