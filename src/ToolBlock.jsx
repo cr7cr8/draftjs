@@ -31,6 +31,7 @@ import { add } from 'date-fns/esm';
 
 
 import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
+import { set } from 'immutable';
 
 
 export default function ToolBlock(props) {
@@ -44,7 +45,7 @@ export default function ToolBlock(props) {
   const { editorRef, readOnly, setReadOnly, EmojiPanel, markingImageBlock, editorState, setEditorState, taggingFontBar } = props.blockProps
 
   const theme = useTheme()
-  const [hidden, setHidden] = useState(true)
+
   const editorBlockRef = useRef()
 
 
@@ -53,18 +54,26 @@ export default function ToolBlock(props) {
 
   const [focusOn, setFocusOn] = useState(true)
 
-  useEffect(function () {
-    //  markingFontBarBlock()
-    if ((!selection.hasFocus) && (!hidden)) {
-      setHidden(true)
-    }
-    else if ((selection.hasFocus) && (selection.focusKey === blockKey) && (hidden)) {
-      setHidden(false)
-    }
-    else if ((selection.hasFocus) && (selection.focusKey !== blockKey) && (!hidden)) {
-      setHidden(true)
-    }
 
+
+
+  const [hidden, setHidden] = useState(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey))
+
+
+
+
+  useEffect(function () {
+    // markingFontBarBlock()
+    // if ((!selection.hasFocus) && (!hidden)) {
+    //   setHidden(true)
+    // }
+    // else if ((selection.hasFocus) && (selection.focusKey === blockKey) && (hidden)) {
+    //   setHidden(false)
+    // }
+    // else if ((selection.hasFocus) && (selection.focusKey !== blockKey) && (!hidden)) {
+    //   setHidden(true)
+    // }
+    setHidden( !(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey) ) )
   })
 
 
@@ -104,10 +113,10 @@ export default function ToolBlock(props) {
   return (
     <div
       style={{ position: "relative", backgroundColor: backColor }}
-      onMouseDown={function () {
+    //  onMouseDown={function () {
 
-        setHidden(false); checkFocus();   //markingFontBarBlock(); setEditorState(editorState)
-      }}
+    //    setHidden(false);  //  checkFocus();   //markingFontBarBlock(); setEditorState(editorState)
+    //  }}
 
     >
 
@@ -122,7 +131,7 @@ export default function ToolBlock(props) {
           top: "50%",
           transform: "translateY(-50%)",
           position: "absolute",
-          right:0,
+          right: 0,
         }}
         className={theme.sizeCss}
 
@@ -151,9 +160,9 @@ export default function ToolBlock(props) {
         style={{
           top: "50%",
           transform: "translateX(-100%)  translateY(-50%)",
-         
+
           position: "absolute",
-          right:0,
+          right: 0,
         }}
         className={theme.sizeCss}
 
