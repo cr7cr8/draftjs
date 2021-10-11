@@ -145,6 +145,7 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
             if (item.getKey() === startKey) {
               shouldReturn = true
               return true
+
             }
             else if (item.getKey() === endKey) {
               shouldReturn = false
@@ -196,8 +197,6 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
             else if (item.getKey() === startKey) {
               shouldReturn = false
               return true
-
-
             }
             else if (item.getKey() === endKey) {
               shouldReturn = true
@@ -205,7 +204,9 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
               // return false
               return !Boolean(item.getText())
             }
-            return shouldReturn
+            else {
+              return shouldReturn
+            }
           })
 
 
