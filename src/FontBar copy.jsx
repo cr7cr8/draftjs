@@ -126,47 +126,86 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
           e.preventDefault(); e.stopPropagation();
 
           let selection = editorState.getSelection()
-
+          const allBlocks = editorState.getCurrentContent()
           const startKey = selection.getStartKey()
           const endKey = selection.getEndKey()
 
-          let allBlocks = editorState.getCurrentContent()
+
+          let choosenBlocks = editorState.getCurrentContent()
+          let nonChoosenBlocks = editorState.getCurrentContent()
+          let shouldReturn = false;
+
 
 
           let blockList = Immutable.List()
           let blockText = ""
 
 
-          let shouldReturn = false;
-          allBlocks = allBlocks.getBlockMap().filter(item => {
 
-
-
+          choosenBlocks = choosenBlocks.getBlockMap().filter(item => {
             if (item.getKey() === startKey) {
               shouldReturn = true
+            }
+            if (item.getKey() === endKey) {
+              shouldReturn = false
               return true
             }
-            else if (item.getKey() === endKey) {
-              shouldReturn = false
-              //  return true
-              return Boolean(item.getText())
-            }
-            else {
-              return startKey === endKey ? false : shouldReturn
-            }
-
+            return shouldReturn
           })
 
-          allBlocks.forEach((block, ...props) => {
+
+
+          let startKeyAppeard = false;
+          let endKeyAppeard = false;
+
+
+          // nonChoosenBlocks = nonChoosenBlocks.getBlockMap().filter(item => {
+          //   if (item.getKey() === startKey) {
+          //     return true
+          //   }
+          //   else {
+          //     return !choosenBlocks.has(item.getKey())
+          //   }
+          // })
+
+
+          // nonChoosenBlocks = nonChoosenBlocks.getBlockMap().filter(item => {
+          //   if ((item.getKey() !== endKey) && (item.getKey() !== startKey) && (!startKeyAppeard)) {
+          //     return true
+          //   }
+          //   else if (item.getKey() === startKey) {
+          //     startKeyAppeard = true
+          //     return false
+          //   }
+          //   else if ((item.getKey() !== startKey) && (item.getKey() !== endKey) && (startKeyAppeard) && (!endKeyAppeard)) {
+          //     return false
+          //   }
+          //   else if (item.getKey() === endKey) {
+          //     endKeyAppeard = true
+          //     return false
+          //   }
+          //   else{
+          //     return true
+          //   }
+
+
+          // })
+
+
+
+          choosenBlocks.forEach((block, ...props) => {
             const { characterList, data, key, text, type } = block.toObject()
             blockText = blockText + text + "\n"
+
+
             blockList = blockList.concat(characterList.push(CharacterMetadata.create()))
           })
 
 
 
+          const endBlockText = editorState.getCurrentContent().getBlockForKey(endKey).getText()
 
-          // if (startKey !== endKey)
+          console.log(endBlockText)
 
           blockText = blockText.substr(0, blockText.length - 1)
           blockList = blockList.pop()
@@ -183,36 +222,51 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
               data: Immutable.Map({ colorBlock: true })
             })
 
+
+
+
+
           shouldReturn = true
           const arr = editorState.getCurrentContent().getBlocksAsArray().map(item => {
 
-            return item.getKey() !== startKey ? item : singleBlock
+            if (item.getKey() !== startKey) {
+              return item
+            }
+            else {
+              return singleBlock
+            }
 
           }).filter(item => {
-            if (startKey === endKey) {
-              return true
-            }
 
-            else if (item.getKey() === startKey) {
+
+            if (item.getKey() === startKey) {
               shouldReturn = false
               return true
-
-
             }
-            else if (item.getKey() === endKey) {
+            if (item.getKey() === endKey) {
               shouldReturn = true
-
-              // return false
-              return !Boolean(item.getText())
+              return false
             }
+
             return shouldReturn
           })
+
+
+          //console.log(nonChoosenBlocks.toJS())
+
+          // console.log(editorState.getCurrentContent().getBlocksAsArray())
+          // console.log([aaa])
 
 
 
           let es = EditorState.push(
             editorState,
-            ContentState.createFromBlockArray(arr)
+            ContentState.createFromBlockArray(arr)  //  ContentState.createFromBlockArray([singleBlock])  //  nonChoosenBlocks, ContentState.createFromBlockArray([aaa])
+            // ContentState.createFromText(blockText)
+            // ContentState.createFromBlockArray(editorState.getCurrentContent().getBlocksAsArray())
+
+            // .set('selectionBefore', contentState.getSelectionBefore())
+            // .set('selectionAfter', contentState.getSelectionAfter())
           )
 
 
@@ -228,10 +282,10 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
 
           es = EditorState.acceptSelection(es, newSelection)
 
-
+          //RichUtils.insertSoftNewline()
           setEditorState(es)
 
-
+          //setEditorState(RichUtils.insertSoftNewline(es))
 
 
         }}
