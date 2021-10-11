@@ -38,31 +38,40 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
   const theme = useTheme()
 
 
+  const fontBarPanelRef = useRef()
+  const [width, setWidth] = useState()
+  const [height, setHeight] = useState()
 
 
+  const [movingPX, setMovingPX] = useState(0)
 
-  
+
   useEffect(function () {
 
 
-   // setTimeout(() => {
-      const fontBar = document.querySelector('span[style*="--font-bar"]')
-      if (fontBar) {
-        const { x: fontBarX, y: fontBarY, width } = fontBar.getBoundingClientRect()
-        const { x: editorRefX, y: editorRefY } = editorRef.current.editor.editor.getBoundingClientRect()
-        const x = Number(fontBarX) - Number(editorRefX)
-        const y = Number(fontBarY) - Number(editorRefY)
+    // setTimeout(() => {
+    const fontBar = document.querySelector('span[style*="--font-bar"]')
+    if (fontBar) {
+      const { x: fontBarX, y: fontBarY, width } = fontBar.getBoundingClientRect()
+      const { x: editorRefX, y: editorRefY } = editorRef.current.editor.editor.getBoundingClientRect()
+      const x = Number(fontBarX) - Number(editorRefX)
+      const y = Number(fontBarY) - Number(editorRefY)
 
-        setLeft(x); setTop(y); setTaggingWidth(width)
+      setLeft(x); setTop(y); setTaggingWidth(width)
 
-      }
-      else { setLeft(0); setTop(0) }
-
-       
-
+    }
+    else { setLeft(0); setTop(0) }
 
   })
 
+  useEffect(function () {
+
+
+    console.log(window.getComputedStyle(fontBarPanelRef.current).width)
+    setWidth(window.getComputedStyle(fontBarPanelRef.current).width)
+    setHeight(window.getComputedStyle(fontBarPanelRef.current).height)
+
+  }, [])
 
 
 
@@ -70,22 +79,38 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
     <Paper
       style={{
         top, left,
-        display: (top === 0 && left === 0) ? "none" : "block",
+        // display: (top === 0 && left === 0) ? "none" : "flex",
 
-        width: "fit-content",
+
+        display: (top === 0 && left === 0) ? "block" : "block",
+
+        ...width && { width: width },
+        ...height && { height: height },
         backgroundColor: "#acf",
+
         borderRadius: "1000px",
 
         position: "absolute",
-        zIndex: 100,
+        zIndex: 1100,
         transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
         transitionProperty: "top ,left",
         transitionDuration: "100ms",
+
+        overflow: "hidden",
+        whiteSpace: "nowrap",
       }}
       onClick={function (e) { }}
     >
 
-      <div>
+      <div ref={fontBarPanelRef}
+        style={{
+          display: "inline-block",
+          transitionProperty: "transform",
+          transform: `translateX(${movingPX}%)`,
+          transitionDuration: "200ms",
+        }}
+
+      >
         <IconButton className={theme.sizeCss}
           onClick={function (e) {
             e.preventDefault(); e.stopPropagation();
@@ -135,19 +160,43 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
         </IconButton>
 
 
-
-
-
-
-        {isAllTextBlock && <IconButton className={theme.sizeCss}
+        <IconButton className={theme.sizeCss}
+          disabled={!isAllTextBlock}
           onClick={function (e) {
-            onColorClick(e, editorState, setEditorState, "pink")
+            //    alert("fd")
+            e.preventDefault(); e.stopPropagation();
+            setMovingPX(-100)
           }}
         >
           <ColorLensTwoToneIcon className={theme.sizeCss} />
-        </IconButton>}
+        </IconButton>
 
       </div>
+
+      {isAllTextBlock && <div
+        style={{
+          opacity: 0.5,
+          backgroundColor: "pink",
+
+          width: width ? width : 0,
+          height: height ? height : 0,
+          display: "inline-block",
+          transitionProperty: "transform",
+          transform: `translateX(${movingPX}%)`,
+          transitionDuration: "200ms",
+        }}
+      >
+        <IconButton className={theme.sizeCss}
+          onClick={function (e) {
+            e.preventDefault(); e.stopPropagation();
+            setMovingPX(0)
+            // setEditorState(RichUtils.toggleInlineStyle(editorState, "UNDERLINE"))
+          }}>
+          <FormatBoldIcon className={theme.sizeCss} />
+        </IconButton>
+      </div>}
+
+
 
     </Paper >
   )
@@ -183,7 +232,7 @@ function getChoosenBlocks(editorState) {
 
 
 
-function onColorClick(e, editorState, setEditorState, color = "brown") {
+function markingColorBlock(e, editorState, setEditorState, color = "brown") {
   e.preventDefault(); e.stopPropagation();
 
   let selection = editorState.getSelection()
