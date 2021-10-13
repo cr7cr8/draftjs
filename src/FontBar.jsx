@@ -19,6 +19,55 @@ import Immutable from "immutable"
 
 import ColorLensTwoToneIcon from '@material-ui/icons/ColorLensTwoTone';
 
+import tinygradient from "tinygradient";
+
+const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr }) => {
+
+  return {
+
+    fontBarCss: ({ btnArr, ...props }) => {
+
+      return {
+        ...breakpointsAttribute(["height", multiplyArr(textSizeArr, 1)]),
+        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 7)]),
+        "& button": { padding: 0, },
+        "& > div": {
+          ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 7)]),
+        }
+      }
+    }
+
+  }
+
+
+})
+
+
+
+
+//const gradient = tinygradient([{ color: '#614385', pos: 0 }, { color: '#516395', pos: 1 }]);
+
+//const gradient2 = tinygradient([{ color: '#614385', pos: 0 }, { color: '#516395', pos: 1 }]);
+//background-image: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+
+
+//const gradient = tinygradient([{ color: 'red', pos: 0 }, { color: 'blue', pos: 1 }]);
+//const gradientStyle = { backgroundImage: gradient.css("linear", "45deg"), color: "white" }
+
+const gradientStyleArr = [
+  { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
+  { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
+  { backgroundImage: "linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%)", color: "#666" },
+
+
+
+]
+
+
+
+
+
+
 export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
 
 
@@ -28,6 +77,9 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
     return block.getType() === "unstyled"
   })
 
+  let isAllColorBlock = getChoosenBlocks(editorState).every((block, key, ...props) => {
+    return block.getType() === "colorBlock"
+  })
 
 
 
@@ -36,20 +88,13 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
   const [taggingWidth, setTaggingWidth] = useState(0)
 
   const theme = useTheme()
-
-
   const fontBarPanelRef = useRef()
-  const [width, setWidth] = useState()
-  const [height, setHeight] = useState()
-
-
   const [movingPX, setMovingPX] = useState(0)
-
+  const { fontBarCss } = useStyles()
 
   useEffect(function () {
 
 
-    // setTimeout(() => {
     const fontBar = document.querySelector('span[style*="--font-bar"]')
     if (fontBar) {
       const { x: fontBarX, y: fontBarY, width } = fontBar.getBoundingClientRect()
@@ -64,29 +109,29 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
 
   })
 
-  useEffect(function () {
 
 
-    console.log(window.getComputedStyle(fontBarPanelRef.current).width)
-    setWidth(window.getComputedStyle(fontBarPanelRef.current).width)
-    setHeight(window.getComputedStyle(fontBarPanelRef.current).height)
-
-  }, [])
 
 
 
   return (
     <Paper
+
+
+      className={fontBarCss}
+
+
       style={{
         top, left,
-        // display: (top === 0 && left === 0) ? "none" : "flex",
+        display: (top === 0 && left === 0) ? "none" : "block",
 
 
-        display: (top === 0 && left === 0) ? "block" : "block",
+        //  display: (top === 0 && left === 0) ? "block" : "block",
 
-        ...width && { width: width },
-        ...height && { height: height },
+
         backgroundColor: "#acf",
+
+
 
         borderRadius: "1000px",
 
@@ -161,7 +206,7 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
 
 
         <IconButton className={theme.sizeCss}
-          disabled={!isAllTextBlock}
+          //     disabled={!(isAllTextBlock || isAllColorBlock)}
           onClick={function (e) {
             //    alert("fd")
             e.preventDefault(); e.stopPropagation();
@@ -173,13 +218,12 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
 
       </div>
 
-      {isAllTextBlock && <div
+      <div
         style={{
-          opacity: 0.5,
+          //   opacity: 0.5,
           backgroundColor: "pink",
 
-          width: width ? width : 0,
-          height: height ? height : 0,
+
           display: "inline-block",
           transitionProperty: "transform",
           transform: `translateX(${movingPX}%)`,
@@ -190,11 +234,42 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
           onClick={function (e) {
             e.preventDefault(); e.stopPropagation();
             setMovingPX(0)
-            // setEditorState(RichUtils.toggleInlineStyle(editorState, "UNDERLINE"))
+
+
+
           }}>
           <FormatBoldIcon className={theme.sizeCss} />
         </IconButton>
-      </div>}
+
+
+
+        {
+          gradientStyleArr.map(function (item, index) {
+
+
+
+            return <IconButton className={theme.sizeCss} key={index}
+              disabled={(!isAllTextBlock && !isAllColorBlock)}
+
+              onClick={function (e) {
+                e.preventDefault(); e.stopPropagation();
+                markingColorBlock(e, editorState, setEditorState, item)
+                setMovingPX(-100)
+              }}>
+              <div className={theme.sizeCss} style={{ ...item, opacity: isAllTextBlock || isAllColorBlock ? 1 : 0.3, borderRadius: "1000px" }} />
+            </IconButton>
+
+          })
+        }
+
+
+
+
+
+
+
+
+      </div>
 
 
 
@@ -232,7 +307,7 @@ function getChoosenBlocks(editorState) {
 
 
 
-function markingColorBlock(e, editorState, setEditorState, color = "brown") {
+function markingColorBlock(e, editorState, setEditorState, gradientStyle) {
   e.preventDefault(); e.stopPropagation();
 
   let selection = editorState.getSelection()
@@ -263,7 +338,7 @@ function markingColorBlock(e, editorState, setEditorState, color = "brown") {
       text: blockText,
       type: "colorBlock",
       key: startKey,
-      data: Immutable.Map({ colorBlock: true, color: color })
+      data: Immutable.Map({ colorBlock: true, ...gradientStyle })
     })
 
   let shouldReturn = true

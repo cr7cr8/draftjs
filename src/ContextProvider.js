@@ -100,6 +100,9 @@ const useStyles = makeStyles((theme) => {
     heightCss: ({ textSizeArr }) => {
       return {
         ...breakpointsAttribute(["height", multiplyArr(textSizeArr, 1)]),
+        "& button":{
+          verticalAlign:"unset"
+        }
       }
     },
 

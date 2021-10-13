@@ -76,18 +76,7 @@ export default function ToolBlock(props) {
     // else if ((selection.hasFocus) && (selection.focusKey !== blockKey) && (!hidden)) {
     //   setHidden(true)
     // }
-
-
-
-    //  editorBlockRef.current._node
-
-
     setHidden(!(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey)))
-
-
-    editorBlockRef.current._node.style.backgroundColor = backColor
-
-
   })
 
 
@@ -125,43 +114,50 @@ export default function ToolBlock(props) {
 
 
   return (
+    <div
+      style={{ position: "relative", backgroundColor: backColor }} contentEditable={true}
+    //  onMouseDown={function () {
+
+    //    setHidden(false);  //  checkFocus();   //markingFontBarBlock(); setEditorState(editorState)
+    //  }}
+
+    >
 
 
-    <>
 
-      <EditorBlock     {...props} ref={editorBlockRef} />  
-     
+      <EditorBlock     {...props} ref={editorBlockRef} >  </EditorBlock>
 
-      {
-        !hidden && <IconButton
-          style={{
-            top: "50%",
-            transform: "translateY(-50%)",
-            position: "absolute",
-            right: 0,
-          }}
-          className={theme.sizeCss}
 
-          contentEditable={false}
-          onMouseDown={function (e) {
-            e.preventDefault()
-            e.stopPropagation()
-            markingImageBlock(blockKey)
 
-            setTimeout(() => {
-              editorRef.current.focus()
-            }, 0);
-          }}
+      {!hidden && <IconButton
+        style={{
+          top: "50%",
+          transform: "translateY(-50%)",
+          position: "absolute",
+          right: 0,
+        }}
+        className={theme.sizeCss}
 
-          onClick={function (e) {
-            e.preventDefault()
-            e.stopPropagation()
+        contentEditable={false}
+        onMouseDown={function (e) {
+          e.preventDefault()
+          e.stopPropagation()
+          markingImageBlock(blockKey)
 
-          }}
-        >
-          <AddPhotoAlternateOutlinedIcon className={theme.sizeCss} />
-        </IconButton>
-      }
+          setTimeout(() => {
+            editorRef.current.focus()
+          }, 0);
+        }}
+
+        onClick={function (e) {
+          e.preventDefault()
+          e.stopPropagation()
+
+        }}
+      >
+        <AddPhotoAlternateOutlinedIcon className={theme.sizeCss} />
+      </IconButton>}
+
 
       {!hidden && <IconButton
         style={{
@@ -191,19 +187,26 @@ export default function ToolBlock(props) {
         }}
       >
         <AddPhotoAlternateOutlinedIcon className={theme.sizeCss} />
-      </IconButton>
-
-      }
-
-
-
-    </>
+      </IconButton>}
 
 
 
 
 
 
+
+
+      {/* <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}> */}
+      {/* {EmojiPanel} */}
+      {/* </Collapse> */}
+
+
+
+      {/* <ToolButton blockKey={blockKey} clickFn={addImage} hidden={hidden} setHidden={setHidden} readOnly={readOnly} setReadOnly={setReadOnly} insertImageBlock={insertImageBlock} /> */}
+
+
+
+    </div>
   )
 }
 

@@ -16,6 +16,8 @@ import { stateToHTML } from 'draft-js-export-html';
 import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button, } from "@material-ui/core";
 import { makeStyles, useTheme, ThemeProvider, withTheme } from '@material-ui/styles';
 
+
+
 import { withContext } from "./ContextProvider"
 
 
@@ -29,6 +31,7 @@ import createImagePlugin from './ImagePlugin';
 import createFontBarPlugin from './FontBarPlugin';
 
 import ToolBlock from "./ToolBlock";
+import ColorBlock from "./ColorBlock";
 
 import styled from "styled-components"
 
@@ -81,6 +84,20 @@ const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setIma
 // })
 
 
+const useStyles = makeStyles((theme) => {
+
+
+  return {
+    colorBlockCss: (data) => {
+      return {
+        backgroundImage: data.backgroundImage
+      }
+    }
+  }
+
+})
+
+
 
 export default withContext(function DraftEditor({ ctx, ...props }) {
   //const theme = useTheme()
@@ -108,7 +125,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       <Paper style={{ position: "relative" }} >
 
 
-        <FontBar {...{editorState,setEditorState,editorRef}} />
+        <FontBar {...{ editorState, setEditorState, editorRef }} />
         <Editor
 
           // onFocus={function (e, two) {
@@ -195,8 +212,39 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
           }}
 
+          blockStyleFn={function (block) {
+            const text = block.getText()
+            const data = block.getData().toObject()
+            const type = block.getType()
+
+
+            //   const { colorBlockCss } = useStyles()
+
+            if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
+              return "image-block-figure"
+            }
+            if ((!text) && (type === "unstyled")) {
+              return "unstyled-text-draft-block"
+            }
+            if (type === "FontBarBlock") {
+              return "font-bar-block"
+            }
+            if (data.colorBlock) {
+              return "font-bar-block"
+            }
+
+          }}
+
+
+
           blockRenderMap={
             Immutable.Map({
+
+              // 'unstyled': { 
+              //   element: 'div',
+              //   wrapper: <ColorBlock />,
+              //  }
+
               // 'unstyled': { 
               //   element: 'h3',
               //   wrapper: <Typography variant='body2'/>,
@@ -222,24 +270,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
 
-          blockStyleFn={function (block) {
-            const text = block.getText()
-            const data = block.getData().toObject()
-            const type = block.getType()
-            if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
-              return "image-block-figure"
-            }
-            if ((!text) && (type === "unstyled")) {
-              return "unstyled-text-draft-block"
-            }
-            if (type === "FontBarBlock") {
-              return "font-bar-block"
-            }
-            if (data.colorBlock){
-              return "font-bar-block"
-            }
 
-          }}
 
           blockRendererFn={function (block) {
 
@@ -271,6 +302,17 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                 }
               }
             }
+
+            if (type === "colorBlock") {
+
+              return {
+                component: ColorBlock,
+                editable: true,
+
+              }
+
+            }
+
 
             if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
               //   console.log(JSON.stringify(data))
@@ -323,22 +365,23 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             else if (e.shiftKey || hasCommandModifier(e) || e.altKey) {
               return getDefaultKeyBinding(e);
             }
-            else if ((block.getType() === "unstyled") && (e.keyCode === 37)) {
-         
-              return "tool-block-left"
-            }
-            else if ((block.getType() === "unstyled") && (e.keyCode === 38)) {
-              return "tool-block-up"
-            }
-            else if ((block.getType() === "unstyled") && (e.keyCode === 39)) {
-              return "tool-block-right"
-            }
-            else if ((block.getType() === "unstyled") && (e.keyCode === 40)) {
-              return "tool-block-down"
-            }
-            else if ((!block.getText()) && (block.getType() === "unstyled") && (e.keyCode === 8)) {
-              return "tool-block-delete"
-            }
+          
+            // else if ((block.getType() === "unstyled") && (e.keyCode === 37)) {
+
+            //   return "tool-block-left"
+            // }
+            // else if ((block.getType() === "unstyled") && (e.keyCode === 38)) {
+            //   return "tool-block-up"
+            // }
+            // else if ((block.getType() === "unstyled") && (e.keyCode === 39)) {
+            //   return "tool-block-right"
+            // }
+            // else if ((block.getType() === "unstyled") && (e.keyCode === 40)) {
+            //   return "tool-block-down"
+            // }
+            // else if ((!block.getText()) && (block.getType() === "unstyled") && (e.keyCode === 8)) {
+            //   return "tool-block-delete"
+            // }
 
             // return getDefaultKeyBinding(e);
 
@@ -619,14 +662,24 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
           }}
           handleReturn={function (e, newState, { getEditorState, setEditorState }) {
-            const editorState = getEditorState()
+            const editorState = newState;// getEditorState()
             const selectionState = editorState.getSelection();
-            const contentState = editorState.getCurrentContent();
+            let contentState = newState.getCurrentContent();
             const block = contentState.getBlockForKey(selectionState.getStartKey());
             //    console.log(block.getType())
             if (block.getType() === "imageBlock") {
               return "handled"
             }
+            if ((block.getType() === "colorBlock") && (!checkShowing())) {
+
+              const es = RichUtils.insertSoftNewline(newState)
+
+              setEditorState(es)
+              return "handled"
+
+            }
+
+
           }}
 
 
@@ -661,9 +714,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
         <div>{JSON.stringify(editorState.getCurrentContent().selectionAfter, null, 2)}</div> */}
 
-         <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
+        <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
         <hr />
-       {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
+        {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
       </div>
       {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
 

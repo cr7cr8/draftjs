@@ -520,9 +520,12 @@ export default function createMentionPlugin() {
     mentionPlugin: {
 
       handleReturn(e, newState, { setEditorState }) {
+      
+
 
         if (isShowing) {
           insertMention(matchFriendArr[tabIndex % matchFriendArr.length]);
+        
           return "handled"
         }
         // else {
