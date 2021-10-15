@@ -13,6 +13,7 @@ import { Image, AlternateEmailSharp } from "@material-ui/icons";
 
 
 import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
+import ColorLensTwoToneIcon from '@material-ui/icons/ColorLensTwoTone';
 
 import AvatarChipList from "./AvatarChipList";
 
@@ -129,14 +130,14 @@ export default function ToolBlock(props) {
 
     <>
 
-      <EditorBlock     {...props} ref={editorBlockRef} />  
-     
+      <EditorBlock     {...props} ref={editorBlockRef} />
+
 
       {
         !hidden && <IconButton
           style={{
             top: "50%",
-            transform: "translateY(-50%)",
+            transform: "translateX(100%) translateY(-50%)",
             position: "absolute",
             right: 0,
           }}
@@ -163,37 +164,37 @@ export default function ToolBlock(props) {
         </IconButton>
       }
 
-      {!hidden && <IconButton
-        style={{
-          top: "50%",
-          transform: "translateX(-100%)  translateY(-50%)",
+      {
+        !hidden && <IconButton
+          style={{
+            top: "50%",
+            transform: "translateX(200%) translateY(-50%)",
+            position: "absolute",
+            right: 0,
+          }}
+          className={theme.sizeCss}
 
-          position: "absolute",
-          right: 0,
-        }}
-        className={theme.sizeCss}
+          contentEditable={false}
+          onMouseDown={function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+            // markingImageBlock(blockKey)
 
-        contentEditable={false}
-        onMouseDown={function (e) {
-          e.preventDefault()
-          e.stopPropagation()
-          markingImageBlock(blockKey)
+            // setTimeout(() => {
+            //   editorRef.current.focus()
+            // }, 0);
+          }}
 
-          setTimeout(() => {
-            editorRef.current.focus()
-          }, 0);
-        }}
+          onClick={function (e) {
+            e.preventDefault()
+            e.stopPropagation()
 
-        onClick={function (e) {
-          e.preventDefault()
-          e.stopPropagation()
-
-        }}
-      >
-        <AddPhotoAlternateOutlinedIcon className={theme.sizeCss} />
-      </IconButton>
-
+          }}
+        >
+          <ColorLensTwoToneIcon className={theme.sizeCss} />
+        </IconButton>
       }
+
 
 
 

@@ -57,9 +57,32 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr }
 const gradientStyleArr = [
   { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
   { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
-  { backgroundImage: "linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%)", color: "#666" },
+  {
+
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/600/300)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    //backgroundPosition: "100% 100%",
+    //backgroundImage: "linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%),  url(https://picsum.photos/200/300)",
+    // backgroundImage: "url(https://picsum.photos/200/300)",
+
+    color: "#666"
+  },
 
 
+  {
+
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    //backgroundPosition: "100% 100%",
+    //backgroundImage: "linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%),  url(https://picsum.photos/200/300)",
+    // backgroundImage: "url(https://picsum.photos/200/300)",
+
+    color: "#666"
+  },
+
+  { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#666" },
 
 ]
 
@@ -307,7 +330,7 @@ function getChoosenBlocks(editorState) {
 
 
 
-function markingColorBlock(e, editorState, setEditorState, gradientStyle) {
+function markingColorBlock0(e, editorState, setEditorState, gradientStyle) {
   e.preventDefault(); e.stopPropagation();
 
   let selection = editorState.getSelection()
@@ -325,6 +348,10 @@ function markingColorBlock(e, editorState, setEditorState, gradientStyle) {
 
   allBlocks.forEach((block, ...props) => {
     const { characterList, data, key, text, type } = block.toObject()
+
+    // blockText = blockText + text 
+    // blockList = blockList.concat(characterList)
+
     blockText = blockText + text + "\n"
     blockList = blockList.concat(characterList.push(CharacterMetadata.create()))
   })
@@ -381,6 +408,49 @@ function markingColorBlock(e, editorState, setEditorState, gradientStyle) {
   setEditorState(es)
 }
 
+function markingColorBlock(e, editorState, setEditorState, gradientStyle) {
+  e.preventDefault(); e.stopPropagation();
+
+
+  let allBlocks = Modifier.setBlockType(editorState.getCurrentContent(), editorState.getSelection(), "colorBlock")
+
+  allBlocks = Modifier.setBlockData(allBlocks, editorState.getSelection(), Immutable.Map({ colorBlock: true, ...gradientStyle }))
+
+
+  let es = EditorState.push(
+    editorState,
+    allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+    "change-block-type",
+  )
+  setEditorState(es)
+
+  // let selection = editorState.getSelection()
+
+  // const startKey = selection.getStartKey()
+  // const endKey = selection.getEndKey()
+
+
+  // let allBlocks = editorState.getCurrentContent()
+
+  // let blockList = Immutable.List()
+  // let blockText = ""
+
+
+  // allBlocks = getChoosenBlocks(editorState)
+  // allBlocks.forEach(block => {
+  //   block.set
+  // })
+
+
+  // let es = EditorState.push(
+  //   editorState,
+  //   allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+  // )
+
+  // //console.log(allBlocks.toObject())
+
+  // setEditorState(es)
+}
 
 
 

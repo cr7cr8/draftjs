@@ -32,7 +32,11 @@ figure {
 
  .font-bar-block{
 
-  background-color: brown;
+  /* background-color: brown; */
+
+  background-image: linear-gradient(45deg, red 0%, blue 100%);
+  color: #aaa;
+  opacity: 0.5;
 } 
 
 /* .unstyled-text-draft-block::before{

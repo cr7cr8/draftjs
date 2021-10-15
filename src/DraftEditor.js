@@ -226,12 +226,12 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             if ((!text) && (type === "unstyled")) {
               return "unstyled-text-draft-block"
             }
-            if (type === "FontBarBlock") {
-              return "font-bar-block"
-            }
-            if (data.colorBlock) {
-              return "font-bar-block"
-            }
+            // if (type === "FontBarBlock") {
+            //   return "font-bar-block"
+            // }
+            // if (type==="colorBlock") {
+            //   return "font-bar-block"
+            // }
 
           }}
 
@@ -239,6 +239,11 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
           blockRenderMap={
             Immutable.Map({
+              "colorBlock": {
+                element: "div",
+                wrapper: <ColorBlock editorState={editorState} setEditorState={setEditorState} />,
+              }
+
 
               // 'unstyled': { 
               //   element: 'div',
@@ -303,15 +308,15 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               }
             }
 
-            if (type === "colorBlock") {
+            // if (type === "colorBlock") {
 
-              return {
-                component: ColorBlock,
-                editable: true,
+            //   return {
+            //     component: ColorBlock,
+            //     editable: true,
 
-              }
+            //   }
 
-            }
+            // }
 
 
             if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
@@ -365,7 +370,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             else if (e.shiftKey || hasCommandModifier(e) || e.altKey) {
               return getDefaultKeyBinding(e);
             }
-          
+
             // else if ((block.getType() === "unstyled") && (e.keyCode === 37)) {
 
             //   return "tool-block-left"
@@ -661,6 +666,13 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             return 'not-handled';
 
           }}
+
+          handleBeforeInput={function (aaa, editorState) {
+
+            //            console.log(aaa)
+            //            alert(aaa)
+          }}
+
           handleReturn={function (e, newState, { getEditorState, setEditorState }) {
             const editorState = newState;// getEditorState()
             const selectionState = editorState.getSelection();
@@ -670,24 +682,28 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             if (block.getType() === "imageBlock") {
               return "handled"
             }
-            if ((block.getType() === "colorBlock") && (!checkShowing())) {
+            // if ((block.getType() === "colorBlock") && (!checkShowing())) {
 
-              const es = RichUtils.insertSoftNewline(newState)
 
-              setEditorState(es)
-              return "handled"
 
-            }
+            //   // const es = RichUtils.insertSoftNewline(newState)
+
+            //   // setEditorState(es)
+            //   return "not-handled"
+
+            // }
 
 
           }}
 
 
           stripPastedStyles={true}
-          handlePastedText={function (text, html, editorState, props) {
-            return true
+        // handlePastedText={function (text, html, editorState, props) {
 
-          }}
+        // //  alert(text)
+        // //   return "handled"
+        //   return "un-handled"
+        // }}
 
 
 
@@ -714,8 +730,8 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
         <div>{JSON.stringify(editorState.getCurrentContent().selectionAfter, null, 2)}</div> */}
 
-        <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
-        <hr />
+        {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
+        <hr /> */}
         {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
       </div>
       {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
