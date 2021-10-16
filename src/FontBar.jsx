@@ -5,7 +5,7 @@ import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata
 
 import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button, IconButton } from "@material-ui/core";
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
-
+import { Context, withContext } from "./ContextProvider"
 
 import FormatBoldIcon from '@material-ui/icons/FormatBold';
 import FormatItalicIcon from '@material-ui/icons/FormatItalic';
@@ -45,53 +45,31 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr }
 
 
 
-//const gradient = tinygradient([{ color: '#614385', pos: 0 }, { color: '#516395', pos: 1 }]);
+// const gradientStyleArr = [
+//   { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
+//   { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
+//   {
+//     backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/600/300)",
+//     backgroundSize: "cover",
+//     backgroundRepeat: "no-repeat",
+//     color: "#666"
+//   },
+//   {
+//     backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
+//     backgroundSize: "cover",
+//     backgroundRepeat: "no-repeat",
 
-//const gradient2 = tinygradient([{ color: '#614385', pos: 0 }, { color: '#516395', pos: 1 }]);
-//background-image: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
-
-
-//const gradient = tinygradient([{ color: 'red', pos: 0 }, { color: 'blue', pos: 1 }]);
-//const gradientStyle = { backgroundImage: gradient.css("linear", "45deg"), color: "white" }
-
-const gradientStyleArr = [
-  { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
-  { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
-  {
-
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/600/300)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    //backgroundPosition: "100% 100%",
-    //backgroundImage: "linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%),  url(https://picsum.photos/200/300)",
-    // backgroundImage: "url(https://picsum.photos/200/300)",
-
-    color: "#666"
-  },
-
-
-  {
-
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    //backgroundPosition: "100% 100%",
-    //backgroundImage: "linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%),  url(https://picsum.photos/200/300)",
-    // backgroundImage: "url(https://picsum.photos/200/300)",
-
-    color: "#666"
-  },
-
-  { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#666" },
-
-]
+//     color: "#666"
+//   },
+//   { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#666" },
+// ]
 
 
 
 
 
 
-export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
+export const FontBar = withContext(function ({ gradientStyleArr, editorState, setEditorState, editorRef, ...props }) {
 
 
 
@@ -104,7 +82,7 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
     return block.getType() === "colorBlock"
   })
 
-
+  //const gradientStyleArr = ctx.gradientStyleArr
 
   const [top, setTop] = useState(0)
   const [left, setLeft] = useState(0)
@@ -298,7 +276,8 @@ export function FontBar({ editorState, setEditorState, editorRef, ...props }) {
 
     </Paper >
   )
-}
+})
+
 
 
 
@@ -408,7 +387,7 @@ function markingColorBlock0(e, editorState, setEditorState, gradientStyle) {
   setEditorState(es)
 }
 
-function markingColorBlock(e, editorState, setEditorState, gradientStyle) {
+export function markingColorBlock(e, editorState, setEditorState, gradientStyle) {
   e.preventDefault(); e.stopPropagation();
 
 

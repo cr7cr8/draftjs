@@ -100,8 +100,8 @@ const useStyles = makeStyles((theme) => {
     heightCss: ({ textSizeArr }) => {
       return {
         ...breakpointsAttribute(["height", multiplyArr(textSizeArr, 1)]),
-        "& button":{
-          verticalAlign:"unset"
+        "& button": {
+          verticalAlign: "unset"
         }
       }
     },
@@ -137,7 +137,7 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
 
       sizeCss,
       smSizeCss,
-      heightCss, 
+      heightCss,
       widthCss,
       palette: {
         primary: colorIndigo,
@@ -296,8 +296,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [imageBlockObj, setImageBlockObj] = useState({})
 
-  const { sizeCss, smSizeCss,heightCss, widthCss, } = useStyles({ textSizeArr })
-  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, }), [textSizeArr, isLight, setIsLight, ])
+  const { sizeCss, smSizeCss, heightCss, widthCss, } = useStyles({ textSizeArr })
+  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, }), [textSizeArr, isLight, setIsLight,])
 
 
   useEffect(function () {
@@ -329,6 +329,26 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showEmojiPanel, setShowEmojiPanel,
           emojiCtxStr, setEmojiCtxStr,
           imageBlockObj, setImageBlockObj,
+
+          gradientStyleArr: [
+            { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
+            { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
+            {
+              backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/600/300)",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              color: "#666"
+            },
+            {
+              backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              color: "#666"
+            },
+            { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#666" },
+          ],
+
+
           //     imageArr, setImageArr,
           //  editorTop, setEditorTop,
         }}>

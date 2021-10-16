@@ -33,7 +33,6 @@ import { add } from 'date-fns/esm';
 
 import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
 import { set } from 'immutable';
-import { getEventListeners } from 'events';
 
 
 export default function ToolBlock(props) {
@@ -44,7 +43,7 @@ export default function ToolBlock(props) {
 
   const { block, selection, contentState } = props
 
-  const { editorRef, readOnly, setReadOnly, EmojiPanel, markingImageBlock, markingColorBlock, editorState, setEditorState, taggingFontBar, gradientStyleArr } = props.blockProps
+  const { editorRef, readOnly, setReadOnly, EmojiPanel, markingImageBlock, editorState, setEditorState, taggingFontBar } = props.blockProps
 
 
 
@@ -64,44 +63,65 @@ export default function ToolBlock(props) {
 
   const [hidden, setHidden] = useState(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey))
 
-  const [showColorPanel, setShowColorPanel] = useState(false)
 
 
-
-  function aaa() {
-    console.log(Math.random())
-    setShowColorPanel(false)
-  }
 
   useEffect(function () {
+    // markingFontBarBlock()
+    // if ((!selection.hasFocus) && (!hidden)) {
+    //   setHidden(true)
+    // }
+    // else if ((selection.hasFocus) && (selection.focusKey === blockKey) && (hidden)) {
+    //   setHidden(false)
+    // }
+    // else if ((selection.hasFocus) && (selection.focusKey !== blockKey) && (!hidden)) {
+    //   setHidden(true)
+    // }
+
+
+
+    //  editorBlockRef.current._node
+
 
     setHidden(!(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey)))
+
+
     editorBlockRef.current._node.style.backgroundColor = backColor
-    editorBlockRef.current._node.contentEditable = !showColorPanel
-
-
-
-    if (showColorPanel) {
-
-      editorBlockRef.current._node.addEventListener("click", aaa)
-
-    }
-    //console.log(editorBlockRef.current._node)
-
-
-
-    return function () {
-
-      if (editorBlockRef.current && editorBlockRef.current._node) {
-        editorBlockRef.current._node.removeEventListener("click", aaa)
-      }
-    }
 
 
   })
 
 
 
+  function checkFocus() {
+
+    const { hasFocus, focusKey } = editorState.getSelection() //contentState.getSelectionAfter()
+
+
+
+    let newSelection = SelectionState.createEmpty(blockKey)
+    newSelection = newSelection.merge({
+      focusKey: blockKey,
+      focusOffset: 0,
+      anchorOffset: blockKey,
+      anchorOffset: 0,
+      hasFocus: true
+    });
+
+    let newContent = Modifier.setBlockData(
+      contentState,
+      newSelection,//  SelectionState.createEmpty(newKey),
+      Immutable.Map(block.getData())
+    );
+
+    const newEditorState = EditorState.push(editorState, newContent, 'change-block-type');
+
+    //   EditorState.forceSelection(externalES, newSelection)
+    return setEditorState(taggingFontBar(newEditorState))
+
+
+
+  }
 
 
 
@@ -111,54 +131,6 @@ export default function ToolBlock(props) {
     <>
 
       <EditorBlock     {...props} ref={editorBlockRef} />
-
-      {showColorPanel && gradientStyleArr.map(function (item, index) {
-
-
-
-        return <IconButton className={theme.sizeCss} key={index}
-          style={{
-           
-            top: "50%",
-            transform: `translateX(-${100*index}%) translateY(-50%)`,
-            position: "absolute",
-            right: 0,
-            padding:0,
-          }}
-          onClick={function (e) {
-            e.preventDefault(); e.stopPropagation();
-            markingColorBlock(e, editorState, setEditorState, item)
-
-          }}>
-          <div className={theme.sizeCss} style={{ borderRadius: "1000px",...item }} />
-        </IconButton>
-
-      })
-        // <IconButton
-        //   className={theme.sizeCss}
-
-        //   style={{
-        //     backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
-        //     color: "white",
-        //     top: "50%",
-        //     transform: "translateX(-100%) translateY(-50%)",
-        //     position: "absolute",
-        //     right: 0,
-        //   }}
-        //   onClick={function (e) {
-        //     e.preventDefault(); e.stopPropagation();
-        //     markingColorBlock(e, editorState, setEditorState, { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white", })
-
-
-
-        //   }}
-        // >
-        //   <div className={theme.sizeCss} style={{ borderRadius: "1000px" }} />
-        // </IconButton>
-
-
-      }
-
 
 
       {
@@ -216,7 +188,6 @@ export default function ToolBlock(props) {
           onClick={function (e) {
             e.preventDefault()
             e.stopPropagation()
-            setShowColorPanel(pre => !pre)
 
           }}
         >

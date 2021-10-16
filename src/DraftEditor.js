@@ -35,7 +35,7 @@ import ColorBlock from "./ColorBlock";
 
 import styled from "styled-components"
 
-import { FontBar, taggingFontBar } from "./FontBar"
+import { FontBar, taggingFontBar, markingColorBlock } from "./FontBar"
 
 import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
 const { hasCommandModifier } = KeyBindingUtil;
@@ -104,7 +104,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   const key = useRef(Math.random() + "")
 
-  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj } = ctx
+  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
 
@@ -125,7 +125,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       <Paper style={{ position: "relative" }} >
 
 
-        <FontBar {...{ editorState, setEditorState, editorRef }} />
+        <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef }} />
         <Editor
 
           // onFocus={function (e, two) {
@@ -300,10 +300,11 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   readOnly,
                   setReadOnly,
                   markingImageBlock,
+                  markingColorBlock,
                   editorState,
                   setEditorState,
                   taggingFontBar,
-
+                  gradientStyleArr,
                 }
               }
             }
