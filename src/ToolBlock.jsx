@@ -102,7 +102,7 @@ export default function ToolBlock(props) {
 
 
 
-
+  
 
 
   return (
@@ -120,7 +120,7 @@ export default function ToolBlock(props) {
           style={{
            
             top: "50%",
-            transform: `translateX(-${100*index}%) translateY(-50%)`,
+            transform: `translateX(-${100*(gradientStyleArr.length-index)}%) translateY(-50%)`,
             position: "absolute",
             right: 0,
             padding:0,
