@@ -267,7 +267,7 @@ export default function createImagePlugin() {
     },
 
     EmojiPanel: withStyles(styleObj, { withTheme: true })(withContext(EmojiPanelComp)),
-    taggingEmoji
+   // taggingEmoji
 
   }
 

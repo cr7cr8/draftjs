@@ -71,7 +71,7 @@ export default function ColorBlock(props) {
 
 
   const theme = useTheme()
-  const { editorState, setEditorState, taggingEmoji, editorRef } = props;
+  const { editorState, setEditorState,  editorRef } = props;
   const selection = editorState.getSelection()
 
   const arr = [[props.children[0]]]

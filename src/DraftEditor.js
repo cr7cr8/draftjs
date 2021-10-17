@@ -67,7 +67,7 @@ const initialState = {
   blocks: []
 };
 const { mentionPlugin, taggingMention, checkShowing } = createMentionPlugin()
-const { emojiPlugin, EmojiPanel ,taggingEmoji} = createEmojiPlugin()
+const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setImageBlockData*/ } = createImagePlugin()
 //const { fontBarPlugin, taggingFontBar } = createFontBarPlugin()
 
@@ -243,7 +243,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             Immutable.Map({
               "colorBlock": {
                 element: "div",
-                wrapper: <ColorBlock editorState={editorState} setEditorState={setEditorState} taggingEmoji={taggingEmoji} editorRef={editorRef} />,
+                wrapper: <ColorBlock editorState={editorState} setEditorState={setEditorState} editorRef={editorRef} />,
               }
 
 
