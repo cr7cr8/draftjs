@@ -67,7 +67,7 @@ const initialState = {
   blocks: []
 };
 const { mentionPlugin, taggingMention, checkShowing } = createMentionPlugin()
-const { emojiPlugin, EmojiPanel ,taggingEmoji} = createEmojiPlugin()
+const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setImageBlockData*/ } = createImagePlugin()
 //const { fontBarPlugin, taggingFontBar } = createFontBarPlugin()
 
@@ -144,8 +144,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           editorState={editorState}
 
           onChange={function (newState, { ...props }) {
-
-
 
             newState = taggingFontBar(newState)
             setEditorState(newState)
@@ -243,7 +241,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             Immutable.Map({
               "colorBlock": {
                 element: "div",
-                wrapper: <ColorBlock editorState={editorState} setEditorState={setEditorState} taggingEmoji={taggingEmoji} editorRef={editorRef} />,
+                wrapper: <ColorBlock editorState={editorState} setEditorState={setEditorState} />,
               }
 
 
@@ -356,6 +354,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const block = contentState.getBlockForKey(selectionState.getStartKey());
 
 
+            // if ((block.getType() === "imageBlock") && ((e.keyCode === 8) || (e.keyCode === 46))) {
+            //   return "cancel-delete"
+            // }
 
             if (checkShowing() && e.keyCode === 38) {
               return undefined
@@ -364,14 +365,31 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               return undefined
             }
 
-            // if ((block.getType() === "imageBlock")) {
-            //   return "cancel-delete"
-            // }
+            if ((block.getType() === "imageBlock")) {
+              return "cancel-delete"
+            }
             else if (e.shiftKey || hasCommandModifier(e) || e.altKey) {
               return getDefaultKeyBinding(e);
             }
 
+            // else if ((block.getType() === "unstyled") && (e.keyCode === 37)) {
 
+            //   return "tool-block-left"
+            // }
+            // else if ((block.getType() === "unstyled") && (e.keyCode === 38)) {
+            //   return "tool-block-up"
+            // }
+            // else if ((block.getType() === "unstyled") && (e.keyCode === 39)) {
+            //   return "tool-block-right"
+            // }
+            // else if ((block.getType() === "unstyled") && (e.keyCode === 40)) {
+            //   return "tool-block-down"
+            // }
+            // else if ((!block.getText()) && (block.getType() === "unstyled") && (e.keyCode === 8)) {
+            //   return "tool-block-delete"
+            // }
+
+            // return getDefaultKeyBinding(e);
 
             return undefined
 
@@ -394,6 +412,257 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
 
+            if (command === "tool-block-left") {
+
+              let selectionState = editorState.getSelection();
+              const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = editorState.getSelection().toArray()
+
+              const contentState = editorState.getCurrentContent();
+              const blockArr = contentState.getBlocksAsArray();
+
+              //console.log(selectionState)
+
+              let currentIndex = blockArr.findIndex((item, index) => {
+                return item.getKey() === selectionState.getStartKey()
+              })
+
+
+              if (currentIndex === 0) {
+                selectionState = selectionState.merge({
+                  focusKey: blockArr[currentIndex].getKey(),
+                  focusOffset: Math.max(0, focusOffset - 1),
+                  anchorKey: blockArr[currentIndex].getKey(),
+                  anchorOffset: Math.max(0, focusOffset - 1),
+                  hasFocus: true
+                });
+
+                //   editorState = EditorState.acceptSelection(editorState, selectionState)
+                editorState = EditorState.forceSelection(editorState, selectionState)
+                editorState = taggingFontBar(editorState)
+                setEditorState(editorState)
+                //   break
+                return 'not-handled';
+
+              }
+
+              let aboveIndex = currentIndex
+              while (aboveIndex > 0) {
+                aboveIndex = aboveIndex - 1;
+                if ((blockArr[aboveIndex].getType() === "unstyled") || (focusOffset > 0)) {
+                  selectionState = selectionState.merge({
+                    focusKey: focusOffset === 0 ? blockArr[aboveIndex].getKey() : blockArr[currentIndex].getKey(),
+                    focusOffset: focusOffset === 0 ? blockArr[aboveIndex].getText().length : focusOffset - 1,
+                    anchorKey: focusOffset === 0 ? blockArr[aboveIndex].getKey() : blockArr[currentIndex].getKey(),
+                    anchorOffset: focusOffset === 0 ? blockArr[aboveIndex].getText().length : focusOffset - 1,
+                    hasFocus: true
+                  });
+
+                  //   editorState = EditorState.acceptSelection(editorState, selectionState)
+                  editorState = EditorState.forceSelection(editorState, selectionState)
+                  editorState = taggingFontBar(editorState)
+                  setEditorState(editorState)
+                  //   break
+                  return 'not-handled';
+                  // return 'handled';        //return 'not-handled';
+                }
+              }
+            }
+
+            if (command === "tool-block-up") {
+
+              let selectionState = editorState.getSelection();
+              const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = editorState.getSelection().toArray()
+
+              const contentState = editorState.getCurrentContent();
+              const blockArr = contentState.getBlocksAsArray();
+
+
+              //console.log(selectionState)
+
+              let currentIndex = blockArr.findIndex((item, index) => {
+
+                return item.getKey() === selectionState.getStartKey()
+              })
+
+
+              if (currentIndex === 0) {
+
+                return 'not-handled';
+
+              }
+
+
+              let aboveIndex = currentIndex
+              while (aboveIndex > 0) {
+                aboveIndex = aboveIndex - 1;
+
+                if ((blockArr[aboveIndex].getType() === "unstyled")) {
+
+                  selectionState = selectionState.merge({
+                    focusKey: blockArr[aboveIndex].getKey(),
+                    focusOffset: Math.min(focusOffset, blockArr[aboveIndex].getText().length),
+                    anchorKey: blockArr[aboveIndex].getKey(),
+                    anchorOffset: Math.min(focusOffset, blockArr[aboveIndex].getText().length),
+                    hasFocus: true
+                  });
+
+                  //   editorState = EditorState.acceptSelection(editorState, selectionState)
+                  editorState = EditorState.forceSelection(editorState, selectionState)
+                  editorState = taggingFontBar(editorState)
+                  setEditorState(editorState)
+                  //   break
+                  return 'not-handled';
+                  // return 'handled';        //return 'not-handled';
+                }
+              }
+            }
+
+            if (command === "tool-block-right") {
+
+              let selectionState = editorState.getSelection();
+              const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = editorState.getSelection().toArray()
+              const contentState = editorState.getCurrentContent();
+              const blockArr = contentState.getBlocksAsArray();
+              let currentIndex = blockArr.findIndex((item, index) => {
+                return item.getKey() === selectionState.getStartKey()
+              })
+
+              if (currentIndex === blockArr.length - 1) {
+                selectionState = selectionState.merge({
+                  focusKey: blockArr[currentIndex].getKey(),
+                  focusOffset: Math.min(blockArr[currentIndex].getText().length, focusOffset + 1),
+                  anchorKey: blockArr[currentIndex].getKey(),
+                  anchorOffset: Math.min(blockArr[currentIndex].getText().length, focusOffset + 1),
+                  hasFocus: true
+                });
+
+                //   editorState = EditorState.acceptSelection(editorState, selectionState)
+                editorState = EditorState.forceSelection(editorState, selectionState)
+                editorState = taggingFontBar(editorState)
+                setEditorState(editorState)
+                //   break
+                return 'not-handled';
+
+              }
+
+              let belowIndex = currentIndex
+              while (belowIndex < blockArr.length - 1) {
+
+                belowIndex = belowIndex + 1;
+                if ((blockArr[belowIndex].getType() === "unstyled") || (focusOffset < blockArr[currentIndex].getText().length)) {
+
+
+
+
+                  selectionState = selectionState.merge({
+                    focusKey: focusOffset < blockArr[currentIndex].getText().length ? blockArr[currentIndex].getKey() : blockArr[belowIndex].getKey(),
+                    focusOffset: focusOffset < blockArr[currentIndex].getText().length ? focusOffset + 1 : 0,
+                    anchorKey: focusOffset < blockArr[currentIndex].getText().length ? blockArr[currentIndex].getKey() : blockArr[belowIndex].getKey(),
+                    anchorOffset: focusOffset < blockArr[currentIndex].getText().length ? focusOffset + 1 : 0,
+                    hasFocus: true
+                  });
+
+                  //   editorState = EditorState.acceptSelection(editorState, selectionState)
+                  editorState = EditorState.forceSelection(editorState, selectionState)
+                  editorState = taggingFontBar(editorState)
+                  setEditorState(editorState)
+                  //   break
+                  return 'not-handled';
+                }
+              }
+
+
+            }
+
+            if (command === "tool-block-down") {
+
+              let selectionState = editorState.getSelection();
+              const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = editorState.getSelection().toArray()
+
+              const contentState = editorState.getCurrentContent();
+              const blockArr = contentState.getBlocksAsArray();
+
+              let currentIndex = blockArr.findIndex((item, index) => {
+                return item.getKey() === selectionState.getStartKey()
+              })
+
+              if (currentIndex === blockArr.length - 1) {
+                return 'not-handled';
+              }
+
+              let belowIndex = currentIndex
+              while (belowIndex < blockArr.length - 1) {
+
+                belowIndex = belowIndex + 1;
+                if ((blockArr[belowIndex].getType() === "unstyled")) {
+
+                  selectionState = selectionState.merge({
+                    focusKey: blockArr[belowIndex].getKey(),
+                    focusOffset: Math.min(focusOffset, blockArr[belowIndex].getText().length),
+                    anchorKey: blockArr[belowIndex].getKey(),
+                    anchorOffset: Math.min(focusOffset, blockArr[belowIndex].getText().length),
+                    hasFocus: true
+                  });
+
+                  //   editorState = EditorState.acceptSelection(editorState, selectionState)
+                  editorState = EditorState.forceSelection(editorState, selectionState)
+                  editorState = taggingFontBar(editorState)
+                  setEditorState(editorState)
+                  //   break
+
+
+                  return 'not-handled';
+                }
+
+
+
+              }
+
+            }
+
+            if (command === "tool-block-delete") {
+
+
+              let selectionState = editorState.getSelection();
+              const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = editorState.getSelection().toArray()
+
+              const contentState = editorState.getCurrentContent();
+              const blockArr = contentState.getBlocksAsArray();
+
+
+              let currentIndex = blockArr.findIndex((item, index) => {
+                return item.getKey() === selectionState.getStartKey()
+              })
+
+
+              let newContentBlockArr = contentState.getBlocksAsArray().filter(function (item) {
+                return item.getKey() !== selectionState.getStartKey()
+              })
+
+
+              if (currentIndex === 0) { return 'not-handled'; }
+              // selectionState = selectionState.merge({
+              //   focusKey: blockArr[currentIndex - 1].getKey(),
+              //   focusOffset: blockArr[currentIndex - 1].getText().length,
+              //   anchorKey: blockArr[currentIndex - 1].getKey(),
+              //   anchorOffset: blockArr[currentIndex - 1].getText().length,
+              //   hasFocus: true
+              // });
+
+
+
+              const newContentState = ContentState.createFromBlockArray(newContentBlockArr)
+
+              editorState = EditorState.push(editorState, newContentState, 'move-block');
+
+
+              //   editorState = EditorState.createWithContent(newContentState)
+              //   editorState = EditorState.forceSelection(editorState, selectionState)
+              setEditorState(editorState)
+              return 'not-handled';
+
+
+            }
 
             return 'not-handled';
 

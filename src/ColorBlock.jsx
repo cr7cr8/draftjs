@@ -71,7 +71,7 @@ export default function ColorBlock(props) {
 
 
   const theme = useTheme()
-  const { editorState, setEditorState } = props;
+  const { editorState, setEditorState, taggingEmoji, editorRef } = props;
   const selection = editorState.getSelection()
 
   const arr = [[props.children[0]]]
@@ -137,6 +137,8 @@ export default function ColorBlock(props) {
         }
       })
 
+      // return JSON.stringify(pre) === JSON.stringify(newArr)?pre:newArr
+
       return newArr
 
     })
@@ -153,6 +155,7 @@ export default function ColorBlock(props) {
 
       })
 
+      // return JSON.stringify(pre) === JSON.stringify(newArr)?pre:newArr
       return newArr
 
     })
@@ -188,7 +191,9 @@ export default function ColorBlock(props) {
 
     })
 
-
+    // setTimeout(() => {                    will reander not only once per click if placed here
+    //   setEditorState(editorState)
+    // }, 0);
 
 
   })
@@ -227,7 +232,7 @@ export default function ColorBlock(props) {
                     right: 0,
                   }}
 
-                  onClick={function () {
+                  onMouseDown={function () {
 
 
                     let newContent = Modifier.setBlockType(
@@ -246,12 +251,13 @@ export default function ColorBlock(props) {
 
                     es = EditorState.push(es, newContent, 'change-block-data');
                     es = EditorState.acceptSelection(es, selection)
+
                     return setEditorState(es)
 
                   }}
 
                 >
-                  <HighlightOffOutlinedIcon className={theme.sizeCss}
+                  <HighlightOffOutlinedIcon className={theme.sizeCss} contentEditable={false}
                   />
                 </IconButton>
 
@@ -264,7 +270,7 @@ export default function ColorBlock(props) {
                     right: 0,
                   }}
 
-                  onClick={function () {
+                  onMouseDown={function () {
 
                     setVertical(pre => {
                       //  pre + 25
@@ -280,6 +286,12 @@ export default function ColorBlock(props) {
 
                     })
 
+
+
+                    setTimeout(() => {
+                      setEditorState(editorState)
+                      //editorRef.current.focus()
+                    }, 0);
 
                   }}
 
@@ -297,7 +309,7 @@ export default function ColorBlock(props) {
                     right: 0,
                   }}
 
-                  onClick={function () {
+                  onMouseDown={function () {
 
                     setHorizontal(pre => {
                       //  pre + 25
@@ -311,7 +323,14 @@ export default function ColorBlock(props) {
 
                     })
 
+                    setTimeout(() => {
+                      setEditorState(editorState)
+                    }, 0);
 
+                    //   setTimeout(() => {
+                    //      setEditorState(taggingEmoji(editorState))
+                    //      editorRef.current.focus()
+                    //   }, 0);
                   }}
 
                 >

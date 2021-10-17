@@ -12,7 +12,7 @@ import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
 import { stateToHTML } from 'draft-js-export-html';
 
 import styled, { ThemeProvider as StyledThemeProvider } from "styled-components"
-
+import Immutable from "immutable"
 
 
 // import {
@@ -47,6 +47,7 @@ import BasicImageList from "./ImagePanel"
 
 
 import { FontBar, taggingFontBar } from "./FontBar"
+export const Context = createContext();
 
 function flatten(arr) {
   return arr.reduce(function (flat, toFlatten) {
@@ -114,10 +115,6 @@ const useStyles = makeStyles((theme) => {
 
   }
 })
-
-
-export const Context = createContext();
-
 
 
 function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, heightCss, widthCss, myTheme }) {
@@ -247,6 +244,7 @@ function toPreHtml(editorState) {
 
 
       },
+
       blockRenderers: {
         imageBlock: function (block) {
           const text = block.getText()
@@ -263,7 +261,62 @@ function toPreHtml(editorState) {
           // return '<imgtag />'
         },
         // colorBlock: function (block) {
-        //   return `<colorBlock>` + (block.getText()) + `</colorBlock>`
+        //   const text = block.getText()
+        //   const data = escape(JSON.stringify(block.getData().toObject()))
+        //   const type = block.getType()
+        //   const key = block.getKey()
+
+        //   // console.log(block)
+
+        //   return stateToHTML(ContentState.createFromBlockArray([block]),{
+
+        //     defaultBlockTag: "div",
+        //     entityStyleFn: (entity) => {
+        //       // console.log(entity.getType())
+      
+      
+        //       if (entity.getType().indexOf("HEAD") > 0) {
+        //         return {
+        //           element: 'object',
+        //           attributes: {
+        //             "data-type": "avatar_head"
+        //           }
+        //         }
+        //       }
+        //       else if (entity.getType().indexOf("BODY") > 0) {
+        //         return {
+        //           element: 'object',
+        //           attributes: {
+        //             "data-type": "avatar_body"
+        //           }
+      
+        //         }
+        //       }
+        //       else if (entity.getType().indexOf("EMOJI") >= 0) {
+        //         return {
+        //           element: 'object',
+        //           attributes: {
+        //             "data-type": "emoji",
+        //             "data-emoji_symbol": entity.getData().symbol,
+        //             "data-emoji_url": entity.getData().url
+        //           }
+      
+        //         }
+        //       }
+      
+      
+        //     },
+
+        //     blockRenderers: {
+            
+        //     }
+
+        //   })
+
+        //   //return `<object  data-type="color-block"  data-block_key="${key}" data-block_data="${data}" >` + escape(block.getText() || "_") + '</object>'
+
+          
+
         // },
       },
 
@@ -285,7 +338,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
 
 
-  const [showContent, setShowContent] = useState(false)
+  const [showContent, setShowContent] = useState(true)
   const [showMention, setShowMention] = useState(false)
   const [showHint, setShowHint] = useState(true)
   const [avatarHint, setAvatarHint] = useState(false)

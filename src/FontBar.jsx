@@ -124,12 +124,14 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
       style={{
         top, left,
-        display: (top === 0 && left === 0) ? "none" : "block",
+        display:"block",
+        //  display: (top === 0 && left === 0) ? "none" : "block",
 
-
+        //  display: editorState.getSelection().isCollapsed() ? "block" : "block",
         //  display: (top === 0 && left === 0) ? "block" : "block",
 
-
+      
+        opacity:editorState.getSelection().isCollapsed() ? 0 : 1,
         backgroundColor: "#acf",
 
 
@@ -137,9 +139,9 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         borderRadius: "1000px",
 
         position: "absolute",
-        zIndex: 1100,
+        zIndex: editorState.getSelection().isCollapsed() ?-1:1100,
         transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
-        transitionProperty: "top ,left",
+        transitionProperty: "top ,left, opacity",
         transitionDuration: "100ms",
 
         overflow: "hidden",
@@ -437,7 +439,11 @@ export function markingColorBlock(e, editorState, setEditorState, gradientStyle)
 
 export function taggingFontBar(editorState) {
 
-  const oldSelection = editorState.getSelection();
+  const oldSelection = editorState.getSelection(); 
+
+  if(oldSelection.isCollapsed()){return editorState}
+
+
   let allBlocks = editorState.getCurrentContent();
   let newSelection = editorState.getSelection();
 
@@ -468,7 +474,8 @@ export function taggingFontBar(editorState) {
   if (oldSelection.isCollapsed()) {
 
     editorState = EditorState.push(editorState, allBlocks, "change-inline-style");
-    editorState = EditorState.forceSelection(editorState, oldSelection);
+    editorState = EditorState.acceptSelection(editorState, oldSelection);
+   // editorState = EditorState.forceSelection(editorState, oldSelection);
     return editorState
 
   }
@@ -477,7 +484,8 @@ export function taggingFontBar(editorState) {
 
     allBlocks = Modifier.applyInlineStyle(allBlocks, oldSelection, "FONTBAR")
     editorState = EditorState.push(editorState, allBlocks, "change-inline-style");
-    editorState = EditorState.forceSelection(editorState, oldSelection);
+    editorState = EditorState.acceptSelection(editorState, oldSelection);
+    //editorState = EditorState.forceSelection(editorState, oldSelection);
 
     return editorState
   }

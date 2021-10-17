@@ -88,7 +88,7 @@ export default function createImagePlugin() {
     );
   };
 
-  function taggingEmoji() {
+  function taggingEmoji(externalES,) {
     const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = externalES.getSelection().toArray()
     const [anchorStartKey, anchorStartOffset, anchorFocusKey, anchorFocusOffset, isAnchorBackward, isAnchorFocused]
       = [!isBackward ? anchorKey : focusKey, !isBackward ? anchorOffset : focusOffset, isBackward ? anchorKey : focusKey, isBackward ? anchorOffset : focusOffset,]
@@ -133,6 +133,35 @@ export default function createImagePlugin() {
 
 
       let matchArr;
+
+      if  ((matchArr = /.|(^$)/.exec(blockText)) !== null) {
+
+        const emojiKey = matchArr[0]
+        const start = matchArr.index;
+        const end = matchArr.index + matchArr[0].length;
+        const contentLength = end - start;
+        const contentFocusAt = anchorFocusOffset - start;
+
+
+        newSelection = newSelection.merge({
+          anchorKey: blockKey,
+          anchorOffset: start,
+          focusKey: blockKey,
+          focusOffset: start + emojiKey.length,
+          isBackward: false,
+          hasFocus: false,
+
+        })
+
+        newContent = newContent.createEntity("EMOJI", "IMMUTABLE", { emojiKey });
+        const entityKey = newContent.getLastCreatedEntityKey();
+
+        newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
+
+      }
+
+
+
       while ((matchArr = emojiRegex.exec(blockText)) !== null) {
 
         const emojiKey = matchArr[0]
@@ -225,7 +254,7 @@ export default function createImagePlugin() {
       onChange: function (editorState, { setEditorState }) {
         externalES = editorState
         externalSetEditorState = setEditorState
-        externalES = taggingEmoji()
+        externalES = taggingEmoji(externalES)
 
         return externalES
       },
@@ -237,8 +266,8 @@ export default function createImagePlugin() {
       }],
     },
 
-    EmojiPanel: withStyles(styleObj, { withTheme: true })(withContext(EmojiPanelComp))
-
+    EmojiPanel: withStyles(styleObj, { withTheme: true })(withContext(EmojiPanelComp)),
+    taggingEmoji
 
   }
 
