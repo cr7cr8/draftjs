@@ -218,8 +218,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const text = block.getText()
             const data = block.getData().toObject()
             const type = block.getType()
-
-
+           
             //   const { colorBlockCss } = useStyles()
 
             if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {

@@ -82,6 +82,9 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     return block.getType() === "colorBlock"
   })
 
+
+  //console.log(isAllTextBlock,isAllColorBlock)
+
   //const gradientStyleArr = ctx.gradientStyleArr
 
   const [top, setTop] = useState(0)
@@ -93,20 +96,24 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   const [movingPX, setMovingPX] = useState(0)
   const { fontBarCss } = useStyles()
 
+
   useEffect(function () {
 
+   // setTimeout(() => {
+      const fontBar = document.querySelector('span[style*="--font-bar"]')
+   //   console.log(isAllTextBlock,isAllColorBlock,!!fontBar)
+      if (fontBar) {
+        const { x: fontBarX, y: fontBarY, width } = fontBar.getBoundingClientRect()
+        const { x: editorRefX, y: editorRefY } = editorRef.current.editor.editor.getBoundingClientRect()
+        const x = Number(fontBarX) - Number(editorRefX)
+        const y = Number(fontBarY) - Number(editorRefY)
+     //   console.log(x,y)
+        setLeft(x); setTop(y); setTaggingWidth(width)
+  
+      }
+      else { setLeft(-100); setTop(-100) }
 
-    const fontBar = document.querySelector('span[style*="--font-bar"]')
-    if (fontBar) {
-      const { x: fontBarX, y: fontBarY, width } = fontBar.getBoundingClientRect()
-      const { x: editorRefX, y: editorRefY } = editorRef.current.editor.editor.getBoundingClientRect()
-      const x = Number(fontBarX) - Number(editorRefX)
-      const y = Number(fontBarY) - Number(editorRefY)
-
-      setLeft(x); setTop(y); setTaggingWidth(width)
-
-    }
-    else { setLeft(0); setTop(0) }
+  //  }, 0);
 
   })
 
@@ -124,14 +131,17 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
       style={{
         top, left,
-        display:"block",
+        display: "block",
         //  display: (top === 0 && left === 0) ? "none" : "block",
 
         //  display: editorState.getSelection().isCollapsed() ? "block" : "block",
         //  display: (top === 0 && left === 0) ? "block" : "block",
 
-      
-        opacity:editorState.getSelection().isCollapsed() ? 0 : 1,
+
+        opacity: editorState.getSelection().isCollapsed() ? 0 : 1,
+        zIndex: editorState.getSelection().isCollapsed() ? -1 : 1100,
+       // zIndex: 1100,
+
         backgroundColor: "#acf",
 
 
@@ -139,7 +149,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         borderRadius: "1000px",
 
         position: "absolute",
-        zIndex: editorState.getSelection().isCollapsed() ?-1:1100,
+
         transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
         transitionProperty: "top ,left, opacity",
         transitionDuration: "100ms",
@@ -395,7 +405,7 @@ export function markingColorBlock(e, editorState, setEditorState, gradientStyle)
 
   let allBlocks = Modifier.setBlockType(editorState.getCurrentContent(), editorState.getSelection(), "colorBlock")
 
-  allBlocks = Modifier.setBlockData(allBlocks, editorState.getSelection(), Immutable.Map({ colorBlock: true, ...gradientStyle }))
+  allBlocks = Modifier.setBlockData(allBlocks, editorState.getSelection(), Immutable.Map({ colorBlock: true, ...gradientStyle, horizontal: 50, verticle: 50 }))
 
 
   let es = EditorState.push(
@@ -439,9 +449,9 @@ export function markingColorBlock(e, editorState, setEditorState, gradientStyle)
 
 export function taggingFontBar(editorState) {
 
-  const oldSelection = editorState.getSelection(); 
+  const oldSelection = editorState.getSelection();
 
-  if(oldSelection.isCollapsed()){return editorState}
+  //if (oldSelection.isCollapsed()) { return editorState }
 
 
   let allBlocks = editorState.getCurrentContent();
@@ -475,7 +485,7 @@ export function taggingFontBar(editorState) {
 
     editorState = EditorState.push(editorState, allBlocks, "change-inline-style");
     editorState = EditorState.acceptSelection(editorState, oldSelection);
-   // editorState = EditorState.forceSelection(editorState, oldSelection);
+    // editorState = EditorState.forceSelection(editorState, oldSelection);
     return editorState
 
   }
@@ -484,7 +494,7 @@ export function taggingFontBar(editorState) {
 
     allBlocks = Modifier.applyInlineStyle(allBlocks, oldSelection, "FONTBAR")
     editorState = EditorState.push(editorState, allBlocks, "change-inline-style");
-    editorState = EditorState.acceptSelection(editorState, oldSelection);
+   // editorState = EditorState.acceptSelection(editorState, oldSelection);
     //editorState = EditorState.forceSelection(editorState, oldSelection);
 
     return editorState

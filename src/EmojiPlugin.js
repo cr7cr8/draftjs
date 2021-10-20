@@ -128,7 +128,7 @@ export default function createImagePlugin() {
       //       newContent = Modifier.applyEntity(newContent, newSelection, null)
       //     }
       //   }
-      // })
+      //  })
 
 
 

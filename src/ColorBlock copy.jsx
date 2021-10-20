@@ -190,49 +190,17 @@ export default function ColorBlock(props) {
   })
 
 
-  useMemo(function () {
-
-    let newContent;
-    let es = editorState;
-    arr.forEach((groupArr, index) => {
-      newContent = Modifier.setBlockData(
-
-        es.getCurrentContent(),
-        SelectionState.createEmpty(groupArr[0].props.children.props.block.getKey()),
-        Immutable.Map({ ...groupArr[0].props.children.props.block.getData().toObject(), follower: groupArr.length }),
-      )
-
-      es = EditorState.push(editorState, newContent, 'change-block-data');
-      //es = EditorState.acceptSelection(es, editorState.getSelection())
-
-      if (groupArr[0].props.children.props.block.getData().toObject().follower!== groupArr.length) {
-        setEditorState(es)
-      }
-
-
-    })
-
-
-
-
-
-
-
-
-  })
-
-
 
 
   return (
 
     arr.map((groupArr, index) => {
-      const styleObj = groupArr[0].props.children.props.block.getData().toObject()
+
       return <div key={index} id={"bgkey" + groupArr[0].props.children.props.block.getKey()}
 
         style={{
-          ...styleObj,
-          backgroundPosition: `${styleObj.horizontal}% ${styleObj.vertical}%`,
+          ...groupArr[0].props.children.props.block.getData().toObject(),
+          backgroundPosition: `${horizontal[index]}% ${vertical[index]}%`,
 
         }}>
         {

@@ -56,6 +56,7 @@ function flatten(arr) {
 }
 
 const breakpoints = createBreakpoints({})
+
 function breakpointsAttribute(...args) {
   let xs = {}, sm = {}, md = {}, lg = {}, xl = {};
 
@@ -178,6 +179,52 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
 
     }, myTheme))
 }
+
+
+const entityStyleFn = (entity) => {
+
+  if (entity.getType().indexOf("HEAD") > 0) {
+    return {
+      element: 'object',
+      attributes: {
+        "data-type": "avatar_head"
+      }
+    }
+  }
+  else if (entity.getType().indexOf("BODY") > 0) {
+    return {
+      element: 'object',
+      attributes: {
+        "data-type": "avatar_body"
+      }
+
+    }
+  }
+  else if (entity.getType().indexOf("EMOJI") >= 0) {
+    return {
+      element: 'object',
+      attributes: {
+        "data-type": "emoji",
+        "data-emoji_symbol": entity.getData().symbol,
+        "data-emoji_url": entity.getData().url
+      }
+
+    }
+  }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
 function toPreHtml(editorState) {
 
   const preHtml = stateToHTML(
@@ -209,41 +256,7 @@ function toPreHtml(editorState) {
       },
 
 
-      entityStyleFn: (entity) => {
-        // console.log(entity.getType())
-
-
-        if (entity.getType().indexOf("HEAD") > 0) {
-          return {
-            element: 'object',
-            attributes: {
-              "data-type": "avatar_head"
-            }
-          }
-        }
-        else if (entity.getType().indexOf("BODY") > 0) {
-          return {
-            element: 'object',
-            attributes: {
-              "data-type": "avatar_body"
-            }
-
-          }
-        }
-        else if (entity.getType().indexOf("EMOJI") >= 0) {
-          return {
-            element: 'object',
-            attributes: {
-              "data-type": "emoji",
-              "data-emoji_symbol": entity.getData().symbol,
-              "data-emoji_url": entity.getData().url
-            }
-
-          }
-        }
-
-
-      },
+      entityStyleFn,
 
       blockRenderers: {
         imageBlock: function (block) {
@@ -260,64 +273,44 @@ function toPreHtml(editorState) {
           // return `<div>ffd</div>`
           // return '<imgtag />'
         },
-        // colorBlock: function (block) {
-        //   const text = block.getText()
-        //   const data = escape(JSON.stringify(block.getData().toObject()))
-        //   const type = block.getType()
-        //   const key = block.getKey()
+        colorBlock: function (block) {
+          const text = block.getText()
+          const data = block.getData().toObject()//escape(JSON.stringify(block.getData().toObject()))
+          const type = block.getType()
+          const key = block.getKey()
 
-        //   // console.log(block)
+          const backgroundImage = data.backgroundImage
+          //console.log("bgkey" + key)
 
-        //   return stateToHTML(ContentState.createFromBlockArray([block]),{
+          //  let element;
+          //  setTimeout(() => {
+          //  element = document.getElementById("bgkey" + key)
+          //  console.log(type,data)
+          //      console.log(element)
+          //   }, 0);
 
-        //     defaultBlockTag: "div",
-        //     entityStyleFn: (entity) => {
-        //       // console.log(entity.getType())
-      
-      
-        //       if (entity.getType().indexOf("HEAD") > 0) {
-        //         return {
-        //           element: 'object',
-        //           attributes: {
-        //             "data-type": "avatar_head"
-        //           }
-        //         }
-        //       }
-        //       else if (entity.getType().indexOf("BODY") > 0) {
-        //         return {
-        //           element: 'object',
-        //           attributes: {
-        //             "data-type": "avatar_body"
-        //           }
-      
-        //         }
-        //       }
-        //       else if (entity.getType().indexOf("EMOJI") >= 0) {
-        //         return {
-        //           element: 'object',
-        //           attributes: {
-        //             "data-type": "emoji",
-        //             "data-emoji_symbol": entity.getData().symbol,
-        //             "data-emoji_url": entity.getData().url
-        //           }
-      
-        //         }
-        //       }
-      
-      
-        //     },
+          // if(!element){return "<span />"}
 
-        //     blockRenderers: {
-            
-        //     }
+          // return element.outerHTML
 
-        //   })
+          return (
+            //`<div style="background-color:pink">${
+            `<object  data-type="color-block"  data-block_key="${key}" data-block_data='${JSON.stringify(data)}' data-bgiamge='${backgroundImage}'> 
+            ${stateToHTML(ContentState.createFromBlockArray([block]), {
+              defaultBlockTag: "div",
+              entityStyleFn,
+              blockRenderers: {},
+            })}  
+            </object>`
 
-        //   //return `<object  data-type="color-block"  data-block_key="${key}" data-block_data="${data}" >` + escape(block.getText() || "_") + '</object>'
+          )
 
-          
 
-        // },
+          //return `<object  data-type="color-block"  data-block_key="${key}" data-block_data="${data}" >` + escape(block.getText() || "_") + '</object>'
+
+
+
+        },
       },
 
     }

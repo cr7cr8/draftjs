@@ -31,7 +31,7 @@ const useSize = (target) => {
   return size
 }
 
-
+let backgroundImage = "";
 function toHtml({ preHtml, theme, ctx }) {
 
   //console.log(preHtml)
@@ -95,9 +95,13 @@ function toHtml({ preHtml, theme, ctx }) {
 
 
 
+        // console.log("next is",node?.next)
 
+        if (!data.colorBlock) { return <></> }
 
-        if (!data.follower) { return <></> }
+        // console.log(node.attribs["data-bgiamge"],"|"+backgroundImage, node.attribs["data-bgiamge"] === backgroundImage)
+        //if (node.attribs["data-bgiamge"] === backgroundImage) {    return <></> }
+
 
 
 
@@ -107,28 +111,30 @@ function toHtml({ preHtml, theme, ctx }) {
           return convertNodeToElement(child, index, transformFn)
         })
 
-        let nextNode = node && node.next && node.next.next
-
-
-
+        let nextNode = node ?.next ?.next
+       // console.log(node?.next?.next)
 
         const followerNodes = []
-
-        for (let i = 0; i < data.follower - 1; i++) {
+        while (
+          nextNode ?.name === "object"
+            && nextNode.attribs["data-type"] === "color-block"
+            &&
+            (
+              (!nextNode.attribs["data-block_data"].colorBlock)
+              //|| (nextNode.attribs["data-bgiamge"] === backgroundImage)
+            )
+          //&& (nextNode.attribs["data-bgiamge"])
+          
+        ) {
+          console.log(nextNode.attribs["data-block_data"].colorBlock)
+          // console.log(nextNode)
           followerNodes.push(nextNode)
-          nextNode = nextNode && nextNode.next && nextNode.next.next
+
+          nextNode = nextNode ?.next ?.next
         }
 
-
-        //console.log(followerNodes)
-
-        // followerNodes.forEach((elemen,pos) => {
-        //   followerNodes[pos] = nextNode
-        //   nextNode = node ?.next ?.next
-        // });
-
-
-
+        backgroundImage = node.attribs["data-bgiamge"] ? node.attribs["data-bgiamge"] : backgroundImage
+        //console.log(nextNode, followerNodes)
         return <div key={index}
 
           style={{
