@@ -111,26 +111,26 @@ function toHtml({ preHtml, theme, ctx }) {
           return convertNodeToElement(child, index, transformFn)
         })
 
-        let nextNode = node ?.next ?.next
+        let nextNode = node &&node.next &&node.next.next
        // console.log(node?.next?.next)
 
         const followerNodes = []
         while (
-          nextNode ?.name === "object"
-            && nextNode.attribs["data-type"] === "color-block"
-            &&
-            (
-              (!nextNode.attribs["data-block_data"].colorBlock)
-              //|| (nextNode.attribs["data-bgiamge"] === backgroundImage)
-            )
+          nextNode && nextNode.name === "object"
+          && nextNode.attribs["data-type"] === "color-block"
+          &&
+          (
+            (!nextNode.attribs["data-block_data"].colorBlock)
+            //|| (nextNode.attribs["data-bgiamge"] === backgroundImage)
+          )
           //&& (nextNode.attribs["data-bgiamge"])
-          
+
         ) {
           console.log(nextNode.attribs["data-block_data"].colorBlock)
           // console.log(nextNode)
           followerNodes.push(nextNode)
 
-          nextNode = nextNode ?.next ?.next
+          nextNode = nextNode && nextNode.next && nextNode.next.next
         }
 
         backgroundImage = node.attribs["data-bgiamge"] ? node.attribs["data-bgiamge"] : backgroundImage
