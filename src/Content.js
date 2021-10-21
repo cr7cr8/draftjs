@@ -36,6 +36,47 @@ function toHtml({ preHtml, theme, ctx }) {
 
   //console.log(preHtml)
 
+  const arr = []
+
+  ReactHtmlParser(preHtml, {
+    transform: function (node, index) {
+
+      if (node.name === "object" && node.attribs["data-type"] === "color-block") {
+        arr.push({ bg: node.attribs["data-bgiamge"], row: index, node })
+
+      }
+    }
+  })
+
+  const arr2 = []
+
+  if (arr.length > 0) {
+
+    arr2.push([arr[0]])
+    let preItemValue = arr[0].bg
+
+    arr.reduce((pre, current) => {
+
+      if ((current.bg === "undefined") || (current.bg === pre.bg)) {
+        arr2[arr2.length - 1].push(current)
+      }
+      else if (current.bg === preItemValue) {
+        arr2[arr2.length - 1].push(current)
+      }
+      else {
+        arr2.push([current])
+        preItemValue = current.bg
+      }
+      return current
+
+    })
+  }
+
+  const headRowArr = []
+  arr2.forEach(item => {
+    headRowArr.push(item[0].row)
+  })
+
 
   const html = ReactHtmlParser(preHtml, {
     transform: function transformFn(node, index) {
@@ -79,12 +120,10 @@ function toHtml({ preHtml, theme, ctx }) {
       }
       else if (node.name === "object" && node.attribs["data-type"] === "image-block") {
 
-        //   console.log(JSON.parse(node.attribs["data-block_data"]))
 
         const posData = JSON.parse(unescape(node.attribs["data-block_data"]))
         const key = node.attribs["data-block_key"]
         const imageLinkArr = (ctx && ctx.imageBlockObj && ctx.imageBlockObj[key]) || []
-
 
         return <ImagePanel key={index} imageLinkArr={imageLinkArr} posData={posData} />
 
@@ -93,83 +132,29 @@ function toHtml({ preHtml, theme, ctx }) {
         const key = node.attribs["data-block_key"]
         const data = JSON.parse(node.attribs["data-block_data"])
 
+        if (!headRowArr.includes(index)) { return <React.Fragment key={index} /> }
 
+        const listArr = arr2.find(arrGroup => {
 
+          return arrGroup[0].row === index
 
+        })//.shift()
 
-        if (!data.follower) { return <></> }
-
-
-
-
-
-        const element = node.children.map((child, index) => {
-          return convertNodeToElement(child, index, transformFn)
-        })
-
-        let nextNode = node && node.next && node.next.next
-
-
-
-
-        const followerNodes = []
-
-        for (let i = 0; i < data.follower - 1; i++) {
-          followerNodes.push(nextNode)
-          nextNode = nextNode && nextNode.next && nextNode.next.next
-        }
-
-
-        //console.log(followerNodes)
-
-        // followerNodes.forEach((elemen,pos) => {
-        //   followerNodes[pos] = nextNode
-        //   nextNode = node ?.next ?.next
-        // });
-
-
-
-        return <div key={index}
+        return <div key={node.attribs["data-block_key"]}
 
           style={{
             ...data,
             backgroundPosition: `${data.horizontal}% ${data.vertical}%`,
-
           }}>
-          {element}
-          {followerNodes.map((item, itemIndex) => {
 
-
-            return item.children.map((child, index) => {
-              return <span>{convertNodeToElement(child, index, transformFn)}</span>
+          {
+            listArr.map((item, index) => {
+              return <React.Fragment key={index}>{convertNodeToElement(item.node, index, transformFn)}</React.Fragment>
             })
-
-
-
-
-          })}
-
-
+          }
 
         </div>
-
-
-        //  return <React.Fragment key={index}>{element}</React.Fragment>
-        //  return <span key={index}><span>{element}</span></span>
-
-
-
       }
-      // else if (node.name === "object" && node.attribs["data-type"] === "color-block" && !node.attribs["data-background_key"]) {
-      //   const key = node.attribs["data-block_key"]
-      //   const data = JSON.parse(node.attribs["data-block_data"])
-
-      //   return <></>
-
-      // }
-
-
-
 
     }
   });
