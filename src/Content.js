@@ -82,10 +82,7 @@ function toHtml({ preHtml, theme, ctx }) {
     transform: function transformFn(node, index) {
 
 
-
-
       if (node.name === "object" && node.attribs["data-type"] === "avatar_head") {
-
 
         const element = node.children.map((child, index) => {
           return convertNodeToElement(child, index, transformFn)
