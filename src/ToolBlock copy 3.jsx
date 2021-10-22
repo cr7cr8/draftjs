@@ -38,6 +38,10 @@ import { getEventListeners } from 'events';
 
 export default function ToolBlock(props) {
 
+
+
+
+
   const { block, selection, contentState } = props
 
   const { editorRef, readOnly, setReadOnly, EmojiPanel, markingImageBlock, markingColorBlock, editorState, setEditorState, taggingFontBar, gradientStyleArr,
@@ -46,15 +50,21 @@ export default function ToolBlock(props) {
 
   } = props.blockProps
 
-  
+
+
 
   const theme = useTheme()
   const blockKey = block.getKey()
   const editorBlockRef = useRef()
 
+
+
   const [backColor, setBackColor] = useState(getRandomColor())
 
   //const [focusOn, setFocusOn] = useState(true)
+
+
+
 
   const [hidden, setHidden] = useState(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey))
 
@@ -67,16 +77,47 @@ export default function ToolBlock(props) {
     setShowColorPanel(false)
   }
 
+
+
   function update(e) {
     e.preventDefault()
     e.stopPropagation()
 
     if (e.currentTarget.files[0].name.trim().match(/\.(gif|jpe?g|tiff|png|webp|bmp)$/i)) {
+      // const file = e.currentTarget.files[0]
+      // file.localUrl = URL.createObjectURL(e.currentTarget.files[0])
+      //   console.log(e.currentTarget)
+
 
       const files = e.currentTarget.files
 
       const newImage = bgImageObj.current[files[0].name]
+      // const newFileArr = [
+      //   files[0] && URL.createObjectURL(files[0]),
+
+
+      // ]
+
+
+
+      // alert(JSON.stringify(bgImageObj)+Object.keys(bgImageObj.current).includes(files[0].name))
+      //  if (!Object.keys(bgImageObj.current).includes(files[0].name)) {
       if (!newImage) {
+        // setBgImageObj(
+        //   pre => {
+        //     return {
+
+
+        //       [files[0].name]: {
+        //         backgroundImage: `url(${URL.createObjectURL(files[0])})`,
+        //         backgroundSize: "cover",
+        //         backgroundRepeat: "no-repeat",
+        //       },
+
+        //       ...pre,
+        //     }
+        //   }
+        // )
 
         bgImageObj.current = {
           ...bgImageObj.current,
@@ -89,20 +130,22 @@ export default function ToolBlock(props) {
 
         }
 
+        markingColorBlock(e, editorState, setEditorState, {
 
+          backgroundImage: `url(${URL.createObjectURL(files[0])})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+
+        })
       }
-      const updatedImage = bgImageObj.current[files[0].name]
+      else {
+        alert("xxx")
+        markingColorBlock(e, editorState, setEditorState, newImage)
+      }
 
 
-      markingColorBlock(e, editorState, setEditorState,updatedImage)
 
 
-
-      // markingColorBlock(e, editorState, setEditorState, {
-      //   backgroundImage: `url(${URL.createObjectURL(files[0])})`,
-      //   backgroundSize: "cover",
-      //   backgroundRepeat: "no-repeat",
-      // })
 
 
 
@@ -114,6 +157,11 @@ export default function ToolBlock(props) {
     }
 
   }
+
+
+
+
+
 
   useEffect(function () {
 
@@ -142,16 +190,25 @@ export default function ToolBlock(props) {
 
   })
 
+
+
+
+
+
   return (
+
 
     <>
       <input ref={inputRef} type="file" multiple={false} style={{ display: "none" }}
         onClick={function (e) { e.currentTarget.value = null; }}
         onChange={update}
       />
+
       <EditorBlock     {...props} ref={editorBlockRef} />
 
       {showColorPanel && gradientStyleArr.map(function (item, index) {
+
+
 
         return <IconButton className={theme.sizeCss} key={index}
           contentEditable={false}
@@ -188,11 +245,19 @@ export default function ToolBlock(props) {
           e.preventDefault(); e.stopPropagation();
           //console.log(bgImageObj)
           inputRef.current.click()
+
+
+
         }}
       >
         <AddPhotoAlternateOutlined className={theme.sizeCss} />
       </IconButton>
       }
+
+
+
+
+
 
       {
         !hidden && <IconButton
@@ -256,7 +321,17 @@ export default function ToolBlock(props) {
           <ColorLensTwoToneIcon className={theme.sizeCss} />
         </IconButton>
       }
+
+
+
+
     </>
+
+
+
+
+
+
   )
 }
 

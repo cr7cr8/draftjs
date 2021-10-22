@@ -265,13 +265,12 @@ function toPreHtml(editorState) {
           const type = block.getType()
           const key = block.getKey()
 
-          // console.log(data)
+
 
           //  return `<img src=${data.imgUrl} style=max-width:300px;display:block;margin-left:auto;margin-right:auto;/>`
           //  return `<imgtag id=${data.imgId} style=max-width:100%;display:block;margin-left:auto;margin-right:auto;/>`
           return `<object  data-type="image-block"  data-block_key="${key}" data-block_data="${data}" >` + escape(block.getText()) + '</object>'
-          // return `<div>ffd</div>`
-          // return '<imgtag />'
+
         },
         colorBlock: function (block) {
           const text = block.getText()
@@ -279,23 +278,11 @@ function toPreHtml(editorState) {
           const type = block.getType()
           const key = block.getKey()
 
-          const backgroundImage = data.backgroundImage
-          //console.log("bgkey" + key)
-
-          //  let element;
-          //  setTimeout(() => {
-          //  element = document.getElementById("bgkey" + key)
-          //  console.log(type,data)
-          //      console.log(element)
-          //   }, 0);
-
-          // if(!element){return "<span />"}
-
-          // return element.outerHTML
+          // console.log(data.backgroundImage)
 
           return (
-            //`<div style="background-color:pink">${
-            `<object  data-type="color-block"  data-block_key="${key}" data-block_data='${JSON.stringify(data)}' data-bgiamge='${backgroundImage}'> 
+
+            `<object  data-type="color-block"  data-block_key="${key}" data-block_data='${JSON.stringify(data)}' data-bgiamge='${data.backgroundImage}' > 
             ${stateToHTML(ContentState.createFromBlockArray([block]), {
               defaultBlockTag: "div",
               entityStyleFn,
@@ -306,7 +293,7 @@ function toPreHtml(editorState) {
           )
 
 
-          //return `<object  data-type="color-block"  data-block_key="${key}" data-block_data="${data}" >` + escape(block.getText() || "_") + '</object>'
+
 
 
 
@@ -331,7 +318,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
 
 
-  const [showContent, setShowContent] = useState(true)
+  const [showContent, setShowContent] = useState(false)
   const [showMention, setShowMention] = useState(false)
   const [showHint, setShowHint] = useState(true)
   const [avatarHint, setAvatarHint] = useState(false)
@@ -345,10 +332,11 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const { sizeCss, smSizeCss, heightCss, widthCss, } = useStyles({ textSizeArr })
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, }), [textSizeArr, isLight, setIsLight,])
 
+  const [bgImageObj_,setBgImageObj] = useState({})
+  const bgImageObj = useRef({})
 
   useEffect(function () {
 
-    //console.log(imageBlockObj)
 
   }, [imageBlockObj])
 
@@ -375,7 +363,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showEmojiPanel, setShowEmojiPanel,
           emojiCtxStr, setEmojiCtxStr,
           imageBlockObj, setImageBlockObj,
-
+          bgImageObj, setBgImageObj,
           gradientStyleArr: [
             { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
             { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },

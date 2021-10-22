@@ -43,8 +43,9 @@ function toHtml({ preHtml, theme, ctx }) {
 
       if (node.name === "object" && node.attribs["data-type"] === "color-block") {
         arr.push({ bg: node.attribs["data-bgiamge"], row: index, node })
-
+        return null
       }
+      return null
     }
   })
 
@@ -135,7 +136,7 @@ function toHtml({ preHtml, theme, ctx }) {
 
           return arrGroup[0].row === index
 
-        })//.shift()
+        })
 
         return <div key={node.attribs["data-block_key"]}
 

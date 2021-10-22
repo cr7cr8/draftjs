@@ -181,16 +181,6 @@ export default function ImagePanel(props) {
         .filter((item, index) => { return index < 4 })
 
 
-
-      // setImageArr(pre => {
-      //   const pre_ = [...pre]
-      //   pre_.splice(imageIndex + 1, 0, ...newFileArr)
-      //   return pre_
-      // })
-
-
-
-
       setImageBlockObj(pre => {
         //  alert("dsdf")
 

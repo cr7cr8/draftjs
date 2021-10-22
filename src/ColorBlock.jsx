@@ -190,36 +190,30 @@ export default function ColorBlock(props) {
   })
 
 
-  useMemo(function () {
+  // useMemo(function () {
 
-    let newContent;
-    let es = editorState;
-    arr.forEach((groupArr, index) => {
-      newContent = Modifier.setBlockData(
+  //   let newContent;
+  //   let es = editorState;
+  //   arr.forEach((groupArr, index) => {
+  //     newContent = Modifier.setBlockData(
 
-        es.getCurrentContent(),
-        SelectionState.createEmpty(groupArr[0].props.children.props.block.getKey()),
-        Immutable.Map({ ...groupArr[0].props.children.props.block.getData().toObject(), follower: groupArr.length }),
-      )
+  //       es.getCurrentContent(),
+  //       SelectionState.createEmpty(groupArr[0].props.children.props.block.getKey()),
+  //       Immutable.Map({ ...groupArr[0].props.children.props.block.getData().toObject(), follower: groupArr.length }),
+  //     )
 
-      es = EditorState.push(editorState, newContent, 'change-block-data');
-      //es = EditorState.acceptSelection(es, editorState.getSelection())
+  //     es = EditorState.push(editorState, newContent, 'change-block-data');
+  //     //es = EditorState.acceptSelection(es, editorState.getSelection())
 
-      if (groupArr[0].props.children.props.block.getData().toObject().follower!== groupArr.length) {
-        setEditorState(es)
-      }
-
-
-    })
+  //     if (groupArr[0].props.children.props.block.getData().toObject().follower!== groupArr.length) {
+  //       setEditorState(es)
+  //     }
 
 
+  //   })
 
 
-
-
-
-
-  })
+  // })
 
 
 
@@ -256,7 +250,6 @@ export default function ColorBlock(props) {
                   }}
 
                   onMouseDown={function () {
-
 
                     let newContent = Modifier.setBlockType(
                       blockItem.props.children.props.contentState,
@@ -304,13 +297,10 @@ export default function ColorBlock(props) {
                       const newArr = [...pre]
                       newArr[index] = arr[(pos + 1) % 5]
 
-                      console.log("verticle", newArr)
+                  //    console.log("verticle", newArr)
                       return newArr
 
                     })
-
-
-
 
                     let newContent = Modifier.setBlockData(
                       blockItem.props.children.props.contentState,
@@ -321,11 +311,7 @@ export default function ColorBlock(props) {
                     let es = EditorState.push(editorState, newContent, 'change-block-data');
                     es = EditorState.acceptSelection(es, editorState.getSelection())
 
-
                     setEditorState(es)
-
-
-
                     setTimeout(() => {
                       // setEditorState(es)
                       editorRef.current.focus()
@@ -356,12 +342,10 @@ export default function ColorBlock(props) {
 
                       const newArr = [...pre]
                       newArr[index] = arr[(pos + 1) % 5]
-                      console.log("horizontal", newArr)
+               //       console.log("horizontal", newArr)
                       return newArr
 
                     })
-
-
 
                     let newContent = Modifier.setBlockData(
                       blockItem.props.children.props.contentState,
@@ -372,23 +356,16 @@ export default function ColorBlock(props) {
                     let es = EditorState.push(editorState, newContent, 'change-block-data');
                     es = EditorState.acceptSelection(es, editorState.getSelection())
 
-
                     setEditorState(es)
-
                     setTimeout(() => {
                       editorRef.current.focus()
                     }, 0);
-
-
-
                   }}
 
                 >
                   <HeightIcon className={theme.sizeCss} style={{ transform: "rotate(90deg)" }}
                   />
                 </IconButton>
-
-
 
                 {blockItem}
               </div>

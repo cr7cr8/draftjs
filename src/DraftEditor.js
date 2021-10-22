@@ -29,6 +29,7 @@ import createMentionPlugin from './MentionPlugin';
 import createEmojiPlugin from './EmojiPlugin';
 import createImagePlugin from './ImagePlugin';
 import createFontBarPlugin from './FontBarPlugin';
+import createColorBlockPlugin from './ColorBlockPlugin';
 
 import ToolBlock from "./ToolBlock";
 import ColorBlock from "./ColorBlock";
@@ -69,6 +70,9 @@ const initialState = {
 const { mentionPlugin, taggingMention, checkShowing } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setImageBlockData*/ } = createImagePlugin()
+const { colorBlockPlugin, /*markingColorBlock*/ } = createColorBlockPlugin()
+
+
 //const { fontBarPlugin, taggingFontBar } = createFontBarPlugin()
 
 
@@ -104,7 +108,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   const key = useRef(Math.random() + "")
 
-  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr } = ctx
+  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, setBgImageObj } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
 
@@ -151,7 +155,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             setEditorState(newState)
           }}
 
-          plugins={[mentionPlugin, emojiPlugin, imagePlugin,]}
+          plugins={[mentionPlugin, emojiPlugin, imagePlugin, colorBlockPlugin]}
 
 
           // placeholder="hihihi"
@@ -218,7 +222,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const text = block.getText()
             const data = block.getData().toObject()
             const type = block.getType()
-           
+
             //   const { colorBlockCss } = useStyles()
 
             if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
@@ -306,6 +310,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   setEditorState,
                   taggingFontBar,
                   gradientStyleArr,
+                  bgImageObj,
+                  setBgImageObj,
+
                 }
               }
             }
@@ -354,8 +361,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const contentState = editorState.getCurrentContent();
             const block = contentState.getBlockForKey(selectionState.getStartKey());
 
-
-
             if (checkShowing() && e.keyCode === 38) {
               return undefined
             }
@@ -369,9 +374,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             else if (e.shiftKey || hasCommandModifier(e) || e.altKey) {
               return getDefaultKeyBinding(e);
             }
-
-
-
             return undefined
 
           }}
@@ -390,10 +392,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
               setEditorState(RichUtils.handleKeyCommand(editorState, command))
             }
-
-
-
-
             return 'not-handled';
 
           }}
@@ -462,7 +460,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
         <div>{JSON.stringify(editorState.getCurrentContent().selectionAfter, null, 2)}</div> */}
 
         {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
-        <hr /> */}
+        <hr />  */}
         {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
       </div>
       {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
