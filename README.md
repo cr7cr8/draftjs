@@ -1,8 +1,6 @@
 ### Dev14
 Color Block is done.
 
-
-
 ### Dev13
 Font bar showing is done.
 Return `undefined` in plugins method if not-handled,
