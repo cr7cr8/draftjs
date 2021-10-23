@@ -29,7 +29,7 @@ import createMentionPlugin from './MentionPlugin';
 import createEmojiPlugin from './EmojiPlugin';
 import createImagePlugin from './ImagePlugin';
 import createFontBarPlugin from './FontBarPlugin';
-import createColorBlockPlugin from './ColorBlockPlugin';
+
 
 import ToolBlock from "./ToolBlock";
 import ColorBlock from "./ColorBlock";
@@ -70,7 +70,7 @@ const initialState = {
 const { mentionPlugin, taggingMention, checkShowing } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setImageBlockData*/ } = createImagePlugin()
-const { colorBlockPlugin, /*markingColorBlock*/ } = createColorBlockPlugin()
+
 
 
 //const { fontBarPlugin, taggingFontBar } = createFontBarPlugin()
@@ -155,7 +155,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             setEditorState(newState)
           }}
 
-          plugins={[mentionPlugin, emojiPlugin, imagePlugin, colorBlockPlugin]}
+          plugins={[mentionPlugin, emojiPlugin, imagePlugin]}
 
 
           // placeholder="hihihi"
@@ -172,48 +172,23 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           customStyleFn={function (style, block) {
 
             const styleNames = style.toArray();
-
-
             if (styleNames.includes("FONTBAR")) {
-              //  console.log(block.getKey())
 
-              block.findStyleRanges(
-
-                (metaArr) => { return metaArr.hasStyle("FONTBAR") },
-
-                (start, end) => { /*console.log(start, end)*/ }
-              )
+              // block.findStyleRanges(
+              //   (metaArr) => { return metaArr.hasStyle("FONTBAR") },    (start, end) => { /*console.log(start, end)*/ }
+              // )
 
               return {
-                // element: 'p',
-                // style: {
-                //   color: "red",
-                // },
-                //  attributes: {
-                //    "data-type": "xxxx",
-                //  },
+                // only style attributes working
+
+                // color:"red",
+                // fontSize:"8rem",
                 position: "relative",
                 "--font-bar": block.getKey()
               }
 
 
             }
-            // if (styleNames.includes("UNDERLINE")) {
-
-            //   return {
-            //     // element: 'p',
-            //     // style: {
-            //     //   color: "red",
-            //     // },
-            //      attributes: {
-            //        "data-type": "xxxx",
-            //      },
-            //      backgroundColor: "skyblue"
-            //     // color:"red",
-            //   }
-
-
-            // }
 
 
           }}
@@ -223,20 +198,13 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const data = block.getData().toObject()
             const type = block.getType()
 
-            //   const { colorBlockCss } = useStyles()
-
             if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
               return "image-block-figure"
             }
             if ((!text) && (type === "unstyled")) {
               return "unstyled-text-draft-block"
             }
-            // if (type === "FontBarBlock") {
-            //   return "font-bar-block"
-            // }
-            // if (type==="colorBlock") {
-            //   return "font-bar-block"
-            // }
+          
 
           }}
 
