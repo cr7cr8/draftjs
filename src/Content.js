@@ -130,6 +130,8 @@ function toHtml({ preHtml, theme, ctx }) {
         const key = node.attribs["data-block_key"]
         const data = JSON.parse(node.attribs["data-block_data"])
 
+       
+
         if (!headRowArr.includes(index)) { return <React.Fragment key={index} /> }
 
         const listArr = arr2.find(arrGroup => {
@@ -143,10 +145,14 @@ function toHtml({ preHtml, theme, ctx }) {
           style={{
             ...data,
             backgroundPosition: `${data.horizontal}% ${data.vertical}%`,
+            // ...data.centerBlock&&{textAlign:"center"},
+            // ...data.rightBlock&&{textAlign:"right"},
           }}>
 
           {
             listArr.map((item, index) => {
+
+              return <div key={index} style={{ textAlign:item.node.attribs["data-text-align"]}}  >{convertNodeToElement(item.node, index, transformFn)}</div>
               return <React.Fragment key={index}>{convertNodeToElement(item.node, index, transformFn)}</React.Fragment>
             })
           }
@@ -276,13 +282,13 @@ function ImagePanel({ imageLinkArr = [], posData = {}, ...props }) {
       {
 
         imageLinkArr.map((pic, index) => {
-          const { horizontal = 50, verticle = 50 } = posData["pos" + index] || {}
+          const { horizontal = 50, vertical = 50 } = posData["pos" + index] || {}
 
           return <div key={index}>
 
             <img src={pic} style={{
               position: "absolute", objectFit: "cover", width: "100%", height: "100%",
-              objectPosition: horizontal + "%" + " " + verticle + "%"
+              objectPosition: horizontal + "%" + " " + vertical + "%"
             }} />
 
           </div>

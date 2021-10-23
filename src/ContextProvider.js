@@ -218,13 +218,6 @@ const entityStyleFn = (entity) => {
 
 
 
-
-
-
-
-
-
-
 function toPreHtml(editorState) {
 
   const preHtml = stateToHTML(
@@ -258,7 +251,31 @@ function toPreHtml(editorState) {
 
       entityStyleFn,
 
+
+      blockStyleFn: function (block) {
+
+        const styleObj = block.getData().toObject()
+
+        console.log(styleObj)
+        return {
+          // style: {
+          //   ...styleObj.centerBlock && { textAlign: "center" },
+          //   ...styleObj.rightBlock && { textAlign: "right" }
+
+          // },
+          attributes: {
+
+            ...styleObj.centerBlock && { className: "text-center" },
+            ...styleObj.rightBlock && { className: "text-right" }
+          }
+        }
+
+      },
+
       blockRenderers: {
+
+
+
         imageBlock: function (block) {
           const text = block.getText()
           const data = escape(JSON.stringify(block.getData().toObject()))
@@ -278,11 +295,14 @@ function toPreHtml(editorState) {
           const type = block.getType()
           const key = block.getKey()
 
+          let textAlign = data.centerBlock ? "center" : "left"
+          textAlign = data.rightBlock ? "right" : textAlign
+
           // console.log(data.backgroundImage)
 
           return (
 
-            `<object  data-type="color-block"  data-block_key="${key}" data-block_data='${JSON.stringify(data)}' data-bgiamge='${data.backgroundImage}' > 
+            `<object data-text-align="${textAlign}"  data-type="color-block"  data-block_key="${key}" data-block_data='${JSON.stringify(data)}' data-bgiamge='${data.backgroundImage}' > 
             ${stateToHTML(ContentState.createFromBlockArray([block]), {
               defaultBlockTag: "div",
               entityStyleFn,
@@ -332,7 +352,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const { sizeCss, smSizeCss, heightCss, widthCss, } = useStyles({ textSizeArr })
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, }), [textSizeArr, isLight, setIsLight,])
 
-  const [bgImageObj_,setBgImageObj] = useState({})
+  const [bgImageObj_, setBgImageObj] = useState({})
   const bgImageObj = useRef({})
 
   useEffect(function () {

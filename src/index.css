@@ -39,6 +39,17 @@ figure {
   opacity: 0.5;
 } 
 
+.text-center{
+  text-align: center;
+}
+
+.text-right{
+  text-align: right;
+}
+
+
+
+
 /* .unstyled-text-draft-block::before{
   content:"+";
   color: #E2202D;

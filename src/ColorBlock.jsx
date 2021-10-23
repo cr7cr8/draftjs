@@ -37,44 +37,25 @@ import HeightIcon from '@material-ui/icons/Height';
 
 
 
-const useStyles = makeStyles(theme => {
-
-  return {
-
-
-    colorBlockCss: (gradient) => {
-
-      // console.log(gradient.toObject())
-
-      return {
-
-        ...gradient.toObject()
-      }
-    }
-
-  }
-
-
-})
+// const useStyles = makeStyles(theme => {
+//   return {
+//     colorBlockCss: (gradient) => {
+//       return {
+//         ...gradient.toObject()
+//       }
+//     }
+//   }
+// })
 
 
 export default function ColorBlock(props) {
-
-  //const arr = []
-
-  // props.children.forEach(element => {
-  //   const block = element.props.children.props.block
-
-
-  //   arr.push({ key: block.getKey(), ...block.getData().toObject() })
-  // })
-
 
   const theme = useTheme()
   const { editorState, setEditorState, editorRef } = props;
   const selection = editorState.getSelection()
 
   const arr = [[props.children[0]]]
+
 
   let preItemValue = props.children[0].props.children.props.block.getData().toObject().backgroundImage
   props.children.reduce((previousItem, currentItem, currentIndex) => {
@@ -101,30 +82,11 @@ export default function ColorBlock(props) {
 
   })
 
-  // props.children.reduce((previousItem, currentItem, currentIndex) => {
-
-  //   const previousValue = previousItem.props.children.props.block.getData().toObject().backgroundImage
-  //   const currentValue = currentItem.props.children.props.block.getData().toObject().backgroundImage
 
 
 
-  //   if (previousValue === currentValue) {
-  //     arr[arr.length - 1].push(currentItem)
-  //   }
-  //   else if (!currentValue) {
-  //     arr[arr.length - 1].push(currentItem)
-  //   }
-  //   else {
-  //     arr.push([currentItem])
-  //   }
-  //   return currentItem
-
-  // })
-
-
-
-  const [horizontal, setHorizontal] = useState(arr.map(() => { return 50 }))
-  const [vertical, setVertical] = useState(arr.map(() => { return 50 }))
+  const [horizontal, setHorizontal] = useState(arr.map(() => { return 75 }))
+  const [vertical, setVertical] = useState(arr.map(() => { return 75 }))
 
   useEffect(function () {
 
@@ -185,38 +147,7 @@ export default function ColorBlock(props) {
     // setTimeout(() => {                    will reander not only once per click if placed here
     //   setEditorState(editorState)
     // }, 0);
-
-
   })
-
-
-  // useMemo(function () {
-
-  //   let newContent;
-  //   let es = editorState;
-  //   arr.forEach((groupArr, index) => {
-  //     newContent = Modifier.setBlockData(
-
-  //       es.getCurrentContent(),
-  //       SelectionState.createEmpty(groupArr[0].props.children.props.block.getKey()),
-  //       Immutable.Map({ ...groupArr[0].props.children.props.block.getData().toObject(), follower: groupArr.length }),
-  //     )
-
-  //     es = EditorState.push(editorState, newContent, 'change-block-data');
-  //     //es = EditorState.acceptSelection(es, editorState.getSelection())
-
-  //     if (groupArr[0].props.children.props.block.getData().toObject().follower!== groupArr.length) {
-  //       setEditorState(es)
-  //     }
-
-
-  //   })
-
-
-  // })
-
-
-
 
   return (
 
@@ -259,10 +190,10 @@ export default function ColorBlock(props) {
 
                     let es = EditorState.push(editorState, newContent, 'change-block-type');
 
-                    newContent = Modifier.setBlockData(
+                    newContent = Modifier.mergeBlockData(
                       newContent,
                       SelectionState.createEmpty(blockItemKey),
-                      Immutable.Map({}),
+                      Immutable.Map({colorBlock:false}),
                     )
 
                     es = EditorState.push(es, newContent, 'change-block-data');
@@ -297,12 +228,12 @@ export default function ColorBlock(props) {
                       const newArr = [...pre]
                       newArr[index] = arr[(pos + 1) % 5]
 
-                  //    console.log("verticle", newArr)
+                      //    console.log("vertical", newArr)
                       return newArr
 
                     })
 
-                    let newContent = Modifier.setBlockData(
+                    let newContent = Modifier.mergeBlockData(
                       blockItem.props.children.props.contentState,
                       SelectionState.createEmpty(groupArr[0].props.children.props.block.getKey()),
                       Immutable.Map({ ...groupArr[0].props.children.props.block.getData().toObject(), vertical: vertical[index] }),
@@ -342,12 +273,12 @@ export default function ColorBlock(props) {
 
                       const newArr = [...pre]
                       newArr[index] = arr[(pos + 1) % 5]
-               //       console.log("horizontal", newArr)
+                      //       console.log("horizontal", newArr)
                       return newArr
 
                     })
 
-                    let newContent = Modifier.setBlockData(
+                    let newContent = Modifier.mergeBlockData(
                       blockItem.props.children.props.contentState,
                       SelectionState.createEmpty(groupArr[0].props.children.props.block.getKey()),
                       Immutable.Map({ ...groupArr[0].props.children.props.block.getData().toObject(), horizontal: horizontal[index] }),
@@ -395,41 +326,28 @@ export default function ColorBlock(props) {
 }
 
 
-
-export function ColorBlock1(props) {
-
-
-  const { block, selection, contentState } = props
-
-  //  const {  readOnly, setReadOnly, EmojiPanel, markingImageBlock, editorState, setEditorState, taggingFontBar } = props.blockProps
+export function markingColorBlock(e, editorState, setEditorState, gradientStyle) {
+  e.preventDefault(); e.stopPropagation();
 
 
-  const editorBlockRef = useRef()
+  let allBlocks = Modifier.setBlockType(editorState.getCurrentContent(), editorState.getSelection(), "colorBlock")
 
-  useEffect(function () {
-    //  console.log(block.getKey())
-
-    // console.log(editorBlockRef.current._node)
-    // console.log(block.getData().toObject())
+  //allBlocks = Modifier.setBlockData(allBlocks, editorState.getSelection(), Immutable.Map({ colorBlock: true, ...gradientStyle, horizontal: 50, vertical: 50 }))
+  allBlocks = Modifier.mergeBlockData(allBlocks, editorState.getSelection(), Immutable.Map({ colorBlock: true, ...gradientStyle, horizontal: 50, vertical: 50 }))
 
 
-    editorBlockRef.current._node.style.backgroundImage = block.getData().toObject().backgroundImage
-    editorBlockRef.current._node.style.color = block.getData().toObject().color
-
-
-
-
-    //  editorBlockRef.current._node.setStyle({ ...block.getData() })
-
-  })
-
-
-  return (
-    <EditorBlock     {...props} ref={editorBlockRef} />
-    // <EditorBlock     {...props}  />
-
+  let es = EditorState.push(
+    editorState,
+    allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+    "change-block-type",
   )
-
-
+  setEditorState(es)
 
 }
+
+
+
+
+
+
+

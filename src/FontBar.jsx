@@ -19,7 +19,9 @@ import Immutable from "immutable"
 
 import ColorLensTwoToneIcon from '@material-ui/icons/ColorLensTwoTone';
 
-import tinygradient from "tinygradient";
+//import tinygradient from "tinygradient";
+
+import { markingColorBlock } from "./ColorBlock";
 
 const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr }) => {
 
@@ -138,9 +140,10 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         //  display: (top === 0 && left === 0) ? "block" : "block",
 
 
-        opacity: editorState.getSelection().isCollapsed() ? 0 : 1,
-        zIndex: editorState.getSelection().isCollapsed() ? -1 : 1100,
-        // zIndex: 1100,
+        // opacity: editorState.getSelection().isCollapsed() ? 0 : 1,
+        // zIndex: editorState.getSelection().isCollapsed() ? -1 : 1100,
+
+        zIndex: 1100,
 
         backgroundColor: "#acf",
 
@@ -196,7 +199,24 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         <IconButton className={theme.sizeCss}
           onClick={function (e) {
             e.preventDefault(); e.stopPropagation();
-            // setEditorState(RichUtils.toggleInlineStyle(editorState, "UNDERLINE"))
+
+            const selection = editorState.getSelection()
+            const startKey = selection.getStartKey()
+
+            const data = editorState.getCurrentContent().getBlockForKey(startKey).getData().toObject()
+
+
+            let allBlocks = Modifier.mergeBlockData(editorState.getCurrentContent(), editorState.getSelection(), Immutable.Map({ centerBlock: !(data.centerBlock), rightBlock: false }))
+
+            let es = EditorState.push(
+              editorState,
+              allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+              "change-block-data",
+            )
+            setEditorState(es)
+
+
+
           }}>
           <FormatAlignCenterIcon className={theme.sizeCss} />
         </IconButton>
@@ -204,7 +224,24 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         <IconButton className={theme.sizeCss}
           onClick={function (e) {
             e.preventDefault(); e.stopPropagation();
-            // setEditorState(RichUtils.toggleInlineStyle(editorState, "UNDERLINE"))
+
+
+            const selection = editorState.getSelection()
+            const startKey = selection.getStartKey()
+
+            const data = editorState.getCurrentContent().getBlockForKey(startKey).getData().toObject()
+
+
+            let allBlocks = Modifier.mergeBlockData(editorState.getCurrentContent(), editorState.getSelection(), Immutable.Map({ centerBlock: false, rightBlock: !(data.rightBlock) }))
+
+            let es = EditorState.push(
+              editorState,
+              allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+              "change-block-data",
+            )
+            setEditorState(es)
+
+
           }}>
           <FormatAlignRightIcon className={theme.sizeCss} />
         </IconButton>
@@ -319,132 +356,22 @@ function getChoosenBlocks(editorState) {
 }
 
 
+// export function markingColorBlock(e, editorState, setEditorState, gradientStyle) {
+//   e.preventDefault(); e.stopPropagation();
 
 
-function markingColorBlock0(e, editorState, setEditorState, gradientStyle) {
-  e.preventDefault(); e.stopPropagation();
+//   let allBlocks = Modifier.setBlockType(editorState.getCurrentContent(), editorState.getSelection(), "colorBlock")
 
-  let selection = editorState.getSelection()
+//   allBlocks = Modifier.mergeBlockData(allBlocks, editorState.getSelection(), Immutable.Map({ colorBlock: true, ...gradientStyle, horizontal: 50, vertical: 50 }))
 
-  const startKey = selection.getStartKey()
-  const endKey = selection.getEndKey()
+//   let es = EditorState.push(
+//     editorState,
+//     allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+//     "change-block-type",
+//   )
+//   setEditorState(es)
 
-  let allBlocks = editorState.getCurrentContent()
-
-  let blockList = Immutable.List()
-  let blockText = ""
-
-
-  allBlocks = getChoosenBlocks(editorState)
-
-  allBlocks.forEach((block, ...props) => {
-    const { characterList, data, key, text, type } = block.toObject()
-
-    // blockText = blockText + text 
-    // blockList = blockList.concat(characterList)
-
-    blockText = blockText + text + "\n"
-    blockList = blockList.concat(characterList.push(CharacterMetadata.create()))
-  })
-
-  blockText = blockText.substr(0, blockText.length - 1)
-  blockList = blockList.pop()
-
-  const singleBlock = editorState.getCurrentContent().getBlockForKey(startKey)
-    .merge({
-      characterList: blockList,
-      text: blockText,
-      type: "colorBlock",
-      key: startKey,
-      data: Immutable.Map({ colorBlock: true, ...gradientStyle })
-    })
-
-  let shouldReturn = true
-  const arr = editorState.getCurrentContent().getBlocksAsArray().map(item => {
-    return item.getKey() !== startKey ? item : singleBlock
-  }).filter(item => {
-    if (startKey === endKey) {
-      return true
-    }
-    else if (item.getKey() === startKey) {
-      shouldReturn = false
-      return true
-    }
-    else if (item.getKey() === endKey) {
-      shouldReturn = true
-      // return false
-      return !Boolean(item.getText())
-    }
-    else {
-      return shouldReturn
-    }
-  })
-
-  let es = EditorState.push(
-    editorState,
-    ContentState.createFromBlockArray(arr)
-  )
-
-  const newSelection = es.getSelection().merge({
-
-    anchorKey: startKey,
-    anchorOffset: 0,
-    focusKey: startKey,
-    focusOffset: blockText.length,
-    isBackward: false,
-    hasFocus: true,
-  })
-
-  es = EditorState.acceptSelection(es, newSelection)
-  setEditorState(es)
-}
-
-export function markingColorBlock(e, editorState, setEditorState, gradientStyle) {
-  e.preventDefault(); e.stopPropagation();
-
-
-  let allBlocks = Modifier.setBlockType(editorState.getCurrentContent(), editorState.getSelection(), "colorBlock")
-
-  allBlocks = Modifier.setBlockData(allBlocks, editorState.getSelection(), Immutable.Map({ colorBlock: true, ...gradientStyle, horizontal: 50, verticle: 50 }))
-
-
-  let es = EditorState.push(
-    editorState,
-    allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
-    "change-block-type",
-  )
-
-
-  setEditorState(es)
-  //return es
-
-  // let selection = editorState.getSelection()
-
-  // const startKey = selection.getStartKey()
-  // const endKey = selection.getEndKey()
-
-
-  // let allBlocks = editorState.getCurrentContent()
-
-  // let blockList = Immutable.List()
-  // let blockText = ""
-
-
-  // allBlocks = getChoosenBlocks(editorState)
-  // allBlocks.forEach(block => {
-  //   block.set
-  // })
-
-
-  // let es = EditorState.push(
-  //   editorState,
-  //   allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
-  // )
-
-  // //console.log(allBlocks.toObject())
-
-  // setEditorState(es)
-}
+// }
 
 
 

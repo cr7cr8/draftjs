@@ -28,21 +28,21 @@ import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
 import createMentionPlugin from './MentionPlugin';
 import createEmojiPlugin from './EmojiPlugin';
 import createImagePlugin from './ImagePlugin';
-import createFontBarPlugin from './FontBarPlugin';
+
 
 
 import ToolBlock from "./ToolBlock";
-import ColorBlock from "./ColorBlock";
+import ColorBlock, { markingColorBlock } from "./ColorBlock";
 
 import styled from "styled-components"
 
-import { FontBar, taggingFontBar, markingColorBlock } from "./FontBar"
+import { FontBar, taggingFontBar } from "./FontBar"
 
 import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
 const { hasCommandModifier } = KeyBindingUtil;
 
 
-//import { ToolButton2 } from "./ToolButton"
+
 
 const Div = styled.div.withConfig({
 
@@ -204,7 +204,13 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             if ((!text) && (type === "unstyled")) {
               return "unstyled-text-draft-block"
             }
-          
+            if (data.centerBlock) {
+              return "text-center"
+            }
+            if (data.rightBlock) {
+              return "text-right"
+            }
+
 
           }}
 
@@ -428,7 +434,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
         <div>{JSON.stringify(editorState.getCurrentContent().selectionAfter, null, 2)}</div> */}
 
         {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
-        <hr />  */}
+        <hr /> */}
         {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
       </div>
       {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
