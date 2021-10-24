@@ -520,12 +520,12 @@ export default function createMentionPlugin() {
     mentionPlugin: {
 
       handleReturn(e, newState, { setEditorState }) {
-      
+
 
 
         if (isShowing) {
           insertMention(matchFriendArr[tabIndex % matchFriendArr.length]);
-        
+
           return "handled"
         }
         // else {
@@ -538,7 +538,7 @@ export default function createMentionPlugin() {
 
       keyBindingFn(e, { getEditorState, setEditorState, ...obj }) {
 
-     //   console.log(e.keyCode)
+        //   console.log(e.keyCode)
 
         if ((e.keyCode === 40) && isShowing) {
 
@@ -562,13 +562,13 @@ export default function createMentionPlugin() {
         if (command === "fire-arrow") {
 
           externalSetEditorState(externalES)
-      
+
           return "handled"
         }
 
-   
+
         return undefined // use undefiend rather than "not-handled " in plugin functions //ref: https://github.com/draft-js-plugins/draft-js-plugins/issues/1117
-       
+
       },
 
       onChange: function (editorState, { setEditorState }) {

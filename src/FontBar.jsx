@@ -214,7 +214,9 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
               "change-block-data",
             )
             setEditorState(es)
-
+            setTimeout(() => {
+              editorRef.current.focus()
+            }, 0);
 
 
           }}>
@@ -241,6 +243,10 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
             )
             setEditorState(es)
 
+
+              setTimeout(() => {
+                editorRef.current.focus()
+              }, 0);
 
           }}>
           <FormatAlignRightIcon className={theme.sizeCss} />
@@ -305,6 +311,12 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
                 e.preventDefault(); e.stopPropagation();
                 markingColorBlock(e, editorState, setEditorState, item)
                 setMovingPX(-100)
+
+                setTimeout(() => {
+                  editorRef.current.focus()
+                }, 0);
+
+
               }}>
               <div className={theme.sizeCss} style={{ ...item, opacity: isAllTextBlock || isAllColorBlock ? 1 : 0.3, borderRadius: "1000px" }} />
             </IconButton>
