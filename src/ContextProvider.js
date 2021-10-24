@@ -256,7 +256,7 @@ function toPreHtml(editorState) {
 
         const styleObj = block.getData().toObject()
 
-        console.log(styleObj)
+      
         return {
           // style: {
           //   ...styleObj.centerBlock && { textAlign: "center" },
@@ -352,7 +352,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const { sizeCss, smSizeCss, heightCss, widthCss, } = useStyles({ textSizeArr })
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, }), [textSizeArr, isLight, setIsLight,])
 
-  const [bgImageObj_, setBgImageObj] = useState({})
+  //const [bgImageObj_, setBgImageObj] = useState({})
   const bgImageObj = useRef({})
 
   useEffect(function () {
@@ -383,7 +383,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showEmojiPanel, setShowEmojiPanel,
           emojiCtxStr, setEmojiCtxStr,
           imageBlockObj, setImageBlockObj,
-          bgImageObj, setBgImageObj,
+          bgImageObj, //setBgImageObj,
           gradientStyleArr: [
             { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
             { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
@@ -464,6 +464,9 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
             />
           </FormGroup>
           <DraftEditor />
+
+<br /> <br />
+
           <Content />
 
         </Context.Provider>

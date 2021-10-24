@@ -14,6 +14,7 @@ import { Image, AlternateEmailSharp } from "@material-ui/icons";
 
 import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
 import ColorLensTwoToneIcon from '@material-ui/icons/ColorLensTwoTone';
+import WallpaperIcon from '@material-ui/icons/Wallpaper';
 
 import AvatarChipList from "./AvatarChipList";
 
@@ -190,7 +191,7 @@ export default function ToolBlock(props) {
           inputRef.current.click()
         }}
       >
-        <AddPhotoAlternateOutlined className={theme.sizeCss} />
+        <WallpaperIcon className={theme.sizeCss} />
       </IconButton>
       }
 

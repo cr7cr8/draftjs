@@ -108,7 +108,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   const key = useRef(Math.random() + "")
 
-  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, setBgImageObj } = ctx
+  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
 
@@ -129,7 +129,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       <Paper style={{ position: "relative" }} >
 
 
-        <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef }} />
+        <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef,bgImageObj }} />
         <Editor
 
           // onFocus={function (e, two) {
@@ -285,8 +285,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   taggingFontBar,
                   gradientStyleArr,
                   bgImageObj,
-                  setBgImageObj,
-
+              
                 }
               }
             }

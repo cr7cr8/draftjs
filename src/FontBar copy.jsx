@@ -24,8 +24,6 @@ import WallpaperIcon from '@material-ui/icons/Wallpaper';
 
 import Immutable from "immutable"
 
-import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined';
-
 import ColorLensTwoToneIcon from '@material-ui/icons/ColorLensTwoTone';
 
 //import tinygradient from "tinygradient";
@@ -36,14 +34,14 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr }
 
   return {
 
-    fontBarCss: ({ buttonArr, ...props }) => {
+    fontBarCss: ({ btnArr, ...props }) => {
 
       return {
         ...breakpointsAttribute(["height", multiplyArr(textSizeArr, 1)]),
-        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonArr.length)]),
+        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 8)]),
         "& button": { padding: 0, },
         "& > div": {
-          ...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonArr.length)]),
+          ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 8)]),
         }
       }
     }
@@ -72,6 +70,9 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   })
 
 
+  //console.log(isAllTextBlock,isAllColorBlock)
+
+  //const gradientStyleArr = ctx.gradientStyleArr
 
   const [top, setTop] = useState(0)
   const [left, setLeft] = useState(0)
@@ -80,21 +81,11 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   const theme = useTheme()
   const fontBarPanelRef = useRef()
   const [movingPX, setMovingPX] = useState(0)
-
+  const { fontBarCss } = useStyles()
 
   const inputRef = useRef()
 
-  function changeInlineStyle(e, fontStr) {
-    e.preventDefault(); e.stopPropagation();
-    setEditorState(RichUtils.toggleInlineStyle(editorState, fontStr));
-    setTimeout(() => {
-      editorRef.current.focus()
-    }, 0);
-  }
-
-  function changeBlockData(e, dirStr) {
-
-    e.preventDefault(); e.stopPropagation();
+  function changeBlockData(dirStr) {
 
     const selection = editorState.getSelection()
     const startKey = selection.getStartKey()
@@ -120,30 +111,33 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     }, 0);
   }
 
-  const buttonArr = [
+
+
+  const buutonArr = [
+
     {
       btn: <FormatBoldIcon className={theme.sizeCss} />,
-      fn: function (e) { changeInlineStyle(e, "BOLD") }
+      fn: function (e) { e.preventDefault(); e.stopPropagation(); setEditorState(RichUtils.toggleInlineStyle(editorState, "BOLD")) }
     },
     {
       btn: <FormatItalicIcon className={theme.sizeCss} />,
-      fn: function (e) { changeInlineStyle(e, "ITALIC") }
+      fn: function (e) { e.preventDefault(); e.stopPropagation(); setEditorState(RichUtils.toggleInlineStyle(editorState, "ITALIC")) }
     },
     {
       btn: <FormatUnderlinedIcon className={theme.sizeCss} />,
-      fn: function (e) { changeInlineStyle(e, "UNDERLINE") }
+      fn: function (e) { e.preventDefault(); e.stopPropagation(); setEditorState(RichUtils.toggleInlineStyle(editorState, "UNDERLINE")) }
     },
     {
       btn: <FormatAlignLeftIcon className={theme.sizeCss} />,
-      fn: function (e) { changeBlockData(e, "left") }
+      fn: function (e) { e.preventDefault(); e.stopPropagation(); changeBlockData("left") }
     },
     {
       btn: <FormatAlignCenterIcon className={theme.sizeCss} />,
-      fn: function (e) { changeBlockData(e, "center") }
+      fn: function (e) { e.preventDefault(); e.stopPropagation(); changeBlockData("center") }
     },
     {
       btn: <FormatAlignRightIcon className={theme.sizeCss} />,
-      fn: function (e) { changeBlockData(e, "right") }
+      fn: function (e) { e.preventDefault(); e.stopPropagation(); changeBlockData("right") }
     },
     {
       btn: <FormatColorTextIcon className={theme.sizeCss} />,
@@ -155,7 +149,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     }
 
   ]
-  const { fontBarCss } = useStyles({ buttonArr })
+
 
 
   useEffect(function () {
@@ -234,9 +228,15 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         // zIndex: editorState.getSelection().isCollapsed() ? -1 : 1100,
 
         zIndex: 1100,
+
         backgroundColor: "#acf",
+
+
+
         borderRadius: "1000px",
+
         position: "absolute",
+
         transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
         transitionProperty: "top ,left, opacity",
         transitionDuration: "100ms",
@@ -246,6 +246,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       }}
       onClick={function (e) { }}
     >
+
       <div ref={fontBarPanelRef}
         style={{
           display: "inline-block",
@@ -255,17 +256,140 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         }}
 
       >
-        {
-          buttonArr.map((item, index) => {
-            return <IconButton className={theme.sizeCss} key={index} onClick={item.fn}>{item.btn}</IconButton>
-          })
-        }
+        <IconButton className={theme.sizeCss}
+          onClick={function (e) {
+            e.preventDefault(); e.stopPropagation();
+            setEditorState(RichUtils.toggleInlineStyle(editorState, "BOLD"))
+          }}>
+          <FormatBoldIcon className={theme.sizeCss} />
+        </IconButton>
+
+        <IconButton className={theme.sizeCss}
+          onClick={function (e) {
+            e.preventDefault(); e.stopPropagation();
+            setEditorState(RichUtils.toggleInlineStyle(editorState, "ITALIC"))
+          }}>
+          <FormatItalicIcon className={theme.sizeCss} />
+        </IconButton>
+
+        <IconButton className={theme.sizeCss}
+          onClick={function (e) {
+            e.preventDefault(); e.stopPropagation();
+            setEditorState(RichUtils.toggleInlineStyle(editorState, "UNDERLINE"))
+          }}>
+          <FormatUnderlinedIcon className={theme.sizeCss} />
+        </IconButton>
+
+
+
+
+
+
+        <IconButton className={theme.sizeCss}
+          onClick={function (e) {
+            e.preventDefault(); e.stopPropagation();
+
+            const selection = editorState.getSelection()
+            const startKey = selection.getStartKey()
+
+            const data = editorState.getCurrentContent().getBlockForKey(startKey).getData().toObject()
+
+
+            let allBlocks = Modifier.mergeBlockData(editorState.getCurrentContent(), editorState.getSelection(), Immutable.Map({ centerBlock: false, rightBlock: false }))
+
+            let es = EditorState.push(
+              editorState,
+              allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+              "change-block-data",
+            )
+            setEditorState(es)
+            setTimeout(() => {
+              editorRef.current.focus()
+            }, 0);
+
+
+          }}>
+          <FormatAlignLeftIcon className={theme.sizeCss} />
+        </IconButton>
+
+
+        <IconButton className={theme.sizeCss}
+          onClick={function (e) {
+            e.preventDefault(); e.stopPropagation();
+
+            const selection = editorState.getSelection()
+            const startKey = selection.getStartKey()
+
+            const data = editorState.getCurrentContent().getBlockForKey(startKey).getData().toObject()
+
+
+            let allBlocks = Modifier.mergeBlockData(editorState.getCurrentContent(), editorState.getSelection(), Immutable.Map({ centerBlock: !(data.centerBlock), rightBlock: false }))
+
+            let es = EditorState.push(
+              editorState,
+              allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+              "change-block-data",
+            )
+            setEditorState(es)
+            setTimeout(() => {
+              editorRef.current.focus()
+            }, 0);
+
+
+          }}>
+          <FormatAlignCenterIcon className={theme.sizeCss} />
+        </IconButton>
+
+        <IconButton className={theme.sizeCss}
+          onClick={function (e) {
+            e.preventDefault(); e.stopPropagation();
+
+
+            const selection = editorState.getSelection()
+            const startKey = selection.getStartKey()
+
+            const data = editorState.getCurrentContent().getBlockForKey(startKey).getData().toObject()
+
+
+            let allBlocks = Modifier.mergeBlockData(editorState.getCurrentContent(), editorState.getSelection(), Immutable.Map({ centerBlock: false, rightBlock: !(data.rightBlock) }))
+
+            let es = EditorState.push(
+              editorState,
+              allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+              "change-block-data",
+            )
+            setEditorState(es)
+
+
+            setTimeout(() => {
+              editorRef.current.focus()
+            }, 0);
+
+          }}>
+          <FormatAlignRightIcon className={theme.sizeCss} />
+        </IconButton>
+
+        <IconButton className={theme.sizeCss}
+          onClick={function (e) {
+            e.preventDefault(); e.stopPropagation();
+            // setEditorState(RichUtils.toggleInlineStyle(editorState, "UNDERLINE"))
+          }}>
+          <FormatColorTextIcon className={theme.sizeCss} />
+        </IconButton>
+
+
+        <IconButton className={theme.sizeCss}
+          //     disabled={!(isAllTextBlock || isAllColorBlock)}
+          onClick={function (e) {
+            //    alert("fd")
+            e.preventDefault(); e.stopPropagation();
+            setMovingPX(-100)
+          }}
+        >
+          <NavigateNextIcon className={theme.sizeCss} />
+        </IconButton>
 
       </div>
-
-
-
-
 
       <div
         style={{
@@ -287,7 +411,28 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
           <NavigateBeforeIcon className={theme.sizeCss} />
         </IconButton>
 
+        {
+          gradientStyleArr.map(function (item, index) {
 
+            return <IconButton className={theme.sizeCss} key={index}
+              disabled={(!isAllTextBlock && !isAllColorBlock)}
+
+              onClick={function (e) {
+                e.preventDefault(); e.stopPropagation();
+                markingColorBlock(e, editorState, setEditorState, item)
+                setMovingPX(-100)
+
+                setTimeout(() => {
+                  editorRef.current.focus()
+                }, 0);
+
+
+              }}>
+              <div className={theme.sizeCss} style={{ ...item, opacity: isAllTextBlock || isAllColorBlock ? 1 : 0.3, borderRadius: "1000px" }} />
+            </IconButton>
+
+          })
+        }
 
         <input ref={inputRef} type="file" multiple={false} style={{ display: "none" }}
           onClick={function (e) { e.currentTarget.value = null; }}
@@ -296,7 +441,9 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
 
         <IconButton
+
           className={theme.sizeCss}
+
           contentEditable={false}
           onMouseDown={function (e) {
             e.preventDefault()
@@ -318,66 +465,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         </IconButton>
 
 
-        {
-          gradientStyleArr.map(function (item, index) {
-
-            return <IconButton className={theme.sizeCss} key={index}
-              // disabled={(!isAllTextBlock && !isAllColorBlock)}
-
-              onClick={function (e) {
-                e.preventDefault(); e.stopPropagation();
-                markingColorBlock(e, editorState, setEditorState, item)
-                setMovingPX(-100)
-
-                setTimeout(() => {
-                  editorRef.current.focus()
-                }, 0);
-
-
-              }}>
-              <div className={theme.sizeCss} style={{ ...item, borderRadius: "1000px" }} />
-              {/* <div className={theme.sizeCss} style={{ ...item, opacity: isAllTextBlock || isAllColorBlock ? 1 : 0.3, borderRadius: "1000px" }} /> */}
-            </IconButton>
-
-          })
-        }
-
-        <IconButton
-          className={theme.sizeCss}
-          contentEditable={false}
-          onClick={function (e) {
-            const allBlocks = editorState.getCurrentContent()
-            const selection = editorState.getSelection()
-
-            let newContent = Modifier.setBlockType(
-              allBlocks,
-              selection,
-              "unstyled"
-            )
-
-            let es = EditorState.push(editorState, newContent, 'change-block-type');
-
-            newContent = Modifier.mergeBlockData(
-              newContent,
-              selection,
-              Immutable.Map({ colorBlock: false }),
-            )
-
-            es = EditorState.push(es, newContent, 'change-block-data');
-            es = EditorState.forceSelection(es, selection)
-
-            return setEditorState(es)
-
-          }}>
-          <HighlightOffOutlinedIcon className={theme.sizeCss} />
-        </IconButton>
-
 
       </div>
-
-
-
-
 
 
 
@@ -413,6 +502,23 @@ function getChoosenBlocks(editorState) {
   return allBlocks
 }
 
+
+// export function markingColorBlock(e, editorState, setEditorState, gradientStyle) {
+//   e.preventDefault(); e.stopPropagation();
+
+
+//   let allBlocks = Modifier.setBlockType(editorState.getCurrentContent(), editorState.getSelection(), "colorBlock")
+
+//   allBlocks = Modifier.mergeBlockData(allBlocks, editorState.getSelection(), Immutable.Map({ colorBlock: true, ...gradientStyle, horizontal: 50, vertical: 50 }))
+
+//   let es = EditorState.push(
+//     editorState,
+//     allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+//     "change-block-type",
+//   )
+//   setEditorState(es)
+
+// }
 
 
 

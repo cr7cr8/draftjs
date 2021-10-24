@@ -42,6 +42,8 @@ function toHtml({ preHtml, theme, ctx }) {
     transform: function (node, index) {
 
       if (node.name === "object" && node.attribs["data-type"] === "color-block") {
+
+
         arr.push({ bg: node.attribs["data-bgiamge"], row: index, node })
         return null
       }
@@ -58,8 +60,14 @@ function toHtml({ preHtml, theme, ctx }) {
 
     arr.reduce((pre, current) => {
 
-      if ((current.bg === "undefined") || (current.bg === pre.bg)) {
+      if ((current.bg === "undefined")) {
         arr2[arr2.length - 1].push(current)
+      }
+      else if (current.bg === pre.bg && (Number(current.row) - Number(pre.row)) === 1) {
+        arr2[arr2.length - 1].push(current)
+      }
+      else if (current.bg === pre.bg && (Number(current.row) - Number(pre.row)) !== 1 ) {
+        arr2.push([current])
       }
       else if (current.bg === preItemValue) {
         arr2[arr2.length - 1].push(current)
@@ -77,7 +85,7 @@ function toHtml({ preHtml, theme, ctx }) {
   arr2.forEach(item => {
     headRowArr.push(item[0].row)
   })
-
+  //console.log(headRowArr)
 
   const html = ReactHtmlParser(preHtml, {
     transform: function transformFn(node, index) {
@@ -130,7 +138,7 @@ function toHtml({ preHtml, theme, ctx }) {
         const key = node.attribs["data-block_key"]
         const data = JSON.parse(node.attribs["data-block_data"])
 
-       
+
 
         if (!headRowArr.includes(index)) { return <React.Fragment key={index} /> }
 
@@ -152,7 +160,7 @@ function toHtml({ preHtml, theme, ctx }) {
           {
             listArr.map((item, index) => {
 
-              return <div key={index} style={{ textAlign:item.node.attribs["data-text-align"]}}  >{convertNodeToElement(item.node, index, transformFn)}</div>
+              return <div key={index} style={{ textAlign: item.node.attribs["data-text-align"] }}  >{convertNodeToElement(item.node, index, transformFn)}</div>
               return <React.Fragment key={index}>{convertNodeToElement(item.node, index, transformFn)}</React.Fragment>
             })
           }

@@ -153,7 +153,7 @@ export default function ColorBlock(props) {
 
     arr.map((groupArr, index) => {
       const styleObj = groupArr[0].props.children.props.block.getData().toObject()
-      return <div key={index} id={"bgkey" + groupArr[0].props.children.props.block.getKey()}
+      return <div key={index} //id={"bgkey" + groupArr[0].props.children.props.block.getKey()}
 
         style={{
           ...styleObj,
