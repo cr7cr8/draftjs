@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect, useContext, useCallback, createContext, useMemo } from 'react';
 
 import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 
@@ -14,11 +14,24 @@ import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
 import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
 import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
+
+import FormatSizeIcon from '@material-ui/icons/FormatSize';
+import TextFieldsIcon from '@material-ui/icons/TextFields';
+
+
 import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
+
+
 import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
 
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+//import NavigateNextIcon from '@material-ui/icons/ArrowForwardIos';
+
+
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+//import NavigateBeforeIcon from '@material-ui/icons/ArrowBackIos';
+
+
 
 import WallpaperIcon from '@material-ui/icons/Wallpaper';
 
@@ -84,13 +97,74 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
   const inputRef = useRef()
 
+  function toggleInlineStyle(e, fontStr) {
+    e.preventDefault(); e.stopPropagation();
+
+    const isCollapsed = editorState.getSelection().isCollapsed()
+
+    if (!isCollapsed) {
+
+
+
+      setEditorState(RichUtils.toggleInlineStyle(editorState, fontStr));
+      setTimeout(() => {
+        editorRef.current && editorRef.current.focus()
+      }, 0);
+    }
+    else {
+
+      // let newContent = Modifier.replaceText(
+      //   editorState.getCurrentContent(),
+      //   editorState.getSelection(),
+      //   " ",
+      // )
+
+      // let newSelection = editorState.getSelection().merge({
+
+      //   anchorKey: editorState.getSelection().getStartKey(),
+      //   anchorOffset: editorState.getSelection().getStartOffset(),
+      //   focusKey: editorState.getSelection().getStartKey(),
+      //   focusOffset: editorState.getSelection().getStartOffset() + 1,
+      //   isBackward: false,
+      //   hasFocus: true,
+      // })
+
+
+      // let es = EditorState.push(editorState, newContent, "insert-characters");
+      // es = EditorState.acceptSelection(es, newSelection)
+
+      // setEditorState(RichUtils.toggleInlineStyle(es, fontStr));
+
+      // setEditorState(es)
+
+    }
+
+
+  }
+
   function changeInlineStyle(e, fontStr) {
     e.preventDefault(); e.stopPropagation();
-    setEditorState(RichUtils.toggleInlineStyle(editorState, fontStr));
-    setTimeout(() => {
-      editorRef.current.focus()
-    }, 0);
+
+    const isCollapsed = editorState.getSelection().isCollapsed()
+    if (!isCollapsed) {
+      const allBlocks = Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), fontStr === "LARGE" ? "SMALL" : "LARGE")
+
+      let es = EditorState.push(
+        editorState,
+        allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+        "change-inline-style",
+      )
+
+
+      setEditorState(RichUtils.toggleInlineStyle(es, fontStr));
+      setTimeout(() => {
+        editorRef.current && editorRef.current.focus()
+      }, 0);
+
+    }
+
   }
+
 
   function changeBlockData(e, dirStr) {
 
@@ -123,16 +197,27 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   const buttonArr = [
     {
       btn: <FormatBoldIcon className={theme.sizeCss} />,
-      fn: function (e) { changeInlineStyle(e, "BOLD") }
+      fn: function (e) { toggleInlineStyle(e, "BOLD") }
     },
     {
       btn: <FormatItalicIcon className={theme.sizeCss} />,
-      fn: function (e) { changeInlineStyle(e, "ITALIC") }
+      fn: function (e) { toggleInlineStyle(e, "ITALIC") }
     },
     {
       btn: <FormatUnderlinedIcon className={theme.sizeCss} />,
-      fn: function (e) { changeInlineStyle(e, "UNDERLINE") }
+      fn: function (e) { toggleInlineStyle(e, "UNDERLINE") }
     },
+    {
+      btn: <FormatSizeIcon className={theme.sizeCss} />,
+      fn: function (e) { changeInlineStyle(e, "LARGE"); }
+    },
+    {
+      btn: <TextFieldsIcon className={theme.sizeCss} />,
+      fn: function (e) { changeInlineStyle(e, "SMALL"); }
+    },
+
+
+
     {
       btn: <FormatAlignLeftIcon className={theme.sizeCss} />,
       fn: function (e) { changeBlockData(e, "left") }
@@ -145,10 +230,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       btn: <FormatAlignRightIcon className={theme.sizeCss} />,
       fn: function (e) { changeBlockData(e, "right") }
     },
-    {
-      btn: <FormatColorTextIcon className={theme.sizeCss} />,
-      fn: function (e) { }
-    },
+
     {
       btn: <NavigateNextIcon className={theme.sizeCss} />,
       fn: function (e) { e.preventDefault(); e.stopPropagation(); setMovingPX(-100) }
@@ -157,6 +239,33 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   ]
   const { fontBarCss } = useStyles({ buttonArr })
 
+
+  useLayoutEffect(function () {
+
+
+
+    document.querySelectorAll('span[style*="--font-size-large"]').forEach(
+      item => item.className = theme.lgTextCss
+    )
+    document.querySelectorAll(`span[class*="${theme.lgTextCss}"]:not(span[style*="--font-size-large"])`).forEach(
+      item => {
+        item.classList.remove(theme.lgTextCss)
+      }
+    )
+
+    document.querySelectorAll('span[style*="--font-size-small"]').forEach(
+      item => item.className = theme.smTextCss
+    )
+    document.querySelectorAll(`span[class*="${theme.smTextCss}"]:not(span[style*="--font-size-small"])`).forEach(
+      item => {
+        item.classList.remove(theme.smTextCss)
+      }
+    )
+
+
+
+
+  })
 
   useEffect(function () {
 
@@ -173,6 +282,9 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
     }
     else { setLeft(-100); setTop(-100) }
+
+
+
 
     //  }, 0);
 
@@ -225,13 +337,11 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         top, left,
         display: "block",
         //  display: (top === 0 && left === 0) ? "none" : "block",
-
         //  display: editorState.getSelection().isCollapsed() ? "block" : "block",
         //  display: (top === 0 && left === 0) ? "block" : "block",
 
-
-        // opacity: editorState.getSelection().isCollapsed() ? 0 : 1,
-        // zIndex: editorState.getSelection().isCollapsed() ? -1 : 1100,
+        //  opacity: editorState.getSelection().isCollapsed() ? 0 : 1,
+        //  zIndex: editorState.getSelection().isCollapsed() ? -1 : 1100,
 
         zIndex: 1100,
         backgroundColor: "#acf",

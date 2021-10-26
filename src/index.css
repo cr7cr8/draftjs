@@ -47,7 +47,9 @@ figure {
   text-align: right;
 }
 
-
+.text-red{
+  color:red;
+}
 
 
 /* .unstyled-text-draft-block::before{

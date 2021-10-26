@@ -114,11 +114,28 @@ const useStyles = makeStyles((theme) => {
       }
     },
 
+    smTextCss: ({ textSizeArr }) => {
+      return {
+        color: "red",
+        ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
+      }
+    },
+
+    lgTextCss: ({ textSizeArr }) => {
+      return {
+        color: "yellow",
+        ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1.2)]),
+      }
+    },
+
+
   }
 })
 
 
-function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, heightCss, widthCss, myTheme }) {
+function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, heightCss, widthCss, myTheme, smTextCss, lgTextCss }) {
+
+  //console.log( sizeCss, smSizeCss, heightCss, widthCss,  smTextCss)
 
   return responsiveFontSizes(createTheme(
     {
@@ -133,10 +150,14 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
       setIsLight,
       breakpointsAttribute,
 
-      sizeCss,
-      smSizeCss,
-      heightCss,
-      widthCss,
+      sizeCss: sizeCss.split(" ").pop(),
+      smSizeCss: smSizeCss.split(" ").pop(),
+      heightCss: heightCss.split(" ").pop(),
+      widthCss: widthCss.split(" ").pop(),
+      smTextCss: smTextCss.split(" ").pop(),
+      lgTextCss: lgTextCss.split(" ").pop(),
+      lgTextCss_:  lgTextCss,
+
       palette: {
         primary: colorIndigo,
         type: isLight ? 'light' : "dark",
@@ -180,6 +201,58 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
     }, myTheme))
 }
 
+
+
+
+const inlineStyleFn = (styleNameSet) => {
+
+
+  // let color = styleName.filter((value) => value.startsWith("BOLD")).first();
+
+  // console.log(styleName.toArray())
+
+  // if (color) {
+  //   return {
+  //     element: 'p',
+  //     style: {
+  //       color: "red",
+  //     },
+  //     attributes:{
+  //       "data-type": "xxxx",
+  //     }
+  //   };
+  // }
+
+  if (styleNameSet.toArray().includes("LARGE")) {
+    return {
+      element: "span",
+      // style: {
+      //   //color: "red",
+      //   "--font-size-large":"large"
+      // },
+      attributes: {
+        "class": "large",
+      }
+
+    }
+  }
+
+  if (styleNameSet.toArray().includes("SMALL")) {
+    return {
+      element: "span",
+      // style: {
+      //   //color: "red",
+      //   "--font-size-large":"large"
+      // },
+      attributes: {
+        "class": "small",
+      }
+
+    }
+  }
+
+
+}
 
 const entityStyleFn = (entity) => {
 
@@ -225,29 +298,7 @@ function toPreHtml(editorState) {
     {
       defaultBlockTag: "div",
 
-      inlineStyleFn: (styleName) => {
-
-
-
-        // let color = styleName.filter((value) => value.startsWith("BOLD")).first();
-
-        // console.log(styleName.toArray())
-
-        // if (color) {
-        //   return {
-        //     element: 'p',
-        //     style: {
-        //       color: "red",
-        //     },
-        //     attributes:{
-        //       "data-type": "xxxx",
-        //     }
-        //   };
-        // }
-
-
-      },
-
+      inlineStyleFn,
 
       entityStyleFn,
 
@@ -256,7 +307,7 @@ function toPreHtml(editorState) {
 
         const styleObj = block.getData().toObject()
 
-      
+
         return {
           // style: {
           //   ...styleObj.centerBlock && { textAlign: "center" },
@@ -305,6 +356,7 @@ function toPreHtml(editorState) {
             `<object data-text-align="${textAlign}"  data-type="color-block"  data-block_key="${key}" data-block_data='${JSON.stringify(data)}' data-bgiamge='${data.backgroundImage}' > 
             ${stateToHTML(ContentState.createFromBlockArray([block]), {
               defaultBlockTag: "div",
+              inlineStyleFn,
               entityStyleFn,
               blockRenderers: {},
             })}  
@@ -349,8 +401,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [imageBlockObj, setImageBlockObj] = useState({})
 
-  const { sizeCss, smSizeCss, heightCss, widthCss, } = useStyles({ textSizeArr })
-  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, }), [textSizeArr, isLight, setIsLight,])
+  const { sizeCss, smSizeCss, heightCss, widthCss, smTextCss, lgTextCss } = useStyles({ textSizeArr })
+  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, smTextCss, lgTextCss }), [textSizeArr, isLight, setIsLight,])
 
   //const [bgImageObj_, setBgImageObj] = useState({})
   const bgImageObj = useRef({})
@@ -465,7 +517,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           </FormGroup>
           <DraftEditor />
 
-<br /> <br />
+          <br /> <br />
 
           <Content />
 

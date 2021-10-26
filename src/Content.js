@@ -1,7 +1,7 @@
 import React from "react"
 import { stateToHTML } from 'draft-js-export-html';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2, } from 'react-html-parser';
-import { withTheme, Paper, ThemeProvider, Typography, Zoom } from "@material-ui/core";
+import { withTheme, Paper, ThemeProvider, Typography, Zoom, Box } from "@material-ui/core";
 
 
 import { AvatarChip } from "./AvatarLogo";
@@ -18,6 +18,16 @@ import {
   browserName,
   engineName,
 } from "react-device-detect";
+
+const TTT = function () {
+
+  const theme = useTheme()
+
+  console.log(theme.lgTextCss_)
+  return <Typography className={theme.lgTextCss_}>few</Typography>
+
+}
+
 
 const useSize = (target) => {
   const [size, setSize] = React.useState()
@@ -66,7 +76,7 @@ function toHtml({ preHtml, theme, ctx }) {
       else if (current.bg === pre.bg && (Number(current.row) - Number(pre.row)) === 1) {
         arr2[arr2.length - 1].push(current)
       }
-      else if (current.bg === pre.bg && (Number(current.row) - Number(pre.row)) !== 1 ) {
+      else if (current.bg === pre.bg && (Number(current.row) - Number(pre.row)) !== 1) {
         arr2.push([current])
       }
       else if (current.bg === preItemValue) {
@@ -91,6 +101,27 @@ function toHtml({ preHtml, theme, ctx }) {
     transform: function transformFn(node, index) {
 
 
+
+      if (node.name === "span" && (node.attribs["class"] === "large" || node.attribs["class"] === "small")) {
+
+        //  node.attribs["class"] = theme.lgTextCss
+        //  console.log(node)
+
+        // const lgTextCss = theme.lgTextCss
+        // node.attribs["class"] = lgTextCss
+        //  alert(lgTextCss)
+        //console.log(lgTextCss, node)
+
+        //  console.log(convertNodeToElement(node, index, transformFn))
+        return <div style={{ display: "inline" }} className={node.attribs["class"] === "large" ? theme.lgTextCss : theme.smTextCss}>
+          {convertNodeToElement(node, index, transformFn)}
+        </div>
+        //    console.log(theme.lgTextCss)
+        //  return <TTT  />
+        // return <span className={theme.lgTextCss}>ddd</span>
+        //  return <span className={"text-red"}>{convertNodeToElement(node, index, transformFn)}</span>
+
+      }
       if (node.name === "object" && node.attribs["data-type"] === "avatar_head") {
 
         const element = node.children.map((child, index) => {

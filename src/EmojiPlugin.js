@@ -153,7 +153,7 @@ export default function createImagePlugin() {
 
         })
 
-        newContent = newContent.createEntity("EMOJI", "IMMUTABLE", { emojiKey });
+        newContent = newContent.createEntity("DUMMY", "IMMUTABLE", { emojiKey });
         const entityKey = newContent.getLastCreatedEntityKey();
 
         newContent = Modifier.applyEntity(newContent, newSelection, entityKey)

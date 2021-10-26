@@ -129,7 +129,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       <Paper style={{ position: "relative" }} >
 
 
-        <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef,bgImageObj }} />
+        <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj }} />
         <Editor
 
           // onFocus={function (e, two) {
@@ -161,33 +161,57 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           // placeholder="hihihi"
           preserveSelectionOnBlur={true}
 
-          customStyleMap={
-            Immutable.Map({
-              // stylename1_: {
-              //   color: "rgba(200,0,0,1)",
+          customStyleMap={{
 
-            })
-          }
+            // LARGE:{
+            //   color:"red"
+            // }
+
+
+
+          }}
 
           customStyleFn={function (style, block) {
 
-            const styleNames = style.toArray();
-            if (styleNames.includes("FONTBAR")) {
+            const styleNameArr = style.toArray();
+
+            const styleObj = {}
+
+            if (styleNameArr.includes("FONTBAR")) {
 
               // block.findStyleRanges(
               //   (metaArr) => { return metaArr.hasStyle("FONTBAR") },    (start, end) => { /*console.log(start, end)*/ }
               // )
+              // return {
+              // only style attributes working
 
-              return {
-                // only style attributes working
+              //  color:"red",
+              //  fontSize:"8rem",
+              //  position: "relative",
+              //  "--font-bar": block.getKey()
+              // }
 
-                // color:"red",
-                // fontSize:"8rem",
-                position: "relative",
-                "--font-bar": block.getKey()
-              }
+              styleObj.position = "relative"
+              styleObj["--font-bar"] = block.getKey()
+
+            }
+            if(styleNameArr.includes("LARGE")){
+
+              styleObj["--font-size-large"] = "large"
+              
+            //  styleObj.color = "red"
+            }
+            if(styleNameArr.includes("SMALL")){
+
+              styleObj["--font-size-small"] = "small"
+              
+            //  styleObj.color = "red"
+            }
 
 
+
+            if (styleNameArr.length > 0) {
+              return styleObj
             }
 
 
@@ -285,7 +309,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   taggingFontBar,
                   gradientStyleArr,
                   bgImageObj,
-              
+
                 }
               }
             }
