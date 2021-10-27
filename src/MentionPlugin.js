@@ -41,6 +41,7 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => {
         lineHeight: "100%",
         alignItems: "center",
 
+        //whiteSpace: "pre-line",
         //  transform: "scale(0.8)",
         //    boxShadow: theme.shadows[5],
         borderTopLeftRadius: "1000px",
@@ -439,7 +440,7 @@ export default function createMentionPlugin() {
     if (mentionType === "longMentionOnAt_HEAD") {
       // return <></>                                                      //2+2*0.15
       return (
-        <span className={longMention_HEAD_Css}>{children}</span>
+        <span className={longMention_HEAD_Css}  data-mention-head="@">{children}</span>
       )
     }
     else if (mentionType === "longMentionOnAt_BODY") {                                   //2*0.5
@@ -459,7 +460,7 @@ export default function createMentionPlugin() {
     else if (mentionType === "longMentionOnOther_HEAD") {
       // return <></>
       //    return <sapn style={{ backgroundColor: "skyblue", paddingRight: "0" }}>{children}</sapn>
-      return <span className={longMention_HEAD_Css}>{children}</span>
+      return <span className={longMention_HEAD_Css}  data-mention-head="@">{children}</span>
     }
     else if (mentionType === "longMentionOnOther_BODY") {
 
@@ -492,8 +493,8 @@ export default function createMentionPlugin() {
 
     else if (mentionType === "longMentionOff_HEAD") {
       return showMention
-        ? <span style={{ fontSize: 0, width: 0, height: 0, display: "inline-block" }}>{children}</span>  //<></> works as well
-        : <span className={longMention_HEAD_Css}>{children}</span>
+        ? <span style={{ fontSize: 0, width: 0, height: 0, display: "inline-block" }} data-mention-head="@">{children}</span>  //<></> works as well
+        : <span className={longMention_HEAD_Css} data-mention-head="@">{children}</span>
     }
     else if (mentionType === "longMentionOff_BODY") {
       // return <span className={longMention_BODY_Css} contentEditable="true">

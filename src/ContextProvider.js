@@ -116,14 +116,14 @@ const useStyles = makeStyles((theme) => {
 
     smTextCss: ({ textSizeArr }) => {
       return {
-        color: "red",
+        //color: "red",
         ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
       }
     },
 
     lgTextCss: ({ textSizeArr }) => {
       return {
-        color: "yellow",
+        //color: "yellow",
         ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1.2)]),
       }
     },
@@ -156,7 +156,7 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
       widthCss: widthCss.split(" ").pop(),
       smTextCss: smTextCss.split(" ").pop(),
       lgTextCss: lgTextCss.split(" ").pop(),
-      lgTextCss_:  lgTextCss,
+      lgTextCss_: lgTextCss,
 
       palette: {
         primary: colorIndigo,
@@ -204,7 +204,7 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
 
 
 
-const inlineStyleFn = (styleNameSet) => {
+const inlineStyleFn = (styleNameSet, ...props) => {
 
 
   // let color = styleName.filter((value) => value.startsWith("BOLD")).first();
@@ -223,15 +223,17 @@ const inlineStyleFn = (styleNameSet) => {
   //   };
   // }
 
-  if (styleNameSet.toArray().includes("LARGE")) {
+  if (styleNameSet.has("LARGE")) {
     return {
       element: "span",
-      // style: {
-      //   //color: "red",
-      //   "--font-size-large":"large"
-      // },
+      style: {
+      //  color: "red",
+    
+      //  backgroundColor: "pink",
+      },
       attributes: {
         "class": "large",
+
       }
 
     }
@@ -254,7 +256,9 @@ const inlineStyleFn = (styleNameSet) => {
 
 }
 
-const entityStyleFn = (entity) => {
+const entityStyleFn = (entity, ...props) => {
+
+  // console.log("===", props)
 
   if (entity.getType().indexOf("HEAD") > 0) {
     return {
@@ -298,9 +302,12 @@ function toPreHtml(editorState) {
     {
       defaultBlockTag: "div",
 
-      inlineStyleFn,
+
 
       entityStyleFn,
+      inlineStyleFn,
+
+
 
 
       blockStyleFn: function (block) {
@@ -356,8 +363,9 @@ function toPreHtml(editorState) {
             `<object data-text-align="${textAlign}"  data-type="color-block"  data-block_key="${key}" data-block_data='${JSON.stringify(data)}' data-bgiamge='${data.backgroundImage}' > 
             ${stateToHTML(ContentState.createFromBlockArray([block]), {
               defaultBlockTag: "div",
-              inlineStyleFn,
               entityStyleFn,
+              inlineStyleFn,
+
               blockRenderers: {},
             })}  
             </object>`

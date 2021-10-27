@@ -18,6 +18,9 @@ import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 import FormatSizeIcon from '@material-ui/icons/FormatSize';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 
+import FormatClearIcon from '@material-ui/icons/FormatClear';
+
+
 
 import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
 
@@ -165,6 +168,31 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
   }
 
+  function clearInlineStyle(e) {
+    e.preventDefault(); e.stopPropagation();
+    let allBlocks = editorState.getCurrentContent();
+    let selection = editorState.getSelection();
+
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "BOLD")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "ITALIC")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "UNDERLINE")
+
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SMALL")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "LARGE")
+
+    let es = EditorState.push(
+      editorState,
+      allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+      "change-inline-style",
+    )
+
+    setEditorState(es);
+    setTimeout(() => {
+      editorRef.current && editorRef.current.focus()
+    }, 0);
+  }
+
+
 
   function changeBlockData(e, dirStr) {
 
@@ -216,7 +244,10 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       fn: function (e) { changeInlineStyle(e, "SMALL"); }
     },
 
-
+    {
+      btn: <FormatClearIcon className={theme.sizeCss} />,
+      fn: function (e) { clearInlineStyle(e) }
+    },
 
     {
       btn: <FormatAlignLeftIcon className={theme.sizeCss} />,
@@ -245,7 +276,17 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
 
     document.querySelectorAll('span[style*="--font-size-large"]').forEach(
-      item => item.className = theme.lgTextCss
+      item => {
+       
+      
+        if (item.parentElement && item.parentElement.getAttribute("data-mention-head")) {
+         // console.log(item.parentElement.getAttribute("data-mention-head"))
+        }
+        else {
+          item.className = theme.lgTextCss
+        }
+
+      }
     )
     document.querySelectorAll(`span[class*="${theme.lgTextCss}"]:not(span[style*="--font-size-large"])`).forEach(
       item => {
@@ -254,7 +295,14 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     )
 
     document.querySelectorAll('span[style*="--font-size-small"]').forEach(
-      item => item.className = theme.smTextCss
+      item => {
+        if (item.parentElement && item.parentElement.getAttribute("data-mention-head")) {
+          //console.log(item.parentElement.getAttribute("data-mention-head"))
+        }
+        else {
+          item.className = theme.smTextCss
+        }
+      }
     )
     document.querySelectorAll(`span[class*="${theme.smTextCss}"]:not(span[style*="--font-size-small"])`).forEach(
       item => {

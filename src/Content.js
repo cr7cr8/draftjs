@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useLayoutEffect, useEffect, useRef, forwardRef } from "react"
 import { stateToHTML } from 'draft-js-export-html';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2, } from 'react-html-parser';
 import { withTheme, Paper, ThemeProvider, Typography, Zoom, Box } from "@material-ui/core";
@@ -19,12 +19,12 @@ import {
   engineName,
 } from "react-device-detect";
 
-const TTT = function () {
 
-  const theme = useTheme()
+function TTT(node, myRef) {
 
-  console.log(theme.lgTextCss_)
-  return <Typography className={theme.lgTextCss_}>few</Typography>
+  const ref = useRef()
+  forwardRef()
+  return <React.Fragment>{node}</React.Fragment>
 
 }
 
@@ -100,28 +100,14 @@ function toHtml({ preHtml, theme, ctx }) {
   const html = ReactHtmlParser(preHtml, {
     transform: function transformFn(node, index) {
 
+      if ((node.attribs && node.attribs["class"] && node.attribs["class"] === "large") || (node.attribs && node.attribs["class"] && node.attribs["class"] === "small")) {
 
-
-      if (node.name === "span" && (node.attribs["class"] === "large" || node.attribs["class"] === "small")) {
-
-        //  node.attribs["class"] = theme.lgTextCss
-        //  console.log(node)
-
-        // const lgTextCss = theme.lgTextCss
-        // node.attribs["class"] = lgTextCss
-        //  alert(lgTextCss)
-        //console.log(lgTextCss, node)
-
-        //  console.log(convertNodeToElement(node, index, transformFn))
         return <div style={{ display: "inline" }} className={node.attribs["class"] === "large" ? theme.lgTextCss : theme.smTextCss}>
-          {convertNodeToElement(node, index, transformFn)}
+          {convertNodeToElement(node, index, transformFn).props.children}
         </div>
-        //    console.log(theme.lgTextCss)
-        //  return <TTT  />
-        // return <span className={theme.lgTextCss}>ddd</span>
-        //  return <span className={"text-red"}>{convertNodeToElement(node, index, transformFn)}</span>
 
       }
+
       if (node.name === "object" && node.attribs["data-type"] === "avatar_head") {
 
         const element = node.children.map((child, index) => {
@@ -130,15 +116,37 @@ function toHtml({ preHtml, theme, ctx }) {
 
         return <span key={index} style={{ fontSize: 0, width: 0, height: 0, display: "inline-block" }}><span><span>{element}</span></span></span>
 
+        //fontSize in the  theme.lgTextCss as classname of a span tag will not work
         return <React.Fragment key={index}></React.Fragment>  // work as well
       }
       else if (node.name === "object" && node.attribs["data-type"] === "avatar_body") {
 
         const element = node.children.map((child, index) => {
-          return convertNodeToElement(child, index, transformFn)
+
+          const fontNode = convertNodeToElement(child, index, transformFn)
+    
+          if (typeof (fontNode) === "object" && (fontNode.props.className === "large" || fontNode.props.className === "small")) {
+
+            //fontSize in the  theme.lgTextCss as classname of a span tag will not work
+            //console.log(React.cloneElement(fontNode, { className:theme.lgTextCss }, fontNode.props.children)) 
+
+            return React.cloneElement(
+              <div />,
+              { className: fontNode.props.className === "large" ? theme.lgTextCss : theme.smTextCss, style: { display: "inline" } },
+              fontNode.props.children
+            )
+
+          }
+          else {
+            return fontNode
+          }
+
+
         })
 
         const personName = reactElementToJSXString(<>{element}</>).replace(/(<([^>]*)>)/ig, '').replace(/\s/g, '')
+
+
         return <AvatarChip hoverContent={personName} key={index} size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={personName} >{element}</AvatarChip>
       }
 
@@ -149,10 +157,22 @@ function toHtml({ preHtml, theme, ctx }) {
       // }
       else if (node.name === "object" && node.attribs["data-type"] === "emoji") {
         const element = node.children.map((child, index) => {
-          return convertNodeToElement(child, index, transformFn)
+
+          const emojiNode = convertNodeToElement(child, index, transformFn)
+
+          if (typeof (emojiNode) === "object" && (emojiNode.props.className === "large" || emojiNode.props.className === "small")) {
+            return React.cloneElement(
+              <div />,
+              { key: index, className: emojiNode.props.className === "large" ? theme.lgTextCss : theme.smTextCss, style: { display: "inline" } },
+              emojiNode.props.children
+            )
+          }
+          else {
+            return <React.Fragment key={index}>{emojiNode}</React.Fragment>
+          }
         })
-        //  return <React.Fragment key={index}>{element}</React.Fragment>
-        return <span key={index}><span>{element}</span></span>
+        return <React.Fragment key={index}>{element}</React.Fragment>
+        //return element
 
       }
       else if (node.name === "object" && node.attribs["data-type"] === "image-block") {
@@ -207,6 +227,12 @@ function toHtml({ preHtml, theme, ctx }) {
 export default withTheme(withContext(function Content({ theme, ctx, ...props }) {
 
   const { editorState, setEditorState, toPreHtml } = ctx
+
+
+  useEffect(function () {
+    document.querySelectorAll(".large").forEach(item => item.className = theme.lgTextCss)
+  })
+
 
   return (
     <Zoom in={ctx.showContent} unmountOnExit={true}>
