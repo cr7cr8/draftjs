@@ -173,9 +173,7 @@ export default function EmojiPanel({ clickFn, ctx, theme, ...props }) {
             dataArr.map((item, index) => {
               return <Tab value={index} style={{}} label={<span style={{}}>{item.category}</span>} key={index}
 
-
                 onClick={() => {
-
 
                   setDataArr(pre => {
                     const newDataArr = pre.map(oldItem => ({ ...oldItem, slideOn: false, direction: index > tabValue ? "right" : "left" }))

@@ -52,7 +52,7 @@ function toHtml({ preHtml, theme, ctx }) {
     transform: function (node, index) {
 
       if (node.name === "object" && node.attribs["data-type"] === "color-block") {
-
+       // console.log(node.attribs["data-bgiamge"], index)
 
         arr.push({ bg: node.attribs["data-bgiamge"], row: index, node })
         return null
@@ -74,14 +74,22 @@ function toHtml({ preHtml, theme, ctx }) {
         arr2[arr2.length - 1].push(current)
       }
       else if (current.bg === pre.bg && (Number(current.row) - Number(pre.row)) === 1) {
+
         arr2[arr2.length - 1].push(current)
       }
       else if (current.bg === pre.bg && (Number(current.row) - Number(pre.row)) !== 1) {
+
         arr2.push([current])
       }
-      else if (current.bg === preItemValue) {
+      else if (current.bg === preItemValue && (Number(current.row) - Number(pre.row)) !== 1) {
+        arr2.push([current])
+        //arr2[arr2.length - 1].push(current)
+      }
+      else if (current.bg === preItemValue && (Number(current.row) - Number(pre.row)) === 1) {
+        //arr2.push([current])
         arr2[arr2.length - 1].push(current)
       }
+
       else {
         arr2.push([current])
         preItemValue = current.bg
@@ -102,7 +110,7 @@ function toHtml({ preHtml, theme, ctx }) {
 
       if ((node.attribs && node.attribs["class"] && node.attribs["class"] === "large") || (node.attribs && node.attribs["class"] && node.attribs["class"] === "small")) {
 
-        return <div style={{ display: "inline" }} className={node.attribs["class"] === "large" ? theme.lgTextCss : theme.smTextCss}>
+        return <div key={index} style={{ display: "inline" }} className={node.attribs["class"] === "large" ? theme.lgTextCss : theme.smTextCss}>
           {convertNodeToElement(node, index, transformFn).props.children}
         </div>
 
@@ -124,7 +132,7 @@ function toHtml({ preHtml, theme, ctx }) {
         const element = node.children.map((child, index) => {
 
           const fontNode = convertNodeToElement(child, index, transformFn)
-    
+
           if (typeof (fontNode) === "object" && (fontNode.props.className === "large" || fontNode.props.className === "small")) {
 
             //fontSize in the  theme.lgTextCss as classname of a span tag will not work
@@ -132,13 +140,13 @@ function toHtml({ preHtml, theme, ctx }) {
 
             return React.cloneElement(
               <div />,
-              { className: fontNode.props.className === "large" ? theme.lgTextCss : theme.smTextCss, style: { display: "inline" } },
+              { key: index, className: fontNode.props.className === "large" ? theme.lgTextCss : theme.smTextCss, style: { display: "inline" } },
               fontNode.props.children
             )
 
           }
           else {
-            return fontNode
+            return <React.Fragment key={index}>{fontNode}</React.Fragment>
           }
 
 
@@ -182,6 +190,7 @@ function toHtml({ preHtml, theme, ctx }) {
         const key = node.attribs["data-block_key"]
         const imageLinkArr = (ctx && ctx.imageBlockObj && ctx.imageBlockObj[key]) || []
 
+      
         return <ImagePanel key={index} imageLinkArr={imageLinkArr} posData={posData} />
 
       }
@@ -333,6 +342,7 @@ function ImagePanel({ imageLinkArr = [], posData = {}, ...props }) {
   const classes = useStyles({ numOfImage: imageLinkArr.length })
   const target = React.useRef(null)
   const size = useSize(target)
+
 
   return (
     <div className={classes.baseGridCss} ref={target}

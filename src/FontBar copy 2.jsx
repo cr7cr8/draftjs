@@ -4,11 +4,6 @@ import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata
 
 
 import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button, IconButton } from "@material-ui/core";
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-
-
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
 import { Context, withContext } from "./ContextProvider"
 
@@ -31,12 +26,9 @@ import FormatClearIcon from '@material-ui/icons/FormatClear';
 
 
 import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
-import FormatColorFillIcon from '@material-ui/icons/FormatColorFill';
+
 
 import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
-
-
-
 
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 //import NavigateNextIcon from '@material-ui/icons/ArrowForwardIos';
@@ -49,8 +41,6 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 import WallpaperIcon from '@material-ui/icons/Wallpaper';
 
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-
 import Immutable from "immutable"
 
 import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined';
@@ -61,84 +51,21 @@ import ColorLensTwoToneIcon from '@material-ui/icons/ColorLensTwoTone';
 
 import { markingColorBlock } from "./ColorBlock";
 
-const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) => {
+const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr }) => {
 
   return {
-
-    // panelHeightCss: () => {
-    //   return {
-    //     ...breakpointsAttribute(["height", multiplyArr(textSizeArr, 1.2)]),
-    //   }
-    // },
-
-    colorBtnCss: ({ item: item }) => {
-
-      const rgba = colorValues(item && item.color || "white")
-
-      return {
-        ...item,
-        borderRadius: "1000px",
-        color: `rgba(${rgba[0]},${rgba[1]},${rgba[2]},0.1)`,
-        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 1)], ["height", multiplyArr(textSizeArr, 1)]),
-
-        "&:hover": {
-          color: `rgba(${rgba[0]},${rgba[1]},${rgba[2]},1)`,
-        }
-
-      }
-
-    },
 
     fontBarCss: ({ buttonArr, ...props }) => {
 
       return {
-
-
-        "& .MuiTabs-root": {
-          minWidth: "0px",
-          minHeight: "0px",
-        },
-
-        "& .MuiTab-root": {
-          minWidth: "0px",
-          minHeight: "0px",
-          padding: 0,
-          margin: 0,
-          lineHeight: 1,
-          color: theme.palette.text.secondary,
-
-          ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 1.2)], ["height", multiplyArr(textSizeArr, 1.2)]),
-
-        },
-
-
-        "& .MuiTab-root:hover": {
-          backgroundColor: theme.palette.action.selected,
-        },
-
-        "& .MuiTabs-flexContainer": {
-          flexWrap: "wrap",
-          // minWidth: "0px",
-          // minHeight: "0px",
-
-        },
-
-        "& .MuiTab-fullWidth": {
-          flexBasis: "unset",
-          //    flexShrink: "unset"
-        },
-
-
-        "& .MuiBox-root": {
-          padding: 0,
-          margin: 0,
-          overflow: "hidden"
-
+        ...breakpointsAttribute(["height", multiplyArr(textSizeArr, 1)]),
+        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonArr.length)]),
+        "& button": { padding: 0, },
+        "& > div": {
+          ...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonArr.length)]),
         }
       }
-    },
-
-
+    }
 
   }
 
@@ -146,7 +73,14 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, 
 })
 
 
+
+
+
+
 export const FontBar = withContext(function ({ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, ...props }) {
+
+
+
 
   let isAllTextBlock = getChoosenBlocks(editorState).every((block, key, ...props) => {
     return block.getType() === "unstyled"
@@ -156,12 +90,16 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     return block.getType() === "colorBlock"
   })
 
+
+
   const [top, setTop] = useState(0)
   const [left, setLeft] = useState(0)
   const [taggingWidth, setTaggingWidth] = useState(0)
 
   const theme = useTheme()
   const fontBarPanelRef = useRef()
+  const [movingPX, setMovingPX] = useState(0)
+
 
   const inputRef = useRef()
 
@@ -257,6 +195,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     }, 0);
   }
 
+
+
   function changeBlockData(e, dirStr) {
 
     e.preventDefault(); e.stopPropagation();
@@ -285,29 +225,6 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     }, 0);
   }
 
-
-
-
-  const categoryBtnArr = [
-
-    <TextFieldsIcon className={theme.sizeCss} />,
-
-
-    <FormatColorTextIcon className={theme.sizeCss} />,
-
-
-    <LinkIcon className={theme.sizeCss} />,
-
-    <FormatColorFillIcon className={theme.sizeCss} />,
-
-    // {
-    //   btn: <PanoramaOutlinedIcon className={theme.sizeCss} />
-    // },
-  ]
-
-  const [directionArr, setDirectionArr] = useState(new Array(categoryBtnArr.length).map(item => true))
-
-
   const buttonArr = [
     {
       btn: <FormatBoldIcon className={theme.sizeCss} />,
@@ -335,10 +252,20 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       fn: function (e) { clearInlineStyle(e) }
     },
 
-    // {
-    //   btn: < LinkIcon className={theme.sizeCss} />,
-    //   fn: function (e) { }
-    // },
+    {
+      btn: < LinkIcon className={theme.sizeCss} />,
+      fn: function (e) {  }
+    },
+
+   
+    {
+      btn: <div className={theme.sizeCss} style={{background:"orange", borderRadius:"1000px"}}/>,
+      fn: function (e) {  }
+    },
+
+
+
+
     {
       btn: <FormatAlignLeftIcon className={theme.sizeCss} />,
       fn: function (e) { changeBlockData(e, "left") }
@@ -352,151 +279,22 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       fn: function (e) { changeBlockData(e, "right") }
     },
 
-    // {
-    //   btn: <NavigateNextIcon className={theme.sizeCss} />,
-    //   fn: function (e) { e.preventDefault(); e.stopPropagation(); setMovingPX(-100) }
-    // }
+    {
+      btn: <NavigateNextIcon className={theme.sizeCss} />,
+      fn: function (e) { e.preventDefault(); e.stopPropagation(); setMovingPX(-100) }
+    }
 
   ]
-
-
-  const panelArr = [
-
-    {
-      btnArr: buttonArr,
-      fn: function () {
-
-        return (
-          this.btnArr.map((item, index) => {
-            return <IconButton
-              key={index}
-              //style={{ padding: 0 }}
-              className={theme.sizeCss}
-              onClick={(e) => { item.fn(e) }}>{item.btn}</IconButton>
-          })
-        )
-      }
-    },
-    {
-      btnArr: [],
-      fn: function () { }
-    },
-    {
-      btnArr: [],
-      fn: function () {
-
-      }
-    },
-    {
-      btnArr: gradientStyleArr,
-      fn: function () {
-
-
-        return (
-          <>
-
-            <input ref={inputRef} type="file" multiple={false} style={{ display: "none" }}
-              onClick={function (e) { e.currentTarget.value = null; }}
-              onChange={update}
-            />
-
-            <IconButton
-              className={theme.sizeCss}
-              //  style={{ padding: 0 }}
-              contentEditable={false}
-              onMouseDown={function (e) {
-                e.preventDefault()
-                e.stopPropagation()
-
-                inputRef.current.click()
-                // setTimeout(() => {
-                //   editorRef.current.focus()
-                // }, 0);
-              }}
-
-              onClick={function (e) {
-                e.preventDefault()
-                e.stopPropagation()
-
-              }}
-            >
-              <WallpaperIcon className={theme.sizeCss} />
-            </IconButton>
-
-
-
-            {
-              this.btnArr.map((item, index) => {
-                const { colorBtnCss } = useStyles({ item })
-                // const rgba = (colorValues(item.color || "white"))
-
-                console.log()
-                return <IconButton
-                  key={index}
-                  className={theme.sizeCss}
-                  // style={{ padding: 0 }}
-                  // disabled={(!isAllTextBlock && !isAllColorBlock)}
-
-                  onClick={function (e) {
-                    e.preventDefault(); e.stopPropagation();
-                    markingColorBlock(e, editorState, setEditorState, item)
-
-
-                    setTimeout(() => {
-                      editorRef.current.focus()
-                    }, 0);
-
-
-                  }}>
-
-                  <RadioButtonUncheckedIcon className={colorBtnCss}
-                  //  style={{ ...item, borderRadius: "1000px", color: `rgba(${rgba[0]},${rgba[1]},${rgba[2]},0.3)` }}
-                  />
-                  {/* <div className={theme.sizeCss} style={{ ...item, borderRadius: "1000px" }} /> */}
-                  {/* <div className={theme.sizeCss} style={{ ...item, opacity: isAllTextBlock || isAllColorBlock ? 1 : 0.3, borderRadius: "1000px" }} /> */}
-                </IconButton>
-
-              })
-            }
-
-          </>
-        )
-      }
-    },
-
-  ]
-
-
   const { fontBarCss } = useStyles({ buttonArr })
-
-
-
 
 
   useLayoutEffect(function () {
 
 
 
-    // document.querySelectorAll(`span[class*="${theme.lgTextCss}"]:not(span[style*="--font-size-large"])`).forEach(
-    //   item => {
-    //     item.classList.remove(theme.lgTextCss)
-    //   }
-    // )
-
-
-    document.querySelectorAll(`span[class*="${theme.lgTextCss}"]`).forEach(
-      item => {
-        if( Object.values(item.style).includes("--font-size-large")){return}
-        else{
-          item.classList.remove(theme.lgTextCss)
-        }
-
-      }
-    )
-
-
     document.querySelectorAll('span[style*="--font-size-large"]').forEach(
       item => {
+
 
         if (item.parentElement && item.parentElement.getAttribute("data-mention-head")) {
           // console.log(item.parentElement.getAttribute("data-mention-head"))
@@ -507,28 +305,11 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
       }
     )
-
-
-    ///////////////////////////////////////
-
-
-    // document.querySelectorAll(`span[class*="${theme.smTextCss}"]:not(span[style*="--font-size-small"])`).forEach(
-    //   item => {
-    //     item.classList.remove(theme.smTextCss)
-    //   }
-    // )
-
-    document.querySelectorAll(`span[class*="${theme.smTextCss}"]`).forEach(
+    document.querySelectorAll(`span[class*="${theme.lgTextCss}"]:not(span[style*="--font-size-large"])`).forEach(
       item => {
-        if( Object.values(item.style).includes("--font-size-small")){return}
-        else{
-          item.classList.remove(theme.smTextCss)
-        }
-
+        item.classList.remove(theme.lgTextCss)
       }
     )
-
-
 
     document.querySelectorAll('span[style*="--font-size-small"]').forEach(
       item => {
@@ -538,6 +319,11 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         else {
           item.className = theme.smTextCss
         }
+      }
+    )
+    document.querySelectorAll(`span[class*="${theme.smTextCss}"]:not(span[style*="--font-size-small"])`).forEach(
+      item => {
+        item.classList.remove(theme.smTextCss)
       }
     )
 
@@ -602,10 +388,10 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
   }
 
-  const [tabValue, setTabValue] = useState(0)
+
+
 
   return (
-
     <Paper
 
 
@@ -624,7 +410,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
         zIndex: 1100,
         backgroundColor: "#acf",
-        // borderRadius: "1000px",
+        borderRadius: "1000px",
         position: "absolute",
         transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
         transitionProperty: "top ,left, opacity",
@@ -635,106 +421,143 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       }}
       onClick={function (e) { }}
     >
-
-      <Tabs
-
-        indicatorColor="primary"
-        value={tabValue}
-        selectionFollowsFocus={true}
-        //onChange={handleChange}
-        indicatorColor="primary"
-        textColor="primary"
-        variant="fullWidth"
-
-      //variant="scrollable"
-      //scrollButtons="on"
-
-      >
-
-        {categoryBtnArr.map((item, index) => {
-
-          return <Tab
-            value={index}
-            key={index}
-            style={{ background: tabValue === index ? "transparent" : "gray" }}
-
-            label={item}
-
-
-
-
-            onClick={() => {
-
-              setDirectionArr(pre => {
-
-
-                pre[tabValue] = tabValue > index
-                pre[index] = tabValue < index
-
-                return pre //[...pre]
-
-              })
-
-              setTabValue(index)
-            }}
-          />
-        })}
-
-      </Tabs>
-
-
-      <div key="slide"
-
-        className={theme.panelHeightCss}
+      <div ref={fontBarPanelRef}
         style={{
-          overflow: "hidden", /*backgroundColor: "wheat",*/ position: "relative", width: "100%", display: "flex", flexWrap: "nowrap",
-
+          display: "inline-block",
+          transitionProperty: "transform",
+          transform: `translateX(${movingPX}%)`,
+          transitionDuration: "200ms",
         }}
 
       >
-        {panelArr.map((panelItem, index) => {
+        {
+          buttonArr.map((item, index) => {
+            return <IconButton className={theme.sizeCss} key={index} onClick={item.fn}>{item.btn}</IconButton>
+          })
+        }
 
-          return (
-            <Slide
-              key={index}
-              in={index === tabValue}
-              direction={directionArr[index] ? "left" : "right"}
-              onEntered={function () {
-
-                //setTimeout(() => {
-                //  editorRef.current.focus()
-                //}, 0);
-
-              }}
-
-              onExited={function () {
-
-                //setTimeout(() => {
-                //    editorRef.current.focus()
-                //}, 0);
-
-              }}
-              unmountOnExit={false} timeout={{ exit: 300, enter: 300 }} >
-
-              <div style={{ position: index === 0 ? "relative" : "absolute", padding: "0px" }}>{panelItem.fn()}</div>
-
-            </Slide>
-
-          )
-
-
-        })}
       </div>
-    </Paper>
 
 
+
+
+
+      <div
+        style={{
+          //   opacity: 0.5,
+          backgroundColor: "pink",
+
+
+          display: "inline-block",
+          transitionProperty: "transform",
+          transform: `translateX(${movingPX}%)`,
+          transitionDuration: "200ms",
+        }}
+      >
+        <IconButton className={theme.sizeCss}
+          onClick={function (e) {
+            e.preventDefault(); e.stopPropagation();
+            setMovingPX(0)
+          }}>
+          <NavigateBeforeIcon className={theme.sizeCss} />
+        </IconButton>
+
+
+
+        <input ref={inputRef} type="file" multiple={false} style={{ display: "none" }}
+          onClick={function (e) { e.currentTarget.value = null; }}
+          onChange={update}
+        />
+
+
+        <IconButton
+          className={theme.sizeCss}
+          contentEditable={false}
+          onMouseDown={function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+
+            inputRef.current.click()
+            // setTimeout(() => {
+            //   editorRef.current.focus()
+            // }, 0);
+          }}
+
+          onClick={function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+
+          }}
+        >
+          <WallpaperIcon className={theme.sizeCss} />
+        </IconButton>
+
+
+        {
+          gradientStyleArr.map(function (item, index) {
+
+            return <IconButton className={theme.sizeCss} key={index}
+              // disabled={(!isAllTextBlock && !isAllColorBlock)}
+
+              onClick={function (e) {
+                e.preventDefault(); e.stopPropagation();
+                markingColorBlock(e, editorState, setEditorState, item)
+                setMovingPX(-100)
+
+                setTimeout(() => {
+                  editorRef.current.focus()
+                }, 0);
+
+
+              }}>
+              <div className={theme.sizeCss} style={{ ...item, borderRadius: "1000px" }} />
+              {/* <div className={theme.sizeCss} style={{ ...item, opacity: isAllTextBlock || isAllColorBlock ? 1 : 0.3, borderRadius: "1000px" }} /> */}
+            </IconButton>
+
+          })
+        }
+
+        <IconButton
+          className={theme.sizeCss}
+          contentEditable={false}
+          onClick={function (e) {
+            const allBlocks = editorState.getCurrentContent()
+            const selection = editorState.getSelection()
+
+            let newContent = Modifier.setBlockType(
+              allBlocks,
+              selection,
+              "unstyled"
+            )
+
+            let es = EditorState.push(editorState, newContent, 'change-block-type');
+
+            newContent = Modifier.mergeBlockData(
+              newContent,
+              selection,
+              Immutable.Map({ colorBlock: false }),
+            )
+
+            es = EditorState.push(es, newContent, 'change-block-data');
+            es = EditorState.forceSelection(es, selection)
+
+            return setEditorState(es)
+
+          }}>
+          <HighlightOffOutlinedIcon className={theme.sizeCss} />
+        </IconButton>
+
+
+      </div>
+
+
+
+
+
+
+
+    </Paper >
   )
-
-
-
-
-
-
 })
 
 
@@ -824,43 +647,4 @@ export function taggingFontBar(editorState) {
   }
 
 
-}
-
-
-
-function colorValues(color) {
-  if (!color)
-    return;
-  if (color.toLowerCase() === 'transparent')
-    return [0, 0, 0, 0];
-  if (color[0] === '#') {
-    if (color.length < 7) {
-      // convert #RGB and #RGBA to #RRGGBB and #RRGGBBAA
-      color = '#' + color[1] + color[1] + color[2] + color[2] + color[3] + color[3] + (color.length > 4 ? color[4] + color[4] : '');
-    }
-    return [parseInt(color.substr(1, 2), 16),
-    parseInt(color.substr(3, 2), 16),
-    parseInt(color.substr(5, 2), 16),
-    color.length > 7 ? parseInt(color.substr(7, 2), 16) / 255 : 1];
-  }
-  if (color.indexOf('rgb') === -1) {
-    // convert named colors
-    var temp_elem = document.body.appendChild(document.createElement('fictum')); // intentionally use unknown tag to lower chances of css rule override with !important
-    var flag = 'rgb(1, 2, 3)'; // this flag tested on chrome 59, ff 53, ie9, ie10, ie11, edge 14
-    temp_elem.style.color = flag;
-    if (temp_elem.style.color !== flag)
-      return; // color set failed - some monstrous css rule is probably taking over the color of our object
-    temp_elem.style.color = color;
-    if (temp_elem.style.color === flag || temp_elem.style.color === '')
-      return; // color parse failed
-    color = getComputedStyle(temp_elem).color;
-    document.body.removeChild(temp_elem);
-  }
-  if (color.indexOf('rgb') === 0) {
-    if (color.indexOf('rgba') === -1)
-      color += ',1'; // convert 'rgb(R,G,B)' to 'rgb(R,G,B)A' which looks awful but will pass the regxep below
-    return color.match(/[\.\d]+/g).map(function (a) {
-      return +a
-    });
-  }
 }

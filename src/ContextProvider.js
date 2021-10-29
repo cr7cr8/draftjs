@@ -114,6 +114,13 @@ const useStyles = makeStyles((theme) => {
       }
     },
 
+    textCss: ({ textSizeArr }) => {
+      return {
+        //color: "red",
+        ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1)]),
+      }
+    },
+
     smTextCss: ({ textSizeArr }) => {
       return {
         //color: "red",
@@ -133,7 +140,7 @@ const useStyles = makeStyles((theme) => {
 })
 
 
-function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, heightCss, widthCss, myTheme, smTextCss, lgTextCss }) {
+function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, heightCss, widthCss, myTheme, textCss, smTextCss, lgTextCss }) {
 
   //console.log( sizeCss, smSizeCss, heightCss, widthCss,  smTextCss)
 
@@ -154,9 +161,10 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
       smSizeCss: smSizeCss.split(" ").pop(),
       heightCss: heightCss.split(" ").pop(),
       widthCss: widthCss.split(" ").pop(),
+
+      textCss: textCss.split(" ").pop(),
       smTextCss: smTextCss.split(" ").pop(),
       lgTextCss: lgTextCss.split(" ").pop(),
-      lgTextCss_: lgTextCss,
 
       palette: {
         primary: colorIndigo,
@@ -227,9 +235,9 @@ const inlineStyleFn = (styleNameSet, ...props) => {
     return {
       element: "span",
       style: {
-      //  color: "red",
-    
-      //  backgroundColor: "pink",
+        //  color: "red",
+
+        //  backgroundColor: "pink",
       },
       attributes: {
         "class": "large",
@@ -409,8 +417,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [imageBlockObj, setImageBlockObj] = useState({})
 
-  const { sizeCss, smSizeCss, heightCss, widthCss, smTextCss, lgTextCss } = useStyles({ textSizeArr })
-  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, smTextCss, lgTextCss }), [textSizeArr, isLight, setIsLight,])
+  const { sizeCss, smSizeCss, heightCss, widthCss, textCss, smTextCss, lgTextCss } = useStyles({ textSizeArr })
+  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, textCss, smTextCss, lgTextCss }), [textSizeArr, isLight, setIsLight,])
 
   //const [bgImageObj_, setBgImageObj] = useState({})
   const bgImageObj = useRef({})
@@ -445,8 +453,14 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           imageBlockObj, setImageBlockObj,
           bgImageObj, //setBgImageObj,
           gradientStyleArr: [
-            { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
+
+         
+
+
+            { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
             { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
+            { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
+            { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
             {
               backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/600/300)",
               backgroundSize: "cover",
@@ -459,7 +473,18 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
               backgroundRepeat: "no-repeat",
               color: "#666"
             },
-            { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#666" },
+            {
+              backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/502/700)",
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              color: "#666"
+            },
+            { backgroundImage: "linear-gradient(to top, #e6b980 0%, #eacda3 100%)", color: "#fff" },
+            { backgroundImage: "linear-gradient(45deg, #ff758c 0%, #ff7eb3 100%)", color: "#fff" },
+            // { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#fff" },
+            // { backgroundImage: "linear-gradient(to top, #e6b980 0%, #eacda3 100%)", color: "#fff" },
+            // { backgroundImage: "linear-gradient(45deg, #ff758c 0%, #ff7eb3 100%)", color: "#fff" },
+            // { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#fff" },
           ],
 
 

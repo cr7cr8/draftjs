@@ -303,10 +303,10 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
 
 
   const [horizontal, setHorizontal] = useState(blockDataObj["pos" + index] ? blockDataObj["pos" + index].horizontal : 50)  //!!! should fetch from the block data first
-  const [verticle, setVerticle] = useState(blockDataObj["pos" + index] ? blockDataObj["pos" + index].verticle : 50)  //!!! should fetch from the block data first
+  const [vertical, setvertical] = useState(blockDataObj["pos" + index] ? blockDataObj["pos" + index].vertical : 50)  //!!! should fetch from the block data first
 
   // useEffect(function () {
-  //   console.log(horizontal, verticle)
+  //   console.log(horizontal, vertical)
   // })
 
 
@@ -319,7 +319,7 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
     const blockDataObj = block.getData().toObject() || {}
 
     setHorizontal(blockDataObj["pos" + index] ? blockDataObj["pos" + index].horizontal : 50)
-    setVerticle(blockDataObj["pos" + index] ? blockDataObj["pos" + index].verticle : 50)
+    setvertical(blockDataObj["pos" + index] ? blockDataObj["pos" + index].vertical : 50)
 
 
   }, [refreshAll])
@@ -375,7 +375,7 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
 
 
 
-        {verticle > 0 && <IconButton
+        {vertical > 0 && <IconButton
           style={{
             backgroundColor: theme.palette.background.paper,
             position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)"
@@ -383,9 +383,9 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
           children={<KeyboardArrowUpIcon />}
           onClick={
             function () {
-              setVerticle(pre => {
-                setImageBlockData({ ["pos" + index]: { horizontal, verticle: Math.max(0, Math.min(pre - 25, 100)) } }, blockKey)
-                // setImageBlockData({ [picName.current]: { horizontal, verticle: Math.max(0, Math.min(pre - 25, 100)) } }, blockKey)
+              setvertical(pre => {
+                setImageBlockData({ ["pos" + index]: { horizontal, vertical: Math.max(0, Math.min(pre - 25, 100)) } }, blockKey)
+                // setImageBlockData({ [picName.current]: { horizontal, vertical: Math.max(0, Math.min(pre - 25, 100)) } }, blockKey)
                 return Math.max(0, Math.min(pre - 25, 100))
               })
               //  setTimeout(() => {
@@ -394,7 +394,7 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
             }}
         />}
 
-        {verticle < 100 && <IconButton
+        {vertical < 100 && <IconButton
           style={{
             backgroundColor: theme.palette.background.paper,
             position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)"
@@ -402,9 +402,9 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
           children={<KeyboardArrowDownIcon />}
           onClick={
             function () {
-              setVerticle(pre => {
-                setImageBlockData({ ["pos" + index]: { horizontal, verticle: Math.max(0, Math.min(pre + 25, 100)) } }, blockKey)
-                // setImageBlockData({ [picName.current]: { horizontal, verticle: Math.max(0, Math.min(pre + 25, 100)) } }, blockKey)
+              setvertical(pre => {
+                setImageBlockData({ ["pos" + index]: { horizontal, vertical: Math.max(0, Math.min(pre + 25, 100)) } }, blockKey)
+                // setImageBlockData({ [picName.current]: { horizontal, vertical: Math.max(0, Math.min(pre + 25, 100)) } }, blockKey)
                 return Math.max(0, Math.min(pre + 25, 100))
               })
             }
@@ -420,7 +420,7 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
           onClick={
             function () {
               setHorizontal(pre => {
-                setImageBlockData({ ["pos" + index]: { horizontal: Math.max(0, Math.min(pre - 25, 100)), verticle } }, blockKey)
+                setImageBlockData({ ["pos" + index]: { horizontal: Math.max(0, Math.min(pre - 25, 100)), vertical } }, blockKey)
                 return Math.max(0, Math.min(pre - 25, 100))
 
               })
@@ -439,7 +439,7 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
             function () {
             //  console.log(pic)
               setHorizontal(pre => {
-                setImageBlockData({ ["pos" + index]: { horizontal: Math.max(0, Math.min(pre + 25, 100)), verticle } }, blockKey)
+                setImageBlockData({ ["pos" + index]: { horizontal: Math.max(0, Math.min(pre + 25, 100)), vertical } }, blockKey)
                 return Math.max(0, Math.min(pre + 25, 100))
 
               })
@@ -449,7 +449,7 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
         />}
 
       </div>
-      <img src={pic} ref={imageRef} style={{ position: "absolute", objectFit: "cover", width: "100%", height: "100%", objectPosition: horizontal + "%" + " " + verticle + "%" }} />
+      <img src={pic} ref={imageRef} style={{ position: "absolute", objectFit: "cover", width: "100%", height: "100%", objectPosition: horizontal + "%" + " " + vertical + "%" }} />
     </>
 
   )

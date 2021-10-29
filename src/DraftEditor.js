@@ -28,7 +28,7 @@ import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
 import createMentionPlugin from './MentionPlugin';
 import createEmojiPlugin from './EmojiPlugin';
 import createImagePlugin from './ImagePlugin';
-
+import createLinkPlugin from './LinkPlugin';
 
 
 import ToolBlock from "./ToolBlock";
