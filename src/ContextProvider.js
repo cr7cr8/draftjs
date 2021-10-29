@@ -552,7 +552,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
           <br /> <br />
 
-          <Content />
+          {showContent&&<Content />}
 
         </Context.Provider>
       </StyledThemeProvider>
