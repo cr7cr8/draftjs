@@ -240,6 +240,11 @@ export function SettingBar({ setShowSettingBar, markingImageBlock, markingColorB
 
     }
 
+    return function () {
+      console.log(renderMe)
+    }
+
+
 
   })
 
@@ -297,10 +302,35 @@ export function SettingBar({ setShowSettingBar, markingImageBlock, markingColorB
         onClick={function (e) { e.currentTarget.value = null; }}
         onChange={update}
       />
-      <Slide in={renderMe} unmountOnExit={true} direction="right" timeout={{ enter: setShowSettingBar ? 300 : 0, exit: 300 }} onExited={function () {
-        setShowSettingBar && setShowSettingBar(false)
-      }} onEntered={function () { editorRef.current.focus() }}>
-        <div style={{ position: "absolute", top: 0, width:"auto",overflow: "hidden", whiteSpace: "nowrap", right: 0, /*backgroundColor:"#acf"*/ }}
+      <Slide in={renderMe}
+        unmountOnExit={true}
+
+        direction="right" timeout={{ enter: setShowSettingBar ? 300 : 0, exit: 300 }}
+
+        onExited={function () {
+          setShowSettingBar && setShowSettingBar(false)
+          !setShowSettingBar && function () {
+
+            const selection = editorState.getSelection()
+            const allBlocks = Modifier.mergeBlockData(editorState.getCurrentContent(), SelectionState.createEmpty(blockKey), Immutable.Map({ fromSetting: false }))
+
+            let es = EditorState.push(
+              editorState,
+              allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+              "change-block-data",
+            )
+
+            es = EditorState.forceSelection(es, selection)
+
+
+
+            setEditorState(es)
+          
+
+          }()
+        }}
+        onEntered={function () { editorRef.current.focus() }}>
+        <div style={{ position: "absolute", top: 0, width: "auto", overflow: "hidden", whiteSpace: "nowrap", right: 0, /*backgroundColor:"#acf"*/ }}
           contentEditable={false}
           onMouseDown={function (e) {
             e.preventDefault()

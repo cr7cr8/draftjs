@@ -1,5 +1,8 @@
 ### Dev16
 
+to do:   colorblock hint is hidden
+
+
 ### Dev15
 merge ColorBlock , both in draftjs and output js
 settingPanel is added 

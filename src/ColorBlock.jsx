@@ -130,6 +130,7 @@ export default function ColorBlock(props) {
   useEffect(function () {
     arr.forEach((groupArr, index) => {
 
+      
       if (!groupArr[0].props.children.props.block.getData().toObject().colorBlock) {
         groupArr.forEach(blockItem => {
           let newContent = Modifier.setBlockType(
@@ -171,7 +172,7 @@ export default function ColorBlock(props) {
             const blockItemKey = blockItem.props.children.props.block.getKey()
             const blockItemData = blockItem.props.children.props.block.getData().toObject()
 
-            console.log(blockItem)
+
             return <div key={blockItem.props.children.props.block.getKey()} style={{ position: "relative" }}
             >
 
@@ -314,16 +315,20 @@ export default function ColorBlock(props) {
                 </React.Fragment>}
 
 
-              {React.cloneElement(
+              {/* {React.cloneElement(
                 blockItem,
-                { ...blockItem.props, className: "hide" },
+                { ...blockItem.props, ...!blockItemText && { className: "hide" } },
 
                 <>
                   {blockItemData.fromSetting && <SettingBar  {...{ markingColorBlock, markingImageBlock, blockKey: blockItemKey }} />}
                   {blockItem.props.children}
                 </>
-              )}
+              )} */}
 
+              <div {...{ ...blockItem.props, ...!blockItemText && { className: "hide" } }}>
+                {blockItemData.fromSetting && <SettingBar  {...{ markingColorBlock, markingImageBlock, blockKey: blockItemKey }} />}
+                {blockItem.props.children}
+              </div>
 
 
             </div>
