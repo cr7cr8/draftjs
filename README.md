@@ -1,4 +1,8 @@
+### Dev16
+
 ### Dev15
+merge ColorBlock , both in draftjs and output js
+settingPanel is added 
 
 ### Dev14
 Color Block is done.
