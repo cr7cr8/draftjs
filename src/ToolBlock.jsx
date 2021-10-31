@@ -8,13 +8,20 @@ import Editor from "draft-js-plugins-editor";
 import Immutable from 'immutable';
 
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
-import { Typography, IconButton, Button, ButtonGroup, Container, Paper, Avatar, Box, Chip, Grow, Zoom, Slide } from "@material-ui/core";
-import { Image, AlternateEmailSharp } from "@material-ui/icons";
+import { FormControlLabel, Typography, IconButton, Button, ButtonGroup, Container, Paper, Avatar, Box, Chip, Grow, Zoom, Slide } from "@material-ui/core";
+import SwitchBtn from "./SwitchBtn"
 
 
-import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
-import ColorLensTwoToneIcon from '@material-ui/icons/ColorLensTwoTone';
-import WallpaperIcon from '@material-ui/icons/Wallpaper';
+
+
+
+import InsertPhotoOutlinedIcon from '@material-ui/icons/InsertPhotoOutlined';
+import ImageTwoToneIcon from '@material-ui/icons/ImageTwoTone';
+
+
+import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
+import SettingsIcon from '@material-ui/icons/Settings';
+
 
 import AvatarChipList from "./AvatarChipList";
 
@@ -41,16 +48,24 @@ export default function ToolBlock(props) {
 
   const { block, selection, contentState } = props
 
+
+
   const { editorRef, readOnly, setReadOnly, EmojiPanel, markingImageBlock, markingColorBlock, editorState, setEditorState, taggingFontBar, gradientStyleArr,
     bgImageObj,
     setBgImageObj,
+    showFontBar,
+    setShowFontBar,
 
   } = props.blockProps
 
-  
+
 
   const theme = useTheme()
   const blockKey = block.getKey()
+  const startKey = selection.getStartKey()
+
+  // console.log(blockKey === startKey)
+
   const editorBlockRef = useRef()
 
   const [backColor, setBackColor] = useState(getRandomColor())
@@ -59,14 +74,174 @@ export default function ToolBlock(props) {
 
   const [hidden, setHidden] = useState(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey))
 
-  const [showColorPanel, setShowColorPanel] = useState(false)
+  const [showSettingBar, setShowSettingBar] = useState(false)
 
   const inputRef = useRef()
 
   function aaa() {
 
-    setShowColorPanel(false)
+    //  setShowColorPanel(false)
   }
+
+
+
+  useEffect(function () {
+
+
+
+
+    setHidden(!(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey)))
+    if (editorBlockRef.current._node.style.backgroundColor !== backColor) editorBlockRef.current._node.style.backgroundColor = backColor
+    if (editorBlockRef.current._node.parentElement.style.overflow !== "hidden") editorBlockRef.current._node.parentElement.style.overflow = "hidden"
+    editorBlockRef.current._node.contentEditable = !showSettingBar
+
+
+
+    if (showSettingBar) {
+      editorBlockRef.current._node.addEventListener("click", aaa)
+    }
+    //console.log(editorBlockRef.current._node)
+
+
+
+    return function () {
+
+      if (editorBlockRef.current && editorBlockRef.current._node) {
+        editorBlockRef.current._node.removeEventListener("click", aaa)
+      }
+    }
+
+
+  })
+
+  return (
+
+    <>
+
+      <EditorBlock  {...props} ref={editorBlockRef} />
+
+
+
+      {/* {showSettingBar && <div style={{ position: "absolute", top: 0, width: "100%", overflow: "hidden" }}
+        contentEditable={false}
+        onClick={function (e) {
+          e.preventDefault()
+          e.stopPropagation()
+          setShowSettingBar(false)
+        }}
+      > */}
+
+
+      {showSettingBar && <SettingBar  {...{ setShowSettingBar, markingImageBlock, markingColorBlock, blockKey }} />}
+
+
+
+
+      {/* <SwitchBtn
+
+          checked={showFontBar}
+          factor={[2, 2, 0.5, 3, 1]} //"4rem", "4rem", "1rem", "6rem", "2rem"
+          onChange={() => { setShowFontBar(pre => !pre); editorRef.current.focus() }} name="showFontBar" color="primary"
+
+        />
+
+
+
+
+
+        {gradientStyleArr.map(function (item, index) {
+
+          return (
+
+
+            <IconButton className={theme.sizeCss} key={index}
+              contentEditable={false}
+              style={{
+                padding: 0,
+              }}
+              onClick={function (e) {
+                e.preventDefault(); e.stopPropagation();
+                markingColorBlock(e, editorState, setEditorState, item, blockKey)
+
+              }}>
+              <div className={theme.sizeCss} style={{ borderRadius: "1000px", ...item }} />
+            </IconButton>
+          )
+        })} */}
+
+      {/* </div> */}
+
+
+
+
+
+
+
+      {
+        !hidden && !showSettingBar && <IconButton
+          style={{
+            top: "50%",
+            //transform: "translateX(100%) translateY(-50%)",
+            transform: "translateX(0%) translateY(-50%)",
+            position: "absolute",
+            right: 0,
+          }}
+          className={theme.sizeCss}
+
+          contentEditable={false}
+          onMouseDown={function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+            // markingImageBlock(blockKey)
+
+            // setTimeout(() => {
+            //   editorRef.current.focus()
+            // }, 0);
+          }}
+
+          onClick={function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+            setShowSettingBar(pre => !pre)
+
+          }}
+        >
+          <SettingsIcon className={theme.sizeCss} />
+        </IconButton>
+      }
+
+
+
+    </>
+  )
+}
+
+
+export function SettingBar({ setShowSettingBar, markingImageBlock, markingColorBlock, blockKey, ...props }) {
+
+
+  const { showFontBar, setShowFontBar, editorState, setEditorState, gradientStyleArr, editorRef, bgImageObj } = useContext(Context)
+  const inputRef = useRef()
+
+  const theme = useTheme()
+  const selection = editorState.getSelection()
+  const [renderMe, setRenderMe] = useState(true)
+
+
+
+  useEffect(function () {
+
+    if (renderMe) {
+
+      if (editorState.getCurrentContent().getBlockForKey(blockKey).getText()) {
+        setShowSettingBar && setShowSettingBar(false)
+        setRenderMe(false)
+      }
+
+    }
+
+
+  })
 
   function update(e) {
     e.preventDefault()
@@ -95,15 +270,8 @@ export default function ToolBlock(props) {
       const updatedImage = bgImageObj.current[files[0].name]
 
 
-      markingColorBlock(e, editorState, setEditorState,updatedImage)
+      markingColorBlock(e, editorState, setEditorState, updatedImage, blockKey)
 
-
-
-      // markingColorBlock(e, editorState, setEditorState, {
-      //   backgroundImage: `url(${URL.createObjectURL(files[0])})`,
-      //   backgroundSize: "cover",
-      //   backgroundRepeat: "no-repeat",
-      // })
 
 
 
@@ -116,150 +284,145 @@ export default function ToolBlock(props) {
 
   }
 
-  useEffect(function () {
-
-    setHidden(!(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey)))
-    editorBlockRef.current._node.style.backgroundColor = backColor
-    editorBlockRef.current._node.contentEditable = !showColorPanel
+  // if (!renderMe) {
+  //   return null
+  // }
 
 
 
-    if (showColorPanel) {
-
-      editorBlockRef.current._node.addEventListener("click", aaa)
-
-    }
-    //console.log(editorBlockRef.current._node)
-
-
-
-    return function () {
-
-      if (editorBlockRef.current && editorBlockRef.current._node) {
-        editorBlockRef.current._node.removeEventListener("click", aaa)
-      }
-    }
-
-
-  })
 
   return (
-
     <>
       <input ref={inputRef} type="file" multiple={false} style={{ display: "none" }}
         onClick={function (e) { e.currentTarget.value = null; }}
         onChange={update}
       />
-      <EditorBlock     {...props} ref={editorBlockRef} />
-
-      {showColorPanel && gradientStyleArr.map(function (item, index) {
-
-        return <IconButton className={theme.sizeCss} key={index}
-          contentEditable={false}
-          style={{
-
-            top: "50%",
-            transform: `translateX(-${100 * (gradientStyleArr.length - index)}%) translateY(-50%)`,
-            position: "absolute",
-            right: 0,
-            padding: 0,
-          }}
-          onClick={function (e) {
-            e.preventDefault(); e.stopPropagation();
-            markingColorBlock(e, editorState, setEditorState, item)
-
-          }}>
-          <div className={theme.sizeCss} style={{ borderRadius: "1000px", ...item }} />
-        </IconButton>
-
-      })}
-
-
-      {showColorPanel && <IconButton className={theme.sizeCss}
-        contentEditable={false}
-        style={{
-          top: "50%",
-          transform: `translateX(-${100 * (gradientStyleArr.length + 1)}%) translateY(-50%)`,
-          position: "absolute",
-          right: 0,
-          padding: 0,
-        }}
-
-        onClick={function (e) {
-          e.preventDefault(); e.stopPropagation();
-          //console.log(bgImageObj)
-          inputRef.current.click()
-        }}
-      >
-        <WallpaperIcon className={theme.sizeCss} />
-      </IconButton>
-      }
-
-      {
-        !hidden && <IconButton
-          style={{
-            top: "50%",
-            transform: "translateX(100%) translateY(-50%)",
-            position: "absolute",
-            right: 0,
-          }}
-          className={theme.sizeCss}
-
+      <Slide in={renderMe} unmountOnExit={true} direction="right" timeout={{ enter: setShowSettingBar ? 300 : 0, exit: 300 }} onExited={function () {
+        setShowSettingBar && setShowSettingBar(false)
+      }} onEntered={function () { editorRef.current.focus() }}>
+        <div style={{ position: "absolute", top: 0, width:"auto",overflow: "hidden", whiteSpace: "nowrap", right: 0, /*backgroundColor:"#acf"*/ }}
           contentEditable={false}
           onMouseDown={function (e) {
             e.preventDefault()
             e.stopPropagation()
-            markingImageBlock(blockKey)
 
-            setTimeout(() => {
-              editorRef.current.focus()
-            }, 0);
           }}
-
           onClick={function (e) {
             e.preventDefault()
             e.stopPropagation()
 
-          }}
-        >
-          <AddPhotoAlternateOutlinedIcon className={theme.sizeCss} />
-        </IconButton>
-      }
+            let es = EditorState.forceSelection(editorState, SelectionState.createEmpty(blockKey))
+            setEditorState(es)
 
-      {
-        !hidden && <IconButton
-          style={{
-            top: "50%",
-            transform: "translateX(200%) translateY(-50%)",
-            position: "absolute",
-            right: 0,
-          }}
-          className={theme.sizeCss}
-
-          contentEditable={false}
-          onMouseDown={function (e) {
-            e.preventDefault()
-            e.stopPropagation()
-            // markingImageBlock(blockKey)
-
-            // setTimeout(() => {
-            //   editorRef.current.focus()
-            // }, 0);
-          }}
-
-          onClick={function (e) {
-            e.preventDefault()
-            e.stopPropagation()
-            setShowColorPanel(pre => !pre)
+            //  setShowSettingBar && setShowSettingBar(false)
+            setRenderMe(false)
 
           }}
         >
-          <ColorLensTwoToneIcon className={theme.sizeCss} />
-        </IconButton>
-      }
+
+
+          <SwitchBtn
+
+            checked={showFontBar}
+            //  factor={[2, 2, 0.5, 3, 1]} //"4rem", "4rem", "1rem", "6rem", "2rem"
+            onChange={() => {
+              // setShowFontBar(pre => !pre);
+              // setShowFontBar(pre => !pre)
+              // editorRef.current.focus()
+            }}
+            name="showFontBar" color="primary"
+            onMouseDown={function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              // setSwitchOn(pre => !pre);
+              // setShowFontBar(pre => !pre);
+            }}
+
+            onClick={function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+
+              setShowFontBar(pre => !pre); //editorRef.current.focus()
+            }}
+
+          />
+
+
+
+          <IconButton className={theme.sizeCss}
+            contentEditable={false}
+
+            onClick={function (e) {
+              e.preventDefault(); e.stopPropagation()
+              markingImageBlock(blockKey)
+              //  setShowColorPanel(pre => !pre)
+            }}
+          >
+            <InsertPhotoOutlinedIcon className={theme.sizeCss} />
+          </IconButton>
+
+
+          <IconButton className={theme.sizeCss}
+            contentEditable={false}
+
+            onClick={function (e) {
+              e.preventDefault(); e.stopPropagation();
+              inputRef.current.click()
+            }}
+          >
+            <ImageTwoToneIcon className={theme.sizeCss} />
+          </IconButton>
+
+          {gradientStyleArr.map(function (item, index) {
+
+            return (
+
+
+              <IconButton className={theme.sizeCss} key={index}
+                contentEditable={false}
+                style={{
+                  padding: 0,
+                }}
+                onClick={function (e) {
+                  e.preventDefault(); e.stopPropagation();
+                  markingColorBlock(e, editorState, setEditorState, item, blockKey, true)
+
+                }}>
+                <div className={theme.sizeCss} style={{ borderRadius: "1000px", ...item }} />
+              </IconButton>
+            )
+          })}
+
+          <IconButton className={theme.sizeCss}
+            contentEditable={false}
+
+
+            onClick={function () {
+              //  setShowSettingBar && setShowSettingBar(false)
+
+              let es = EditorState.forceSelection(editorState, SelectionState.createEmpty(blockKey))
+
+              setEditorState(es)
+              setRenderMe(false)
+
+
+            }} >
+            <ClearOutlinedIcon className={theme.sizeCss} contentEditable={false}
+            />
+          </IconButton>
+        </div>
+      </Slide>
+
     </>
+
+
+
   )
+
+
+
 }
+
 
 function getRandomColor() {
 

@@ -108,7 +108,8 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   const key = useRef(Math.random() + "")
 
-  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj } = ctx
+  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showFontBar,
+    setShowFontBar } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
 
@@ -126,10 +127,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       </Collapse>
       {/* </Fade> */}
 
-      <Paper style={{ position: "relative" }} >
+      <Paper style={{ position: "relative"}} > 
 
 
-        <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj }} />
+        {ctx.showFontBar && <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj }} />}
         <Editor
 
           // onFocus={function (e, two) {
@@ -195,17 +196,17 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               styleObj["--font-bar"] = block.getKey()
 
             }
-            if(styleNameArr.includes("LARGE")){
+            if (styleNameArr.includes("LARGE")) {
 
               styleObj["--font-size-large"] = "large"
-              
-            //  styleObj.color = "red"
+
+              //  styleObj.color = "red"
             }
-            if(styleNameArr.includes("SMALL")){
+            if (styleNameArr.includes("SMALL")) {
 
               styleObj["--font-size-small"] = "small"
-              
-            //  styleObj.color = "red"
+
+              //  styleObj.color = "red"
             }
 
 
@@ -244,7 +245,14 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             Immutable.Map({
               "colorBlock": {
                 element: "div",
-                wrapper: <ColorBlock editorState={editorState} setEditorState={setEditorState} editorRef={editorRef} />,
+                wrapper: <ColorBlock editorState={editorState}
+                  setEditorState={setEditorState} editorRef={editorRef}
+                  showFontBar={showFontBar}
+                  setShowFontBar={setShowFontBar}
+                  gradientStyleArr={gradientStyleArr}
+                  markingImageBlock={markingImageBlock}
+
+                />,
               }
 
 
@@ -294,7 +302,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
             // }
             if ((!text) && (type === "unstyled")) {
-
+              //if ((!text) && (type === "unstyled" || type === "colorBlock")) {
               return {
                 component: ToolBlock,
                 editable: true,
@@ -309,6 +317,8 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   taggingFontBar,
                   gradientStyleArr,
                   bgImageObj,
+                  showFontBar,
+                  setShowFontBar,
 
                 }
               }
@@ -350,7 +360,8 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               return null
             }
 
-          }}
+          }
+          }
 
           keyBindingFn={function (e, { getEditorState, setEditorState, ...obj }) {
             const editorState = getEditorState()

@@ -51,6 +51,11 @@ figure {
   color:red;
 }
 
+.hide{
+  overflow: hidden;
+  position: relative;
+
+}
 
 /* .unstyled-text-draft-block::before{
   content:"+";

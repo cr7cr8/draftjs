@@ -310,13 +310,8 @@ function toPreHtml(editorState) {
     {
       defaultBlockTag: "div",
 
-
-
       entityStyleFn,
       inlineStyleFn,
-
-
-
 
       blockStyleFn: function (block) {
 
@@ -410,6 +405,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [showMention, setShowMention] = useState(false)
   const [showHint, setShowHint] = useState(true)
   const [avatarHint, setAvatarHint] = useState(false)
+  const [showFontBar, setShowFontBar] = useState(true)
 
 
   const [showEmojiPanel, setShowEmojiPanel] = useState(false)
@@ -447,6 +443,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           showMention, setShowMention,
           showContent, setShowContent,
           showHint, setShowHint,
+          showFontBar, setShowFontBar,
           avatarHint, setAvatarHint,
           showEmojiPanel, setShowEmojiPanel,
           emojiCtxStr, setEmojiCtxStr,
@@ -454,7 +451,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           bgImageObj, //setBgImageObj,
           gradientStyleArr: [
 
-         
+
 
 
             { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
@@ -462,10 +459,11 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
             { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
             { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
             {
-              backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/600/300)",
+              backgroundImage: "url(https://picsum.photos/600/300)",
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
-              color: "#666"
+              color: "#666",
+            
             },
             {
               backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
@@ -497,7 +495,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
           <FormGroup row >
             <FormControlLabel
-              control={<SwitchBtn checked={showContent} onChange={() => { setShowContent(pre => !pre) }} name="showContent" color="primary" />}
+              control={<SwitchBtn checked={showContent}  factor={[2, 2, 2, 1.8, 2.2]}
+              onChange={() => { setShowContent(pre => !pre) }} name="showContent" color="primary" />}
               label="Content"
               labelPlacement="start"
             />
@@ -506,6 +505,13 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
               control={<SwitchBtn checked={showMention} factor={[2, 2, 2, 1.8, 3]}
                 onChange={() => { setShowMention(pre => !pre); editorRef.current.focus() }} name="showMention" color="primary" />}
               label="AvatarMention"
+              labelPlacement="start"
+            />
+
+            <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
+              control={<SwitchBtn checked={showFontBar} factor={[2, 2, 2, 1.8, 2.2]}
+                onChange={() => { setShowFontBar(pre => !pre); editorRef.current.focus() }} name="showFontBar" color="primary" />}
+              label="FontBar"
               labelPlacement="start"
             />
 
@@ -552,7 +558,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
           <br /> <br />
 
-          {showContent&&<Content />}
+          {showContent && <Content />}
 
         </Context.Provider>
       </StyledThemeProvider>

@@ -51,7 +51,7 @@ import { SettingBar } from "./ToolBlock"
 export default function ColorBlock(props) {
 
   const theme = useTheme()
-  const { editorState, setEditorState, editorRef, gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock } = props;
+  const { editorState, setEditorState, editorRef, gradientStyleArr, showFontBar, setShowFontBar } = props;
   const selection = editorState.getSelection()
 
   const arr = [[props.children[0]]]
@@ -169,17 +169,53 @@ export default function ColorBlock(props) {
 
             const blockItemText = blockItem.props.children.props.block.getText()
             const blockItemKey = blockItem.props.children.props.block.getKey()
-            const blockItemData = blockItem.props.children.props.block.getData().toObject()
-
-            console.log(blockItem)
-            return <div key={blockItem.props.children.props.block.getKey()} style={{ position: "relative" }}
-            >
 
 
 
-              {/* {blockItemData.fromSetting && <SettingBar  {...{ markingColorBlock, markingImageBlock, blockKey: blockItemKey }} />} */}
 
 
+
+
+            //   if (!blockItemText && selection.isCollapsed() && selection.hasFocus && selection.focusKey === blockItemKey) {
+
+            return <div key={blockItem.props.children.props.block.getKey()} style={{ position: "relative" }}>
+
+
+              {/* {!blockItemText && <div style={{ position: "absolute", width: "100%", overflow: "hidden" }} contentEditable={false}>
+                {gradientStyleArr.map(function (item, index) {
+
+                  return (
+
+
+                    <IconButton className={theme.sizeCss} key={index}
+                      contentEditable={false}
+                      style={{
+
+                        //    top: "50%",
+                        //     transform: `translateX(-${100 * (gradientStyleArr.length - index)}%) translateY(-50%)`,
+                        //    position: "absolute",
+                        //    right: 0,
+                        padding: 0,
+                      }}
+                      onMouseDown={function (e) {
+                        e.preventDefault(); e.stopPropagation();
+                        // alert( groupArr[0].props.children.props.block.getKey())
+                        markingColorBlock(e, editorState, setEditorState, item, blockItemKey)
+
+                      }}>
+                      <div className={theme.sizeCss} style={{ borderRadius: "1000px", ...item }} />
+                    </IconButton>
+                  )
+                })}
+              </div>} */}
+
+              <SettingBar  {...{ setShowSettingBar:function(){}, markingColorBlock, blockKey:blockItemKey }} />
+              
+              
+              {/* <SettingBar
+                {...{ setShowSettingBar:function(){}, showFontBar, setShowFontBar, editorRef, gradientStyleArr, markingColorBlock, editorState, setEditorState, blockKey:blockItemKey }}
+
+              /> */}
 
 
               {(selection.isCollapsed() && selection.hasFocus && selection.focusKey === blockItemKey) &&
@@ -206,7 +242,7 @@ export default function ColorBlock(props) {
                       newContent = Modifier.mergeBlockData(
                         newContent,
                         SelectionState.createEmpty(blockItemKey),
-                        Immutable.Map({ colorBlock: false, fromSetting: false }),
+                        Immutable.Map({ colorBlock: false }),
                       )
 
                       es = EditorState.push(es, newContent, 'change-block-data');
@@ -312,18 +348,7 @@ export default function ColorBlock(props) {
                   </IconButton>
 
                 </React.Fragment>}
-
-
-              {React.cloneElement(
-                blockItem,
-                { ...blockItem.props, className: "hide" },
-
-                <>
-                  {blockItemData.fromSetting && <SettingBar  {...{ markingColorBlock, markingImageBlock, blockKey: blockItemKey }} />}
-                  {blockItem.props.children}
-                </>
-              )}
-
+              {blockItem}
 
 
             </div>
@@ -350,7 +375,7 @@ export default function ColorBlock(props) {
 }
 
 
-export function markingColorBlock(e, editorState, setEditorState, gradientStyle, targetKey = null, fromSetting = false) {
+export function markingColorBlock(e, editorState, setEditorState, gradientStyle, targetKey) {
   e.preventDefault(); e.stopPropagation();
 
 
@@ -359,8 +384,8 @@ export function markingColorBlock(e, editorState, setEditorState, gradientStyle,
 
   let allBlocks = Modifier.setBlockType(editorState.getCurrentContent(), selection, "colorBlock")
 
-  // allBlocks = Modifier.setBlockData(allBlocks, editorState.getSelection(), Immutable.Map({ colorBlock: true, ...gradientStyle, horizontal: 50, vertical: 50 }))
-  allBlocks = Modifier.mergeBlockData(allBlocks, selection, Immutable.Map({ colorBlock: true, ...gradientStyle, horizontal: 50, vertical: 50, fromSetting }))
+  //allBlocks = Modifier.setBlockData(allBlocks, editorState.getSelection(), Immutable.Map({ colorBlock: true, ...gradientStyle, horizontal: 50, vertical: 50 }))
+  allBlocks = Modifier.mergeBlockData(allBlocks, selection, Immutable.Map({ colorBlock: true, ...gradientStyle, horizontal: 50, vertical: 50 }))
 
 
   let es = EditorState.push(
@@ -368,15 +393,6 @@ export function markingColorBlock(e, editorState, setEditorState, gradientStyle,
     allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
     "change-block-type",
   )
-
-  // es = targetKey
-  //   ? EditorState.forceSelection(es, selection)
-  //   : EditorState.acceptSelection(es, selection)
-
-  es = EditorState.forceSelection(es, selection)
-
-
-
   setEditorState(es)
 
 }

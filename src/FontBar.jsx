@@ -23,6 +23,7 @@ import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
 import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 
+import TitleIcon from '@material-ui/icons/Title';
 import FormatSizeIcon from '@material-ui/icons/FormatSize';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 
@@ -107,34 +108,41 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, 
           lineHeight: 1,
           color: theme.palette.text.secondary,
 
-          ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 1.2)], ["height", multiplyArr(textSizeArr, 1.2)]),
+          ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 1.1)], ["height", multiplyArr(textSizeArr, 1.1)]),
 
         },
 
 
-        "& .MuiTab-root:hover": {
-          backgroundColor: theme.palette.action.selected,
-        },
-
-        "& .MuiTabs-flexContainer": {
-          flexWrap: "wrap",
+        // "& .MuiTab-root:hover": {
+        //   backgroundColor: theme.palette.action.selected,
+        // },
+        "& .MuiTabs-indicator": {
+          backgroundColor: "transparent",
+          // flexWrap: "wrap",
           // minWidth: "0px",
           // minHeight: "0px",
 
         },
 
-        "& .MuiTab-fullWidth": {
-          flexBasis: "unset",
-          //    flexShrink: "unset"
-        },
+        // "& .MuiTabs-flexContainer": {
+        // flexWrap: "wrap",
+        // minWidth: "0px",
+        // minHeight: "0px",
+
+        //  },
+
+        // "& .MuiTab-fullWidth": {
+        //   flexBasis: "unset",
+        //    flexShrink: "unset"
+        //  },
 
 
-        "& .MuiBox-root": {
-          padding: 0,
-          margin: 0,
-          overflow: "hidden"
+        // "& .MuiBox-root": {
+        //   padding: 0,
+        //   margin: 0,
+        //   overflow: "hidden"
 
-        }
+        // }
       }
     },
 
@@ -290,7 +298,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
   const categoryBtnArr = [
 
-    <TextFieldsIcon className={theme.sizeCss} />,
+    <TitleIcon className={theme.sizeCss} />,
 
 
     <FormatColorTextIcon className={theme.sizeCss} />,
@@ -486,8 +494,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
     document.querySelectorAll(`span[class*="${theme.lgTextCss}"]`).forEach(
       item => {
-        if( Object.values(item.style).includes("--font-size-large")){return}
-        else{
+        if (Object.values(item.style).includes("--font-size-large")) { return }
+        else {
           item.classList.remove(theme.lgTextCss)
         }
 
@@ -520,8 +528,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
     document.querySelectorAll(`span[class*="${theme.smTextCss}"]`).forEach(
       item => {
-        if( Object.values(item.style).includes("--font-size-small")){return}
-        else{
+        if (Object.values(item.style).includes("--font-size-small")) { return }
+        else {
           item.classList.remove(theme.smTextCss)
         }
 
