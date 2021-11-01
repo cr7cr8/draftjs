@@ -74,11 +74,27 @@ export default function ToolBlock(props) {
 
   const [showSettingBar, setShowSettingBar] = useState(false)
 
+
   useEffect(function () {
 
-    //editorBlockRef.current._node.parentElement.style.overflow = showSettingBar ? "hidden" : "visible"
+    // return function () {
+    //   setShowSettingBar(false)
+    // }
+
+  //  blockText && function () { editorBlockRef.current._node.parentElement.style.overflow = "visible" }()
+
+  })
+
+  useEffect(function () {
+
+
+    editorBlockRef.current._node.parentElement.style.overflow = showSettingBar ? "hidden" : "visible"
     setHidden(!(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey)))
     if (editorBlockRef.current._node.style.backgroundColor !== backColor) editorBlockRef.current._node.style.backgroundColor = backColor
+
+
+
+
   })
 
   return (
@@ -86,6 +102,7 @@ export default function ToolBlock(props) {
     <>
 
       <EditorBlock  {...props} ref={editorBlockRef} />
+
       {showSettingBar && <SettingBar  {...{ setShowSettingBar, markingImageBlock, markingColorBlock, blockKey, editorBlockRef }} />}
 
       {
@@ -209,7 +226,7 @@ export function SettingBar({ setShowSettingBar, markingImageBlock, markingColorB
         onClick={function (e) { e.currentTarget.value = null; }}
         onChange={update}
       />
-      <Grow in={renderMe}
+      <Slide in={renderMe}
         unmountOnExit={true}
 
         direction="right" timeout={{ enter: setShowSettingBar ? 300 : 0, exit: 300 }}
@@ -352,7 +369,7 @@ export function SettingBar({ setShowSettingBar, markingImageBlock, markingColorB
             />
           </IconButton>
         </div>
-      </Grow>
+      </Slide>
 
     </>
 

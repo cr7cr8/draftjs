@@ -34,29 +34,33 @@ import FormatClearIcon from '@material-ui/icons/FormatClear';
 import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
 import FormatColorFillIcon from '@material-ui/icons/FormatColorFill';
 
+import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
 
-import ImageTwoToneIcon from '@material-ui/icons/ImageTwoTone';
 
+
+
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+//import NavigateNextIcon from '@material-ui/icons/ArrowForwardIos';
+
+
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+//import NavigateBeforeIcon from '@material-ui/icons/ArrowBackIos';
+
+
+
+import WallpaperIcon from '@material-ui/icons/Wallpaper';
 
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-
 import Immutable from "immutable"
 
+import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined';
 
+import ColorLensTwoToneIcon from '@material-ui/icons/ColorLensTwoTone';
 
+//import tinygradient from "tinygradient";
 
 import { markingColorBlock } from "./ColorBlock";
-
-import {
-  red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime,
-  yellow, amber, orange, deepOrange, brown, grey, blueGrey
-} from '@material-ui/core/colors';
-
-
-
 
 const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) => {
 
@@ -142,12 +146,6 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, 
       }
     },
 
-    dotPanelCss:()=>{
-
-      return {
-
-      }
-    }
 
 
   }
@@ -319,10 +317,6 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
 
   const buttonArr = [
-
-
-
-
     {
       btn: <FormatBoldIcon className={theme.sizeCss} />,
       fn: function (e) { toggleInlineStyle(e, "BOLD") }
@@ -374,7 +368,6 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   ]
 
 
-
   const panelArr = [
 
     {
@@ -393,148 +386,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       }
     },
     {
-      btnArr: [red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime,
-        yellow, amber, orange, deepOrange, brown, grey, blueGrey],
-      fn: function RenderFn() {
-
-        const [panelValue, setPanelValue] = useState(0)
-
-        const sourceArr = this.btnArr
-
-        const totalLength = sourceArr.length
-        const perLength = buttonArr.length
-        let panelArr;
-
-        if (perLength >= totalLength) {
-          console.log(totalLength)
-        }
-        else if ((2 * perLength - 2) >= totalLength) {
-          console.log(totalLength, perLength)
-        }
-        else {
-          panelArr = [...new Array(Math.ceil((totalLength - 2) / (perLength - 2)))].map(item => [])
-
-          panelArr[0] = sourceArr.slice(0, perLength - 1)
-
-          panelArr[panelArr.length - 1] = sourceArr.slice(sourceArr.length - (totalLength - (perLength - 1)) % (perLength - 2))
-
-
-          panelArr = [
-            panelArr[0],
-            ...sliceIntoChunks((sourceArr.slice(perLength - 1, sourceArr.length - (totalLength - (perLength - 1)) % (perLength - 2))), perLength - 2),
-            panelArr[panelArr.length - 1],
-          ]
-
-          panelArr.forEach((item, index) => {
-            if (index === 0) {
-              item.push(<NavigateNextIcon className={theme.sizeCss} />)
-            }
-            else if (index === panelArr.length - 1) {
-              item.unshift(<NavigateBeforeIcon className={theme.sizeCss} />)
-            }
-            else {
-              item.push(<NavigateNextIcon className={theme.sizeCss} />)
-              item.unshift(<NavigateBeforeIcon className={theme.sizeCss} />)
-            }
-
-          })
-
-        }
-
-        const [direction, setDirection] = useState([...new Array(panelArr.length)].map(item => "left"))
-
-        //  const [directionArr, setDirectionArr] = useState(new Array(categoryBtnArr.length).map(item => true))
-        const [hoveredColor,setHoveredColor] = useState()
-
-        return (<>
-
-          {panelArr.map((dotArr, dotPanelArrIndex) => {
-
-
-
-            return <Slide in={dotPanelArrIndex === panelValue} timeout={{ enter: 300, exit: 300 }}
-              direction={direction[dotPanelArrIndex]}
-
-
-              key={dotPanelArrIndex}
-              unmountOnExit={false}>
-
-              <div style={{
-                backgroundColor: "#" + ((1 << 24) * Math.random() | 0).toString(16),
-                display: "inline-block", position: "absolute", height: "4rem",
-           //     transform: "translateY(10px)"
-
-
-
-
-              }}>
-
-               
-
-
-             
-
-                {dotArr.map((color, index) => {
-                  return <IconButton
-                    key={index}
-                    onClick={function () {
-
-                      if (color[500]) {
-
-
-                      }
-                      else {
-                        setDirection(pre => {
-
-
-                          const selfValue = pre[dotPanelArrIndex] = index === 0 ? "left" : "right"
-
-                          const arr = [...new Array(panelArr.length)].map(item => selfValue === "right" ? "left" : "right")
-                          arr[dotPanelArrIndex] = selfValue
-                          return arr
-
-
-                        })
-                        setPanelValue(pre => {
-                          return (pre + (index === 0 ? -1 : 1)) % panelArr.length
-                        })
-                      }
-
-
-
-                      // setPanelValue(pre => {
-                      //   return (pre + 1) % panelArr.length
-                      // })
-                    }}
-                    className={theme.sizeCss}>
-                    {color && color[500] ?
-                      <RadioButtonUncheckedIcon style={{ backgroundColor: color[500], borderRadius: "1000px", color: "transparent" }} />
-                      : color
-
-                    }
-
-                  </IconButton>
-
-
-                })}
-              </div>
-            </Slide>
-
-          })}
-
-        </>)
-
-
-
-
-
-
-
-
-      }
-
-
-
+      btnArr: [],
+      fn: function () { }
     },
     {
       btnArr: [],
@@ -575,7 +428,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
               }}
             >
-              <ImageTwoToneIcon className={theme.sizeCss} />
+              <WallpaperIcon className={theme.sizeCss} />
             </IconButton>
 
 
@@ -585,7 +438,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
                 const { colorBtnCss } = useStyles({ item })
                 // const rgba = (colorValues(item.color || "white"))
 
-
+                console.log()
                 return <IconButton
                   key={index}
                   className={theme.sizeCss}
@@ -808,7 +661,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
       >
 
-        {categoryBtnArr.map((item, index) => {
+        {left !== "50%" && categoryBtnArr.map((item, index) => {
 
           return <Tab
             value={index}
@@ -840,9 +693,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
         className={theme.panelHeightCss}
         style={{
-          //overflow: "hidden", 
-          //backgroundColor: "wheat",
-          position: "relative", width: "100%", display: "flex", flexWrap: "nowrap",
+          overflow: "hidden", /*backgroundColor: "wheat",*/ position: "relative", width: "100%", display: "flex", flexWrap: "nowrap",
 
         }}
 
@@ -852,7 +703,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
           return (
             <Slide
               key={index}
-              in={index === tabValue}
+              in={left==="50%"?index===3:index === tabValue}
               direction={directionArr[index] ? "left" : "right"}
               onEntered={function () {
 
@@ -884,6 +735,11 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
 
   )
+
+
+
+
+
 
 })
 
@@ -1013,15 +869,4 @@ function colorValues(color) {
       return +a
     });
   }
-}
-
-
-
-function sliceIntoChunks(arr, chunkSize) {
-  const res = [];
-  for (let i = 0; i < arr.length; i += chunkSize) {
-    const chunk = arr.slice(i, i + chunkSize);
-    res.push(chunk);
-  }
-  return res;
 }

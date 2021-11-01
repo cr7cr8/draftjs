@@ -130,7 +130,7 @@ export default function ColorBlock(props) {
   useEffect(function () {
     arr.forEach((groupArr, index) => {
 
-      
+
       if (!groupArr[0].props.children.props.block.getData().toObject().colorBlock) {
         groupArr.forEach(blockItem => {
           let newContent = Modifier.setBlockType(
@@ -325,11 +325,15 @@ export default function ColorBlock(props) {
                 </>
               )} */}
 
-              <div {...{ ...blockItem.props, ...!blockItemText && { className: "hide" } }}>
+              {/* <div {...{ ...blockItem.props, ...!blockItemText && { className: "hide" } }}>
+                {blockItemData.fromSetting && <SettingBar  {...{ markingColorBlock, markingImageBlock, blockKey: blockItemKey }} />}
+                {blockItem.props.children}
+              </div> */}
+
+              <div {...{ ...blockItem.props}}>
                 {blockItemData.fromSetting && <SettingBar  {...{ markingColorBlock, markingImageBlock, blockKey: blockItemKey }} />}
                 {blockItem.props.children}
               </div>
-
 
             </div>
 

@@ -40,9 +40,6 @@ import ImageTwoToneIcon from '@material-ui/icons/ImageTwoTone';
 
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-
 import Immutable from "immutable"
 
 
@@ -142,12 +139,6 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, 
       }
     },
 
-    dotPanelCss:()=>{
-
-      return {
-
-      }
-    }
 
 
   }
@@ -395,123 +386,75 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     {
       btnArr: [red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime,
         yellow, amber, orange, deepOrange, brown, grey, blueGrey],
-      fn: function RenderFn() {
-
-        const [panelValue, setPanelValue] = useState(0)
-
-        const sourceArr = this.btnArr
-
-        const totalLength = sourceArr.length
-        const perLength = buttonArr.length
-        let panelArr;
-
-        if (perLength >= totalLength) {
-          console.log(totalLength)
-        }
-        else if ((2 * perLength - 2) >= totalLength) {
-          console.log(totalLength, perLength)
-        }
-        else {
-          panelArr = [...new Array(Math.ceil((totalLength - 2) / (perLength - 2)))].map(item => [])
-
-          panelArr[0] = sourceArr.slice(0, perLength - 1)
-
-          panelArr[panelArr.length - 1] = sourceArr.slice(sourceArr.length - (totalLength - (perLength - 1)) % (perLength - 2))
+      fn: function Fn() {
 
 
-          panelArr = [
-            panelArr[0],
-            ...sliceIntoChunks((sourceArr.slice(perLength - 1, sourceArr.length - (totalLength - (perLength - 1)) % (perLength - 2))), perLength - 2),
-            panelArr[panelArr.length - 1],
-          ]
+        // return (
+        //   <>
+        //     <Slide in={true} timeout={{ enter: 500 }} direction="left" ><div style={{backgroundColor:"pink",display:"inline-block"}}>
 
-          panelArr.forEach((item, index) => {
-            if (index === 0) {
-              item.push(<NavigateNextIcon className={theme.sizeCss} />)
-            }
-            else if (index === panelArr.length - 1) {
-              item.unshift(<NavigateBeforeIcon className={theme.sizeCss} />)
-            }
-            else {
-              item.push(<NavigateNextIcon className={theme.sizeCss} />)
-              item.unshift(<NavigateBeforeIcon className={theme.sizeCss} />)
-            }
+        //       {this.btnArr.map((item, index) => {
+        //         if (index >= 1) { return <></> }
+        //         return <IconButton
+        //           key={index}
 
-          })
+        //           className={theme.sizeCss}>
+        //           {<RadioButtonUncheckedIcon style={{ backgroundColor: item[500], borderRadius: "1000px", color: "transparent" }} />}
 
-        }
+        //         </IconButton>
 
-        const [direction, setDirection] = useState([...new Array(panelArr.length)].map(item => "left"))
+        //       })}
+        //     </div></Slide>
 
-        //  const [directionArr, setDirectionArr] = useState(new Array(categoryBtnArr.length).map(item => true))
-        const [hoveredColor,setHoveredColor] = useState()
+        //     <Slide in={true} timeout={{ enter: 1500 }} direction="left" ><div style={{backgroundColor:"lightcyan",display:"inline-block"}}>
+
+        //       {this.btnArr.map((item, index) => {
+        //         if (index <= 17) { return <></> }
+        //         return <IconButton
+        //           key={index}
+
+        //           className={theme.sizeCss}>
+        //           {<RadioButtonUncheckedIcon style={{ backgroundColor: item[500], borderRadius: "1000px", color: "transparent" }} />}
+
+        //         </IconButton>
+
+        //       })}
+        //     </div></Slide>
+        //   </>
+        // )
+
+        // console.log(Math.ceil(this.btnArr.length / buttonArr.length))
+        const dotArr = this.btnArr
+        const dotPanelArr = [...new Array(Math.ceil(this.btnArr.length / buttonArr.length))].map(item=>[])
+
+        const [panelState,setPanelState]=useState(0)
+
+        dotArr.forEach((dot, index) => {
+
+          //   dotPanelArr[Math.floor(index / buttonArr.length)][index % buttonArr.length] = dot
+
+          dotPanelArr[Math.floor(index / buttonArr.length)].push(dot)
+
+
+        })
+
+
+        console.log(dotPanelArr)
+
 
         return (<>
 
-          {panelArr.map((dotArr, dotPanelArrIndex) => {
-
-
-
-            return <Slide in={dotPanelArrIndex === panelValue} timeout={{ enter: 300, exit: 300 }}
-              direction={direction[dotPanelArrIndex]}
-
-
-              key={dotPanelArrIndex}
-              unmountOnExit={false}>
-
-              <div style={{
-                backgroundColor: "#" + ((1 << 24) * Math.random() | 0).toString(16),
-                display: "inline-block", position: "absolute", height: "4rem",
-           //     transform: "translateY(10px)"
-
-
-
-
-              }}>
-
-               
-
-
-             
-
+          {dotPanelArr.map((dotArr, dotPanelArrindex) => {
+          return  <Slide in={dotPanelArrindex===1} timeout={{ enter: 500 }} direction="left" key={dotPanelArrindex} unmountOnExit={true}>
+              
+              <div style={{ backgroundColor: "#" + ((1<<24)*Math.random() | 0).toString(16), display: "inline-block" }}>
                 {dotArr.map((color, index) => {
                   return <IconButton
                     key={index}
-                    onClick={function () {
 
-                      if (color[500]) {
-
-
-                      }
-                      else {
-                        setDirection(pre => {
-
-
-                          const selfValue = pre[dotPanelArrIndex] = index === 0 ? "left" : "right"
-
-                          const arr = [...new Array(panelArr.length)].map(item => selfValue === "right" ? "left" : "right")
-                          arr[dotPanelArrIndex] = selfValue
-                          return arr
-
-
-                        })
-                        setPanelValue(pre => {
-                          return (pre + (index === 0 ? -1 : 1)) % panelArr.length
-                        })
-                      }
-
-
-
-                      // setPanelValue(pre => {
-                      //   return (pre + 1) % panelArr.length
-                      // })
-                    }}
                     className={theme.sizeCss}>
-                    {color && color[500] ?
-                      <RadioButtonUncheckedIcon style={{ backgroundColor: color[500], borderRadius: "1000px", color: "transparent" }} />
-                      : color
-
-                    }
+                    {<RadioButtonUncheckedIcon
+                      style={{ backgroundColor: color[500], borderRadius: "1000px", color: "transparent" }} />}
 
                   </IconButton>
 
@@ -522,11 +465,15 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
           })}
 
+
+
+
+
+
+
+
+
         </>)
-
-
-
-
 
 
 
@@ -840,9 +787,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
         className={theme.panelHeightCss}
         style={{
-          //overflow: "hidden", 
-          //backgroundColor: "wheat",
-          position: "relative", width: "100%", display: "flex", flexWrap: "nowrap",
+          overflow: "hidden", /*backgroundColor: "wheat",*/ position: "relative", width: "100%", display: "flex", flexWrap: "nowrap",
 
         }}
 
@@ -1013,15 +958,4 @@ function colorValues(color) {
       return +a
     });
   }
-}
-
-
-
-function sliceIntoChunks(arr, chunkSize) {
-  const res = [];
-  for (let i = 0; i < arr.length; i += chunkSize) {
-    const chunk = arr.slice(i, i + chunkSize);
-    res.push(chunk);
-  }
-  return res;
 }
