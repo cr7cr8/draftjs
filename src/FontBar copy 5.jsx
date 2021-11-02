@@ -611,7 +611,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
   }
 
-
+ 
 
   return (
 
@@ -826,10 +826,113 @@ export function taggingFontBar(editorState) {
 }
 
 
+function ColorDot0({ index, setPanelValue, panelArr, color, setDirection, dotPanelArrIndex, panelColor, setPanelColor, ...props }) {
+
+  const theme = useTheme()
+  const [open, setOpen] = useState(false)
+  const dotRef = useRef()
+
+
+
+  return (
+    <React.Fragment>
+
+
+
+      <IconButton
+        onMouseEnter={function () { setOpen(true); setPanelColor(color[500]) }}
+        // onMouseLeave={function () { setOpen(false) }}
+        //id={"colordot" + index}
+        ref={dotRef}
+
+        onClick={function () {
+
+          if (color[500]) {
+            //todo apply color
+
+          }
+          else {
+            setDirection(pre => {
+
+
+              const selfValue = pre[dotPanelArrIndex] = index === 0 ? "left" : "right"
+
+              const arr = [...new Array(panelArr.length)].map(item => selfValue === "right" ? "left" : "right")
+              arr[dotPanelArrIndex] = selfValue
+              return arr
+
+
+            })
+            setPanelValue(pre => {
+              return (pre + (index === 0 ? -1 : 1)) % panelArr.length
+            })
+          }
+
+        }}
+        className={theme.sizeCss}>
+        {color && color[500] ?
+          <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: color[500], borderRadius: "1000px", color: "transparent" }} />
+          : color
+
+        }
+
+      </IconButton>
+      {color && color[500] && <Popover
+        transitionDuration={{ enter: 0, exit: 300 }}
+        elevation={0}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "bottom", horizontal: "left" }}
+        open={open}
+        anchorReference="anchorEl"
+        //   anchorEl={document.getElementById("colordot" + index)}
+        anchorEl={dotRef.current && dotRef.current.parentElement}
+        style={{ pointerEvents: "none", overflow: "hidden", }}
+
+        PaperProps={{
+          //  className: theme.heightCss,
+
+          style: {
+            pointerEvents: "auto", lineHeight: 1, ...panelColor && { backgroundColor: panelColor },
+            borderBottomLeftRadius: "0px", borderBottomRightRadius: "0px",
+            overflow: "hidden",
+          },
+          onMouseEnter: function () { setOpen(true); setPanelColor(color[500]) },
+          onMouseLeave: function () { setOpen(false) },
+          elevation: 0
+        }}
+
+      >
+
+
+
+        {Object.keys(color).map((item, index) => {
+          if (item === "500" || item[0] === "A") { return null }
+          return <IconButton className={theme.sizeCss} key={index}
+            onMouseEnter={function () {
+
+              setPanelColor(color[item])
+            }}
+
+          >
+
+            <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: color[item], borderRadius: "1000px", color: "transparent" }} />
+          </IconButton>
+
+        })}
+
+      </Popover>}
+    </React.Fragment>
+
+  )
+
+}
 
 
 class ColorDot_ extends React.Component {
 
+  // static defaultProps = {
+  //   aaa: "aaa"
+  // }
 
 
   constructor(props) {
@@ -838,14 +941,9 @@ class ColorDot_ extends React.Component {
 
     this.dotRef = React.createRef()
 
-    this.containerRef = React.createRef()
-
-
     this.state = { open: false }
 
-    this.lastColor = "3333"
-
-    this.draftEditor = null
+    this.lastColor = null
   }
 
   setOpen = (value) => {
@@ -853,9 +951,6 @@ class ColorDot_ extends React.Component {
       return { ...pre, open: value }
     })
   }
-  setOpenOff =  this.setOpen.bind(null, false)
-
-
 
   toggleOpen = () => {
     this.setState(pre => {
@@ -871,36 +966,8 @@ class ColorDot_ extends React.Component {
     })
   }
 
-  setAllOpenOff = () => {
-    Object.keys(this.props.allDotsArr.current).forEach(item => this.props.allDotsArr.current[item].setOpen(false))
-  }
 
-  applyColorToText = (colorString) => {
-
-
-
-
-
-
-
-    //todo
-    let editorState = this.props.ctx.editorState
-    let setEditorState = this.props.ctx.setEditorState
-
-    const selection = editorState.getSelection()
-
-
-
-
-  }
-
-
-  componentDidUpdate = () => {
-
-
-  }
-
-  componentDidMount = () => {
+  componentDidMount() {
 
     if (this.props.color[500]) {
       this.props.allDotsArr.current = {
@@ -909,23 +976,14 @@ class ColorDot_ extends React.Component {
       }
     }
 
-    this.draftEditor =  document.getElementsByClassName("DraftEditor-root")[0]
-
-    this.draftEditor.addEventListener("mouseover",this.setOpenOff)
-   // console.log( getEventListeners( this.draftEditor))
-
-    //  console.log( this.props.ctx.editorState);
+    console.log(this);
   }
-  componentWillUnmount = () => {
+  componentWillUnmount() {
 
     if (this.props.color[500]) {
       delete this.props.allDotsArr.current[this.props.color[500]];
-
+      //  console.log(this.props.allDotsArr.current, Object.keys(this.props.allDotsArr.current).length);
     }
-
-    this.draftEditor.removeEventListener("mouseover",this.setOpenOff)
-
-  // console.log( getEventListeners( this.draftEditor))
   }
 
 
@@ -938,25 +996,33 @@ class ColorDot_ extends React.Component {
 
         <IconButton
           onMouseDown={(e) => {
-            e.stopPropagation(); e.preventDefault();
-          }}
 
+            e.stopPropagation(); e.preventDefault();
+
+            // this.setRestAllOpen(false);
+
+            // this.setOpen(true); 
+
+            // console.log(e)
+            // setPanelColor(color[500]);
+
+
+          }}
+          //  onMouseLeave={() => { this.setAllOpen(false); this.setOpen(false) }}
+          //id={"colordot" + index}
           ref={this.dotRef}
 
 
           onClick={() => {
 
             if (color[500]) {
-
-
-              // this.applyColorToText(color[500])
-
               this.setRestAllOpen(false);
+
               this.toggleOpen();
+
               this.lastColor = color[500]
               setPanelColor(color[500]);
 
-              this.applyColorToText(color[500])
             }
             else {
               setDirection(pre => {
@@ -968,7 +1034,7 @@ class ColorDot_ extends React.Component {
               setPanelValue(pre => {
                 return (pre + (index === 0 ? -1 : 1)) % panelArr.length
               })
-              this.setAllOpenOff()
+              Object.keys(this.props.allDotsArr.current).forEach(item => this.props.allDotsArr.current[item].setOpen(false))
 
             }
 
@@ -989,15 +1055,8 @@ class ColorDot_ extends React.Component {
           anchorReference="anchorEl"
           //   anchorEl={document.getElementById("colordot" + index)}
           anchorEl={this.dotRef.current && this.dotRef.current.parentElement}
-          style={{ pointerEvents: "none", overflow: "hidden", /*backgroundColor: panelColor, opacity: 0.5 */ }}
+          style={{ pointerEvents: "none", overflow: "hidden", }}
 
-
-          onMouseDown={(e) => {
-
-
-            // alert("A")
-
-          }}
           PaperProps={{
             //  className: theme.heightCss,
 
@@ -1007,7 +1066,7 @@ class ColorDot_ extends React.Component {
               overflow: "hidden",
             },
 
-
+            //  onMouseLeave: () => { this.setAllOpen(false); this.setOpen(false) },
             elevation: 0
           }}
 
@@ -1015,30 +1074,20 @@ class ColorDot_ extends React.Component {
           {Object.keys(color).map((item, index) => {
             if (item === "500" || item[0] === "A") { return null }
             return <IconButton className={theme.sizeCss} key={index}
-
-
-              // onMouseDown={(e) => {
-              //   e.stopPropagation(); e.preventDefault();
-
-
-              // }}
-
+              // onMouseEnter={() => {
               onClick={(e) => {
                 e.stopPropagation(); e.preventDefault();
-
                 this.setRestAllOpen(false);
+
                 this.lastColor === color[item] && this.toggleOpen();
                 this.lastColor = color[item]
+
+
                 setPanelColor(color[item])
 
-
-
-                this.applyColorToText(color[item])
-
-
-
-
               }}
+            //   setPanelColor(color[item])
+            // }}
 
             >
 
@@ -1128,14 +1177,20 @@ function RenderColorPickerPanel({ btnArr, basicButtonArr, panelColor, setPanelCo
 
         <div style={{
           ...panelColor && { backgroundColor: panelColor },
-
-          display: "inline-block", position: "absolute",
-
+          //   backgroundColor: "#" + ((1 << 24) * Math.random() | 0).toString(16),
+          display: "inline-block", position: "absolute",// height: "4rem",
+          //     transform: "translateY(10px)"
+          // left:0,
+          // right:0
         }}>
 
 
           {dotArr.map((color, index) => {
+
             return <ColorDot key={index} {...{ index, setPanelValue, panelArr, color, setDirection, dotPanelArrIndex, panelColor, setPanelColor, allDotsArr }} />
+
+
+
 
           })}
         </div>

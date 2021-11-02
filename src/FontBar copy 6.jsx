@@ -838,14 +838,9 @@ class ColorDot_ extends React.Component {
 
     this.dotRef = React.createRef()
 
-    this.containerRef = React.createRef()
-
-
-    this.state = { open: false }
+    this.state = { open: false, anchorEl: null }
 
     this.lastColor = "3333"
-
-    this.draftEditor = null
   }
 
   setOpen = (value) => {
@@ -853,9 +848,6 @@ class ColorDot_ extends React.Component {
       return { ...pre, open: value }
     })
   }
-  setOpenOff =  this.setOpen.bind(null, false)
-
-
 
   toggleOpen = () => {
     this.setState(pre => {
@@ -890,17 +882,13 @@ class ColorDot_ extends React.Component {
     const selection = editorState.getSelection()
 
 
-
-
-  }
-
-
-  componentDidUpdate = () => {
-
+    console.log(colorString, selection.isCollapsed());
 
   }
 
-  componentDidMount = () => {
+
+
+  componentDidMount() {
 
     if (this.props.color[500]) {
       this.props.allDotsArr.current = {
@@ -909,23 +897,14 @@ class ColorDot_ extends React.Component {
       }
     }
 
-    this.draftEditor =  document.getElementsByClassName("DraftEditor-root")[0]
-
-    this.draftEditor.addEventListener("mouseover",this.setOpenOff)
-   // console.log( getEventListeners( this.draftEditor))
-
     //  console.log( this.props.ctx.editorState);
   }
-  componentWillUnmount = () => {
+  componentWillUnmount() {
 
     if (this.props.color[500]) {
       delete this.props.allDotsArr.current[this.props.color[500]];
 
     }
-
-    this.draftEditor.removeEventListener("mouseover",this.setOpenOff)
-
-  // console.log( getEventListeners( this.draftEditor))
   }
 
 
@@ -989,15 +968,10 @@ class ColorDot_ extends React.Component {
           anchorReference="anchorEl"
           //   anchorEl={document.getElementById("colordot" + index)}
           anchorEl={this.dotRef.current && this.dotRef.current.parentElement}
-          style={{ pointerEvents: "none", overflow: "hidden", /*backgroundColor: panelColor, opacity: 0.5 */ }}
+          style={{ pointerEvents: "none", overflow: "hidden", backgroundColor: panelColor, opacity: 0.5 }}
 
 
-          onMouseDown={(e) => {
 
-
-            // alert("A")
-
-          }}
           PaperProps={{
             //  className: theme.heightCss,
 
