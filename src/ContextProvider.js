@@ -418,7 +418,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   //const [bgImageObj_, setBgImageObj] = useState({})
   const bgImageObj = useRef({})
-
+  const [tabValue, setTabValue] = useState(0)
+  const [panelColor, setPanelColor] = useState(null)
   useEffect(function () {
 
 
@@ -449,6 +450,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           emojiCtxStr, setEmojiCtxStr,
           imageBlockObj, setImageBlockObj,
           bgImageObj, //setBgImageObj,
+          tabValue, setTabValue,
+          panelColor, setPanelColor,
           gradientStyleArr: [
 
 

@@ -156,7 +156,7 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, 
 })
 
 
-export const FontBar = withContext(function ({ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, ...props }) {
+export const FontBar = withContext(function ({ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColor, setPanelColor, ...props }) {
 
   let isAllTextBlock = getChoosenBlocks(editorState).every((block, key, ...props) => {
     return block.getType() === "unstyled"
@@ -174,6 +174,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   const fontBarPanelRef = useRef()
 
   const inputRef = useRef()
+  //const [panelColor, setPanelColor] = useState(null)
 
   function toggleInlineStyle(e, fontStr) {
     e.preventDefault(); e.stopPropagation();
@@ -295,9 +296,6 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     }, 0);
   }
 
-
-
-
   const categoryBtnArr = [
 
     <TitleIcon className={theme.sizeCss} />,
@@ -369,18 +367,11 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   ]
 
 
-
-
-
-
-
-
   const panelArr = [
 
     {
 
       fn: function () {
-
         return (
           basicButtonArr.map((item, index) => {
             return <IconButton
@@ -393,12 +384,15 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       }
     },
     {
-
       fn: RenderColorPickerPanel.bind(null, {
-        btnArr: [red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime,
-          yellow, amber, orange, deepOrange, brown, grey, blueGrey], basicButtonArr
-      }),
-
+        btnArr: [
+          red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime,
+          yellow, amber, orange, deepOrange, brown, grey, blueGrey
+        ],
+        basicButtonArr,
+        panelColor,
+        setPanelColor
+      })
     },
     {
 
@@ -407,7 +401,6 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       }
     },
     {
-
       fn: function () {
 
 
@@ -485,12 +478,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
   ]
 
-
   const { fontBarCss } = useStyles({ basicButtonArr })
-
-
-
-
 
   useLayoutEffect(function () {
 
@@ -623,7 +611,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
   }
 
-  const [tabValue, setTabValue] = useState(0)
+ 
 
   return (
 
@@ -644,7 +632,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         //  zIndex: editorState.getSelection().isCollapsed() ? -1 : 1100,
 
         zIndex: 1100,
-        backgroundColor: "#acf",
+        backgroundColor: panelColor || "#acf",
         // borderRadius: "1000px",
         position: "absolute",
         transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
@@ -838,24 +826,30 @@ export function taggingFontBar(editorState) {
 }
 
 
-function ColorDot({ index, setPanelValue, panelArr, color, setDirection, dotPanelArrIndex, ...props }) {
+function ColorDot0({ index, setPanelValue, panelArr, color, setDirection, dotPanelArrIndex, panelColor, setPanelColor, ...props }) {
 
   const theme = useTheme()
   const [open, setOpen] = useState(false)
   const dotRef = useRef()
+
+
+
   return (
-    <>
+    <React.Fragment>
+
+
+
       <IconButton
-        onMouseEnter={function () { setOpen(true) }}
-        onMouseLeave={function () { setOpen(false) }}
+        onMouseEnter={function () { setOpen(true); setPanelColor(color[500]) }}
+        // onMouseLeave={function () { setOpen(false) }}
         //id={"colordot" + index}
         ref={dotRef}
-        key={index}
+
         onClick={function () {
 
           if (color[500]) {
-            alert("d")
-            //setOpen(pre => !pre)
+            //todo apply color
+
           }
           else {
             setDirection(pre => {
@@ -883,34 +877,238 @@ function ColorDot({ index, setPanelValue, panelArr, color, setDirection, dotPane
         }
 
       </IconButton>
-      <Popover
-        transitionDuration={{ enter: 0, exit: 100 }}
+      {color && color[500] && <Popover
+        transitionDuration={{ enter: 0, exit: 300 }}
         elevation={0}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        transformOrigin={{ vertical: "bottom", horizontal: "center" }}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "bottom", horizontal: "left" }}
         open={open}
         anchorReference="anchorEl"
         //   anchorEl={document.getElementById("colordot" + index)}
         anchorEl={dotRef.current && dotRef.current.parentElement}
-        style={{ pointerEvents: "none" }}
+        style={{ pointerEvents: "none", overflow: "hidden", }}
+
+        PaperProps={{
+          //  className: theme.heightCss,
+
+          style: {
+            pointerEvents: "auto", lineHeight: 1, ...panelColor && { backgroundColor: panelColor },
+            borderBottomLeftRadius: "0px", borderBottomRightRadius: "0px",
+            overflow: "hidden",
+          },
+          onMouseEnter: function () { setOpen(true); setPanelColor(color[500]) },
+          onMouseLeave: function () { setOpen(false) },
+          elevation: 0
+        }}
+
       >
-        <Paper
-          elevation={0}
-          style={{ pointerEvents: "auto", backgroundColor: color[500] }}
-          onMouseEnter={function () { setOpen(true) }}
-          onMouseLeave={function () { setOpen(false) }}
-        >
-          dsdfs
-      </Paper>
-      </Popover>
-    </>
+
+
+
+        {Object.keys(color).map((item, index) => {
+          if (item === "500" || item[0] === "A") { return null }
+          return <IconButton className={theme.sizeCss} key={index}
+            onMouseEnter={function () {
+
+              setPanelColor(color[item])
+            }}
+
+          >
+
+            <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: color[item], borderRadius: "1000px", color: "transparent" }} />
+          </IconButton>
+
+        })}
+
+      </Popover>}
+    </React.Fragment>
 
   )
 
 }
 
 
-function RenderColorPickerPanel({ btnArr, basicButtonArr, ...props }) {
+class ColorDot_ extends React.Component {
+
+  // static defaultProps = {
+  //   aaa: "aaa"
+  // }
+
+
+  constructor(props) {
+    super(props)
+
+
+    this.dotRef = React.createRef()
+
+    this.state = { open: false }
+
+    this.lastColor = null
+  }
+
+  setOpen = (value) => {
+    this.setState(pre => {
+      return { ...pre, open: value }
+    })
+  }
+
+  toggleOpen = () => {
+    this.setState(pre => {
+      return { ...pre, open: !pre.open }
+    })
+  }
+
+
+  setRestAllOpen = (value) => {
+
+    Object.keys(this.props.allDotsArr.current).forEach(key => {
+      this.props.color[500] !== key && this.props.allDotsArr.current[key].setOpen(value)
+    })
+  }
+
+
+  componentDidMount() {
+
+    if (this.props.color[500]) {
+      this.props.allDotsArr.current = {
+        ...this.props.allDotsArr.current,
+        [this.props.color[500]]: this
+      }
+    }
+
+    console.log(this);
+  }
+  componentWillUnmount() {
+
+    if (this.props.color[500]) {
+      delete this.props.allDotsArr.current[this.props.color[500]];
+      //  console.log(this.props.allDotsArr.current, Object.keys(this.props.allDotsArr.current).length);
+    }
+  }
+
+
+
+  render() {
+    const { index, setPanelValue, panelArr, color, setDirection, dotPanelArrIndex, panelColor, setPanelColor, theme, ctx } = this.props
+
+    return (
+      <React.Fragment>
+
+        <IconButton
+          onMouseDown={(e) => {
+
+            e.stopPropagation(); e.preventDefault();
+
+            // this.setRestAllOpen(false);
+
+            // this.setOpen(true); 
+
+            // console.log(e)
+            // setPanelColor(color[500]);
+
+
+          }}
+          //  onMouseLeave={() => { this.setAllOpen(false); this.setOpen(false) }}
+          //id={"colordot" + index}
+          ref={this.dotRef}
+
+
+          onClick={() => {
+
+            if (color[500]) {
+              this.setRestAllOpen(false);
+
+              this.toggleOpen();
+
+              this.lastColor = color[500]
+              setPanelColor(color[500]);
+
+            }
+            else {
+              setDirection(pre => {
+                const selfValue = pre[dotPanelArrIndex] = index === 0 ? "left" : "right"
+                const arr = [...new Array(panelArr.length)].map(item => selfValue === "right" ? "left" : "right")
+                arr[dotPanelArrIndex] = selfValue
+                return arr
+              })
+              setPanelValue(pre => {
+                return (pre + (index === 0 ? -1 : 1)) % panelArr.length
+              })
+              Object.keys(this.props.allDotsArr.current).forEach(item => this.props.allDotsArr.current[item].setOpen(false))
+
+            }
+
+          }}
+          className={theme.sizeCss}>
+          {color && color[500] ?
+            <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: color[500], borderRadius: "1000px", color: "transparent" }} />
+            : color
+          }
+
+        </IconButton>
+        {color && color[500] && <Popover
+          transitionDuration={{ enter: 0, exit: 300 }}
+          elevation={0}
+          anchorOrigin={{ vertical: "top", horizontal: "left" }}
+          transformOrigin={{ vertical: "bottom", horizontal: "left" }}
+          open={this.state.open}
+          anchorReference="anchorEl"
+          //   anchorEl={document.getElementById("colordot" + index)}
+          anchorEl={this.dotRef.current && this.dotRef.current.parentElement}
+          style={{ pointerEvents: "none", overflow: "hidden", }}
+
+          PaperProps={{
+            //  className: theme.heightCss,
+
+            style: {
+              pointerEvents: "auto", lineHeight: 1, ...panelColor && { backgroundColor: panelColor },
+              borderBottomLeftRadius: "0px", borderBottomRightRadius: "0px",
+              overflow: "hidden",
+            },
+
+            //  onMouseLeave: () => { this.setAllOpen(false); this.setOpen(false) },
+            elevation: 0
+          }}
+
+        >
+          {Object.keys(color).map((item, index) => {
+            if (item === "500" || item[0] === "A") { return null }
+            return <IconButton className={theme.sizeCss} key={index}
+              // onMouseEnter={() => {
+              onClick={(e) => {
+                e.stopPropagation(); e.preventDefault();
+                this.setRestAllOpen(false);
+
+                this.lastColor === color[item] && this.toggleOpen();
+                this.lastColor = color[item]
+
+
+                setPanelColor(color[item])
+
+              }}
+            //   setPanelColor(color[item])
+            // }}
+
+            >
+
+              <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: color[item], borderRadius: "1000px", color: "transparent" }} />
+            </IconButton>
+
+          })}
+
+        </Popover>}
+      </React.Fragment>
+
+
+    )
+
+  }
+}
+
+const ColorDot = withTheme(withContext(ColorDot_))
+
+
+function RenderColorPickerPanel({ btnArr, basicButtonArr, panelColor, setPanelColor, ...props }) {
 
   const theme = useTheme()
   const [panelValue, setPanelValue] = useState(0)
@@ -961,8 +1159,8 @@ function RenderColorPickerPanel({ btnArr, basicButtonArr, ...props }) {
 
 
 
-
-
+  //  const [panelColor, setPanelColor] = useState(null)
+  const allDotsArr = useRef({})
 
   return (<>
 
@@ -978,73 +1176,22 @@ function RenderColorPickerPanel({ btnArr, basicButtonArr, ...props }) {
         unmountOnExit={false}>
 
         <div style={{
-          backgroundColor: "#" + ((1 << 24) * Math.random() | 0).toString(16),
+          ...panelColor && { backgroundColor: panelColor },
+          //   backgroundColor: "#" + ((1 << 24) * Math.random() | 0).toString(16),
           display: "inline-block", position: "absolute",// height: "4rem",
           //     transform: "translateY(10px)"
+          // left:0,
+          // right:0
         }}>
 
 
           {dotArr.map((color, index) => {
 
-            return <>
-              <ColorDot {...{ index, setPanelValue, panelArr, color, setDirection, dotPanelArrIndex }} />
-
-              {/* <IconButton
-                onMouseEnter={function () { index === 4 && setOpen(true) }}
-                onMouseLeave={function () { index === 4 && setOpen(false) }}
-                id={"colordot" + index}
-                key={index}
-                onClick={function () {
-
-                  if (color[500]) {
-                    alert("d")
-                    //setOpen(pre => !pre)
-                  }
-                  else {
-                    setDirection(pre => {
-
-
-                      const selfValue = pre[dotPanelArrIndex] = index === 0 ? "left" : "right"
-
-                      const arr = [...new Array(panelArr.length)].map(item => selfValue === "right" ? "left" : "right")
-                      arr[dotPanelArrIndex] = selfValue
-                      return arr
-
-
-                    })
-                    setPanelValue(pre => {
-                      return (pre + (index === 0 ? -1 : 1)) % panelArr.length
-                    })
-                  }
+            return <ColorDot key={index} {...{ index, setPanelValue, panelArr, color, setDirection, dotPanelArrIndex, panelColor, setPanelColor, allDotsArr }} />
 
 
 
-                  // setPanelValue(pre => {
-                  //   return (pre + 1) % panelArr.length
-                  // })
-                }}
-                className={theme.sizeCss}>
-                {color && color[500] ?
-                  <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: color[500], borderRadius: "1000px", color: "transparent" }} />
-                  : color
 
-                }
-
-              </IconButton>
-              {index === 4 && <Popover
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
-                transformOrigin={{ vertical: "bottom", horizontal: "center" }}
-                open={open}
-                anchorReference="anchorEl"
-                anchorEl={document.getElementById("colordot" + index)}
-                style={{ pointerEvents: "none" }}
-              ><Paper
-
-                style={{ pointerEvents: "auto", }}
-                onMouseEnter={function () { setOpen(true) }}
-                onMouseLeave={function () { setOpen(false) }}
-              >dsdfs</Paper></Popover>} */}
-            </>
           })}
         </div>
       </Slide>

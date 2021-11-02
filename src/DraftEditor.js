@@ -109,7 +109,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
   const key = useRef(Math.random() + "")
 
   const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showFontBar,
-    setShowFontBar } = ctx
+    setShowFontBar,tabValue, setTabValue, panelColor, setPanelColor } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
 
@@ -127,10 +127,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       </Collapse>
       {/* </Fade> */}
 
-      <Paper style={{ position: "relative"}} > 
+      <Paper style={{ position: "relative" }} >
 
 
-        {ctx.showFontBar && <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj }} />}
+        {ctx.showFontBar && <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue,panelColor, setPanelColor }} />}
         <Editor
 
           // onFocus={function (e, two) {
