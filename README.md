@@ -1,6 +1,6 @@
 ### Dev16
 
-to do:   colorblock hint is hidden
+text color picker is done
 
 
 ### Dev15
