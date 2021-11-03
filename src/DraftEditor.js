@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect, useContext, useCallback, createContext, useMemo } from 'react';
 
 
 
@@ -109,8 +109,85 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
   const key = useRef(Math.random() + "")
 
   const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showFontBar,
-    setShowFontBar,tabValue, setTabValue, panelColor, setPanelColor } = ctx
+    setShowFontBar, tabValue, setTabValue, panelColor, setPanelColor } = ctx
   const [readOnly, setReadOnly] = useState(false)
+
+  const theme = useTheme()
+
+  useLayoutEffect(function () {
+
+    // if ((left === "50%") && (tabValue !== 3)) {
+    //   setTabValue(3)
+    // }
+
+    // document.querySelectorAll(`span[class*="${theme.lgTextCss}"]:not(span[style*="--font-size-large"])`).forEach(
+    //   item => {
+    //     item.classList.remove(theme.lgTextCss)
+    //   }
+    // )
+
+
+    document.querySelectorAll(`span[class*="${theme.lgTextCss}"]`).forEach(
+      item => {
+        if (Object.values(item.style).includes("--font-size-large")) { return }
+        else {
+          item.classList.remove(theme.lgTextCss)
+        }
+
+      }
+    )
+
+
+    document.querySelectorAll('span[style*="--font-size-large"]').forEach(
+      item => {
+
+        if (item.parentElement && item.parentElement.getAttribute("data-mention-head")) {
+          // console.log(item.parentElement.getAttribute("data-mention-head"))
+        }
+        else {
+          item.className = theme.lgTextCss
+        }
+
+      }
+    )
+
+
+    ///////////////////////////////////////
+
+
+    // document.querySelectorAll(`span[class*="${theme.smTextCss}"]:not(span[style*="--font-size-small"])`).forEach(
+    //   item => {
+    //     item.classList.remove(theme.smTextCss)
+    //   }
+    // )
+
+    document.querySelectorAll(`span[class*="${theme.smTextCss}"]`).forEach(
+      item => {
+        if (Object.values(item.style).includes("--font-size-small")) { return }
+        else {
+          item.classList.remove(theme.smTextCss)
+        }
+
+      }
+    )
+
+
+
+    document.querySelectorAll('span[style*="--font-size-small"]').forEach(
+      item => {
+        if (item.parentElement && item.parentElement.getAttribute("data-mention-head")) {
+          //console.log(item.parentElement.getAttribute("data-mention-head"))
+        }
+        else {
+          item.className = theme.smTextCss
+        }
+      }
+    )
+
+
+
+
+  })
 
 
 
@@ -120,8 +197,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
     <React.Fragment key={key.current}>
 
-
-
       <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}>
         <EmojiPanel />
       </Collapse>
@@ -130,7 +205,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       <Paper style={{ position: "relative" }} >
 
 
-        {ctx.showFontBar && <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue,panelColor, setPanelColor }} />}
+        {ctx.showFontBar && <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColor, setPanelColor }} />}
         <Editor
 
           // onFocus={function (e, two) {
@@ -153,6 +228,11 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
             newState = taggingFontBar(newState)
+
+            setShowFontBar(!newState.getSelection().isCollapsed())
+
+
+
             setEditorState(newState)
           }}
 
@@ -168,7 +248,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             //   color:"red"
             // }
 
-          
+
 
           }}
 
@@ -177,12 +257,12 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const styleNameArr = style.toArray();
 
             const styleObj = {}
-            let colorString =""
+            let colorString = ""
 
-            styleNameArr.forEach(item=>{
+            styleNameArr.forEach(item => {
 
-              if(item[0]==="#"){
-                styleObj.color =item
+              if (item[0] === "#") {
+                styleObj.color = item
               }
 
 
