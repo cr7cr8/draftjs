@@ -56,6 +56,17 @@ import {
 } from '@material-ui/core/colors';
 
 
+let colorStringArr = [];
+
+[red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime,
+  yellow, amber, orange, deepOrange, brown, grey, blueGrey].forEach(item => {
+
+    colorStringArr = [...colorStringArr, ...Object.values(item)]
+  })
+
+
+
+
 
 
 const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) => {
@@ -255,6 +266,11 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SMALL")
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "LARGE")
+
+    colorStringArr.forEach(colorString => {
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, colorString)
+    })
+
 
     let es = EditorState.push(
       editorState,
@@ -853,7 +869,7 @@ class ColorDot_ extends React.Component {
       return { ...pre, open: value }
     })
   }
-  setOpenOff =  this.setOpen.bind(null, false)
+  setOpenOff = this.setOpen.bind(null, false)
 
 
 
@@ -880,15 +896,33 @@ class ColorDot_ extends React.Component {
 
 
 
-
-
-
     //todo
     let editorState = this.props.ctx.editorState
-    let setEditorState = this.props.ctx.setEditorState
+    const setEditorState = this.props.ctx.setEditorState
+    const editorRef = this.props.ctx.editorRef
 
     const selection = editorState.getSelection()
 
+
+    let allBlocks = editorState.getCurrentContent()
+
+    if (!selection.isCollapsed()) {
+
+      colorStringArr.forEach(item => {
+        allBlocks = Modifier.removeInlineStyle(allBlocks, selection, item)
+      })
+
+      editorState = EditorState.push(editorState, allBlocks, "change-inline-style")
+      //editorState= EditorState.acceptSelection(editorState, selection);
+
+
+
+      setEditorState(RichUtils.toggleInlineStyle(editorState, colorString));
+      setTimeout(() => {
+        editorRef.current && editorRef.current.focus()
+      }, 0);
+
+    }
 
 
 
@@ -909,10 +943,10 @@ class ColorDot_ extends React.Component {
       }
     }
 
-    this.draftEditor =  document.getElementsByClassName("DraftEditor-root")[0]
+    this.draftEditor = document.getElementsByClassName("DraftEditor-root")[0]
 
-    this.draftEditor.addEventListener("mouseover",this.setOpenOff)
-   // console.log( getEventListeners( this.draftEditor))
+    this.draftEditor.addEventListener("mouseover", this.setOpenOff)
+    // console.log( getEventListeners( this.draftEditor))
 
     //  console.log( this.props.ctx.editorState);
   }
@@ -923,9 +957,9 @@ class ColorDot_ extends React.Component {
 
     }
 
-    this.draftEditor.removeEventListener("mouseover",this.setOpenOff)
+    this.draftEditor.removeEventListener("mouseover", this.setOpenOff)
 
-  // console.log( getEventListeners( this.draftEditor))
+    // console.log( getEventListeners( this.draftEditor))
   }
 
 
@@ -1062,7 +1096,10 @@ const ColorDot = withTheme(withContext(ColorDot_))
 function RenderColorPickerPanel({ btnArr, basicButtonArr, panelColor, setPanelColor, ...props }) {
 
   const theme = useTheme()
-  const [panelValue, setPanelValue] = useState(0)
+  //const [panelValue, setPanelValue] = useState(0)
+
+  const { panelValue, setPanelValue } = useContext(Context)
+
 
   const sourceArr = btnArr
 

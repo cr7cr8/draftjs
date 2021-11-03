@@ -52,7 +52,7 @@ function toHtml({ preHtml, theme, ctx }) {
     transform: function (node, index) {
 
       if (node.name === "object" && node.attribs["data-type"] === "color-block") {
-       // console.log(node.attribs["data-bgiamge"], index)
+        // console.log(node.attribs["data-bgiamge"], index)
 
         arr.push({ bg: node.attribs["data-bgiamge"], row: index, node })
         return null
@@ -108,13 +108,29 @@ function toHtml({ preHtml, theme, ctx }) {
   const html = ReactHtmlParser(preHtml, {
     transform: function transformFn(node, index) {
 
-      if ((node.attribs && node.attribs["class"] && node.attribs["class"] === "large") || (node.attribs && node.attribs["class"] && node.attribs["class"] === "small")) {
 
-        return <div key={index} style={{ display: "inline" }} className={node.attribs["class"] === "large" ? theme.lgTextCss : theme.smTextCss}>
+
+      if (node.attribs && !node.attribs.class && node.attribs.textcolor) {
+
+        return <span key={index} style={{ color: node.attribs.textcolor, }} >
+          {convertNodeToElement(node, index, transformFn).props.children}
+        </span>
+
+      }
+
+      else if ((node.attribs && node.attribs["class"] && node.attribs["class"] === "large") || (node.attribs && node.attribs["class"] && node.attribs["class"] === "small")) {
+
+
+        const color = node.attribs && node.attribs.textcolor
+
+        return <div key={index} style={{ display: "inline", color, }} className={node.attribs["class"] === "large" ? theme.lgTextCss : theme.smTextCss}>
           {convertNodeToElement(node, index, transformFn).props.children}
         </div>
 
       }
+
+
+
 
       if (node.name === "object" && node.attribs["data-type"] === "avatar_head") {
 
@@ -127,20 +143,31 @@ function toHtml({ preHtml, theme, ctx }) {
         //fontSize in the  theme.lgTextCss as classname of a span tag will not work
         return <React.Fragment key={index}></React.Fragment>  // work as well
       }
+
+
+
       else if (node.name === "object" && node.attribs["data-type"] === "avatar_body") {
 
         const element = node.children.map((child, index) => {
 
           const fontNode = convertNodeToElement(child, index, transformFn)
 
-          if (typeof (fontNode) === "object" && (fontNode.props.className === "large" || fontNode.props.className === "small")) {
+          if (typeof (fontNode) === "object" && (fontNode.props.textcolor || fontNode.props.className === "large" || fontNode.props.className === "small")) {
 
             //fontSize in the  theme.lgTextCss as classname of a span tag will not work
             //console.log(React.cloneElement(fontNode, { className:theme.lgTextCss }, fontNode.props.children)) 
 
+            console.log(fontNode.props.textcolor)
+
+            let className = null
+            if (fontNode.props.className === "large") { className = theme.lgTextCss }
+            if (fontNode.props.className === "small") { className = theme.smTextCss }
+            let color = null
+            if (fontNode.props.textcolor) { color = fontNode.props.textcolor }
+
             return React.cloneElement(
               <div />,
-              { key: index, className: fontNode.props.className === "large" ? theme.lgTextCss : theme.smTextCss, style: { display: "inline" } },
+              { key: index, className, style: { display: "inline", color } },
               fontNode.props.children
             )
 
@@ -190,7 +217,7 @@ function toHtml({ preHtml, theme, ctx }) {
         const key = node.attribs["data-block_key"]
         const imageLinkArr = (ctx && ctx.imageBlockObj && ctx.imageBlockObj[key]) || []
 
-      
+
         return <ImagePanel key={index} imageLinkArr={imageLinkArr} posData={posData} />
 
       }

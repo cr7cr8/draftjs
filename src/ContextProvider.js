@@ -29,7 +29,7 @@ import Immutable from "immutable"
 //import url, { axios } from './config';
 //import jwtDecode from 'jwt-decode';
 
-import yellow from '@material-ui/core/colors/yellow';
+
 import { PhoneMissed } from '@material-ui/icons';
 import DraftEditor from './DraftEditor';
 import Content from "./Content";
@@ -47,6 +47,23 @@ import BasicImageList from "./ImagePanel"
 
 
 import { FontBar, taggingFontBar } from "./FontBar"
+import {
+  red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime,
+  yellow, amber, orange, deepOrange, brown, grey, blueGrey
+} from '@material-ui/core/colors';
+
+
+let colorStringArr = [];
+
+[red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime,
+  yellow, amber, orange, deepOrange, brown, grey, blueGrey].forEach(item => {
+
+    colorStringArr = [...colorStringArr, ...Object.values(item)]
+  })
+
+
+
+
 export const Context = createContext();
 
 function flatten(arr) {
@@ -231,37 +248,58 @@ const inlineStyleFn = (styleNameSet, ...props) => {
   //   };
   // }
 
-  if (styleNameSet.has("LARGE")) {
-    return {
-      element: "span",
-      style: {
-        //  color: "red",
+  const styleObj = {
 
-        //  backgroundColor: "pink",
-      },
-      attributes: {
-        "class": "large",
+    element: "span",
+    style: {
 
-      }
+    },
+    attributes: {
 
     }
+  }
+
+  colorStringArr.forEach(colorString => {
+    if (styleNameSet.has(colorString)) {
+      styleObj.attributes.textcolor = colorString
+    }
+  })
+
+
+  if (styleNameSet.has("LARGE")) {
+
+    styleObj.attributes.class = "large"
+    // return {
+    //   element: "span",
+    //   style: {
+    //     //  color: "red",
+
+    //     //  backgroundColor: "pink",
+    //   },
+    //   attributes: {
+    //     "class": "large",
+
+    //   }
+
+    // }
   }
 
   if (styleNameSet.toArray().includes("SMALL")) {
-    return {
-      element: "span",
-      // style: {
-      //   //color: "red",
-      //   "--font-size-large":"large"
-      // },
-      attributes: {
-        "class": "small",
-      }
+    styleObj.attributes.class = "small"
+    // return {
+    //   element: "span",
+    //   // style: {
+    //   //   //color: "red",
+    //   //   "--font-size-large":"large"
+    //   // },
+    //   attributes: {
+    //     "class": "small",
+    //   }
 
-    }
+    // }
   }
 
-
+  return styleObj
 }
 
 const entityStyleFn = (entity, ...props) => {
@@ -420,6 +458,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const bgImageObj = useRef({})
   const [tabValue, setTabValue] = useState(0)
   const [panelColor, setPanelColor] = useState(null)
+  const [panelValue, setPanelValue] = useState(0)   //text color panel
+
   useEffect(function () {
 
 
@@ -452,10 +492,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           bgImageObj, //setBgImageObj,
           tabValue, setTabValue,
           panelColor, setPanelColor,
+          panelValue, setPanelValue, //text color panel
           gradientStyleArr: [
-
-
-
 
             { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
             { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
@@ -466,7 +504,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
               color: "#666",
-            
+
             },
             {
               backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
@@ -498,8 +536,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
           <FormGroup row >
             <FormControlLabel
-              control={<SwitchBtn checked={showContent}  factor={[2, 2, 2, 1.8, 2.2]}
-              onChange={() => { setShowContent(pre => !pre) }} name="showContent" color="primary" />}
+              control={<SwitchBtn checked={showContent} factor={[2, 2, 2, 1.8, 2.2]}
+                onChange={() => { setShowContent(pre => !pre) }} name="showContent" color="primary" />}
               label="Content"
               labelPlacement="start"
             />

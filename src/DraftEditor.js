@@ -168,7 +168,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             //   color:"red"
             // }
 
-
+          
 
           }}
 
@@ -177,6 +177,19 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const styleNameArr = style.toArray();
 
             const styleObj = {}
+            let colorString =""
+
+            styleNameArr.forEach(item=>{
+
+              if(item[0]==="#"){
+                styleObj.color =item
+              }
+
+
+            })
+
+
+
 
             if (styleNameArr.includes("FONTBAR")) {
 
