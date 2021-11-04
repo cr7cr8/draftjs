@@ -74,54 +74,183 @@ export default function ToolBlock(props) {
 
   const [showSettingBar, setShowSettingBar] = useState(false)
 
+
+  function update(e) {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (e.currentTarget.files[0].name.trim().match(/\.(gif|jpe?g|tiff|png|webp|bmp)$/i)) {
+
+      const files = e.currentTarget.files
+
+      const newImage = bgImageObj.current[files[0].name]
+      if (!newImage) {
+
+        bgImageObj.current = {
+          ...bgImageObj.current,
+          [files[0].name]: {
+            backgroundImage: `url(${URL.createObjectURL(files[0])})`,
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+          },
+
+
+        }
+
+
+      }
+      const updatedImage = bgImageObj.current[files[0].name]
+
+
+      markingColorBlock(e, editorState, setEditorState, updatedImage, blockKey)
+
+
+
+
+      setTimeout(() => {
+
+        editorRef.current.focus()
+      }, 100);
+
+    }
+
+  }
+
+  const inputRef = useRef()
   useEffect(function () {
 
     //editorBlockRef.current._node.parentElement.style.overflow = showSettingBar ? "hidden" : "visible"
-    setHidden(!(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey)))
+    // setHidden(!(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey)))
+    setHidden(!(selection.isCollapsed() && (selection.getStartKey() === blockKey)))
     if (editorBlockRef.current._node.style.backgroundColor !== backColor) editorBlockRef.current._node.style.backgroundColor = backColor
   })
 
   return (
 
     <>
-
+      <input ref={inputRef} type="file" multiple={false} style={{ display: "none" }}
+        onClick={function (e) { e.currentTarget.value = null; }}
+        onChange={update}
+      />
       <EditorBlock  {...props} ref={editorBlockRef} />
-      {showSettingBar && <SettingBar  {...{ setShowSettingBar, markingImageBlock, markingColorBlock, blockKey, editorBlockRef }} />}
+      {<div
 
+        style={{
+          transform: "translateY(-100%)",
+          position: "absolute",
+          //  background: "orange",
+          right: 0,
+          // display: "flex",
+          alignItems: "center",
+          //   opacity: 0.5,
+          //  transition: "width 0.3s",
+          // width: showSettingBar ? "100%" : 0,
+          width: "100%",
+          whiteSpace: "nowrap",
+          overflow: "hidden"
+        }}
+      >
+        <Zoom in={showSettingBar} unmountOnExit={true}>
+          <IconButton className={theme.sizeCss}
+            contentEditable={false}
+
+            onClick={function (e) {
+              e.preventDefault(); e.stopPropagation()
+              markingImageBlock(blockKey)
+              //  setShowColorPanel(pre => !pre)
+            }}
+          >
+            <InsertPhotoOutlinedIcon className={theme.sizeCss} />
+          </IconButton>
+        </Zoom>
+
+        <Zoom in={showSettingBar} unmountOnExit={true}>
+          <IconButton className={theme.sizeCss}
+            contentEditable={false}
+
+            onClick={function (e) {
+              e.preventDefault(); e.stopPropagation();
+              inputRef.current.click()
+            }}
+          >
+            <ImageTwoToneIcon className={theme.sizeCss} />
+          </IconButton>
+        </Zoom>
+
+        {gradientStyleArr.map(function (item, index) {
+
+          return (
+            <Slide key={index} in={showSettingBar} direction="left"
+              timeout={{ enter: 100 * index + 100, exit: 100 * (gradientStyleArr.length - index) }}
+              unmountOnExit={true}>
+              <IconButton className={theme.sizeCss} key={index}
+                contentEditable={false}
+                style={{
+                  padding: 0,
+                }}
+                onClick={function (e) {
+                  e.preventDefault(); e.stopPropagation();
+                  markingColorBlock(e, editorState, setEditorState, item, blockKey, true)
+
+                }}>
+                <div className={theme.sizeCss} style={{ borderRadius: "1000px", ...item }} />
+              </IconButton>
+            </Slide>
+          )
+        })}
+
+      </div>
+      }
       {
-        !hidden && !showSettingBar && <IconButton
-          style={{
-            top: "50%",
-            //transform: "translateX(100%) translateY(-50%)",
-            transform: "translateX(0%) translateY(-50%)",
-            position: "absolute",
-            right: 0,
-          }}
-          className={theme.sizeCss}
 
+        !hidden && <div
+          //  className={theme.sizeCss}
           contentEditable={false}
-          onMouseDown={function (e) {
-            e.preventDefault()
-            e.stopPropagation()
-
-          }}
-
-          onClick={function (e) {
-            e.preventDefault()
-            e.stopPropagation()
-            setShowSettingBar(pre => !pre)
-
+          style={{
+            transform: "translateX(100%) translateY(-100%)",
+            position: "absolute",
+            //  background: "skyblue",
+            justifyContent:"center",
+            display: "flex",
+            alignItems: "center",
+            backgroundColor:"skyblue",
+          //  width:"100%",
+            right:0,
+            zIndex:0,
+            userSelect:"none"
           }}
         >
-          <SettingsIcon className={theme.sizeCss} />
-        </IconButton>
+          <div style={{width:0}}>&nbsp;</div>
+          {/* <div contentEditable={false} style={{ transform: "translateX(0%)", display: "flex", alignItems: "center" }}> */}
+          {/* <div     contentEditable={false} style={{ width: 0 }}>&nbsp;</div> */}
+          <IconButton
+            style={{ transform: "translateX(0%)", alignItems: "center", backgroundColor:"pink" }}
+            className={theme.sizeCss}
+            contentEditable={false}
+            onMouseDown={function (e) {
+              e.preventDefault()
+              e.stopPropagation()
+            }}
+
+            onClick={function (e) {
+              e.preventDefault()
+              e.stopPropagation()
+              setShowSettingBar(pre => !pre)
+            }}
+          >
+            <SettingsIcon className={theme.sizeCss} />
+          </IconButton>
+          {/* </div> */}
+        </div>
       }
-
-
-
     </>
   )
 }
+
+
+
+
+
 
 
 export function SettingBar({ setShowSettingBar, markingImageBlock, markingColorBlock, blockKey, editorBlockRef, ...props }) {

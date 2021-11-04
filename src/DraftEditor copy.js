@@ -190,9 +190,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
   })
 
 
-  const selection = editorState.getSelection()
-
-
 
 
 
@@ -230,11 +227,11 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
 
-            // newState = taggingFontBar(newState)
+            newState = taggingFontBar(newState)
 
             setShowFontBar(!newState.getSelection().isCollapsed())
 
-            //setShowFontBar(true)
+
 
             setEditorState(newState)
           }}
@@ -263,10 +260,16 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             let colorString = ""
 
             styleNameArr.forEach(item => {
+
               if (item[0] === "#") {
                 styleObj.color = item
               }
+
+
             })
+
+
+
 
             if (styleNameArr.includes("FONTBAR")) {
 
@@ -325,9 +328,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             if (data.rightBlock) {
               return "text-right"
             }
-            if (!text) {
-              return "unselectable"
-            }
+
 
           }}
 
@@ -348,6 +349,31 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               }
 
 
+              // 'unstyled': { 
+              //   element: 'div',
+              //   wrapper: <ColorBlock />,
+              //  }
+
+              // 'unstyled': { 
+              //   element: 'h3',
+              //   wrapper: <Typography variant='body2'/>,
+              //  }
+
+              // "colorBlock": {
+              //   style: "backgournd-color:red"
+              // }
+              // "imageBlock": {
+              //   element: "figure",
+              //   wrapper: <ImagePanel
+              //     imageArr
+              //     setImageArr
+              //     imageBlockObj
+              //     setImageBlockObj
+              //     editor={editorRef}
+              //     blockKey={"dsdd"}
+              //     deleteImageBlock={deleteImageBlock.bind(null, "dsdd")}
+              //     className="image-block" />
+              // }
             })
           }
 
@@ -368,8 +394,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             //   console.log(blockKey)
 
             // }
-            // if ((!text) && (type === "unstyled")) {
-            if ((type === "unstyled")) {
+            if ((!text) && (type === "unstyled")) {
               //if ((!text) && (type === "unstyled" || type === "colorBlock")) {
               return {
                 component: ToolBlock,

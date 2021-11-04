@@ -57,6 +57,11 @@ figure {
 
 }
 
+.unselectable{
+  user-select: none;
+}
+
+
 /* .unstyled-text-draft-block::before{
   content:"+";
   color: #E2202D;

@@ -54,6 +54,7 @@ import {
   red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime,
   yellow, amber, orange, deepOrange, brown, grey, blueGrey
 } from '@material-ui/core/colors';
+import { browserName } from 'react-device-detect';
 
 
 let colorStringArr = [];
@@ -394,7 +395,11 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
               key={index}
               //style={{ padding: 0 }}
               className={theme.sizeCss}
-              onClick={(e) => { item.fn(e) }}>{item.btn}</IconButton>
+              onClick={(e) => {
+                e.preventDefault(); e.stopPropagation();
+
+                item.fn(e)
+              }}>{item.btn}</IconButton>
           })
         )
       }
@@ -496,30 +501,122 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
   const { fontBarCss } = useStyles({ basicButtonArr })
 
- 
+
 
   useEffect(function () {
 
-    // setTimeout(() => {
-    const fontBar = document.querySelector('span[style*="--font-bar"]')
-    //   console.log(isAllTextBlock,isAllColorBlock,!!fontBar)
-    if (fontBar) {
-      const { x: fontBarX, y: fontBarY, width } = fontBar.getBoundingClientRect()
+
+    const selection = editorState.getSelection()
+
+
+    if (!selection.isCollapsed()) {
+      const startKey = selection.getStartKey()
+      const startOffset = selection.getStartOffset()
+
+      if (!editorState.getCurrentContent().getBlockForKey(startKey).getText()) { return function () { } }
+
+
+
+      const endKey = selection.getEndKey()
+      const endOffset = selection.getEndOffset()
+
+      const text = editorState.getCurrentContent().getBlockForKey(startKey).getText();
+
+
+      const sameLine = startKey === endKey
+
+      const selectedText = sameLine ? text.substring(startOffset, endOffset) : text.substr(startOffset)
+
+
+      // const element = document.querySelector(`div[data-block="true"][data-offset-key*="${startKey}"] [data-offset-key*="${startKey}"]`)
+
+      const elementNodeList =
+        document.querySelectorAll(`div[data-block="true"][data-offset-key*="${startKey}"] > div[data-offset-key*="${startKey}"] [data-offset-key*="${startKey}"] [data-text*="true"] `)
+
+
+      const elementArr = Array.from(elementNodeList).map(el => { return el.firstChild.textContent })
+
+      //  console.log(elementArr, startOffset)
+      let startPosDone = false
+      let startElement = 0
+      let accumString = ""
+      let accumString_ = ""
+
+      let relateStartPos = 0;
+      elementArr.reduce((previous, current, elementIndex) => {
+        // console.log(current)
+        accumString_ = previous + current
+
+        if ((startOffset <= accumString_.length - 1) && (startPosDone === false)) {
+          startElement = elementIndex
+          startPosDone = true
+          accumString = accumString_
+          //  console.log(current[startOffset])
+          relateStartPos = startOffset - previous.length + 1
+        }
+
+        return accumString_
+
+      }, "")
+
+      const range = document.createRange();
+
+
+
+      range.setStart(elementNodeList[startElement].firstChild, Math.max(0, Math.min(relateStartPos - 1, elementArr[startElement].length - 1)))
+
+      if (!sameLine || endOffset === text.length) {
+        range.setEnd(elementNodeList[elementNodeList.length - 1].firstChild, elementNodeList[elementNodeList.length - 1].firstChild.textContent.length)
+      }
+
+      else if (sameLine) {
+
+        let endPosDone = false
+        let endElement = 0
+        accumString = ""
+        accumString_ = ""
+
+        let relateEndPos = 0;
+        elementArr.reduce((previous, current, elementIndex) => {
+          // console.log(current)
+          accumString_ = previous + current
+
+          if ((endOffset <= accumString_.length - 1) && (endPosDone === false)) {
+            endElement = elementIndex
+            endPosDone = true
+            accumString = accumString_
+            //  console.log(current[startOffset])
+            relateEndPos = endOffset - previous.length + 1
+          }
+
+          return accumString_
+
+        }, "")
+
+        range.setEnd(elementNodeList[endElement].firstChild, relateEndPos - 1)
+
+        console.log("start", elementNodeList[startElement].firstChild.textContent[relateStartPos - 1])
+        console.log("end", accumString, elementNodeList[endElement].firstChild.textContent[relateEndPos - 1])
+
+      }
+
+      const { x: fontBarX, y: fontBarY, width } = range.getBoundingClientRect()
       const { x: editorRefX, y: editorRefY } = editorRef.current.editor.editor.getBoundingClientRect()
       const x = Number(fontBarX) - Number(editorRefX)
       const y = Number(fontBarY) - Number(editorRefY)
       //   console.log(x,y)
       setLeft(x); setTop(y); setTaggingWidth(width)
 
+
+
+
     }
-    else { setLeft("50%"); setTop(-4) }
 
-
-
-
-    //  }, 0);
 
   })
+
+
+
 
   function update(e) {
     e.preventDefault()
@@ -575,7 +672,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         //  zIndex: editorState.getSelection().isCollapsed() ? -1 : 1100,
 
         zIndex: 1100,
-        backgroundColor: panelColor || "#acf",
+        //backgroundColor: panelColor || "#acf",
+        //backgroundColor: "#acf",
         // borderRadius: "1000px",
         position: "absolute",
         transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
@@ -585,7 +683,11 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         overflow: "hidden",
         whiteSpace: "nowrap",
       }}
-      onClick={function (e) { }}
+      onClick={function (e) {
+        e.preventDefault();
+        e.stopPropagation()
+
+      }}
     >
 
       <Tabs
@@ -612,7 +714,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
             label={item}
 
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault(); e.stopPropagation();
 
               setDirectionArr(pre => {
 
@@ -635,7 +738,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
         className={theme.panelHeightCss}
         style={{
-          //overflow: "hidden", 
+          //overflow: "hidden",
           //backgroundColor: "wheat",
           position: "relative", width: "100%", display: "flex", flexWrap: "nowrap",
 
@@ -715,42 +818,47 @@ function getChoosenBlocks(editorState) {
 export function taggingFontBar(editorState) {
 
   const oldSelection = editorState.getSelection();
+  let newSelection = editorState.getSelection();
 
-  //if (oldSelection.isCollapsed()) { return editorState }
+
+  //if (oldSelection.isCollapsed()) {
+
+
+  // setLeft("50%"); setTop(-4)
+
+  //  return editorState
+  //}
 
 
   let allBlocks = editorState.getCurrentContent();
-  let newSelection = editorState.getSelection();
+
 
 
   allBlocks.getBlockMap().forEach(function (block) {
 
     const [blockKey, blockType, blockText, metaArr] = block.toArray()
+    newSelection = SelectionState.createEmpty(blockKey).merge({
 
-    metaArr.forEach(function (item, index) {
+      anchorKey: blockKey,
+      anchorOffset: 0,
+      focusKey: blockKey,
+      focusOffset: blockText.length,
+      isBackward: false,
+      hasFocus: false,
 
-      // console.log(item.getStyle().toArray(), item.hasStyle("BOLD"))
-      if (item.hasStyle("FONTBAR")) {
-        newSelection = newSelection.merge({
-          anchorKey: blockKey,
-          anchorOffset: index,
-          focusKey: blockKey,
-          focusOffset: index + 1,
-          isBackward: false,
-          hasFocus: false,
-        })
-        allBlocks = Modifier.removeInlineStyle(allBlocks, newSelection, "FONTBAR")
-
-      }
     })
+    allBlocks = Modifier.removeInlineStyle(allBlocks, newSelection, "FONTBAR")
+
   })
+
+
 
 
   if (oldSelection.isCollapsed()) {
 
     editorState = EditorState.push(editorState, allBlocks, "change-inline-style");
-    editorState = EditorState.acceptSelection(editorState, oldSelection);
-    // editorState = EditorState.forceSelection(editorState, oldSelection);
+    //  editorState = EditorState.acceptSelection(editorState, oldSelection);
+    editorState = EditorState.forceSelection(editorState, oldSelection);
     return editorState
 
   }
@@ -759,8 +867,8 @@ export function taggingFontBar(editorState) {
 
     allBlocks = Modifier.applyInlineStyle(allBlocks, oldSelection, "FONTBAR")
     editorState = EditorState.push(editorState, allBlocks, "change-inline-style");
-    // editorState = EditorState.acceptSelection(editorState, oldSelection);
-    //editorState = EditorState.forceSelection(editorState, oldSelection);
+    //editorState = EditorState.acceptSelection(editorState, oldSelection);
+    editorState = EditorState.forceSelection(editorState, oldSelection);
 
     return editorState
   }
@@ -870,9 +978,13 @@ class ColorDot_ extends React.Component {
       }
     }
 
-    this.draftEditor = document.getElementsByClassName("DraftEditor-root")[0]
+    //this.draftEditor = document.getElementsByClassName("DraftEditor-root")[0]
 
-    this.draftEditor.addEventListener("mouseover", this.setOpenOff)
+    this.draftEditor = document.body
+
+
+    //this.draftEditor.addEventListener("mouseover", this.setOpenOff)
+    this.draftEditor.addEventListener("click", this.setOpenOff)
     // console.log( getEventListeners( this.draftEditor))
 
     //  console.log( this.props.ctx.editorState);
@@ -905,17 +1017,18 @@ class ColorDot_ extends React.Component {
           ref={this.dotRef}
 
 
-          onClick={() => {
-
+          onClick={(e) => {
+            e.stopPropagation(); e.preventDefault();
             if (color[500]) {
 
 
               // this.applyColorToText(color[500])
 
               this.setRestAllOpen(false);
-              this.toggleOpen();
+              this.setOpen(true)
+              //  this.toggleOpen();
               this.lastColor = color[500]
-              setPanelColor(color[500]);
+              //setPanelColor(color[500]);
 
               this.applyColorToText(color[500])
             }
@@ -929,7 +1042,7 @@ class ColorDot_ extends React.Component {
               setPanelValue(pre => {
                 return (pre + (index === 0 ? -1 : 1)) % panelArr.length
               })
-              this.setAllOpenOff()
+              //   this.setAllOpenOff()
 
             }
 
@@ -949,7 +1062,7 @@ class ColorDot_ extends React.Component {
           open={this.state.open}
           anchorReference="anchorEl"
           //   anchorEl={document.getElementById("colordot" + index)}
-          anchorEl={this.dotRef.current && this.dotRef.current.parentElement}
+          anchorEl={this.dotRef.current && this.dotRef.current.parentElement.parentElement}
           style={{ pointerEvents: "none", overflow: "hidden", /*backgroundColor: panelColor, opacity: 0.5 */ }}
 
 
@@ -963,7 +1076,7 @@ class ColorDot_ extends React.Component {
             //  className: theme.heightCss,
 
             style: {
-              pointerEvents: "auto", lineHeight: 1, ...panelColor && { backgroundColor: panelColor },
+              pointerEvents: "auto", lineHeight: 1,// ...panelColor && { backgroundColor: panelColor },
               borderBottomLeftRadius: "0px", borderBottomRightRadius: "0px",
               overflow: "hidden",
             },
@@ -988,7 +1101,8 @@ class ColorDot_ extends React.Component {
                 e.stopPropagation(); e.preventDefault();
 
                 this.setRestAllOpen(false);
-                this.lastColor === color[item] && this.toggleOpen();
+                this.setOpen(true);
+                //  this.lastColor === color[item] && this.toggleOpen();
                 this.lastColor = color[item]
                 setPanelColor(color[item])
 
@@ -1003,7 +1117,11 @@ class ColorDot_ extends React.Component {
 
             >
 
-              <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: color[item], borderRadius: "1000px", color: "transparent" }} />
+              <RadioButtonUncheckedIcon className={theme.sizeCss}
+                style={{
+                  backgroundColor: color[item],
+                  borderRadius: "1000px", color: "transparent"
+                }} />
             </IconButton>
 
           })}
@@ -1085,17 +1203,18 @@ function RenderColorPickerPanel({ btnArr, basicButtonArr, panelColor, setPanelCo
 
       return <Slide in={dotPanelArrIndex === panelValue} timeout={{ enter: 300, exit: 300 }}
         direction={direction[dotPanelArrIndex]}
-
-
+        onClick={function (e) { alert("sdsd"); e.preventDefault(); e.stopPropagation() }}
         key={dotPanelArrIndex}
         unmountOnExit={false}>
 
-        <div style={{
-          ...panelColor && { backgroundColor: panelColor },
+        <div
 
-          display: "inline-block", position: "absolute",
+          style={{
+            //     ...panelColor && { backgroundColor: panelColor },
 
-        }}>
+            display: "inline-block", position: "absolute",
+
+          }}>
 
 
           {dotArr.map((color, index) => {
