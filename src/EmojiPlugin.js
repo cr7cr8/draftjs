@@ -100,7 +100,9 @@ export default function createImagePlugin() {
 
     // externalES.getCurrentContent().getBlocksAsArray().forEach(function (block) {
 
-    externalES.getCurrentContent().getBlockMap().forEach(function (block) {
+   // externalES.getCurrentContent().getBlockMap().forEach(function (block) {
+
+      const block = externalES.getCurrentContent().getBlockForKey(oldSelection.getStartKey())
 
       const blockKey = block.getKey()
       const blockText = block.getText()
@@ -192,7 +194,7 @@ export default function createImagePlugin() {
 
 
 
-    })
+  //  })
 
 
 

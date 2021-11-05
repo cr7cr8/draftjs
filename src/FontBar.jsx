@@ -665,7 +665,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         top, left,
         display: "block",
         //  display: (top === 0 && left === 0) ? "none" : "block",
-        //  display: editorState.getSelection().isCollapsed() ? "block" : "block",
+       //   display: editorState.getSelection().isCollapsed() ? "none" : "block",
         //  display: (top === 0 && left === 0) ? "block" : "block",
 
         //  opacity: editorState.getSelection().isCollapsed() ? 0 : 1,

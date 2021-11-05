@@ -108,7 +108,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   const key = useRef(Math.random() + "")
 
-  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showFontBar,
+  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showHint ,showFontBar,
     setShowFontBar, tabValue, setTabValue, panelColor, setPanelColor } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
@@ -231,6 +231,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
             // newState = taggingFontBar(newState)
+            newState = taggingMention(showHint, newState)
 
             setShowFontBar(!newState.getSelection().isCollapsed())
 

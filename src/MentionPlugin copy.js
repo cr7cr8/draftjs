@@ -196,32 +196,20 @@ export default function createMentionPlugin() {
     // )
   }
 
+  function taggingMention() {
 
-  function conditionWrap(showHint) {
-  
-    return showHint
-      ? externalES.getCurrentContent().getBlockMap()
-      : [externalES.getCurrentContent().getBlockForKey(externalES.getSelection().getStartKey())]
-
-  }
-
-  function taggingMention(showHint = false, editorState = externalES) {
-
-    const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = editorState.getSelection().toArray()
+    const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = externalES.getSelection().toArray()
     const [anchorStartKey, anchorStartOffset, anchorFocusKey, anchorFocusOffset, isAnchorBackward, isAnchorFocused]
       = [!isBackward ? anchorKey : focusKey, !isBackward ? anchorOffset : focusOffset, isBackward ? anchorKey : focusKey, isBackward ? anchorOffset : focusOffset,]
     const regx = /\s([@][\w_\[\u4E00-\u9FCA\]]*)/g
 
 
-    const oldSelection = editorState.getSelection();
-    let newSelection = editorState.getSelection();
-    newContent = editorState.getCurrentContent();
+    const oldSelection = externalES.getSelection();
+    let newSelection = externalES.getSelection();
+    newContent = externalES.getCurrentContent();
 
     // externalES.getCurrentContent().getBlocksAsArray().forEach(function (block) {
-    // externalES.getCurrentContent().getBlockMap().forEach(function (block) {
-    conditionWrap(showHint).forEach(function (block) {
-      //const block = externalES.getCurrentContent().getBlockForKey(oldSelection.getStartKey())
-
+    externalES.getCurrentContent().getBlockMap().forEach(function (block) {
 
       const blockKey = block.getKey()
       const blockText = block.getText()
@@ -292,7 +280,11 @@ export default function createMentionPlugin() {
         const contentLenth = end - start;
         const contentFocusAt = anchorFocusOffset - start;
 
-    
+        //console.log(" contentFocusAt ", contentFocusAt, " contentLength: ", contentLenth, " start: ", start, " end: ", end)
+
+        // const shortMentionOn = (contentLenth === 2) && hasfocus && (blockKey === anchorFocusKey) && (contentFocusAt === 2)
+        // const shortMentionOff = (contentLenth === 2) && ((!hasfocus) || (blockKey !== anchorFocusKey) || (contentFocusAt !== 2))
+
         const shortMentionOn = false
         const shortMentionOff = false
 
@@ -303,7 +295,36 @@ export default function createMentionPlugin() {
         const longMentionOff = (contentLenth > 2) && ((!hasfocus) || (blockKey !== anchorFocusKey) || (contentFocusAt <= 0) || (contentFocusAt > contentLenth))
 
 
-     
+        // if (shortMentionOn) {
+        //   newContent = newContent.createEntity("shortMentionOn", "MUTABLE", { mentionType: "shortMentionOn" });
+        //   let entityKey = newContent.getLastCreatedEntityKey();
+        //   newSelection = newSelection.merge({
+        //     anchorKey: blockKey,
+        //     focusKey: blockKey,
+        //     anchorOffset: start,
+        //     focusOffset: end,
+        //     isBackward: false,
+        //     hasFocus: false,
+        //   })
+
+        //   newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
+
+        // }
+        // else if (shortMentionOff) {
+        //   newContent = newContent.createEntity("shortMentionOff", "MUTABLE", { mentionType: "shortMentionOff" });
+        //   let entityKey = newContent.getLastCreatedEntityKey();
+        //   newSelection = newSelection.merge({
+        //     anchorKey: blockKey,
+        //     focusKey: blockKey,
+        //     anchorOffset: start,
+        //     focusOffset: end,
+        //     isBackward: false,
+        //     hasFocus: false,
+        //   })
+
+        //   newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
+
+        // }
         if (longMentionOnAt) {
 
           tagStartPos = start
@@ -334,13 +355,12 @@ export default function createMentionPlugin() {
     })
 
 
-    editorState = EditorState.push(editorState, newContent, "apply-entity");
-    editorState = EditorState.acceptSelection(editorState, oldSelection);
-    return editorState
+    externalES = EditorState.push(externalES, newContent, "apply-entity");
+    externalES = EditorState.acceptSelection(externalES, oldSelection);
+    return externalES
 
 
   }
-
 
   function insertMention(friendName, mentionHeadKey, mentionBodyKey, entityKey) {
 
@@ -420,7 +440,7 @@ export default function createMentionPlugin() {
     if (mentionType === "longMentionOnAt_HEAD") {
       // return <></>                                                      //2+2*0.15
       return (
-        <span className={longMention_HEAD_Css} data-mention-head="@">{children}</span>
+        <span className={longMention_HEAD_Css}  data-mention-head="@">{children}</span>
       )
     }
     else if (mentionType === "longMentionOnAt_BODY") {                                   //2*0.5
@@ -440,7 +460,7 @@ export default function createMentionPlugin() {
     else if (mentionType === "longMentionOnOther_HEAD") {
       // return <></>
       //    return <sapn style={{ backgroundColor: "skyblue", paddingRight: "0" }}>{children}</sapn>
-      return <span className={longMention_HEAD_Css} data-mention-head="@">{children}</span>
+      return <span className={longMention_HEAD_Css}  data-mention-head="@">{children}</span>
     }
     else if (mentionType === "longMentionOnOther_BODY") {
 
@@ -555,7 +575,7 @@ export default function createMentionPlugin() {
       onChange: function (editorState, { setEditorState }) {
         externalES = editorState
         externalSetEditorState = setEditorState
-        // externalES = taggingMention()
+        externalES = taggingMention()
         return externalES
 
       },
