@@ -142,9 +142,9 @@ export default function EditingBlock(props) {
   const theme = useTheme()
 
   const { toolBarCss, collapseCss } = useStyles()
+  const { editorBlockKeyArr, setEditorBlockKeyArr } = useContext(Context)
 
-
-  const { editorState, setEditorState, editorRef, gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock } = props;
+  const { editorState, setEditorState, editorRef, gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock, } = props;
   const selection = editorState.getSelection()
   const startKey = selection.getStartKey()
   const endKey = selection.getEndKey()
@@ -157,7 +157,10 @@ export default function EditingBlock(props) {
   //const arr = [props.children[0]]
   //let preItemValue = props.children[0].props.children.props.block.getData().toObject().backgroundImage
 
-  const [loaded, setLoaded] = useState(false)
+  const headKey = props.children[0].props.children.props.block.getKey()
+  const [loaded, setLoaded] = useState(editorBlockKeyArr.some(key => {
+    return key === headKey
+  }))
 
   const [showSettingBar, setShowSettingBar] = useState(true)
 
@@ -234,7 +237,6 @@ export default function EditingBlock(props) {
           </div>
 
 
-          {/* <div style={{ backgroundColor: "lightcoral", display: "inline-block" }}> */}
 
           <Tabs
 
@@ -261,72 +263,41 @@ export default function EditingBlock(props) {
 
               return (
 
-          
-
-                  <Tab key={index}
-                    value={index}
-                    icon={
 
 
+                <Tab key={index}
+                  value={index}
+                  icon={
 
-                      <Grow key={index} in={loaded && displayToolBar} in={true} direction="left"
-                      timeout={{ enter: 100 * index + 100,    exit: 100 * (gradientStyleArr.length - index) }}
+
+
+                    <Grow key={index} in={loaded && displayToolBar} in={true} direction="left"
+                      timeout={{ enter: 100 * index + 100, exit: 100 * (gradientStyleArr.length - index) }}
                       unmountOnExit={true}>
 
-                      <div className={theme.sizeCss} contentEditable={false} style={{ borderRadius: "1000px", ...item }} />
-                      </Grow>
+                      <div className={theme.sizeCss} contentEditable={false} style={{ borderRadius: "1000px", ...item }}
 
+                        onClick={function (e) {
+                          e.preventDefault(); e.stopPropagation();
+                          // alert("s")
+                          //    markingColorBlock(e, editorState, setEditorState, item, blockKey, true)
 
-                      // <IconButton className={theme.sizeCss} key={index}
-                      //   contentEditable={false}
-                      //   style={{
-                      //     padding: 0,
-                      //   }}
-                      //   onClick={function (e) {
-                      //     e.preventDefault(); e.stopPropagation();
-                      //     //    markingColorBlock(e, editorState, setEditorState, item, blockKey, true)
+                        }}
+                      />
+                    </Grow>
 
-                      //   }}>
-                      //   <div className={theme.sizeCss} style={{ borderRadius: "1000px", ...item }} />
-                      // </IconButton>
-                    }
-                  />
-               
+                  }
+                />
+
 
 
               )
 
 
-              return (
 
-
-
-
-
-
-                <Slide key={index} in={loaded && displayToolBar} in={true} direction="left"
-                  timeout={{ enter: 50 * index + 100, exit: 50 * (gradientStyleArr.length - index) }}
-                  unmountOnExit={true}>
-
-                  <IconButton className={theme.sizeCss} key={index}
-                    contentEditable={false}
-                    style={{
-                      padding: 0,
-                    }}
-                    onClick={function (e) {
-                      e.preventDefault(); e.stopPropagation();
-                      //    markingColorBlock(e, editorState, setEditorState, item, blockKey, true)
-
-                    }}>
-                    <div className={theme.sizeCss} style={{ borderRadius: "1000px", ...item }} />
-                  </IconButton>
-                </Slide>
-
-
-              )
             })}
           </Tabs>
-          {/* </div> */}
+
         </Collapse>
       ),
       [showSettingBar, loaded && displayToolBar]
@@ -337,7 +308,25 @@ export default function EditingBlock(props) {
 
   useEffect(function () {
 
-    setLoaded(true)
+
+
+    const headKey = props.children[0].props.children.props.block.getKey()
+
+    console.log(editorBlockKeyArr)
+    if (!editorBlockKeyArr.some(key => { return key === headKey })) {
+
+      setEditorBlockKeyArr(pre => {
+        return [...pre, headKey]
+      })
+      setLoaded(true)
+    }
+    return function () {
+
+      // setEditorBlockKeyArr(pre => {
+      //   return pre.filter(key => { return key !== headKey })
+      // })
+
+    }
 
   }, [])
 
@@ -396,7 +385,9 @@ export default function EditingBlock(props) {
                     // markingColorBlock(e, editorState, setEditorState, {}, blockKey)
 
                     setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
-
+                    block.getKey() === headKey && setEditorBlockKeyArr(pre => {
+                      return pre.filter(key => { return key !== headKey })
+                    })
                     //setShowSettingBar(pre => !pre)
                   }}
                 >
