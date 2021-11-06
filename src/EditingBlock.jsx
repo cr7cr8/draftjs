@@ -158,9 +158,12 @@ export default function EditingBlock(props) {
   //let preItemValue = props.children[0].props.children.props.block.getData().toObject().backgroundImage
 
   const headKey = props.children[0].props.children.props.block.getKey()
-  const [loaded, setLoaded] = useState(editorBlockKeyArr.some(key => {
+
+
+  const hasLoaded = editorBlockKeyArr.some(key => {
     return key === headKey
-  }))
+  })
+  //const [loaded, setLoaded] = useState(hasLoaded)
 
   const [showSettingBar, setShowSettingBar] = useState(true)
 
@@ -168,7 +171,7 @@ export default function EditingBlock(props) {
   const allClassNames = classNames({
 
     "editor-block-light": true,
-    "editor-block-dark": displayToolBar && loaded
+    "editor-block-dark": displayToolBar && hasLoaded
 
   })
 
@@ -184,7 +187,7 @@ export default function EditingBlock(props) {
       () => (
         <Collapse
           contentEditable={false}
-          in={loaded && isStartKeyIn && isEndKeyIn}
+          in={hasLoaded && isStartKeyIn && isEndKeyIn}
           timeout={{ enter: 300, exit: 0 }}
           //  elevation={0}
           className={collapseCss}
@@ -208,7 +211,7 @@ export default function EditingBlock(props) {
           }}
         >
           <div style={{ display: "flex", backgroundColor: "orange" }}>
-            <Zoom in={showSettingBar} unmountOnExit={true}>
+            <Zoom in={showSettingBar} unmountOnExit={true}   timeout={{ enter: hasLoaded ? 0 : 300, exit: 300 }} >
               <IconButton className={theme.sizeCss}
                 contentEditable={false}
 
@@ -222,7 +225,7 @@ export default function EditingBlock(props) {
               </IconButton>
             </Zoom>
 
-            <Zoom in={showSettingBar} unmountOnExit={true}>
+            <Zoom in={showSettingBar} unmountOnExit={true}  timeout={{ enter: hasLoaded ? 0 : 300, exit: 300 }}  >
               <IconButton className={theme.sizeCss}
                 contentEditable={false}
 
@@ -271,8 +274,8 @@ export default function EditingBlock(props) {
 
 
 
-                    <Grow key={index} in={loaded && displayToolBar} in={true} direction="left"
-                      timeout={{ enter: 100 * index + 100, exit: 100 * (gradientStyleArr.length - index) }}
+                    <Grow key={index} in={hasLoaded && displayToolBar} in={true} direction="left"
+                      timeout={{ enter: hasLoaded ? 0 : 200 * index + 100, exit: 100 * (gradientStyleArr.length - index) }}
                       unmountOnExit={true}>
 
                       <div className={theme.sizeCss} contentEditable={false} style={{ borderRadius: "1000px", ...item }}
@@ -300,7 +303,7 @@ export default function EditingBlock(props) {
 
         </Collapse>
       ),
-      [showSettingBar, loaded && displayToolBar]
+      [showSettingBar, hasLoaded, displayToolBar]
     )
 
 
@@ -310,15 +313,13 @@ export default function EditingBlock(props) {
 
 
 
-    const headKey = props.children[0].props.children.props.block.getKey()
 
-    console.log(editorBlockKeyArr)
-    if (!editorBlockKeyArr.some(key => { return key === headKey })) {
+    if (!hasLoaded) {
 
       setEditorBlockKeyArr(pre => {
         return [...pre, headKey]
       })
-      setLoaded(true)
+
     }
     return function () {
 
