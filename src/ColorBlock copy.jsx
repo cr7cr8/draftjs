@@ -8,17 +8,13 @@ import Editor from "draft-js-plugins-editor";
 import Immutable from 'immutable';
 
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
-import { Typography, IconButton, Button, ButtonGroup, Container, Paper, Popover, Avatar, Box, Chip, Grow, Zoom, Slide } from "@material-ui/core";
+import { Typography, IconButton, Button, ButtonGroup, Container, Paper, Popover,Avatar, Box, Chip, Grow, Zoom, Slide } from "@material-ui/core";
 import { Image, AlternateEmailSharp } from "@material-ui/icons";
 
 
 import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
 import HighlightOffOutlinedIcon from '@material-ui/icons/HighlightOffOutlined';
 
-
-import SettingsIcon from '@material-ui/icons/Settings';
-import InsertPhotoOutlinedIcon from '@material-ui/icons/InsertPhotoOutlined';
-import ImageTwoToneIcon from '@material-ui/icons/ImageTwoTone';
 import AvatarChipList from "./AvatarChipList";
 
 import {
@@ -334,127 +330,15 @@ export default function ColorBlock(props) {
                 {blockItem.props.children}
               </div> */}
 
-              <div {...{ ...blockItem.props }}>
+              <div {...{ ...blockItem.props}}>
+                {blockItemData.fromSetting && <SettingBar  {...{ markingColorBlock, markingImageBlock, blockKey: blockItemKey }} />}
                 {blockItem.props.children}
-                {/* {blockItemData.fromSetting && <SettingBar  {...{ markingColorBlock, markingImageBlock, blockKey: blockItemKey }} />} */}
-
-                {<div
-
-                  style={{
-                    transform: "translateY(-100%)",
-                    position: "absolute",
-                    //  background: "orange",
-                    right: 0,
-                    // display: "flex",
-                    alignItems: "center",
-                    //   opacity: 0.5,
-                    //  transition: "width 0.3s",
-                    // width: showSettingBar ? "100%" : 0,
-                    width: "100%",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden"
-                  }}
-                >
-                  <Zoom in={true} unmountOnExit={true}>
-                    <IconButton className={theme.sizeCss}
-                      contentEditable={false}
-
-                      onClick={function (e) {
-                        e.preventDefault(); e.stopPropagation()
-                        //  markingImageBlock(blockKey)
-                        //  setShowColorPanel(pre => !pre)
-                      }}
-                    >
-                      <InsertPhotoOutlinedIcon className={theme.sizeCss} />
-                    </IconButton>
-                  </Zoom>
-
-                  <Zoom in={true} unmountOnExit={true}>
-                    <IconButton className={theme.sizeCss}
-                      contentEditable={false}
-
-                      onClick={function (e) {
-                        e.preventDefault(); e.stopPropagation();
-                        //    inputRef.current.click()
-                      }}
-                    >
-                      <ImageTwoToneIcon className={theme.sizeCss} />
-                    </IconButton>
-                  </Zoom>
-
-                  {gradientStyleArr.map(function (item, index) {
-
-                    return (
-                      <Slide key={index} in={true} direction="left"
-                        timeout={{ enter: 100 * index + 100, exit: 100 * (gradientStyleArr.length - index) }}
-                        unmountOnExit={true}>
-                        <IconButton className={theme.sizeCss} key={index}
-                          contentEditable={false}
-                          style={{
-                            padding: 0,
-                          }}
-                          onClick={function (e) {
-                            e.preventDefault(); e.stopPropagation();
-                            markingColorBlock(e, editorState, setEditorState, item, blockItemKey, false)
-
-                          }}>
-                          <div className={theme.sizeCss} style={{ borderRadius: "1000px", ...item }} />
-                        </IconButton>
-                      </Slide>
-                    )
-                  })}
-
-                </div>
-                }
-                {
-
-                  <div
-                    //  className={theme.sizeCss}
-                    contentEditable={false}
-                    style={{
-                      transform: "translateX(100%) translateY(-100%)",
-                      position: "absolute",
-                      //  background: "skyblue",
-                      justifyContent: "center",
-                      display: "flex",
-                      alignItems: "center",
-                      backgroundColor: "skyblue",
-                      //  width:"100%",
-                      right: 0,
-                      zIndex: 0,
-                      userSelect: "none"
-                    }}
-                  >
-                    <div style={{ width: 0 }}>&nbsp;</div>
-                    {/* <div contentEditable={false} style={{ transform: "translateX(0%)", display: "flex", alignItems: "center" }}> */}
-                    {/* <div     contentEditable={false} style={{ width: 0 }}>&nbsp;</div> */}
-                    <IconButton
-                      style={{ transform: "translateX(0%)", alignItems: "center", backgroundColor: "pink" }}
-                      className={theme.sizeCss}
-                      contentEditable={false}
-                      onMouseDown={function (e) {
-                        e.preventDefault()
-                        e.stopPropagation()
-                      }}
-
-                      onClick={function (e) {
-                        e.preventDefault()
-                        e.stopPropagation()
-                      //  setShowSettingBar(pre => !pre)
-                      }}
-                    >
-                      <SettingsIcon className={theme.sizeCss} />
-                    </IconButton>
-                    {/* </div> */}
-                  </div>
-                }
-
               </div>
 
             </div>
 
 
- 
+
 
           })
 

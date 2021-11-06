@@ -43,75 +43,43 @@ figure {
   z-index: 0;
 }
 
-
-.unstyled-block{
-  -moz-osx-font-smoothing: grayscale;
-  /* background-color:#faf; */
-
-  transition: all 300ms;
-}
-
-.editor-block-light{
+.editor-block-wrapper{
   -moz-osx-font-smoothing: grayscale;
   background-color: lightgoldenrodyellow;
+  /* box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 5px 8px 0px rgba(0,0,0,0.14),0px 1px 14px 0px rgba(0,0,0,0.12); */
+ 
+
+
+  /* transition: box-shadow 30000ms, height 3000ms, background-color 3000ms;  */
+  /* transition: box-shadow 300ms, height 300ms; */
+  /* animation-direction: alternate;
+  animation-duration: 3s;
+  animation-name: wrapper-enter;
+  animation-fill-mode: both; */
+
   box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 2px 1px -1px rgba(0,0,0,0.12);
+  box-shadow: unset;
+  /* transform:scale(1); */
+  /* transition: box-shadow 300ms,background-color 300ms, transform 300ms; */
   transition: all 300ms;
 }
-
-
-.editor-block-dark{
+/* .editor-block-wrapper-focus-on:hover{
   -moz-osx-font-smoothing: grayscale;
   background-color: wheat;
+  
   box-shadow: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12);
+  transition: box-shadow 300ms,background-color 300ms;
+} */
+
+
+.editor-block-wrapper-focus-on{
+  -moz-osx-font-smoothing: grayscale;
+  background-color: wheat;
+  /* transform:scale(1.05); */
+  box-shadow: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12);
+  /* transition: box-shadow 300ms,background-color 300ms ,transform 300ms; */
   transition: all 300ms;
 }
-
-
-
-.editor-block-light-dark{
-  animation-duration: 300ms;
-  animation-name: light-dark;
-  animation-fill-mode: both;
-
-}
-
-@keyframes light-dark{
-  0% {
-    background-color: lightgoldenrodyellow;
-    box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 2px 1px -1px rgba(0,0,0,0.12);
-  }
-  100% {
-    background-color: wheat;
-    box-shadow: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12);    
-  }
- 
-}
-
-.editor-block-dark-light{
-  animation-duration: 300ms;
-  animation-name: dark-light;
-  animation-fill-mode: both;
-
-}
-
-@keyframes dark-light{
-  0% {
-    background-color: wheat;
-    box-shadow: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12);
-  }
-  100% {
-    background-color: lightgoldenrodyellow;
-    box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 2px 1px -1px rgba(0,0,0,0.12);
-   
-  
-  }
-}
-
-
-
-
-
-
 
 
 .rotate1-1{
@@ -153,7 +121,20 @@ figure {
   }
 }
 
-
+@keyframes wrapper-enter{
+  0% {
+    /* transform: translateX(0%); */
+    box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 5px 8px 0px rgba(0,0,0,0.14),0px 1px 14px 0px rgba(0,0,0,0.12);
+    background-color: #fff;
+    height:auto;
+  }
+  100% {
+    /* transform: translateX(100%); */
+    box-shadow: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12);
+    background-color: wheat;
+    height:auto;
+  }
+}
 
 
 

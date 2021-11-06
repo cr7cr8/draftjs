@@ -20,7 +20,7 @@ import { makeStyles, useTheme, ThemeProvider, withTheme } from '@material-ui/sty
 
 import { withContext } from "./ContextProvider"
 
-
+import classNames from "classnames"
 
 import { AvatarChip, TwoLineLabel, AvatarLogo } from "./AvatarLogo"
 
@@ -33,6 +33,8 @@ import createLinkPlugin from './LinkPlugin';
 
 import ToolBlock from "./ToolBlock";
 import ColorBlock, { markingColorBlock } from "./ColorBlock";
+import EditingBlock, { markingEditingBlock } from "./EditingBlock";
+
 
 import styled from "styled-components"
 
@@ -108,7 +110,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   const key = useRef(Math.random() + "")
 
-  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showHint ,showFontBar,
+  const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showHint, showFontBar,
     setShowFontBar, tabValue, setTabValue, panelColor, setPanelColor } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
@@ -310,25 +312,44 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           }}
 
           blockStyleFn={function (block) {
-            const text = block.getText()
-            const data = block.getData().toObject()
-            const type = block.getType()
+            const blockText = block.getText()
+            const blockData = block.getData().toObject()
+            const blockType = block.getType()
+            const blockKey = block.getKey()
+            const startKey = editorState.getSelection().getStartKey()
 
-            if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
-              return "image-block-figure"
-            }
-            if ((!text) && (type === "unstyled")) {
-              return "unstyled-text-draft-block"
-            }
-            if (data.centerBlock) {
-              return "text-center"
-            }
-            if (data.rightBlock) {
-              return "text-right"
-            }
-            if (!text) {
-              return "unselectable"
-            }
+
+            const allClassName = classNames({
+
+              "image-block-figure": ((blockType === "atomic") && (blockText === "imageBlockText")) || (blockType === "imageBlock"),
+
+              // "unstyled-focus-on > div[data-offset-key]": blockKey === startKey,
+              // "unstyled-focus-off > div[data-offset-key]": blockKey !== startKey,
+
+
+              "text-center": blockData.centerBlock,
+              "text-right": blockData.rightBlock,
+              "unselectable": !blockText,
+              "unstyled-block":blockType==="unstyled"
+
+            })
+
+            return allClassName
+            // if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
+            //   return "image-block-figure"
+            // }
+            // if ((!text) && (type === "unstyled")) {
+            //   return "unstyled-text-draft-block"
+            // }
+            // if (data.centerBlock) {
+            //   return "text-center"
+            // }
+            // if (data.rightBlock) {
+            //   return "text-right"
+            // }
+            // if (!text) {
+            //   return "unselectable"
+            // }
 
           }}
 
@@ -346,9 +367,23 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   markingImageBlock={markingImageBlock}
 
                 />,
+              },
+
+              "editingBlock": {
+                element: "div",
+                //wrapper: <></>
+                wrapper: <EditingBlock
+                  editorState={editorState}
+                  setEditorState={setEditorState} editorRef={editorRef}
+                  showFontBar={showFontBar}
+                  setShowFontBar={setShowFontBar}
+                  gradientStyleArr={gradientStyleArr}
+                  markingImageBlock={markingImageBlock}
+
+                />
+
+
               }
-
-
             })
           }
 
@@ -435,8 +470,39 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           keyBindingFn={function (e, { getEditorState, setEditorState, ...obj }) {
             const editorState = getEditorState()
             const selectionState = editorState.getSelection();
+
+            const startKey = selectionState.getStartKey();
+            const startOffset = selectionState.getStartOffset();
+            const endOffset = selectionState.getEndOffset();
             const contentState = editorState.getCurrentContent();
             const block = contentState.getBlockForKey(selectionState.getStartKey());
+            const allBlocks = contentState.getBlockMap()
+            const firstBlockKey = allBlocks.slice(0, 1).toArray().shift().getKey()
+
+
+
+
+            // if ((e.keyCode === 8) && (!block.getText()) && allBlocks.size !== 1 && selectionState.isCollapsed() && startKey !== firstBlockKey) {
+            //   //     if ((e.keyCode === 8) && (startOffset===0) && allBlocks.size !== 1 && selectionState.isCollapsed() && startKey !== firstBlockKey) {
+            //   //  setEditorState(RichUtils.onBackspace(editorState))
+
+            //   //   alert("dd")
+
+            //   return "moveup"
+
+            // }
+
+
+            if ((e.keyCode === 8) && (startOffset === 0) && allBlocks.size !== 1 && selectionState.isCollapsed() && startKey !== firstBlockKey) {
+              //  setEditorState(RichUtils.onBackspace(editorState))
+
+              //   alert("dd")
+
+              return "moveup2"
+
+            }
+
+
 
             if (checkShowing() && e.keyCode === 38) {
               return undefined
@@ -456,6 +522,50 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           }}
 
           handleKeyCommand={function (command, editorState, evenTimeStamp, { getEditorState }) {
+
+            if (command === "moveup") {
+
+              const selectionState = editorState.getSelection();
+
+              const startKey = selectionState.getStartKey();
+              setEditorState(deleteBlock(editorState, startKey))
+
+              // const selection = editorState.getSelection();
+              // const startKey = selection.getStartKey();
+              // const startOffset = selection.getStartOffset();
+              // const allBlocks = editorState.getCurrentContent();
+              // const block = allBlocks.getBlockForKey(selection.getStartKey());
+
+              // const blockBefore = allBlocks.getBlockBefore(startKey)
+
+
+              // const newSelection = selection.merge({
+              //   anchorKey: blockBefore.getKey(),
+              //   anchorOffset: blockBefore.getText().length - 1,
+              //   focusKey: blockBefore.getKey(),
+              //   focusOffset: blockBefore.getText().length - 1,
+              //   isBackward: false,
+              //   hasFocus: true,
+
+              // })
+
+              // const newAllBlocks = allBlocks.filter(function (value, key) { return key !== startKey })
+
+              // console.log(newAllBlocks.toArray())
+
+              // let newState = EditorState.createWithContent(newAllBlocks)   //EditorState.push(editorState, newAllBlocks, 'remove-range');
+              // newState = EditorState.forceSelection(newState, newSelection)
+              // setEditorState(newState)
+
+              return 'handled';
+
+            }
+
+            if (command === "moveup2") {
+              const selectionState = editorState.getSelection();
+              const startKey = selectionState.getStartKey();
+              setEditorState(deleteBlock2(editorState, startKey))
+            }
 
             if (command === "bold") {
 
@@ -553,6 +663,123 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 })
 
+
+
+function deleteBlock(store, blockKey) {
+  // const editorState = store.getEditorState();
+  console.log(Math.random())
+  const editorState = store;
+  let content = editorState.getCurrentContent();
+
+  const beforeKey = content.getKeyBefore(blockKey);
+  const beforeBlock = content.getBlockForKey(beforeKey);
+
+  // Note: if the focused block is the first block then it is reduced to an
+  // unstyled block with no character
+  if (beforeBlock === undefined) {
+    const targetRange = new SelectionState({
+      anchorKey: blockKey,
+      anchorOffset: 0,
+      focusKey: blockKey,
+      focusOffset: 1,
+    });
+    // change the blocktype and remove the characterList entry with the sticker
+    content = Modifier.removeRange(content, targetRange, 'backward');
+    content = Modifier.setBlockType(
+      content,
+      targetRange,
+      'unstyled'
+    );
+    const newState = EditorState.push(editorState, content, 'remove-block');
+
+    // force to new selection
+    const newSelection = new SelectionState({
+      anchorKey: blockKey,
+      anchorOffset: 0,
+      focusKey: blockKey,
+      focusOffset: 0,
+    });
+    return EditorState.forceSelection(newState, newSelection);
+  }
+
+  const targetRange = new SelectionState({
+    anchorKey: beforeKey,
+    anchorOffset: beforeBlock.getLength(),
+    focusKey: blockKey,
+    focusOffset: 1,
+  });
+
+  content = Modifier.removeRange(content, targetRange, 'backward');
+  const newState = EditorState.push(editorState, content, 'remove-block');
+
+  // force to new selection
+  const newSelection = new SelectionState({
+    anchorKey: beforeKey,
+    anchorOffset: beforeBlock.getLength(),
+    focusKey: beforeKey,
+    focusOffset: beforeBlock.getLength(),
+  });
+  return EditorState.forceSelection(newState, newSelection);
+}
+
+
+
+function deleteBlock2(store, blockKey) {
+  // const editorState = store.getEditorState();
+  console.log(Math.random())
+  const editorState = store;
+  let content = editorState.getCurrentContent();
+
+  const beforeKey = content.getKeyBefore(blockKey);
+  const beforeBlock = content.getBlockForKey(beforeKey);
+
+  // Note: if the focused block is the first block then it is reduced to an
+  // unstyled block with no character
+  if (beforeBlock === undefined) {
+    const targetRange = new SelectionState({
+      anchorKey: blockKey,
+      anchorOffset: 0,
+      focusKey: blockKey,
+      focusOffset: 1,
+    });
+    // change the blocktype and remove the characterList entry with the sticker
+    content = Modifier.removeRange(content, targetRange, 'backward');
+    content = Modifier.setBlockType(
+      content,
+      targetRange,
+      'unstyled'
+    );
+    const newState = EditorState.push(editorState, content, 'remove-block');
+
+    // force to new selection
+    const newSelection = new SelectionState({
+      anchorKey: blockKey,
+      anchorOffset: 0,
+      focusKey: blockKey,
+      focusOffset: 0,
+    });
+    return EditorState.forceSelection(newState, newSelection);
+  }
+
+  const targetRange = new SelectionState({
+    anchorKey: beforeKey,
+    anchorOffset: beforeBlock.getLength(),
+    focusKey: blockKey,
+    focusOffset: 0,
+  });
+
+  content = Modifier.removeRange(content, targetRange, 'backward');
+  const newState = EditorState.push(editorState, content, 'remove-block');
+
+  // force to new selection
+  const newSelection = new SelectionState({
+    anchorKey: beforeKey,
+    anchorOffset: beforeBlock.getLength(),
+    focusKey: beforeKey,
+    focusOffset: beforeBlock.getLength(),
+  });
+  return EditorState.forceSelection(newState, newSelection);
+}
 
 
 

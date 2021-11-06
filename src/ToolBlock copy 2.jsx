@@ -1,5 +1,5 @@
 
-import { useState, useRef, useEffect, useLayoutEffect, useContext, useCallback, createContext, useMemo } from 'react';
+import { useState, useRef, useEffect, useContext, useCallback, createContext, useMemo } from 'react';
 import { Context, withContext } from "./ContextProvider"
 
 import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
@@ -21,7 +21,7 @@ import ImageTwoToneIcon from '@material-ui/icons/ImageTwoTone';
 
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import SettingsIcon from '@material-ui/icons/Settings';
-import ColorLensOutlinedIcon from '@material-ui/icons/ColorLensOutlined';
+
 
 import AvatarChipList from "./AvatarChipList";
 
@@ -46,7 +46,7 @@ import { getEventListeners } from 'events';
 
 export default function ToolBlock(props) {
 
-  const { block, selection, contentState, } = props
+  const { block, selection, contentState } = props
 
 
 
@@ -63,7 +63,7 @@ export default function ToolBlock(props) {
   const theme = useTheme()
   const blockKey = block.getKey()
   const blockText = block.getText()
-  const startKey = selection.getStartKey()
+
 
   const editorBlockRef = useRef()
 
@@ -116,115 +116,14 @@ export default function ToolBlock(props) {
 
   }
 
-  const toolBar =
-
-    useMemo(
-      () => (
-        <div
-          //  elevation={0}
-          style={{
-            boxShadow: theme.shadows[5],
-            transform: "translateY(-100%)",
-            position: "absolute",
-            background: theme.palette.background.default,
-            right: 0,
-
-            // display: "flex",
-            alignItems: "center",
-            //   opacity: 0.5,
-            //  transition: "width 0.3s",
-            // width: showSettingBar ? "100%" : 0,
-            width: "100%",
-            whiteSpace: "nowrap",
-            overflow: "hidden"
-          }}
-        >
-          <Zoom in={showSettingBar} unmountOnExit={true}>
-            <IconButton className={theme.sizeCss}
-              contentEditable={false}
-
-              onClick={function (e) {
-                e.preventDefault(); e.stopPropagation()
-                markingImageBlock(blockKey)
-                //  setShowColorPanel(pre => !pre)
-              }}
-            >
-              <InsertPhotoOutlinedIcon className={theme.sizeCss} />
-            </IconButton>
-          </Zoom>
-
-          <Zoom in={showSettingBar} unmountOnExit={true}>
-            <IconButton className={theme.sizeCss}
-              contentEditable={false}
-
-              onClick={function (e) {
-                e.preventDefault(); e.stopPropagation();
-                inputRef.current.click()
-              }}
-            >
-              <ImageTwoToneIcon className={theme.sizeCss} />
-            </IconButton>
-          </Zoom>
-
-          {gradientStyleArr.map(function (item, index) {
-
-            return (
-              <Slide key={index} in={showSettingBar} direction="left"
-                timeout={{ enter: 100 * index + 100, exit: 100 * (gradientStyleArr.length - index) }}
-                unmountOnExit={true}>
-                <IconButton className={theme.sizeCss} key={index}
-                  contentEditable={false}
-                  style={{
-                    padding: 0,
-                  }}
-                  onClick={function (e) {
-                    e.preventDefault(); e.stopPropagation();
-                    markingColorBlock(e, editorState, setEditorState, item, blockKey, true)
-
-                  }}>
-                  <div className={theme.sizeCss} style={{ borderRadius: "1000px", ...item }} />
-                </IconButton>
-              </Slide>
-            )
-          })}
-
-        </div>
-      ),
-      [showSettingBar, editorState]
-    )
-
-
-
   const inputRef = useRef()
-  useLayoutEffect(function () {
+  useEffect(function () {
 
     //editorBlockRef.current._node.parentElement.style.overflow = showSettingBar ? "hidden" : "visible"
     // setHidden(!(selection.hasFocus && selection.isCollapsed() && (selection.getStartKey() === blockKey)))
     setHidden(!(selection.isCollapsed() && (selection.getStartKey() === blockKey)))
-    // if (editorBlockRef.current._node.style.backgroundColor !== backColor) editorBlockRef.current._node.style.backgroundColor = backColor
-
-    //if (editorBlockRef.current._node.style.backgroundColor !== backColor) editorBlockRef.current._node.style.backgroundColor = backColor
-
-    if (blockKey === startKey) {
-   //   editorBlockRef.current._node.style.boxShadow = theme.shadows[5]
-      //   editorBlockRef.current._node.style.backgroundColor = theme.palette.background.default
-      //   editorBlockRef.current._node.style.transform = "scale(1.05)"
-    
-    //  editorBlockRef.current._node.style.transition = "transform 300ms,box-shadow 300ms,background-color 300ms"
-    }
-    else {
-  //    editorBlockRef.current._node.style.boxShadow = theme.shadows[0]
- //     editorBlockRef.current._node.style.backgroundColor = backColor
-      //    editorBlockRef.current._node.style.transform = "scale(1.0)"
-   
-   //   editorBlockRef.current._node.style.transition = "transform 300ms,box-shadow 300ms,background-color 300ms"
-    }
-
-
-
-
+    if (editorBlockRef.current._node.style.backgroundColor !== backColor) editorBlockRef.current._node.style.backgroundColor = backColor
   })
-
 
   return (
 
@@ -234,11 +133,77 @@ export default function ToolBlock(props) {
         onChange={update}
       />
 
-      {toolBar}
-
       <EditorBlock  {...props} ref={editorBlockRef} />
 
 
+      {<Paper
+        elevation={5}
+        style={{
+          transform: "translateY(-200%)",
+          position: "absolute",
+          //  background: "orange",
+          right: 0,
+          // display: "flex",
+          alignItems: "center",
+          //   opacity: 0.5,
+          //  transition: "width 0.3s",
+          // width: showSettingBar ? "100%" : 0,
+          width: "100%",
+          whiteSpace: "nowrap",
+          overflow: "hidden"
+        }}
+      >
+        <Zoom in={showSettingBar} unmountOnExit={true}>
+          <IconButton className={theme.sizeCss}
+            contentEditable={false}
+
+            onClick={function (e) {
+              e.preventDefault(); e.stopPropagation()
+              markingImageBlock(blockKey)
+              //  setShowColorPanel(pre => !pre)
+            }}
+          >
+            <InsertPhotoOutlinedIcon className={theme.sizeCss} />
+          </IconButton>
+        </Zoom>
+
+        <Zoom in={showSettingBar} unmountOnExit={true}>
+          <IconButton className={theme.sizeCss}
+            contentEditable={false}
+
+            onClick={function (e) {
+              e.preventDefault(); e.stopPropagation();
+              inputRef.current.click()
+            }}
+          >
+            <ImageTwoToneIcon className={theme.sizeCss} />
+          </IconButton>
+        </Zoom>
+
+        {gradientStyleArr.map(function (item, index) {
+
+          return (
+            <Slide key={index} in={showSettingBar} direction="left"
+              timeout={{ enter: 100 * index + 100, exit: 100 * (gradientStyleArr.length - index) }}
+              unmountOnExit={true}>
+              <IconButton className={theme.sizeCss} key={index}
+                contentEditable={false}
+                style={{
+                  padding: 0,
+                }}
+                onClick={function (e) {
+                  e.preventDefault(); e.stopPropagation();
+                  markingColorBlock(e, editorState, setEditorState, item, blockKey, true)
+
+                }}>
+                <div className={theme.sizeCss} style={{ borderRadius: "1000px", ...item }} />
+              </IconButton>
+            </Slide>
+          )
+        })}
+
+      </Paper>
+      }
       {
 
         !hidden && <div
@@ -251,7 +216,7 @@ export default function ToolBlock(props) {
             justifyContent: "center",
             display: "flex",
             alignItems: "center",
-            //  backgroundColor: "skyblue",
+            backgroundColor: "skyblue",
             //  width:"100%",
             right: 0,
             zIndex: 0,
@@ -262,11 +227,7 @@ export default function ToolBlock(props) {
           {/* <div contentEditable={false} style={{ transform: "translateX(0%)", display: "flex", alignItems: "center" }}> */}
           {/* <div     contentEditable={false} style={{ width: 0 }}>&nbsp;</div> */}
           <IconButton
-            style={{
-              transform: "translateX(0%)",
-              alignItems: "center",
-            //  backgroundColor: "pink"
-            }}
+            style={{ transform: "translateX(0%)", alignItems: "center", backgroundColor: "pink" }}
             className={theme.sizeCss}
             contentEditable={false}
             onMouseDown={function (e) {
@@ -277,16 +238,10 @@ export default function ToolBlock(props) {
             onClick={function (e) {
               e.preventDefault()
               e.stopPropagation()
-
-              // markingColorBlock()
-              // markingColorBlock(e, editorState, setEditorState, {}, blockKey)
-
-              setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
-
-              //setShowSettingBar(pre => !pre)
+              setShowSettingBar(pre => !pre)
             }}
           >
-            <ColorLensOutlinedIcon className={theme.sizeCss+" "+"rotate1"} />
+            <SettingsIcon className={theme.sizeCss} />
           </IconButton>
           {/* </div> */}
         </div>
