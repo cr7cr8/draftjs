@@ -51,6 +51,8 @@ figure {
   transition: all 300ms;
 }
 
+
+
 .editor-block-light{
   -moz-osx-font-smoothing: grayscale;
   background-color: lightgoldenrodyellow;

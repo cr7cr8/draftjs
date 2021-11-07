@@ -111,7 +111,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
   const key = useRef(Math.random() + "")
 
   const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showHint, showFontBar,
-    setShowFontBar, tabValue, setTabValue, panelColor, setPanelColor,editorBlockKeyArr } = ctx
+    setShowFontBar, tabValue, setTabValue, panelColor, setPanelColor, editorBlockKeyArr } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
   const theme = useTheme()
@@ -330,7 +330,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               "text-center": blockData.centerBlock,
               "text-right": blockData.rightBlock,
               "unselectable": !blockText,
-              "unstyled-block":blockType==="unstyled"
+              "unstyled-block": blockType === "unstyled"
 
             })
 
@@ -365,7 +365,8 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   setShowFontBar={setShowFontBar}
                   gradientStyleArr={gradientStyleArr}
                   markingImageBlock={markingImageBlock}
-                  // editorBlockKeyArr={editorBlockKeyArr}
+                  markingColorBlock={markingColorBlock}
+                  editorBlockKeyArr={editorBlockKeyArr}
                 />,
               },
 
@@ -379,6 +380,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   setShowFontBar={setShowFontBar}
                   gradientStyleArr={gradientStyleArr}
                   markingImageBlock={markingImageBlock}
+                  markingColorBlock={markingColorBlock}
 
                 />
 

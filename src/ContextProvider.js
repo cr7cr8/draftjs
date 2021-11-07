@@ -1,11 +1,13 @@
 import React, { createContext, useEffect, useState, useReducer, useRef, useMemo, useCallback, useLayoutEffect, useContext, Component } from 'react';
 
-import { createTheme, ThemeProvider, responsiveFontSizes, List, Avatar } from "@material-ui/core";
+import { createTheme, ThemeProvider, responsiveFontSizes, List, Avatar, IconButton } from "@material-ui/core";
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import colorIndigo from '@material-ui/core/colors/indigo';
 
 import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
-
+import ColorLensOutlinedIcon from '@material-ui/icons/ColorLensOutlined';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 //import { makeStyles, styled, useTheme, } from '@material-ui/core/styles';
 import createBreakpoints from '@material-ui/core/styles/createBreakpoints';
@@ -13,6 +15,8 @@ import { stateToHTML } from 'draft-js-export-html';
 
 import styled, { ThemeProvider as StyledThemeProvider } from "styled-components"
 import Immutable from "immutable"
+
+import DetectableOverflow from "react-detectable-overflow"
 
 
 // import {
@@ -428,6 +432,133 @@ function toPreHtml(editorState) {
 
 
 //const MyEditor = withContext3(DraftEditor)
+const gradientStyleArr = [
+  { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
+  { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
+  { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
+  { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
+  {
+    backgroundImage: "url(https://picsum.photos/600/300)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666",
+
+  },
+  {
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666"
+  },
+  {
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/502/700)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666"
+  },
+  { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
+  { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
+  { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
+  { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
+  {
+    backgroundImage: "url(https://picsum.photos/600/300)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666",
+
+  },
+  {
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666"
+  },
+  {
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/502/700)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666"
+  },
+  { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
+  { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
+  { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
+  { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
+  {
+    backgroundImage: "url(https://picsum.photos/600/300)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666",
+
+  },
+  {
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666"
+  },
+  {
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/502/700)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666"
+  },
+  { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
+  { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
+  { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
+  { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
+  {
+    backgroundImage: "url(https://picsum.photos/600/300)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666",
+
+  },
+  {
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666"
+  },
+  {
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/502/700)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666"
+  },
+
+
+  { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
+  { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
+  { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
+  { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
+  {
+    backgroundImage: "url(https://picsum.photos/600/300)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666",
+
+  },
+  {
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666"
+  },
+  {
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/502/700)",
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    color: "#666"
+  },
+  { backgroundImage: "linear-gradient(to top, #e6b980 0%, #eacda3 100%)", color: "#fff" },
+  { backgroundImage: "linear-gradient(45deg, #ff758c 0%, #ff7eb3 100%)", color: "#fff" },
+  // { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#fff" },
+  // { backgroundImage: "linear-gradient(to top, #e6b980 0%, #eacda3 100%)", color: "#fff" },
+  // { backgroundImage: "linear-gradient(45deg, #ff758c 0%, #ff7eb3 100%)", color: "#fff" },
+  // { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#fff" },
+]
+
+
 
 export default function ContextProvider({ myTheme = {}, ...props }) {
 
@@ -441,7 +572,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [showContent, setShowContent] = useState(false)
   const [showMention, setShowMention] = useState(false)
-  const [showHint, setShowHint] = useState(true)
+  const [showHint, setShowHint] = useState(false)
   const [avatarHint, setAvatarHint] = useState(false)
   const [showFontBar, setShowFontBar] = useState(true)
 
@@ -456,23 +587,26 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   //const [bgImageObj_, setBgImageObj] = useState({})
   const bgImageObj = useRef({})
-  const [editorBlockKeyArr,setEditorBlockKeyArr] = useState([])
+  const [editorBlockKeyArr, setEditorBlockKeyArr] = useState([])
+  const [darkToLightArr, setDarkToLightArr] = useState([])
 
   const [tabValue, setTabValue] = useState(0)
   const [panelColor, setPanelColor] = useState(null)
   const [panelValue, setPanelValue] = useState(0)   //text color panel
 
+
+
+  const [isOverFlow, setIsOverFlow] = useState(false)
+
+
   useEffect(function () {
 
+    // console.log(window.getComputedStyle(inputRef.current).width)
 
-  }, [imageBlockObj])
+    // inputRef.current
+  })
 
-  // useEffect(function () {
-  //   setTimeout(() => {
-  //     console.log(editorRef.current.editor.editor.getBoundingClientRect())
-  //   }, 500)
 
-  // })
 
 
   return (
@@ -495,43 +629,11 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           tabValue, setTabValue,
           panelColor, setPanelColor,
           panelValue, setPanelValue, //text color panel
-          editorBlockKeyArr,setEditorBlockKeyArr,
-          gradientStyleArr: [
-           
-        
-          
-          
-            { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
-            { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
-            { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
-            { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
-            {
-              backgroundImage: "url(https://picsum.photos/600/300)",
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              color: "#666",
+          editorBlockKeyArr, setEditorBlockKeyArr,
+          darkToLightArr, setDarkToLightArr,
 
-            },
-            {
-              backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              color: "#666"
-            },
-            {
-              backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/502/700)",
-              backgroundSize: "cover",
-              backgroundRepeat: "no-repeat",
-              color: "#666"
-            },
-            { backgroundImage: "linear-gradient(to top, #e6b980 0%, #eacda3 100%)", color: "#fff" },
-            { backgroundImage: "linear-gradient(45deg, #ff758c 0%, #ff7eb3 100%)", color: "#fff" },
-            // { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#fff" },
-            // { backgroundImage: "linear-gradient(to top, #e6b980 0%, #eacda3 100%)", color: "#fff" },
-            // { backgroundImage: "linear-gradient(45deg, #ff758c 0%, #ff7eb3 100%)", color: "#fff" },
-            // { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#fff" },
-          ],
 
+          gradientStyleArr,
 
           //     imageArr, setImageArr,
           //  editorTop, setEditorTop,
@@ -601,6 +703,153 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
               labelPlacement="start"
             />
           </FormGroup>
+
+
+
+
+          <div className={theme.heightCss} style={{ display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center", backgroundColor: "pink" }}>
+            {isOverFlow && <IconButton
+              style={{
+                alignItems: "center",
+              }}
+              className={theme.sizeCss}
+              onClick={function () {
+
+                const toolBar = document.querySelector('div[style*="--toolbar--xx"]')
+
+
+
+                toolBar.scrollBy({
+                  top: 0,
+                  left: -Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
+                  behavior: 'smooth'
+                })
+
+              }}
+              onDoubleClick={function (e) {
+                const toolBar = document.querySelector('div[style*="--toolbar--xx"]')
+                toolBar.scrollBy({
+                  top: 0,
+                  left: -1000,
+                  behavior: 'smooth'
+                })
+              }}
+
+            >
+              <ChevronLeftIcon className={theme.sizeCss} />
+            </IconButton>
+            }
+
+
+            <DetectableOverflow //ref={inputRef} 
+
+              onChange={function (overflow) {
+                setIsOverFlow(overflow)
+
+                console.log(document.querySelector('div[style*="--toolbar--xx"]'))
+
+              }}
+              id="toolbar"
+
+              className={theme.heightCss}
+              style={{
+                display: "block",
+                backgroundColor: "wheat", whiteSpace: "nowrap",
+                // position: "relative",
+                //  flexGrow:1,
+                lineHeight: 1,
+                overflow: "hidden",
+                "--toolbar--xx": "--toolbar",
+                // minWidth:"18rem",
+
+                // width: "calc(100% - 4rem)"
+              }}>
+              {gradientStyleArr.map(function (item, index) {
+
+                //  if(index>=3){return null}
+
+
+
+                return (
+
+                  //   <IconButton
+                  //   style={{
+                  //     alignItems: "center",
+                  //   }}
+                  //   className={theme.sizeCss}
+
+
+                  // >
+                  //   <ChevronRightIcon className={theme.sizeCss} />
+                  // </IconButton>
+                  <div className={theme.sizeCss} contentEditable={false} key={index} style={{
+
+                    borderRadius: "1000px",
+                    display: "inline-block",
+                    verticalAlign: "top",
+                    ...item
+                  }}
+                    onClick={function (e) {
+                      e.preventDefault(); e.stopPropagation();
+                      // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
+                    }}
+                  />
+
+
+                )
+              })}
+            </DetectableOverflow>
+
+
+            {isOverFlow && <IconButton
+              style={{
+                alignItems: "center",
+              }}
+              className={theme.sizeCss}
+
+           
+
+              onClick={function (e) {
+
+
+                const toolBar = document.querySelector('div[style*="--toolbar--xx"]')
+                toolBar.scrollBy({
+                  top: 0,
+                  left: Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
+                  behavior: 'smooth'
+                })
+                // document.querySelector('div[style*="--toolbar--xx"]').scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
+              }}
+              onDoubleClick={function (e) {
+                const toolBar = document.querySelector('div[style*="--toolbar--xx"]')
+                toolBar.scrollBy({
+                  top: 0,
+                  left: 1000,
+                  behavior: 'smooth'
+                })
+              }}
+
+            >
+              <ChevronRightIcon className={theme.sizeCss} />
+            </IconButton>
+            }
+
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           <DraftEditor />
 
           <br /> <br />

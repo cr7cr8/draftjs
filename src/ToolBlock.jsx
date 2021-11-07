@@ -245,7 +245,7 @@ export default function ToolBlock(props) {
           //  className={theme.sizeCss}
           contentEditable={false}
           style={{
-            transform: "translateX(100%) translateY(-100%)",
+            transform: "translateX(0%) translateY(-100%)",
             position: "absolute",
             //  background: "skyblue",
             justifyContent: "center",
