@@ -123,9 +123,9 @@ const useStyles = makeStyles((theme) => {
     heightCss: ({ textSizeArr }) => {
       return {
         ...breakpointsAttribute(["height", multiplyArr(textSizeArr, 1)]),
-        "& button": {
-          verticalAlign: "unset"
-        }
+        // "& button": {
+        //   verticalAlign: "unset"
+        // }
       }
     },
 
@@ -596,7 +596,6 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
 
 
-  const [isOverFlow, setIsOverFlow] = useState(false)
 
 
   useEffect(function () {
@@ -707,137 +706,6 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
 
 
-          <div className={theme.heightCss} style={{ display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center", backgroundColor: "pink" }}>
-            {isOverFlow && <IconButton
-              style={{
-                alignItems: "center",
-              }}
-              className={theme.sizeCss}
-              onClick={function () {
-
-                const toolBar = document.querySelector('div[style*="--toolbar--xx"]')
-
-
-
-                toolBar.scrollBy({
-                  top: 0,
-                  left: -Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
-                  behavior: 'smooth'
-                })
-
-              }}
-              onDoubleClick={function (e) {
-                const toolBar = document.querySelector('div[style*="--toolbar--xx"]')
-                toolBar.scrollBy({
-                  top: 0,
-                  left: -1000,
-                  behavior: 'smooth'
-                })
-              }}
-
-            >
-              <ChevronLeftIcon className={theme.sizeCss} />
-            </IconButton>
-            }
-
-
-            <DetectableOverflow //ref={inputRef} 
-
-              onChange={function (overflow) {
-                setIsOverFlow(overflow)
-
-                console.log(document.querySelector('div[style*="--toolbar--xx"]'))
-
-              }}
-              id="toolbar"
-
-              className={theme.heightCss}
-              style={{
-                display: "block",
-                backgroundColor: "wheat", whiteSpace: "nowrap",
-                // position: "relative",
-                //  flexGrow:1,
-                lineHeight: 1,
-                overflow: "hidden",
-                "--toolbar--xx": "--toolbar",
-                // minWidth:"18rem",
-
-                // width: "calc(100% - 4rem)"
-              }}>
-              {gradientStyleArr.map(function (item, index) {
-
-                //  if(index>=3){return null}
-
-
-
-                return (
-
-                  //   <IconButton
-                  //   style={{
-                  //     alignItems: "center",
-                  //   }}
-                  //   className={theme.sizeCss}
-
-
-                  // >
-                  //   <ChevronRightIcon className={theme.sizeCss} />
-                  // </IconButton>
-                  <div className={theme.sizeCss} contentEditable={false} key={index} style={{
-
-                    borderRadius: "1000px",
-                    display: "inline-block",
-                    verticalAlign: "top",
-                    ...item
-                  }}
-                    onClick={function (e) {
-                      e.preventDefault(); e.stopPropagation();
-                      // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
-                    }}
-                  />
-
-
-                )
-              })}
-            </DetectableOverflow>
-
-
-            {isOverFlow && <IconButton
-              style={{
-                alignItems: "center",
-              }}
-              className={theme.sizeCss}
-
-           
-
-              onClick={function (e) {
-
-
-                const toolBar = document.querySelector('div[style*="--toolbar--xx"]')
-                toolBar.scrollBy({
-                  top: 0,
-                  left: Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
-                  behavior: 'smooth'
-                })
-                // document.querySelector('div[style*="--toolbar--xx"]').scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
-              }}
-              onDoubleClick={function (e) {
-                const toolBar = document.querySelector('div[style*="--toolbar--xx"]')
-                toolBar.scrollBy({
-                  top: 0,
-                  left: 1000,
-                  behavior: 'smooth'
-                })
-              }}
-
-            >
-              <ChevronRightIcon className={theme.sizeCss} />
-            </IconButton>
-            }
-
-          </div>
-
-
-
 
 
 
@@ -864,6 +732,10 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
 
 }
+
+
+
+
 
 
 export function withContext(Compo) {

@@ -43,12 +43,6 @@ import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
-
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import DetectableOverflow from "react-detectable-overflow"
-
-
 import Immutable from "immutable"
 
 
@@ -525,8 +519,12 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
       const endKey = selection.getEndKey()
       const endOffset = selection.getEndOffset()
+
       const text = editorState.getCurrentContent().getBlockForKey(startKey).getText();
+
+
       const sameLine = startKey === endKey
+
       const selectedText = sameLine ? text.substring(startOffset, endOffset) : text.substr(startOffset)
 
 
@@ -654,28 +652,6 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   }
 
 
-  return (
-
-    <div style={{
-      top, left,
-      display: "block",
-
-      zIndex: 1100,
-      width:"50vw",
-      backgroundColor:"oldlace",
-      position: "absolute",
-      transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
-      transitionProperty: "top ,left, opacity",
-      transitionDuration: "100ms",
-
-      overflow: "hidden",
-      whiteSpace: "nowrap",
-    }}>
-      <RenderColorPickerPanel basicButtonArr={basicButtonArr} />
-    </div>
-  )
-
-
 
   return (
 
@@ -689,7 +665,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         top, left,
         display: "block",
         //  display: (top === 0 && left === 0) ? "none" : "block",
-        //   display: editorState.getSelection().isCollapsed() ? "none" : "block",
+       //   display: editorState.getSelection().isCollapsed() ? "none" : "block",
         //  display: (top === 0 && left === 0) ? "block" : "block",
 
         //  opacity: editorState.getSelection().isCollapsed() ? 0 : 1,
@@ -714,7 +690,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       }}
     >
 
-      {/* <Tabs
+      <Tabs
 
         indicatorColor="primary"
         value={tabValue}
@@ -755,10 +731,10 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
           />
         })}
 
-      </Tabs> */}
+      </Tabs>
 
 
-      {/* <div key="slide"
+      <div key="slide"
 
         className={theme.panelHeightCss}
         style={{
@@ -801,7 +777,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
 
         })}
-      </div> */}
+      </div>
     </Paper>
 
 
@@ -835,156 +811,6 @@ function getChoosenBlocks(editorState) {
   })
 
   return allBlocks
-}
-
-
-
-function RenderColorPickerPanel({ basicButtonArr, ...props }) {
-
-  const theme = useTheme()
-  const { gradientStyleArr } = useContext(Context)
-  const [isOverFlow, setIsOverFlow] = useState(false)
-
-  const [randomId] = useState("--toolbar--" + Math.floor(Math.random() * 1000))
-
-  return (
-    <div className={theme.heightCss} style={{ maxWidth: "30vw", display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center", backgroundColor: "pink" }}>
-      {isOverFlow && <IconButton
-        style={{
-          alignItems: "center",
-        }}
-        className={theme.sizeCss}
-        contentEditable={false}
-        onClick={function () {
-
-          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
-
-          toolBar.scrollBy({
-            top: 0,
-            left: -Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
-            behavior: 'smooth'
-          })
-
-        }}
-        onDoubleClick={function (e) {
-          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
-          toolBar.scrollBy({
-            top: 0,
-            left: -1000,
-            behavior: 'smooth'
-          })
-        }}
-
-      >
-        <ChevronLeftIcon className={theme.sizeCss} />
-      </IconButton>
-      }
-
-      <DetectableOverflow //ref={inputRef} 
-
-        onChange={function (overflow) {
-          setIsOverFlow(overflow)
-
-          console.log(document.querySelector(`div[style*="${randomId}"]`))
-
-        }}
-
-
-        className={theme.heightCss}
-        style={{
-          display: "block",
-          backgroundColor: "wheat", whiteSpace: "nowrap",
-          // position: "relative",
-          //  flexGrow:1,
-          lineHeight: 1,
-          overflow: "hidden",
-          [randomId]: "--toolbar",
-          // minWidth:"18rem",
-
-          // width: "calc(100% - 4rem)"
-        }}>
-
-        {
-
-          basicButtonArr.map(function (item, index) {
-            return (
-              <IconButton className={theme.sizeCss} key={index} style={{verticalAlign:"top",}}>
-
-                {item.btn}
-              </IconButton>)
-          })
-
-        }
-
-
-        {/* {gradientStyleArr.map(function (item, index) {
-
-          //  if(index>=3){return null}
-
-
-
-          return (
-
-
-            <div className={theme.sizeCss} contentEditable={false} key={index} style={{
-
-              borderRadius: "1000px",
-              display: "inline-block",
-              verticalAlign: "top",
-              ...item
-            }}
-              onClick={function (e) {
-                e.preventDefault(); e.stopPropagation();
-                // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
-              }}
-            />
-
-
-          )
-        })} */}
-
-
-      </DetectableOverflow>
-
-
-
-      {isOverFlow && <IconButton
-        style={{
-          alignItems: "center",
-        }}
-        className={theme.sizeCss}
-
-        contentEditable={false}
-
-        onClick={function (e) {
-
-
-          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
-          toolBar.scrollBy({
-            top: 0,
-            left: Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
-            behavior: 'smooth'
-          })
-          // document.querySelector('div[style*="--toolbar--xx"]').scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
-        }}
-        onDoubleClick={function (e) {
-          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
-          toolBar.scrollBy({
-            top: 0,
-            left: 1000,
-            behavior: 'smooth'
-          })
-        }}
-
-      >
-        <ChevronRightIcon className={theme.sizeCss} />
-      </IconButton>
-      }
-
-    </div>
-  )
-
-
 }
 
 
@@ -1312,8 +1138,7 @@ class ColorDot_ extends React.Component {
 const ColorDot = withTheme(withContext(ColorDot_))
 
 
-
-function RenderColorPickerPanel0({ btnArr, basicButtonArr, panelColor, setPanelColor, ...props }) {
+function RenderColorPickerPanel({ btnArr, basicButtonArr, panelColor, setPanelColor, ...props }) {
 
   const theme = useTheme()
   //const [panelValue, setPanelValue] = useState(0)

@@ -27,12 +27,6 @@ import classNames from "classnames"
 import { light } from '@material-ui/core/styles/createPalette';
 import { lineHeight } from '@material-ui/system';
 
-
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import DetectableOverflow from "react-detectable-overflow"
-
-
 const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) => {
 
 
@@ -195,162 +189,162 @@ export default function EditingBlock(props) {
   const inputRef = useRef()
 
 
-  // const toolBar = useMemo(
-  //   () => (
-  //     <>
-  //       <input ref={inputRef} type="file" multiple={false} style={{ display: "none" }}
-  //         onClick={function (e) { e.currentTarget.value = null; }}
-  //         onChange={function (e) {
+  const toolBar = useMemo(
+    () => (
+      <>
+        <input ref={inputRef} type="file" multiple={false} style={{ display: "none" }}
+          onClick={function (e) { e.currentTarget.value = null; }}
+          onChange={function (e) {
 
-  //           if (e.currentTarget.files[0].name.trim().match(/\.(gif|jpe?g|tiff|png|webp|bmp)$/i)) {
+            if (e.currentTarget.files[0].name.trim().match(/\.(gif|jpe?g|tiff|png|webp|bmp)$/i)) {
 
-  //             const files = e.currentTarget.files
+              const files = e.currentTarget.files
 
-  //             const newImage = bgImageObj.current[files[0].name]
-  //             if (!newImage) {
+              const newImage = bgImageObj.current[files[0].name]
+              if (!newImage) {
 
-  //               bgImageObj.current = {
-  //                 ...bgImageObj.current,
-  //                 [files[0].name]: {
-  //                   backgroundImage: `url(${URL.createObjectURL(files[0])})`,
-  //                   backgroundSize: "cover",
-  //                   backgroundRepeat: "no-repeat",
-  //                 },
-  //               }
-  //             }
-  //             const pickedBgImage = bgImageObj.current[files[0].name]
+                bgImageObj.current = {
+                  ...bgImageObj.current,
+                  [files[0].name]: {
+                    backgroundImage: `url(${URL.createObjectURL(files[0])})`,
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                  },
+                }
+              }
+              const pickedBgImage = bgImageObj.current[files[0].name]
 
-  //             // console.log(pickedBgImage)
-  //             // setEditingBlockData(editorState, setEditorState)
+              // console.log(pickedBgImage)
+              // setEditingBlockData(editorState, setEditorState)
 
-  //             let allBlocks = Modifier.setBlockType(editorState.getCurrentContent(), editorState.getSelection(), "editingBlock")
-  //             allBlocks = Modifier.mergeBlockData(allBlocks, selection, Immutable.Map({ colorBlock: true, ...pickedBgImage, horizontal: 50, vertical: 50, }))
-  //             let es = EditorState.push(
-  //               editorState,
-  //               allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
-  //               "change-block-type",
-  //             )
-  //             es = EditorState.forceSelection(es, selection)
-
-
-
-  //             setEditorState(es)
-
-  //             //   markingColorBlock(e, editorState, setEditorState, updatedImage)
-
-  //             // setTimeout(() => {
-  //             //   editorRef.current.focus()
-  //             // }, 100);
-
-  //           }
-
-  //         }}
-  //       />
-
-
-  //       <Collapse
-  //         contentEditable={false}
-  //         in={hasLoaded && isStartKeyIn && isEndKeyIn}
-  //         timeout={{ enter: 300, exit: 0 }}
-
-  //         className={collapseCss}
-
-  //       >
+              let allBlocks = Modifier.setBlockType(editorState.getCurrentContent(), editorState.getSelection(), "editingBlock")
+              allBlocks = Modifier.mergeBlockData(allBlocks, selection, Immutable.Map({ colorBlock: true, ...pickedBgImage, horizontal: 50, vertical: 50, }))
+              let es = EditorState.push(
+                editorState,
+                allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
+                "change-block-type",
+              )
+              es = EditorState.forceSelection(es, selection)
 
 
 
+              setEditorState(es)
 
-  //         <div style={{ display: "flex", backgroundColor: "orange" }}>
-  //           <Zoom in={showSettingBar} unmountOnExit={true} timeout={{ enter: hasLoaded ? 0 : 300, exit: 300 }} >
-  //             <IconButton className={theme.sizeCss}
-  //               contentEditable={false}
+              //   markingColorBlock(e, editorState, setEditorState, updatedImage)
 
-  //               onClick={function (e) {
-  //                 e.preventDefault(); e.stopPropagation()
+              // setTimeout(() => {
+              //   editorRef.current.focus()
+              // }, 100);
 
+            }
 
-
-  //                 markingImageBlock(editorState.getSelection().getStartKey())
-  //                 //  setShowColorPanel(pre => !pre)
-  //               }}
-  //             >
-  //               <InsertPhotoOutlinedIcon className={theme.sizeCss} />
-  //             </IconButton>
-  //           </Zoom>
-
-  //           <Zoom in={showSettingBar} unmountOnExit={true} timeout={{ enter: hasLoaded ? 0 : 300, exit: 300 }}  >
-  //             <IconButton className={theme.sizeCss}
-  //               contentEditable={false}
-
-  //               onClick={function (e) {
-  //                 e.preventDefault(); e.stopPropagation();
-
-  //                 inputRef.current.click()
+          }}
+        />
 
 
+        <Collapse
+          contentEditable={false}
+          in={hasLoaded && isStartKeyIn && isEndKeyIn}
+          timeout={{ enter: 300, exit: 0 }}
 
-  //               }}
-  //             >
-  //               <ImageTwoToneIcon className={theme.sizeCss} />
-  //             </IconButton>
-  //           </Zoom>
-  //         </div>
+          className={collapseCss}
 
-
-
-  //         <Tabs
-
-  //           className={toolBarCss}
-
-  //           indicatorColor="primary"
-  //           value={1}
-  //           selectionFollowsFocus={true}
-  //           //onChange={handleChange}
-  //           indicatorColor="primary"
-  //           textColor="primary"
-  //           // variant="fullWidth"
-
-  //           variant="scrollable"
-  //           scrollButtons="auto"
-  //           style={{
-  //             // display: "inline-block",
-  //             // backgroundColor: "lightyellow" 
-
-  //           }}
-  //         >
-
-  //           {gradientStyleArr.map(function (item, index) {
-  //             return (
-
-  //               <Tab key={index}
-  //                 value={index}
-  //                 icon={
-  //                   <Grow key={index} in={hasLoaded && displayToolBar} in={true} direction="left"
-  //                     timeout={{ enter: hasLoaded ? 0 : 200 * index + 100, exit: 100 * (gradientStyleArr.length - index) }}
-  //                     unmountOnExit={true}>
-
-  //                     <div className={theme.sizeCss} contentEditable={false} style={{ borderRadius: "1000px", ...item }}
-  //                       onClick={function (e) {
-  //                         e.preventDefault(); e.stopPropagation();
-  //                         // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
+        >
 
 
 
 
-  //                       }}
-  //                     />
-  //                   </Grow>
-  //                 }
-  //               />
-  //             )
-  //           })}
-  //         </Tabs>
+          <div style={{ display: "flex", backgroundColor: "orange" }}>
+            <Zoom in={showSettingBar} unmountOnExit={true} timeout={{ enter: hasLoaded ? 0 : 300, exit: 300 }} >
+              <IconButton className={theme.sizeCss}
+                contentEditable={false}
 
-  //       </Collapse>
-  //     </>
-  //   ),
-  //   [showSettingBar, hasLoaded, displayToolBar, inputRef, bgImageObj, editorState]
-  // )
+                onClick={function (e) {
+                  e.preventDefault(); e.stopPropagation()
+
+
+
+                  markingImageBlock(editorState.getSelection().getStartKey())
+                  //  setShowColorPanel(pre => !pre)
+                }}
+              >
+                <InsertPhotoOutlinedIcon className={theme.sizeCss} />
+              </IconButton>
+            </Zoom>
+
+            <Zoom in={showSettingBar} unmountOnExit={true} timeout={{ enter: hasLoaded ? 0 : 300, exit: 300 }}  >
+              <IconButton className={theme.sizeCss}
+                contentEditable={false}
+
+                onClick={function (e) {
+                  e.preventDefault(); e.stopPropagation();
+
+                  inputRef.current.click()
+
+
+
+                }}
+              >
+                <ImageTwoToneIcon className={theme.sizeCss} />
+              </IconButton>
+            </Zoom>
+          </div>
+
+
+
+          <Tabs
+
+            className={toolBarCss}
+
+            indicatorColor="primary"
+            value={1}
+            selectionFollowsFocus={true}
+            //onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            // variant="fullWidth"
+
+            variant="scrollable"
+            scrollButtons="auto"
+            style={{
+              // display: "inline-block",
+              // backgroundColor: "lightyellow" 
+
+            }}
+          >
+
+            {gradientStyleArr.map(function (item, index) {
+              return (
+
+                <Tab key={index}
+                  value={index}
+                  icon={
+                    <Grow key={index} in={hasLoaded && displayToolBar} in={true} direction="left"
+                      timeout={{ enter: hasLoaded ? 0 : 200 * index + 100, exit: 100 * (gradientStyleArr.length - index) }}
+                      unmountOnExit={true}>
+
+                      <div className={theme.sizeCss} contentEditable={false} style={{ borderRadius: "1000px", ...item }}
+                        onClick={function (e) {
+                          e.preventDefault(); e.stopPropagation();
+                          // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
+
+
+
+
+                        }}
+                      />
+                    </Grow>
+                  }
+                />
+              )
+            })}
+          </Tabs>
+
+        </Collapse>
+      </>
+    ),
+    [showSettingBar, hasLoaded, displayToolBar, inputRef, bgImageObj, editorState]
+  )
 
 
   useEffect(function () {
@@ -462,8 +456,8 @@ export default function EditingBlock(props) {
       })}
 
 
-      <ToolBar />
-      {/* {toolBar} */}
+
+      {toolBar}
       {/* </div> */}
     </div >
   )
@@ -471,141 +465,6 @@ export default function EditingBlock(props) {
 
 
 }
-
-
-function ToolBar() {
-
-  const theme = useTheme()
-  const { gradientStyleArr } = useContext(Context)
-  const [isOverFlow, setIsOverFlow] = useState(false)
-
-  const [randomId] = useState("--toolbar--"+Math.floor(Math.random()*1000))
-
-  return (
-    <div className={theme.heightCss} style={{ display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center", backgroundColor: "pink" }}>
-      {isOverFlow && <IconButton
-        style={{
-          alignItems: "center",
-        }}
-        className={theme.sizeCss}
-        contentEditable={false}
-        onClick={function () {
-
-          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
-
-          toolBar.scrollBy({
-            top: 0,
-            left: -Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
-            behavior: 'smooth'
-          })
-
-        }}
-        onDoubleClick={function (e) {
-          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
-          toolBar.scrollBy({
-            top: 0,
-            left: -1000,
-            behavior: 'smooth'
-          })
-        }}
-
-      >
-        <ChevronLeftIcon className={theme.sizeCss} />
-      </IconButton>
-      }
-
-      <DetectableOverflow //ref={inputRef} 
-
-        onChange={function (overflow) {
-          setIsOverFlow(overflow)
-
-          console.log(document.querySelector(`div[style*="${randomId}"]`))
-
-        }}
-     
-
-        className={theme.heightCss}
-        style={{
-          display: "block",
-          backgroundColor: "wheat", whiteSpace: "nowrap",
-          // position: "relative",
-          //  flexGrow:1,
-          lineHeight: 1,
-          overflow: "hidden",
-          [randomId]: "--toolbar",
-          // minWidth:"18rem",
-
-          // width: "calc(100% - 4rem)"
-        }}>
-        {gradientStyleArr.map(function (item, index) {
-
-          //  if(index>=3){return null}
-
-
-
-          return (
-
-
-            <div className={theme.sizeCss} contentEditable={false} key={index} style={{
-
-              borderRadius: "1000px",
-              display: "inline-block",
-              verticalAlign: "top",
-              ...item
-            }}
-              onClick={function (e) {
-                e.preventDefault(); e.stopPropagation();
-                // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
-              }}
-            />
-
-
-          )
-        })}
-      </DetectableOverflow>
-
-
-
-      {isOverFlow && <IconButton
-        style={{
-          alignItems: "center",
-        }}
-        className={theme.sizeCss}
-
-        contentEditable={false}
-
-        onClick={function (e) {
-
-
-          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
-          toolBar.scrollBy({
-            top: 0,
-            left: Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
-            behavior: 'smooth'
-          })
-          // document.querySelector('div[style*="--toolbar--xx"]').scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
-        }}
-        onDoubleClick={function (e) {
-          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
-          toolBar.scrollBy({
-            top: 0,
-            left: 1000,
-            behavior: 'smooth'
-          })
-        }}
-
-      >
-        <ChevronRightIcon className={theme.sizeCss} />
-      </IconButton>
-      }
-
-    </div>
-  )
-
-
-}
-
-
 
 
 function setEditingBlockData() {

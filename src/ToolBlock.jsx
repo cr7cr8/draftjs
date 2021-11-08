@@ -301,6 +301,9 @@ export default function ToolBlock(props) {
 
 
 
+
+
+
 export function SettingBar({ setShowSettingBar, markingImageBlock, markingColorBlock, blockKey, editorBlockRef, ...props }) {
 
 
