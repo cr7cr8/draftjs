@@ -1,5 +1,7 @@
 ### Dev17
  
+horziotal scroll pannel is done
+
 ### Dev16
 text color picker is done
 
