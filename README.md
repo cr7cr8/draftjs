@@ -1,5 +1,10 @@
+
+### Dev18
+remaking fontbar and toolbar
+
 ### Dev17
- 
+ horizontal scroll panel template made in context
+
 ### Dev16
 text color picker is done
 
