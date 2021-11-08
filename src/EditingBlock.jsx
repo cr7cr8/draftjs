@@ -188,6 +188,8 @@ export default function EditingBlock(props) {
 
   const ediotrBlockCss = function () { return darkToLightArr.includes(headKey) ? "editor-block-dark-light" : lightToDarkCss }()
 
+
+
   const settingIconCss = classNames({
     "rotate2": true,
   })
@@ -195,162 +197,6 @@ export default function EditingBlock(props) {
   const inputRef = useRef()
 
 
-  // const toolBar = useMemo(
-  //   () => (
-  //     <>
-  //       <input ref={inputRef} type="file" multiple={false} style={{ display: "none" }}
-  //         onClick={function (e) { e.currentTarget.value = null; }}
-  //         onChange={function (e) {
-
-  //           if (e.currentTarget.files[0].name.trim().match(/\.(gif|jpe?g|tiff|png|webp|bmp)$/i)) {
-
-  //             const files = e.currentTarget.files
-
-  //             const newImage = bgImageObj.current[files[0].name]
-  //             if (!newImage) {
-
-  //               bgImageObj.current = {
-  //                 ...bgImageObj.current,
-  //                 [files[0].name]: {
-  //                   backgroundImage: `url(${URL.createObjectURL(files[0])})`,
-  //                   backgroundSize: "cover",
-  //                   backgroundRepeat: "no-repeat",
-  //                 },
-  //               }
-  //             }
-  //             const pickedBgImage = bgImageObj.current[files[0].name]
-
-  //             // console.log(pickedBgImage)
-  //             // setEditingBlockData(editorState, setEditorState)
-
-  //             let allBlocks = Modifier.setBlockType(editorState.getCurrentContent(), editorState.getSelection(), "editingBlock")
-  //             allBlocks = Modifier.mergeBlockData(allBlocks, selection, Immutable.Map({ colorBlock: true, ...pickedBgImage, horizontal: 50, vertical: 50, }))
-  //             let es = EditorState.push(
-  //               editorState,
-  //               allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
-  //               "change-block-type",
-  //             )
-  //             es = EditorState.forceSelection(es, selection)
-
-
-
-  //             setEditorState(es)
-
-  //             //   markingColorBlock(e, editorState, setEditorState, updatedImage)
-
-  //             // setTimeout(() => {
-  //             //   editorRef.current.focus()
-  //             // }, 100);
-
-  //           }
-
-  //         }}
-  //       />
-
-
-  //       <Collapse
-  //         contentEditable={false}
-  //         in={hasLoaded && isStartKeyIn && isEndKeyIn}
-  //         timeout={{ enter: 300, exit: 0 }}
-
-  //         className={collapseCss}
-
-  //       >
-
-
-
-
-  //         <div style={{ display: "flex", backgroundColor: "orange" }}>
-  //           <Zoom in={showSettingBar} unmountOnExit={true} timeout={{ enter: hasLoaded ? 0 : 300, exit: 300 }} >
-  //             <IconButton className={theme.sizeCss}
-  //               contentEditable={false}
-
-  //               onClick={function (e) {
-  //                 e.preventDefault(); e.stopPropagation()
-
-
-
-  //                 markingImageBlock(editorState.getSelection().getStartKey())
-  //                 //  setShowColorPanel(pre => !pre)
-  //               }}
-  //             >
-  //               <InsertPhotoOutlinedIcon className={theme.sizeCss} />
-  //             </IconButton>
-  //           </Zoom>
-
-  //           <Zoom in={showSettingBar} unmountOnExit={true} timeout={{ enter: hasLoaded ? 0 : 300, exit: 300 }}  >
-  //             <IconButton className={theme.sizeCss}
-  //               contentEditable={false}
-
-  //               onClick={function (e) {
-  //                 e.preventDefault(); e.stopPropagation();
-
-  //                 inputRef.current.click()
-
-
-
-  //               }}
-  //             >
-  //               <ImageTwoToneIcon className={theme.sizeCss} />
-  //             </IconButton>
-  //           </Zoom>
-  //         </div>
-
-
-
-  //         <Tabs
-
-  //           className={toolBarCss}
-
-  //           indicatorColor="primary"
-  //           value={1}
-  //           selectionFollowsFocus={true}
-  //           //onChange={handleChange}
-  //           indicatorColor="primary"
-  //           textColor="primary"
-  //           // variant="fullWidth"
-
-  //           variant="scrollable"
-  //           scrollButtons="auto"
-  //           style={{
-  //             // display: "inline-block",
-  //             // backgroundColor: "lightyellow" 
-
-  //           }}
-  //         >
-
-  //           {gradientStyleArr.map(function (item, index) {
-  //             return (
-
-  //               <Tab key={index}
-  //                 value={index}
-  //                 icon={
-  //                   <Grow key={index} in={hasLoaded && displayToolBar} in={true} direction="left"
-  //                     timeout={{ enter: hasLoaded ? 0 : 200 * index + 100, exit: 100 * (gradientStyleArr.length - index) }}
-  //                     unmountOnExit={true}>
-
-  //                     <div className={theme.sizeCss} contentEditable={false} style={{ borderRadius: "1000px", ...item }}
-  //                       onClick={function (e) {
-  //                         e.preventDefault(); e.stopPropagation();
-  //                         // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
-
-
-
-
-  //                       }}
-  //                     />
-  //                   </Grow>
-  //                 }
-  //               />
-  //             )
-  //           })}
-  //         </Tabs>
-
-  //       </Collapse>
-  //     </>
-  //   ),
-  //   [showSettingBar, hasLoaded, displayToolBar, inputRef, bgImageObj, editorState]
-  // )
 
 
   useEffect(function () {
@@ -462,7 +308,9 @@ export default function EditingBlock(props) {
       })}
 
 
-      <ToolBar />
+      <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
+        ediotrBlockCss={ediotrBlockCss}
+      />
       {/* {toolBar} */}
       {/* </div> */}
     </div >
@@ -473,16 +321,18 @@ export default function EditingBlock(props) {
 }
 
 
-function ToolBar() {
+function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBlockCss }) {
 
   const theme = useTheme()
   const { gradientStyleArr } = useContext(Context)
   const [isOverFlow, setIsOverFlow] = useState(false)
 
-  const [randomId] = useState("--toolbar--"+Math.floor(Math.random()*1000))
+  const [randomId] = useState("--toolbar--" + Math.floor(Math.random() * 1000))
+
+  const [toolBarLoaded, setToolBarLoaded] = useState(false)
 
   return (
-    <div className={theme.heightCss} style={{ display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center", backgroundColor: "pink" }}>
+    <div className={theme.heightCss} style={{ display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center" }}>
       {isOverFlow && <IconButton
         style={{
           alignItems: "center",
@@ -514,6 +364,41 @@ function ToolBar() {
       </IconButton>
       }
 
+
+      <IconButton className={theme.sizeCss}
+        contentEditable={false}
+
+        onClick={function (e) {
+          e.preventDefault(); e.stopPropagation()
+
+
+
+          markingImageBlock(editorState.getSelection().getStartKey())
+          //  setShowColorPanel(pre => !pre)
+        }}
+      >
+        <InsertPhotoOutlinedIcon className={theme.sizeCss} />
+      </IconButton>
+
+
+
+      <IconButton className={theme.sizeCss}
+        contentEditable={false}
+
+        onClick={function (e) {
+          e.preventDefault(); e.stopPropagation();
+
+          inputRef.current.click()
+
+
+
+        }}
+      >
+        <ImageTwoToneIcon className={theme.sizeCss} />
+      </IconButton>
+
+
+
       <DetectableOverflow //ref={inputRef} 
 
         onChange={function (overflow) {
@@ -522,12 +407,13 @@ function ToolBar() {
           console.log(document.querySelector(`div[style*="${randomId}"]`))
 
         }}
-     
+
 
         className={theme.heightCss}
         style={{
           display: "block",
-          backgroundColor: "wheat", whiteSpace: "nowrap",
+          //    backgroundColor: "wheat", 
+          whiteSpace: "nowrap",
           // position: "relative",
           //  flexGrow:1,
           lineHeight: 1,
@@ -541,26 +427,63 @@ function ToolBar() {
 
           //  if(index>=3){return null}
 
+          // if (!hasLoaded) {
+          //   return (
 
+          //     <div className={theme.sizeCss} contentEditable={false} key={index} style={{
+
+          //       borderRadius: "1000px",
+          //       display: "inline-block",
+          //       verticalAlign: "top",
+          //       ...item
+          //     }}
+          //       onClick={function (e) {
+          //         e.preventDefault(); e.stopPropagation();
+          //         // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
+          //       }}
+          //     />
+          //   )
+
+          // }
+          // else {
 
           return (
 
+            <Grow in={true} key={index} direction="left"
+              // timeout={{
+              //   enter: ediotrBlockCss !== "editor-block-dark-light" && hasLoaded ? (200 * index + 100) : 0
+              // }}
+              timeout={{
+                enter: hasLoaded ? 0 : Math.floor((index+1) / gradientStyleArr.length * (gradientStyleArr.length/9*700))
 
-            <div className={theme.sizeCss} contentEditable={false} key={index} style={{
-
-              borderRadius: "1000px",
-              display: "inline-block",
-              verticalAlign: "top",
-              ...item
-            }}
-              onClick={function (e) {
-                e.preventDefault(); e.stopPropagation();
-                // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
+            //  enter: hasLoaded ? 0 : 3000
               }}
-            />
 
+              onEntered={function () {
+                if (gradientStyleArr.length === index + 1) {
+
+                  setToolBarLoaded(true)
+                }
+              }}
+            >
+              <div className={theme.sizeCss} contentEditable={false} key={index} style={{
+
+                borderRadius: "1000px",
+                display: "inline-block",
+                verticalAlign: "top",
+                ...item
+              }}
+                onClick={function (e) {
+                  e.preventDefault(); e.stopPropagation();
+                  // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
+                }}
+
+              />
+            </Grow>
 
           )
+          //}
+
         })}
       </DetectableOverflow>
 

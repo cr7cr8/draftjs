@@ -653,7 +653,6 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
   }
 
-
   return (
 
     <div style={{
@@ -661,8 +660,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       display: "block",
 
       zIndex: 1100,
-      width:"50vw",
-      backgroundColor:"oldlace",
+    
+    
       position: "absolute",
       transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
       transitionProperty: "top ,left, opacity",
@@ -674,8 +673,6 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       <RenderColorPickerPanel basicButtonArr={basicButtonArr} />
     </div>
   )
-
-
 
   return (
 
@@ -804,39 +801,9 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       </div> */}
     </Paper>
 
-
   )
 
 })
-
-
-
-
-function getChoosenBlocks(editorState) {
-
-  const startKey = editorState.getSelection().getStartKey()
-  const endKey = editorState.getSelection().getEndKey()
-
-  let shouldReturn = false;
-  const allBlocks = editorState.getCurrentContent().getBlockMap().filter(item => {
-
-    if (item.getKey() === startKey) {
-      shouldReturn = true
-      return true
-    }
-    else if (item.getKey() === endKey) {
-      shouldReturn = false
-      //  return true
-      return Boolean(item.getText())
-    }
-    else {
-      return startKey === endKey ? false : shouldReturn
-    }
-  })
-
-  return allBlocks
-}
-
 
 
 function RenderColorPickerPanel({ basicButtonArr, ...props }) {
@@ -905,7 +872,6 @@ function RenderColorPickerPanel({ basicButtonArr, ...props }) {
         }}>
 
         {
-
           basicButtonArr.map(function (item, index) {
             return (
               <IconButton className={theme.sizeCss} key={index} style={{verticalAlign:"top",}}>
@@ -913,19 +879,13 @@ function RenderColorPickerPanel({ basicButtonArr, ...props }) {
                 {item.btn}
               </IconButton>)
           })
-
         }
-
 
         {/* {gradientStyleArr.map(function (item, index) {
 
           //  if(index>=3){return null}
 
-
-
           return (
-
-
             <div className={theme.sizeCss} contentEditable={false} key={index} style={{
 
               borderRadius: "1000px",
@@ -987,6 +947,30 @@ function RenderColorPickerPanel({ basicButtonArr, ...props }) {
 
 }
 
+function getChoosenBlocks(editorState) {
+
+  const startKey = editorState.getSelection().getStartKey()
+  const endKey = editorState.getSelection().getEndKey()
+
+  let shouldReturn = false;
+  const allBlocks = editorState.getCurrentContent().getBlockMap().filter(item => {
+
+    if (item.getKey() === startKey) {
+      shouldReturn = true
+      return true
+    }
+    else if (item.getKey() === endKey) {
+      shouldReturn = false
+      //  return true
+      return Boolean(item.getText())
+    }
+    else {
+      return startKey === endKey ? false : shouldReturn
+    }
+  })
+
+  return allBlocks
+}
 
 
 export function taggingFontBar(editorState) {
