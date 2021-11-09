@@ -8,7 +8,7 @@ import Editor from "draft-js-plugins-editor";
 import Immutable from 'immutable';
 
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
-import { Typography, IconButton, Tabs, Tab, Button, ButtonGroup, Container, Paper, Popover, Avatar, Box, Chip, Grow, Zoom, Slide, Collapse } from "@material-ui/core";
+import { Typography, IconButton, Tabs, Tab, Button, ButtonGroup, Container, Paper, Popover, Avatar, Box, Chip, Grow, Fade, Zoom, Slide, Collapse } from "@material-ui/core";
 
 
 
@@ -160,6 +160,9 @@ export default function EditingBlock(props) {
   const hasFocus = selection.getHasFocus()
   const isCollapsed = selection.isCollapsed()
 
+
+  const isFocusIn = hasFocus && isStartKeyIn && isEndKeyIn
+
   const displayToolBar = hasFocus && isStartKeyIn && isEndKeyIn
   //const arr = [props.children[0]]
   //let preItemValue = props.children[0].props.children.props.block.getData().toObject().backgroundImage
@@ -307,10 +310,14 @@ export default function EditingBlock(props) {
 
       })}
 
-      <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
-        ediotrBlockCss={ediotrBlockCss} anmimationType={null}
-      />
 
+      <Collapse in={isFocusIn} unmountOnExit={true}  contentEditable={false}>
+    
+          <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
+            ediotrBlockCss={ediotrBlockCss} anmimationType={null}
+          />
+       
+      </Collapse>
 
     </div >
 
@@ -422,7 +429,7 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
               anmimationType || React.Fragment,
               {
                 key: index,
-          
+
                 ...anmimationType && {
                   in: true, unmountOnExit: true,
                   timeout: { enter: hasLoaded ? 0 : Math.floor((index + 1) / gradientStyleArr.length * (gradientStyleArr.length / 9 * 700)) },
