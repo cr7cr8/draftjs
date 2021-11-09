@@ -222,7 +222,7 @@ export default function EditingBlock(props) {
   return (
 
     <div className={ediotrBlockCss}>
-
+  
       {props.children.map((item, index, allChildren) => {
 
         const block = item.props.children.props.block
@@ -236,7 +236,7 @@ export default function EditingBlock(props) {
                 //  className={theme.sizeCss}
                 contentEditable={false}
                 style={{
-                  transform: "translateX(0%) translateY(-100%)",
+                  transform: "translateX(100%) translateY(-100%)",
                   position: "absolute",
                   //  background: "skyblue",
                   justifyContent: "center",
@@ -280,7 +280,7 @@ export default function EditingBlock(props) {
                       }
 
                     }
-
+                    //editorState.getCurentConent().getN
                     // markingColorBlock()
                     // markingColorBlock(e, editorState, setEditorState, {}, blockKey)
 
@@ -307,13 +307,12 @@ export default function EditingBlock(props) {
 
       })}
 
+
       <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
-        ediotrBlockCss={ediotrBlockCss} anmimationType={null}
+        ediotrBlockCss={ediotrBlockCss}
       />
-
-
+  
     </div >
-
   )
 
 
@@ -334,10 +333,7 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
 
 
   return (
-    <div className={theme.heightCss} style={{ display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center" }}
-
-      contentEditable={false}
-    >
+    <div className={theme.heightCss} style={{ display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center" }}>
       {isOverFlow && <IconButton
         style={{
           alignItems: "center",
@@ -399,63 +395,124 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
         <ImageTwoToneIcon className={theme.sizeCss} />
       </IconButton>
 
-      <DetectableOverflow
+      <DetectableOverflow //ref={inputRef} 
 
-        onChange={function (overflow) { setIsOverFlow(overflow) }}
+        onChange={function (overflow) {
+          setIsOverFlow(overflow)
+
+       //   console.log(document.querySelector(`div[style*="${randomId}"]`))
+
+        }}
+
 
         className={theme.heightCss}
         style={{
           display: "block",
-          // backgroundColor: "wheat", 
+          //    backgroundColor: "wheat", 
           whiteSpace: "nowrap",
-
+          // position: "relative",
+          //  flexGrow:1,
           lineHeight: 1,
           overflow: "hidden",
           [randomId]: "--toolbar",
+          // minWidth:"18rem",
 
+          // width: "calc(100% - 4rem)"
         }}>
         {gradientStyleArr.map(function (item, index) {
 
 
           return (
+
+
             React.createElement(
               anmimationType || React.Fragment,
+
               {
                 key: index,
-          
                 ...anmimationType && {
-                  in: true, unmountOnExit: true,
-                  timeout: { enter: hasLoaded ? 0 : Math.floor((index + 1) / gradientStyleArr.length * (gradientStyleArr.length / 9 * 700)) },
-                  contentEditable: false,
-                  style: {
-                    userSelect: "none",
-                  }
+                  in: true,
+                  unmountOnExit: true,
+                  timeout: { enter: hasLoaded ? 0 : Math.floor((index + 1) / gradientStyleArr.length * (gradientStyleArr.length / 9 * 700)) }
                 },
               }
               ,
-              <div className={theme.sizeCss}
-                contentEditable={false}
-
-                key={index}
-                style={{
-                  borderRadius: "1000px",
-                  display: "inline-block",
-                  verticalAlign: "top",
-                  userSelect: "none",
-                  ...item
-                }}
-
-                onMouseDown={function (e) {
-                  e.preventDefault(); e.stopPropagation();
-
-                }}
+              <div className={theme.sizeCss} contentEditable={false} key={index} style={{
+                borderRadius: "1000px",
+                display: "inline-block",
+                verticalAlign: "top",
+                ...item
+              }}
                 onClick={function (e) {
                   e.preventDefault(); e.stopPropagation();
                   // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
                 }}
               />
             )
+
+
+
+            // <div className={theme.sizeCss} contentEditable={false} key={index} style={{
+            //   borderRadius: "1000px",
+            //   display: "inline-block",
+            //   verticalAlign: "top",
+            //   ...item
+            // }}
+            //   onClick={function (e) {
+            //     e.preventDefault(); e.stopPropagation();
+            //     // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
+            //   }}
+            // />
+
+
+            // <ConditionWrapper
+
+            //   shouldWrap={!hasLoaded}
+            //   WrapCompo={
+            //     function ({ children }) {
+            //       return (
+            //         <Zoom in={true} key={index}
+            //           timeout={{
+            //             enter: Math.floor((index + 1) / gradientStyleArr.length * (gradientStyleArr.length / 9 * 700))
+            //           }}
+            //         >{children}</Zoom>
+            //       )
+            //     }}
+            // >
+            //   <div className={theme.sizeCss} contentEditable={false} key={index} style={{
+            //     borderRadius: "1000px",
+            //     display: "inline-block",
+            //     verticalAlign: "top",
+            //     ...item
+            //   }}
+            //     onClick={function (e) {
+            //       e.preventDefault(); e.stopPropagation();
+            //       // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
+            //     }}
+            //   />
+            // </ConditionWrapper>
+
+
+            // <Zoom in={true} key={index} direction="right" unmountOnExit={true}
+            //   timeout={{
+            //     enter: hasLoaded ? 0 : Math.floor((index + 1) / gradientStyleArr.length * (gradientStyleArr.length / 9 * 700))
+            //   }}
+            // >
+            //   <div className={theme.sizeCss} contentEditable={false} key={index} style={{
+            //     borderRadius: "1000px",
+            //     display: "inline-block",
+            //     verticalAlign: "top",
+            //     ...item
+            //   }}
+            //     onClick={function (e) {
+            //       e.preventDefault(); e.stopPropagation();
+            //       // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
+            //     }}
+            //   />
+            // </Zoom>
+
           )
+          //}
 
         })}
       </DetectableOverflow >
@@ -506,6 +563,20 @@ function setEditingBlockData() {
 
 }
 
+// const SetEditingBlockData = function () {
+
+//   console.log(".....")
+
+//     return null
+//   }
+
+
+// const setEditingBlockData = withContext(function AA(props) {
+
+// console.log(props)
+
+//   return <></>
+// })
 
 
 

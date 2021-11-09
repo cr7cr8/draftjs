@@ -39,8 +39,6 @@ import ImageTwoToneIcon from '@material-ui/icons/ImageTwoTone';
 
 
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
-import InvertColorsOffOutlinedIcon from '@material-ui/icons/InvertColorsOffOutlined';
 
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -206,15 +204,11 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   function changeInlineStyle(e, fontStr) {
     e.preventDefault(); e.stopPropagation();
 
-
-
     const selection = editorState.getSelection()
     const isCollapsed = selection.isCollapsed()
 
 
-    if (isCollapsed) { return }
-
-    if (fontStr === "SMALL" || fontStr === "LARGE") {
+    if (!isCollapsed) {
       const allBlocks = Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), fontStr === "LARGE" ? "SMALL" : "LARGE")
 
       let es = EditorState.push(
@@ -227,43 +221,15 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       es = RichUtils.toggleInlineStyle(es, fontStr);
       es = EditorState.forceSelection(es, selection)
       setEditorState(es);
-      setTimeout(() => {
-        editorRef.current && editorRef.current.focus()
-      }, 0);
-
-    }
-
-    else if (fontStr[0] == "#") {
-
-      let allBlocks = editorState.getCurrentContent()
-      const selection = editorState.getSelection()
-
-      colorStringArr.forEach(color => {
-
-        allBlocks = Modifier.removeInlineStyle(allBlocks, selection, color)
-
-      })
-
-      let es = EditorState.push(
-        editorState,
-        allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
-        "change-inline-style",
-      )
-
-
-      es = RichUtils.toggleInlineStyle(es, fontStr);
-      es = EditorState.forceSelection(es, selection)
-      setEditorState(es);
-      setTimeout(() => {
-        editorRef.current && editorRef.current.focus()
-      }, 0);
+      // setTimeout(() => {
+      //   editorRef.current && editorRef.current.focus()
+      // }, 0);
 
     }
 
   }
 
   function clearInlineStyle(e) {
-
     e.preventDefault(); e.stopPropagation();
     let allBlocks = editorState.getCurrentContent();
     let selection = editorState.getSelection();
@@ -291,33 +257,6 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     //      editorRef.current && editorRef.current.focus()
     // }, 0);
   }
-
-  function clearInlineColor(e) {
-
-    e.preventDefault(); e.stopPropagation();
-    let allBlocks = editorState.getCurrentContent();
-    let selection = editorState.getSelection();
-
-
-
-    colorStringArr.forEach(colorString => {
-      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, colorString)
-    })
-
-
-    let es = EditorState.push(
-      editorState,
-      allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
-      "change-inline-style",
-    )
-    es = EditorState.forceSelection(es, selection)
-    setEditorState(es);
-    setTimeout(() => {
-      editorRef.current && editorRef.current.focus()
-    }, 0);
-  }
-
-
 
   function changeBlockData(e, dirStr) {
 
@@ -353,9 +292,9 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   const categoryBtnArr = [
 
     <TitleIcon className={theme.sizeCss} />,
-    // <FormatColorTextIcon className={theme.sizeCss} />,
 
-     tabValue !== 1 ? <FormatColorTextIcon className={theme.sizeCss} /> : <InvertColorsOffOutlinedIcon className={theme.sizeCss} />,
+
+    <FormatColorTextIcon className={theme.sizeCss} />,
 
 
     <LinkIcon className={theme.sizeCss} />,
@@ -431,10 +370,9 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         btn: <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: item[500] }} />,
 
 
-        fn: function (e) {
+        fn: function () {
 
           setColorGroupNum(index);
-          changeInlineStyle(e, item[500])
         }
 
       }
@@ -450,15 +388,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       yellow, amber, orange, deepOrange, brown, grey, blueGrey].forEach(
         (color) => {
 
-          const tempArr = Object.keys(color).map((item, index) => {
-            return {
-
-              btn: <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: color[item] }} key={index} />,
-
-              fn: function (e) { changeInlineStyle(e, color[item]) }
-
-
-            }
+          const tempArr = Object.keys(color).map(item => {
+            return { btn: <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: color[item] }} /> }
           })
 
           arr = [...arr, tempArr]
@@ -751,7 +682,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
           zIndex: 1100,
 
-
+         
           position: "absolute",
           //   transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
           transform: `translateY(-${tabValue === 1 ? 150 : 100}%)`,
@@ -786,13 +717,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
               }}
               onClick={function (e) {
                 e.preventDefault(); e.stopPropagation();
-                if(tabValue===1){
-                  clearInlineColor(e)
-                }
                 setTabValue(index)
-                // setTimeout(() => {
-                //   editorRef.current.focus()
-                // }, 0);
               }}
 
             >{item}</Button>
@@ -801,7 +726,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         </div>
 
 
-        {/* Parent overflow hidden is off, have to use Fade rather than slide*/}
+
         <Fade in={tabValue === 0} direction="left" unmountOnExit={false}>
           <div style={{ position: "absolute" }}>
             <RenderColorPickerPanel buttonArr={basicButtonArr} panelCss={colorTabPanelCss} />
@@ -821,8 +746,6 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
             {subColorGroupFn(colorGroupNum).map((group, index) => {
               return <RenderColorPickerPanel buttonArr={[...group.slice(0, 5), ...group.slice(6, 10)]} key={index} panelCss={colorTabPanelCss} />
-
-
             })}
 
           </div>
@@ -833,6 +756,34 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
 
 
+      <Grow in={tabValue === 100} unmountOnExit={true}>
+        <div style={{
+          top: top, left: 0,  //left:left2,
+          display: "block",
+
+          zIndex: 1100,
+
+
+          position: "absolute",
+          //   transform: `translateX( calc( -50% + ${taggingWidth2 / 2}px ) )   translateY(100%)`,
+          transform: `translateY(100%)`,
+          transitionProperty: "top ,left, opacity",
+          transitionDuration: "100ms",
+
+          overflow: "hidden",
+          whiteSpace: "nowrap",
+        }}>
+
+          {/* <div className={theme.heightCss} style={{
+          maxWidth: editorWidth, display: "flex", width: editorWidth, justifyContent: "space-around",
+          alignItems: "center", backgroundColor: "#A0A0A0"
+        }}> */}
+          {subColorGroupFn(colorGroupNum).map((group, index) => {
+            return <RenderColorPickerPanel buttonArr={group} key={index} panelCss={bottomTabPanelCss} panelWidth={editorWidth} />
+          })}
+          {/* </div> */}
+        </div>
+      </Grow>
 
     </>
   )
@@ -842,7 +793,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 })
 
 
-function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, ...props }) {
+function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, ...props }) {
 
 
 

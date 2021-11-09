@@ -207,7 +207,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       </Collapse>
       {/* </Fade> */}
 
-      <Paper style={{ position: "relative" }} >
+      <Paper style={{ position: "relative", wordBreak: "break-all" }} >
 
 
         {ctx.showFontBar && <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColor, setPanelColor }} />}

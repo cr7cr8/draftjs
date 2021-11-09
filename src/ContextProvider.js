@@ -563,7 +563,7 @@ const gradientStyleArr = [
 export default function ContextProvider({ myTheme = {}, ...props }) {
 
 
-  const [textSizeArr, setTextSizeArr] = useState(["4rem", "4rem", "1rem", "6rem", "2rem"])
+  const [textSizeArr, setTextSizeArr] = useState(["4rem", "6rem", "4rem", "1rem", "2rem"])
   const [isLight, setIsLight] = useState(true)
 
   const editorRef = useRef()
@@ -590,7 +590,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [editorBlockKeyArr, setEditorBlockKeyArr] = useState([])
   const [darkToLightArr, setDarkToLightArr] = useState([])
 
-  const [tabValue, setTabValue] = useState(0)
+  const [tabValue, setTabValue] = useState(1)
   const [panelColor, setPanelColor] = useState(null)
   const [panelValue, setPanelValue] = useState(0)   //text color panel
 

@@ -39,8 +39,6 @@ import ImageTwoToneIcon from '@material-ui/icons/ImageTwoTone';
 
 
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
-import InvertColorsOffOutlinedIcon from '@material-ui/icons/InvertColorsOffOutlined';
 
 import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
@@ -53,7 +51,7 @@ import DetectableOverflow from "react-detectable-overflow"
 
 import Immutable from "immutable"
 
-import detectElementOverflow from 'detect-element-overflow'
+
 
 
 import { markingColorBlock } from "./ColorBlock";
@@ -75,67 +73,7 @@ let colorStringArr = [];
 
 
 
-const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) => {
 
-  return {
-    fontBarCss: ({ buttonCount }) => {
-
-
-
-      return {
-        backgroundColor: "lightGreen",
-        padding: 0,
-        margin: 0,
-
-        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonCount)], ["height", multiplyArr(textSizeArr, 2)]),
-
-        //...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonCount)])
-
-
-      }
-
-    },
-    colorTabPanelCss: ({ buttonCount }) => {
-
-      return {
-
-        padding: 0,
-        margin: 0,
-        display: "flex", justifyContent: "flex-start",
-        alignItems: "center", backgroundColor: "pink",
-
-
-        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonCount)], ["height", multiplyArr(textSizeArr, 1)])
-
-
-      }
-
-    },
-
-    bottomTabPanelCss: ({ buttonCount }) => {
-
-      return {
-
-        padding: 0,
-        margin: 0,
-        display: "flex", justifyContent: "flex-start",
-        alignItems: "center", backgroundColor: "pink",
-
-
-        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonCount)], ["height", multiplyArr(textSizeArr, 1)])
-
-
-      }
-
-    },
-
-
-
-
-  }
-
-
-})
 
 
 
@@ -153,11 +91,10 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   const [left, setLeft] = useState("50%")
   const [taggingWidth, setTaggingWidth] = useState(0)
 
-  const [top2, setTop2] = useState(4)
+  const [top2,setTop2] = useState(4)
   const [left2, setLeft2] = useState("50%")
   const [taggingWidth2, setTaggingWidth2] = useState(0)
 
-  const fontPanel = useRef()
 
 
   const theme = useTheme()
@@ -169,36 +106,55 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
 
   const selection = editorState.getSelection()
-  // const startKey = selection.getStartKey()
-  // const endKey = selection.getEndKey()
+  const startKey = selection.getStartKey()
+  const endKey = selection.getEndKey()
   // const isStartKeyIn = props.children.some(item => { return item.props.children.props.block.getKey() === startKey })
   // const isEndKeyIn = props.children.some(item => { return item.props.children.props.block.getKey() === endKey })
   const hasFocus = selection.getHasFocus()
   const isCollapsed = selection.isCollapsed()
 
-  const [editorWidth, setEditorWidth] = useState(0)
-
-
-
 
   function toggleInlineStyle(e, fontStr) {
     e.preventDefault(); e.stopPropagation();
 
-
-    const selection = editorState.getSelection()
-    const isCollapsed = selection.isCollapsed()
+    const isCollapsed = editorState.getSelection().isCollapsed()
 
     if (!isCollapsed) {
 
 
-      let es = RichUtils.toggleInlineStyle(editorState, fontStr)
-      es = EditorState.forceSelection(es, selection)
-      setEditorState(es);
-      // setTimeout(() => {
-      //   editorRef.current && editorRef.current.focus()
-      // }, 0);
-    }
 
+      setEditorState(RichUtils.toggleInlineStyle(editorState, fontStr));
+      setTimeout(() => {
+        editorRef.current && editorRef.current.focus()
+      }, 0);
+    }
+    else {
+
+      // let newContent = Modifier.replaceText(
+      //   editorState.getCurrentContent(),
+      //   editorState.getSelection(),
+      //   " ",
+      // )
+
+      // let newSelection = editorState.getSelection().merge({
+
+      //   anchorKey: editorState.getSelection().getStartKey(),
+      //   anchorOffset: editorState.getSelection().getStartOffset(),
+      //   focusKey: editorState.getSelection().getStartKey(),
+      //   focusOffset: editorState.getSelection().getStartOffset() + 1,
+      //   isBackward: false,
+      //   hasFocus: true,
+      // })
+
+
+      // let es = EditorState.push(editorState, newContent, "insert-characters");
+      // es = EditorState.acceptSelection(es, newSelection)
+
+      // setEditorState(RichUtils.toggleInlineStyle(es, fontStr));
+
+      // setEditorState(es)
+
+    }
 
 
   }
@@ -206,15 +162,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   function changeInlineStyle(e, fontStr) {
     e.preventDefault(); e.stopPropagation();
 
-
-
-    const selection = editorState.getSelection()
-    const isCollapsed = selection.isCollapsed()
-
-
-    if (isCollapsed) { return }
-
-    if (fontStr === "SMALL" || fontStr === "LARGE") {
+    const isCollapsed = editorState.getSelection().isCollapsed()
+    if (!isCollapsed) {
       const allBlocks = Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), fontStr === "LARGE" ? "SMALL" : "LARGE")
 
       let es = EditorState.push(
@@ -224,36 +173,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       )
 
 
-      es = RichUtils.toggleInlineStyle(es, fontStr);
-      es = EditorState.forceSelection(es, selection)
-      setEditorState(es);
-      setTimeout(() => {
-        editorRef.current && editorRef.current.focus()
-      }, 0);
-
-    }
-
-    else if (fontStr[0] == "#") {
-
-      let allBlocks = editorState.getCurrentContent()
-      const selection = editorState.getSelection()
-
-      colorStringArr.forEach(color => {
-
-        allBlocks = Modifier.removeInlineStyle(allBlocks, selection, color)
-
-      })
-
-      let es = EditorState.push(
-        editorState,
-        allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
-        "change-inline-style",
-      )
-
-
-      es = RichUtils.toggleInlineStyle(es, fontStr);
-      es = EditorState.forceSelection(es, selection)
-      setEditorState(es);
+      setEditorState(RichUtils.toggleInlineStyle(es, fontStr));
       setTimeout(() => {
         editorRef.current && editorRef.current.focus()
       }, 0);
@@ -263,7 +183,6 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
   }
 
   function clearInlineStyle(e) {
-
     e.preventDefault(); e.stopPropagation();
     let allBlocks = editorState.getCurrentContent();
     let selection = editorState.getSelection();
@@ -285,39 +204,12 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
       "change-inline-style",
     )
-    es = EditorState.forceSelection(es, selection)
-    setEditorState(es);
-    // setTimeout(() => {
-    //      editorRef.current && editorRef.current.focus()
-    // }, 0);
-  }
 
-  function clearInlineColor(e) {
-
-    e.preventDefault(); e.stopPropagation();
-    let allBlocks = editorState.getCurrentContent();
-    let selection = editorState.getSelection();
-
-
-
-    colorStringArr.forEach(colorString => {
-      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, colorString)
-    })
-
-
-    let es = EditorState.push(
-      editorState,
-      allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
-      "change-inline-style",
-    )
-    es = EditorState.forceSelection(es, selection)
     setEditorState(es);
     setTimeout(() => {
       editorRef.current && editorRef.current.focus()
     }, 0);
   }
-
-
 
   function changeBlockData(e, dirStr) {
 
@@ -341,21 +233,18 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
       "change-block-data",
     )
-
-    es = EditorState.forceSelection(es, selection)
-    setEditorState(es);
-
-    // setTimeout(() => {
-    //    editorRef.current.focus()
-    // }, 0);
+    setEditorState(es)
+    setTimeout(() => {
+      editorRef.current.focus()
+    }, 0);
   }
 
   const categoryBtnArr = [
 
     <TitleIcon className={theme.sizeCss} />,
-    // <FormatColorTextIcon className={theme.sizeCss} />,
 
-     tabValue !== 1 ? <FormatColorTextIcon className={theme.sizeCss} /> : <InvertColorsOffOutlinedIcon className={theme.sizeCss} />,
+
+    <FormatColorTextIcon className={theme.sizeCss} />,
 
 
     <LinkIcon className={theme.sizeCss} />,
@@ -428,14 +317,17 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     ].map((item, index) => {
       return {
 
-        btn: <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: item[500] }} />,
+        btn: <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: item[500] }}
+          onClick={function () {
 
 
-        fn: function (e) {
+            //setOpen(colorGroupNum!==index)
 
-          setColorGroupNum(index);
-          changeInlineStyle(e, item[500])
-        }
+            setColorGroupNum(index);
+         //   setOpen(colorGroupNum!==index)
+          
+          }}
+        />,
 
       }
     })
@@ -450,15 +342,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       yellow, amber, orange, deepOrange, brown, grey, blueGrey].forEach(
         (color) => {
 
-          const tempArr = Object.keys(color).map((item, index) => {
-            return {
-
-              btn: <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: color[item] }} key={index} />,
-
-              fn: function (e) { changeInlineStyle(e, color[item]) }
-
-
-            }
+          const tempArr = Object.keys(color).map(item => {
+            return { btn: <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: color[item] }} /> }
           })
 
           arr = [...arr, tempArr]
@@ -490,13 +375,12 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     return arr
   }
 
-  const { fontBarCss, colorTabPanelCss, bottomTabPanelCss } = useStyles({ buttonCount: basicButtonArr.length })
 
 
 
-  useEffect(function () {
-    setEditorWidth(editorRef.current.editor.editor.getBoundingClientRect().width)
-  })
+
+
+  const [open, setOpen] = useState(true)
 
 
   useEffect(function () {
@@ -587,33 +471,20 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
         range.setEnd(elementNodeList[endElement].firstChild, relateEndPos - 1)
 
-        //    console.log("start", elementNodeList[startElement].firstChild.textContent[relateStartPos - 1])
-        //    console.log("end", accumString, elementNodeList[endElement].firstChild.textContent[relateEndPos - 1])
+        console.log("start", elementNodeList[startElement].firstChild.textContent[relateStartPos - 1])
+        console.log("end", accumString, elementNodeList[endElement].firstChild.textContent[relateEndPos - 1])
 
       }
 
       const { x: fontBarX, y: fontBarY, width } = range.getBoundingClientRect()
-      const { x: editorRefX, y: editorRefY, width: editorWidth } = editorRef.current.editor.editor.getBoundingClientRect()
+      const { x: editorRefX, y: editorRefY } = editorRef.current.editor.editor.getBoundingClientRect()
       const x = Number(fontBarX) - Number(editorRefX)
       const y = Number(fontBarY) - Number(editorRefY)
+      //   console.log(x,y)
+      setLeft(x); setTop(y); setTaggingWidth(width)
 
 
 
-      const fontPanelWdith = Number(window.getComputedStyle(fontPanel.current).width.replace("px", ""))
-
-
-      //console.log(width)
-
-      const finalX = (x - (fontPanelWdith / 2 - width / 2) + fontPanelWdith) <= editorWidth
-        ? (x - (fontPanelWdith / 2 - width / 2))
-        : editorWidth - fontPanelWdith
-
-
-
-
-      setLeft(Math.max(0, finalX))
-      setTop(y);
-      // setTaggingWidth(width)
 
     }
 
@@ -629,24 +500,24 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
 
     if (!selection.isCollapsed()) {
+      const startKey = selection.getStartKey()
+      const startOffset = selection.getStartOffset()
+
+      if (!editorState.getCurrentContent().getBlockForKey(startKey).getText()) { return function () { } }
+
+
+
       const endKey = selection.getEndKey()
-
-
-      if (!editorState.getCurrentContent().getBlockForKey(endKey).getText()) { return function () { } }
-
-
-
-
       const endOffset = selection.getEndOffset()
-      const text = editorState.getCurrentContent().getBlockForKey(endKey).getText();
-      const sameLine = endKey === endKey
-      const selectedText = sameLine ? text.substring(endOffset, endOffset) : text.substr(endOffset)
+      const text = editorState.getCurrentContent().getBlockForKey(startKey).getText();
+      const sameLine = startKey === endKey
+      const selectedText = sameLine ? text.substring(startOffset, endOffset) : text.substr(startOffset)
 
 
       // const element = document.querySelector(`div[data-block="true"][data-offset-key*="${startKey}"] [data-offset-key*="${startKey}"]`)
 
       const elementNodeList =
-        document.querySelectorAll(`div[data-block="true"][data-offset-key*="${endKey}"] > div[data-offset-key*="${endKey}"] [data-offset-key*="${endKey}"] [data-text*="true"] `)
+        document.querySelectorAll(`div[data-block="true"][data-offset-key*="${startKey}"] > div[data-offset-key*="${startKey}"] [data-offset-key*="${startKey}"] [data-text*="true"] `)
 
 
       const elementArr = Array.from(elementNodeList).map(el => { return el.firstChild.textContent })
@@ -662,12 +533,12 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         // console.log(current)
         accumString_ = previous + current
 
-        if ((endOffset <= accumString_.length - 1) && (startPosDone === false)) {
+        if ((startOffset <= accumString_.length - 1) && (startPosDone === false)) {
           startElement = elementIndex
           startPosDone = true
           accumString = accumString_
           //  console.log(current[startOffset])
-          relateStartPos = endOffset - previous.length + 1
+          relateStartPos = startOffset - previous.length + 1
         }
 
         return accumString_
@@ -681,18 +552,10 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
       range.setStart(elementNodeList[startElement].firstChild, Math.max(0, Math.min(relateStartPos - 1, elementArr[startElement].length - 1)))
 
       if (!sameLine || endOffset === text.length) {
-
-
-        //console.log("sameline", sameLine, "endOffset === text.length", endOffset === text.length, "up")
-
         range.setEnd(elementNodeList[elementNodeList.length - 1].firstChild, elementNodeList[elementNodeList.length - 1].firstChild.textContent.length)
-
-
       }
 
       else if (sameLine) {
-
-        // console.log("sameline", sameLine, "endOffset === text.length", endOffset === text.length, "down")
 
         let endPosDone = false
         let endElement = 0
@@ -718,17 +581,20 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
         range.setEnd(elementNodeList[endElement].firstChild, relateEndPos - 1)
 
-        // console.log("start", elementNodeList[startElement].firstChild.textContent[relateStartPos - 1])
-        // console.log("end", accumString, elementNodeList[endElement].firstChild.textContent[relateEndPos - 1])
+        console.log("start", elementNodeList[startElement].firstChild.textContent[relateStartPos - 1])
+        console.log("end", accumString, elementNodeList[endElement].firstChild.textContent[relateEndPos - 1])
 
       }
 
-      const { x: pickedTextX, y: pickedTextY, width } = range.getBoundingClientRect()
+      const { x: fontBarX, y: fontBarY, width } = range.getBoundingClientRect()
       const { x: editorRefX, y: editorRefY } = editorRef.current.editor.editor.getBoundingClientRect()
-      const x = Number(pickedTextX) - Number(editorRefX)
-      const y = Number(pickedTextY) - Number(editorRefY)
-      //console.log(pickedTextY)
-      setLeft2(x); setTop2(y); setTaggingWidth2(width)
+      const x = Number(fontBarX) - Number(editorRefX)
+      const y = Number(fontBarY) - Number(editorRefY)
+      //   console.log(x,y)
+      setLeft(x); setTop(y); setTaggingWidth(width)
+
+
+
 
     }
 
@@ -737,104 +603,118 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
 
 
+
+
+  useLayoutEffect(function () {
+
+    const element =
+      document.querySelector(`div[data-block="true"][data-offset-key*="${endKey}"] > div[data-offset-key*="${endKey}"] [data-offset-key*="${endKey}"] [data-text*="true"] `)
+    console.log(element);
+
+
+    endBlockRef.current = element
+
+
+
+  })
+
+
+
+
+
+
   return (
-    <>
-      <div
-        id="fontpanel1"
-        className={fontBarCss}
-        ref={fontPanel}
-        style={{
-          // top, left: Math.max(0, left),
 
-          top, left,
-          display: "block",
+    <div style={{
+      top, left,
+      display: "block",
 
-          zIndex: 1100,
+      zIndex: 1100,
 
 
-          position: "absolute",
-          //   transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
-          transform: `translateY(-${tabValue === 1 ? 150 : 100}%)`,
+      position: "absolute",
+      transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
+      transitionProperty: "top ,left, opacity",
+      transitionDuration: "100ms",
 
-          transitionProperty: "top ,left, opacity, transform",
-          transitionDuration: "200ms",
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+    }}>
 
-          //  overflow: "hidden",
-          whiteSpace: "nowrap",
-        }}>
+      <div className={theme.heightCss} style={{
+        maxWidth: "30vw", display: "flex", width: "100%", justifyContent: "space-around",
+        alignItems: "center", backgroundColor: "#A0A0A0"
+      }}>
 
-        <div className={theme.heightCss} style={{
-          display: "flex",
-          width: "100%", justifyContent: "flex-start",
-          alignItems: "center",
-          padding: 0,
-          margin: 0,
-          backgroundColor: "greenyellow",
-        }}>
-          {categoryBtnArr.map((item, index) => {
+        {categoryBtnArr.map((item, index) => {
 
-            return <Button
+          return <Button
 
-              key={index}
-              className={theme.sizeCss}
-              style={{
-                color: theme.palette.text.secondary,
-                backgroundColor: tabValue === index ? "skyblue" : "#A0A0A0",
-                width: 100 / categoryBtnArr.length + "%",
-                minWidth: 0,
-
-              }}
-              onClick={function (e) {
-                e.preventDefault(); e.stopPropagation();
-                if(tabValue===1){
-                  clearInlineColor(e)
-                }
-                setTabValue(index)
-                // setTimeout(() => {
-                //   editorRef.current.focus()
-                // }, 0);
-              }}
-
-            >{item}</Button>
-          })}
-
-        </div>
+            className={theme.sizeCss}
+            style={{
+              color: theme.palette.text.secondary,
+              backgroundColor: "#A0A0A0",
 
 
-        {/* Parent overflow hidden is off, have to use Fade rather than slide*/}
-        <Fade in={tabValue === 0} direction="left" unmountOnExit={false}>
-          <div style={{ position: "absolute" }}>
-            <RenderColorPickerPanel buttonArr={basicButtonArr} panelCss={colorTabPanelCss} />
-          </div>
-        </Fade>
-        <Fade in={tabValue === 1} direction="left" unmountOnExit={false}>
-          <div style={{ position: "absolute" }}>
-            <RenderColorPickerPanel buttonArr={colorButtonArr} panelCss={colorTabPanelCss} />
+            }} >{item}</Button>
+        })}
 
 
-          </div>
-        </Fade>
-        <Fade in={tabValue === 1} timeout={{ enter: 800 }} direction="left" unmountOnExit={false}>
-          <div style={{ position: "absolute" }}>
-            <RenderColorPickerPanel buttonArr={colorButtonArr} panelCss={colorTabPanelCss} />
-
-
-            {subColorGroupFn(colorGroupNum).map((group, index) => {
-              return <RenderColorPickerPanel buttonArr={[...group.slice(0, 5), ...group.slice(6, 10)]} key={index} panelCss={colorTabPanelCss} />
-
-
-            })}
-
-          </div>
-        </Fade>
 
       </div>
 
 
 
+      {/* <RenderColorPickerPanel basicButtonArr={basicButtonArr} /> */}
+
+      <RenderColorPickerPanel basicButtonArr={colorButtonArr} />
 
 
-    </>
+
+      {/* <Popover
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+        transformOrigin={{ vertical: "bottom", horizontal: "left" }}
+
+        open={open}
+        anchorReference="anchorEl"
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorEl={endBlockRef.current}
+        style={{ pointerEvents: "none", overflow: "hidden", transform: "translateY(0px)", }}
+
+        PaperProps={{
+          //  className: theme.heightCss,
+
+          style: {
+            pointerEvents: "auto", lineHeight: 1,// ...panelColor && { backgroundColor: panelColor },
+            borderBottomLeftRadius: "0px", borderBottomRightRadius: "0px",
+            overflow: "hidden",
+          //  opacity: 0.5,
+            backgroundColor: "yellow",
+            height: "6rem",
+          },
+          onMouseLeave: function () {  //setOpen(false)
+           },
+          //   onMouseEnter: function () {  alert("222 enter pop"); setOpen(true) },
+
+          elevation: 0
+        }}
+
+      // onMouseLeave={function () { alert("leave leave pop");setOpen(false) }}
+      // onMouseEnter={function () { alert("enter pop");setOpen(true) }}
+
+      >
+        {subColorGroupFn(colorGroupNum).map((group, index) => {
+          return <RenderColorPickerPanel basicButtonArr={group} key={index} />
+        })}
+      </Popover> */}
+
+
+      {/* <RenderColorPickerPanel basicButtonArr={subColorButtonFn(red)} /> */}
+
+
+
+    </div>
   )
 
 
@@ -842,10 +722,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 })
 
 
-function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, ...props }) {
-
-
-
+function RenderColorPickerPanel({ basicButtonArr, ...props }) {
 
   const theme = useTheme()
   const { gradientStyleArr } = useContext(Context)
@@ -853,12 +730,12 @@ function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, 
 
   const [randomId] = useState("--toolbar--" + Math.floor(Math.random() * 1000))
 
-  const { style, ...other } = props
-
   return (
-    <div className={panelCss} style={{
-      ...panelWidth && { width: panelWidth }
-    }} >
+    <div className={theme.heightCss} style={{
+      maxWidth: "20rem",   //"10vw", 
+      display: "flex", width: "100%", justifyContent: "flex-start",
+      alignItems: "center", backgroundColor: "pink"
+    }}>
       {isOverFlow && <IconButton
         style={{
           alignItems: "center",
@@ -890,7 +767,7 @@ function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, 
       </IconButton>
       }
 
-      <DetectableOverflow //ref={inputRef}
+      <DetectableOverflow //ref={inputRef} 
 
         onChange={function (overflow) {
           setIsOverFlow(overflow)
@@ -903,7 +780,6 @@ function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, 
         className={theme.heightCss}
         style={{
           display: "block",
-
           backgroundColor: "skyblue",
           whiteSpace: "nowrap",
           // position: "relative",
@@ -917,12 +793,9 @@ function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, 
         }}>
 
         {
-          buttonArr.map(function (item, index) {
+          basicButtonArr.map(function (item, index) {
             return (
-              <IconButton className={theme.sizeCss} key={index} style={{ verticalAlign: "top", padding: 0, }}
-
-                onClick={item.fn}
-              >
+              <IconButton className={theme.sizeCss} key={index} style={{ verticalAlign: "top", }}>
 
                 {item.btn}
               </IconButton>)
