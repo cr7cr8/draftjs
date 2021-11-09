@@ -793,8 +793,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
                 // setTimeout(() => {
                 //   editorRef.current.focus()
                 // }, 0);
-              }}
-
+              }} 
+ 
             >{item}</Button>
           })}
 
