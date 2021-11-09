@@ -800,7 +800,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
           })}
 
         </div> 
-
+ 
 
         {/* Parent overflow hidden is off, have to use Fade rather than slide*/}
         <Fade in={tabValue === 0} direction="left" unmountOnExit={true}>
