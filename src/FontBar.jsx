@@ -799,7 +799,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
             >{item}</Button>
           })}
 
-        </div>
+        </div> 
 
 
         {/* Parent overflow hidden is off, have to use Fade rather than slide*/}
