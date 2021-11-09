@@ -355,7 +355,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     <TitleIcon className={theme.sizeCss} />,
     // <FormatColorTextIcon className={theme.sizeCss} />,
 
-     tabValue !== 1 ? <FormatColorTextIcon className={theme.sizeCss} /> : <InvertColorsOffOutlinedIcon className={theme.sizeCss} />,
+    tabValue !== 1 ? <FormatColorTextIcon className={theme.sizeCss} /> : <InvertColorsOffOutlinedIcon className={theme.sizeCss} />,
 
 
     <LinkIcon className={theme.sizeCss} />,
@@ -786,15 +786,16 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
               }}
               onClick={function (e) {
                 e.preventDefault(); e.stopPropagation();
-                if(tabValue===1){
+                if (index === 1 && tabValue === 1) {
                   clearInlineColor(e)
                 }
                 setTabValue(index)
-                // setTimeout(() => {
-                //   editorRef.current.focus()
-                // }, 0);
-              }} 
- 
+               // index === 1 && tabValue !== 1 && 
+                setTimeout(() => {
+                  editorRef.current.focus()
+                }, 0);
+              }}
+
             >{item}</Button>
           })}
 
@@ -802,19 +803,19 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
 
         {/* Parent overflow hidden is off, have to use Fade rather than slide*/}
-        <Fade in={tabValue === 0} direction="left" unmountOnExit={false}>
+        <Fade in={tabValue === 0} direction="left" unmountOnExit={true}>
           <div style={{ position: "absolute" }}>
             <RenderColorPickerPanel buttonArr={basicButtonArr} panelCss={colorTabPanelCss} />
           </div>
         </Fade>
-        <Fade in={tabValue === 1} direction="left" unmountOnExit={false}>
+        <Fade in={tabValue === 1} direction="left" unmountOnExit={true}>
           <div style={{ position: "absolute" }}>
             <RenderColorPickerPanel buttonArr={colorButtonArr} panelCss={colorTabPanelCss} />
 
 
           </div>
         </Fade>
-        <Fade in={tabValue === 1} timeout={{ enter: 800 }} direction="left" unmountOnExit={false}>
+        <Fade in={tabValue === 1} timeout={{ enter: 800 }} direction="left" unmountOnExit={true}>
           <div style={{ position: "absolute" }}>
             <RenderColorPickerPanel buttonArr={colorButtonArr} panelCss={colorTabPanelCss} />
 
