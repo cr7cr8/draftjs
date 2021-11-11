@@ -33,109 +33,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import DetectableOverflow from "react-detectable-overflow"
 
 
-const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) => {
 
-
-  return {
-
-    collapseCss: () => {
-      return {
-
-        // right: 0,
-
-        // // display: "flex",
-        // alignItems: "center",
-        // //   opacity: 0.5,
-        // //  transition: "width 0.3s",
-        // // width: showSettingBar ? "100%" : 0,
-        // width: "100%",
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-
-        paddingBottom: "4px",
-        // margin: 0,
-        // padding: 0,
-        // minWidth: 0,
-        // minHeight: 0,
-
-        "& .MuiCollapse-wrapperInner": {
-          display: "flex",
-          margin: 0,
-          padding: 0,
-          minWidth: 0,
-          minHeight: 0,
-        }
-
-      }
-    },
-
-
-    toolBarCss: () => {
-
-      return {
-        margin: 0,
-        padding: 0,
-        backgroundColor: "pink",
-        minWidth: 0,
-        minHeight: 0,
-
-        "& .MuiSvgIcon-fontSizeSmall": {
-          ...breakpointsAttribute(["fontSize", textSizeArr]),
-
-        },
-
-
-        "& .MuiTabs-scrollable": {
-          height: "auto",
-          display: "flex",
-        },
-
-        //  display:"inline-flex",
-        "& .MuiTabs-indicator": {
-          backgroundColor: "transparent",
-          // flexWrap: "wrap",
-          minWidth: "0px",
-          minHeight: "0px",
-          margin: 0,
-          padding: 0,
-
-        },
-        "& .MuiTabs-flexContainer": {
-          //  display: "flex",
-        },
-        "& button": {
-          margin: 0,
-          padding: 0,
-        },
-        "& .MuiTabs-root": {
-          minWidth: "0px",
-          minHeight: "0px",
-        },
-
-        "& .MuiTab-root": {
-          minWidth: "0px",
-          minHeight: "0px",
-          //  padding: 0,
-          //  margin: 0,
-          // lineHeight: 1,
-          // color: theme.palette.text.secondary,
-
-          // ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 1.1)], ["height", multiplyArr(textSizeArr, 1.1)]),
-
-        },
-
-
-
-      }
-
-    },
-
-
-
-  }
-
-
-})
 
 
 
@@ -146,7 +44,7 @@ export default function EditingBlock(props) {
 
   const theme = useTheme()
 
-  const { toolBarCss, collapseCss } = useStyles()
+
   const { editorBlockKeyArr, setEditorBlockKeyArr, darkToLightArr, setDarkToLightArr, bgImageObj, editorState, setEditorState, editorRef,} = useContext(Context)
 
   //const { editorState, setEditorState, editorRef, gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock, markingColorBlock } = props;
@@ -224,21 +122,6 @@ export default function EditingBlock(props) {
   useEffect(function () {
 
 
-    //  props.children[0].props.children.props.block.getData().toObject().backgroundImage
-
-    // const element = Array.from(props.children).find(item => {
-
-
-    //   return item.props.children.props.block.getKey() === focusKey
-
-
-    // })
-
-    // data-offset-key="9itp6-0-0"
-
-    // const element = editorBlockRef.current._node
-
-    // const bound = element && element.getBoundingClientRect()
 
     const element = document.querySelector(`div[data-offset-key*="${startKey}"]`)
     const bound = element && element.getBoundingClientRect()
@@ -246,9 +129,7 @@ export default function EditingBlock(props) {
     const bound2 = editorRef.current.editor.editor.getBoundingClientRect()
 
 
-    //console.log(startKey,element)
 
-    //console.log(toolButtonRef)
      selection.hasFocus && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
 
 
@@ -274,7 +155,7 @@ export default function EditingBlock(props) {
       <Collapse in={isFocusIn} unmountOnExit={true} contentEditable={false}>
 
         <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
-          ediotrBlockCss={ediotrBlockCss} anmimationType={null}
+          ediotrBlockCss={ediotrBlockCss} anmimationType={null} setEditorState={setEditorState}
         />
 
       </Collapse>
@@ -288,7 +169,7 @@ export default function EditingBlock(props) {
 }
 
 
-function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBlockCss, anmimationType }) {
+function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBlockCss, anmimationType,setEditorState }) {
 
   const theme = useTheme()
   const { gradientStyleArr } = useContext(Context)
@@ -338,10 +219,24 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation()
 
+//todo change the blcokstyle text first !!!
+//  RichUtils.toggleBlockType(editorState,"EditingBlock")
+  
+  setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
 
 
-          markingImageBlock(editorState.getSelection().getStartKey())
-          //  setShowColorPanel(pre => !pre)
+
+  markingImageBlock(editorState.getSelection().getStartKey())
+
+
+
+ 
+     
+  
+  //  setShowColorPanel(pre => !pre)
+
+
+         
         }}
       >
         <InsertPhotoOutlinedIcon className={theme.sizeCss} />

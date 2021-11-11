@@ -222,7 +222,7 @@ export default function ImagePanel(props) {
         }}
       >
 
-         {
+        {
           (Array.isArray(imageBlockObj[blockKey]) ? imageBlockObj[blockKey].length : 0) === 0 &&
           <div
             style={{
@@ -258,7 +258,7 @@ export default function ImagePanel(props) {
               children={<DeleteIcon />}
             />
           </div>
-        } 
+        }
 
         {Array.isArray(imageBlockObj[blockKey]) && imageBlockObj[blockKey].map((pic, index) => {
 
@@ -283,7 +283,7 @@ export default function ImagePanel(props) {
             </div>
 
           )
-        })} 
+        })}
       </div>
     </div>
   );

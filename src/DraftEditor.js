@@ -198,9 +198,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           // }}
 
 
-
-
-
           readOnly={readOnly}
           ref={function (element) { editorRef.current = element; }}
           editorState={editorState}
@@ -212,7 +209,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             // newState = taggingFontBar(newState)
             newState = taggingMention(showHint, newState)
 
-            //  setShowFontBar(!newState.getSelection().isCollapsed())
+              setShowFontBar(!newState.getSelection().isCollapsed())
 
             //  setShowFontBar(true)
 
@@ -664,8 +661,8 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
         <div>{JSON.stringify(editorState.getCurrentContent().selectionAfter, null, 2)}</div> */}
 
-        {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
-        <hr /> */}
+        <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
+        <hr />
         {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
       </div>
       {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
