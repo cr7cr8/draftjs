@@ -154,7 +154,7 @@ export default function createImagePlugin() {
           hasFocus: false,
 
         })
-
+ 
         newContent = newContent.createEntity("DUMMY", "IMMUTABLE", { emojiKey });
         const entityKey = newContent.getLastCreatedEntityKey();
 
