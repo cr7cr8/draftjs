@@ -40,6 +40,16 @@ import styled from "styled-components"
 
 import { FontBar, taggingFontBar } from "./FontBar"
 
+import {
+  isMobile,
+  isFirefox,
+  isChrome,
+  browserName,
+  engineName,
+} from "react-device-detect";
+
+
+
 import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
 const { hasCommandModifier } = KeyBindingUtil;
 
@@ -407,8 +417,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
             // }
             // if ((!text) && (type === "unstyled")) {
+
             if ((type === "unstyled")) {
-              //if ((!text) && (type === "unstyled" || type === "colorBlock")) {
+
               return {
                 component: ToolBlock,
                 editable: true,
@@ -425,7 +436,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   bgImageObj,
                   showFontBar,
                   setShowFontBar,
-
                 }
               }
             }
@@ -441,15 +451,14 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             // }
 
 
-            if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
+            //   if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
+            if (type === "imageBlock") {
               //   console.log(JSON.stringify(data))
               return {
-
 
                 component: ImagePanel,
                 editable: false,
                 props: {
-
                   imageBlockObj,
                   setImageBlockObj,
                   editorRef,
@@ -462,12 +471,12 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               }
             }
 
-            else {
-              return null
-            }
+            // else {
+            //   return null
+            // }
 
-          }
-          }
+          }}
+
 
           keyBindingFn={function (e, { getEditorState, setEditorState, ...obj }) {
             const editorState = getEditorState()
@@ -483,27 +492,31 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
 
-
-            // if ((e.keyCode === 8) && (!block.getText()) && allBlocks.size !== 1 && selectionState.isCollapsed() && startKey !== firstBlockKey) {
-            //   //     if ((e.keyCode === 8) && (startOffset===0) && allBlocks.size !== 1 && selectionState.isCollapsed() && startKey !== firstBlockKey) {
-            //   //  setEditorState(RichUtils.onBackspace(editorState))
-
-            //   //   alert("dd")
-
-            //   return "moveup"
-
-            // }
-
-
             if ((e.keyCode === 8) && (startOffset === 0) && allBlocks.size !== 1 && selectionState.isCollapsed() && startKey !== firstBlockKey) {
-              //  setEditorState(RichUtils.onBackspace(editorState))
 
-              //   alert("dd")
 
-              return "moveup2"
+              //if ((e.keyCode === 8) && (startOffset === 0)  && selectionState.isCollapsed() ) {
+              return "backspace"
 
             }
 
+            // if (!checkShowing() && e.keyCode === 38) {
+            //   //alert("38")
+            //   return isFirefox ? "moveUp" : undefined
+            // }
+            // if (!checkShowing() && e.keyCode === 40) {
+            //   //  alert("40")
+            //   return isFirefox ? "moveDown" : undefined
+            // }
+
+            // if (!checkShowing() && e.keyCode === 38) {
+            //   //alert("38")
+            //   return isFirefox ? "moveUp" : "moveUp"
+            // }
+            // if (!checkShowing() && e.keyCode === 40) {
+            //   //  alert("40")
+            //   return isFirefox ? "moveDown" : "moveDown"
+            // }
 
 
             if (checkShowing() && e.keyCode === 38) {
@@ -524,50 +537,73 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           }}
 
           handleKeyCommand={function (command, editorState, evenTimeStamp, { getEditorState }) {
-
-            if (command === "moveup") {
-
-              const selectionState = editorState.getSelection();
-
-              const startKey = selectionState.getStartKey();
-              setEditorState(deleteBlock(editorState, startKey))
-
-              // const selection = editorState.getSelection();
-              // const startKey = selection.getStartKey();
-              // const startOffset = selection.getStartOffset();
-              // const allBlocks = editorState.getCurrentContent();
-              // const block = allBlocks.getBlockForKey(selection.getStartKey());
-
-              // const blockBefore = allBlocks.getBlockBefore(startKey)
+            // return undefiend and return not-handled will be igonred in handleKeyCommand
 
 
-              // const newSelection = selection.merge({
-              //   anchorKey: blockBefore.getKey(),
-              //   anchorOffset: blockBefore.getText().length - 1,
-              //   focusKey: blockBefore.getKey(),
-              //   focusOffset: blockBefore.getText().length - 1,
-              //   isBackward: false,
-              //   hasFocus: true,
-
-              // })
-
-              // const newAllBlocks = allBlocks.filter(function (value, key) { return key !== startKey })
-
-              // console.log(newAllBlocks.toArray())
-
-              // let newState = EditorState.createWithContent(newAllBlocks)   //EditorState.push(editorState, newAllBlocks, 'remove-range');
-              // newState = EditorState.forceSelection(newState, newSelection)
-              // setEditorState(newState)
-
-              return 'handled';
-
-            }
-
-            if (command === "moveup2") {
+            if (command === "backspace") {
+           //   alert("dd")
               const selectionState = editorState.getSelection();
               const startKey = selectionState.getStartKey();
               setEditorState(deleteBlock2(editorState, startKey))
+              // return "handled"
             }
+
+
+            if (command === "moveUp" || command === "moveDown") {
+              const selection = editorState.getSelection();
+              const startKey = selection.getStartKey();
+              const endKey = selection.getEndKey();
+              const isCollapsed = selection.isCollapsed()
+
+
+              const upperBlockKey = editorState.getCurrentContent().getKeyBefore(startKey)
+              const block = editorState.getCurrentContent().getBlockForKey(command === "moveUp" ? startKey : endKey)
+              const lowerBlockKey = editorState.getCurrentContent().getKeyAfter(endKey)
+
+              if ((command === "moveUp" && upperBlockKey) || ((command === "moveDown" && lowerBlockKey))) {
+
+                const adjacentBlock = command === "moveUp"
+                  ? editorState.getCurrentContent().getBlockBefore(startKey)
+                  : editorState.getCurrentContent().getBlockAfter(endKey)
+                const text = adjacentBlock.getText()
+
+                let newSelection = selection.merge({
+
+                  ...isCollapsed && { anchorKey: adjacentBlock.getKey() },
+                  ...isCollapsed && { anchorOffset: text ? text.length : 0 },
+
+                  focusKey: adjacentBlock.getKey(),
+                  focusOffset: adjacentBlock.getKey() ? text.length : 0,
+
+                  isBackward: false,
+                  hasFocus: true,
+                })
+                //  externalES = EditorState.push(externalES, newContent, "insert-characters");
+                let es = EditorState.forceSelection(editorState, newSelection)
+                setEditorState(es)
+              }
+              else if ((command === "moveUp" && !upperBlockKey) || ((command === "moveDown" && !lowerBlockKey))) {
+
+
+                const text = block.getText()
+
+                let newSelection = selection.merge({
+                  anchorKey: block.getKey(),
+                  anchorOffset: command === "moveUp" ? 0 : text ? text.length : 0,
+                  focusKey: block.getKey(),
+                  focusOffset: command === "moveUp" ? 0 : text ? text.length : 0,
+                  isBackward: false,
+                  hasFocus: true,
+                })
+                let es = EditorState.forceSelection(editorState, newSelection)
+                setEditorState(es)
+              }
+
+            }
+
+
+
+
 
             if (command === "bold") {
 
@@ -738,6 +774,7 @@ function deleteBlock2(store, blockKey) {
   // Note: if the focused block is the first block then it is reduced to an
   // unstyled block with no character
   if (beforeBlock === undefined) {
+ //   alert("ffff")
     const targetRange = new SelectionState({
       anchorKey: blockKey,
       anchorOffset: 0,

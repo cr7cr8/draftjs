@@ -622,7 +622,118 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
 
 
- 
+  useEffect(function () {
+    return function () { }
+
+    const selection = editorState.getSelection()
+
+
+    if (!selection.isCollapsed()) {
+      const endKey = selection.getEndKey()
+
+
+      if (!editorState.getCurrentContent().getBlockForKey(endKey).getText()) { return function () { } }
+
+
+
+
+      const endOffset = selection.getEndOffset()
+      const text = editorState.getCurrentContent().getBlockForKey(endKey).getText();
+      const sameLine = endKey === endKey
+      const selectedText = sameLine ? text.substring(endOffset, endOffset) : text.substr(endOffset)
+
+
+      // const element = document.querySelector(`div[data-block="true"][data-offset-key*="${startKey}"] [data-offset-key*="${startKey}"]`)
+
+      const elementNodeList =
+        document.querySelectorAll(`div[data-block="true"][data-offset-key*="${endKey}"] > div[data-offset-key*="${endKey}"] [data-offset-key*="${endKey}"] [data-text*="true"] `)
+
+
+      const elementArr = Array.from(elementNodeList).map(el => { return el.firstChild.textContent })
+
+      //  console.log(elementArr, startOffset)
+      let startPosDone = false
+      let startElement = 0
+      let accumString = ""
+      let accumString_ = ""
+
+      let relateStartPos = 0;
+      elementArr.reduce((previous, current, elementIndex) => {
+        // console.log(current)
+        accumString_ = previous + current
+
+        if ((endOffset <= accumString_.length - 1) && (startPosDone === false)) {
+          startElement = elementIndex
+          startPosDone = true
+          accumString = accumString_
+          //  console.log(current[startOffset])
+          relateStartPos = endOffset - previous.length + 1
+        }
+
+        return accumString_
+
+      }, "")
+
+      const range = document.createRange();
+
+
+
+      range.setStart(elementNodeList[startElement].firstChild, Math.max(0, Math.min(relateStartPos - 1, elementArr[startElement].length - 1)))
+
+      if (!sameLine || endOffset === text.length) {
+
+
+        //console.log("sameline", sameLine, "endOffset === text.length", endOffset === text.length, "up")
+
+        range.setEnd(elementNodeList[elementNodeList.length - 1].firstChild, elementNodeList[elementNodeList.length - 1].firstChild.textContent.length)
+
+
+      }
+
+      else if (sameLine) {
+
+        // console.log("sameline", sameLine, "endOffset === text.length", endOffset === text.length, "down")
+
+        let endPosDone = false
+        let endElement = 0
+        accumString = ""
+        accumString_ = ""
+
+        let relateEndPos = 0;
+        elementArr.reduce((previous, current, elementIndex) => {
+          // console.log(current)
+          accumString_ = previous + current
+
+          if ((endOffset <= accumString_.length - 1) && (endPosDone === false)) {
+            endElement = elementIndex
+            endPosDone = true
+            accumString = accumString_
+            //  console.log(current[startOffset])
+            relateEndPos = endOffset - previous.length + 1
+          }
+
+          return accumString_
+
+        }, "")
+
+        range.setEnd(elementNodeList[endElement].firstChild, relateEndPos - 1)
+
+        // console.log("start", elementNodeList[startElement].firstChild.textContent[relateStartPos - 1])
+        // console.log("end", accumString, elementNodeList[endElement].firstChild.textContent[relateEndPos - 1])
+
+      }
+
+      const { x: pickedTextX, y: pickedTextY, width } = range.getBoundingClientRect()
+      const { x: editorRefX, y: editorRefY } = editorRef.current.editor.editor.getBoundingClientRect()
+      const x = Number(pickedTextX) - Number(editorRefX)
+      const y = Number(pickedTextY) - Number(editorRefY)
+      //console.log(pickedTextY)
+      setLeft2(x); setTop2(y); setTaggingWidth2(width)
+
+    }
+
+
+  })
 
 
 
