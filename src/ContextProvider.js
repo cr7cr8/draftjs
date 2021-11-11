@@ -574,7 +574,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [showMention, setShowMention] = useState(false)
   const [showHint, setShowHint] = useState(false)
   const [avatarHint, setAvatarHint] = useState(false)
-  const [showFontBar, setShowFontBar] = useState(true)
+  const [showFontBar, setShowFontBar] = useState(false)
 
 
   const [showEmojiPanel, setShowEmojiPanel] = useState(false)

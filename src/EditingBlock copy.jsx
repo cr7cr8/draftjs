@@ -8,7 +8,7 @@ import Editor from "draft-js-plugins-editor";
 import Immutable from 'immutable';
 
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
-import { Typography, IconButton, Tabs, Tab, Button, ButtonGroup, Container, Paper, Popover, Avatar, Box, Chip, Grow, Zoom, Slide, Collapse } from "@material-ui/core";
+import { Typography, IconButton, Tabs, Tab, Button, ButtonGroup, Container, Paper, Popover, Avatar, Box, Chip, Grow, Fade, Zoom, Slide, Collapse } from "@material-ui/core";
 
 
 
@@ -25,16 +25,45 @@ import HeightIcon from '@material-ui/icons/Height';
 
 import classNames from "classnames"
 import { light } from '@material-ui/core/styles/createPalette';
+import { lineHeight } from '@material-ui/system';
 
-const useStyles = makeStyles((theme) => {
+
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import DetectableOverflow from "react-detectable-overflow"
+
+
+const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, ...theme }) => {
 
 
   return {
 
     collapseCss: () => {
       return {
+
+        // right: 0,
+
+        // // display: "flex",
+        // alignItems: "center",
+        // //   opacity: 0.5,
+        // //  transition: "width 0.3s",
+        // // width: showSettingBar ? "100%" : 0,
+        // width: "100%",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+
+        paddingBottom: "4px",
+        // margin: 0,
+        // padding: 0,
+        // minWidth: 0,
+        // minHeight: 0,
+
         "& .MuiCollapse-wrapperInner": {
-          display: "flex"
+          display: "flex",
+          margin: 0,
+          padding: 0,
+          minWidth: 0,
+          minHeight: 0,
         }
 
       }
@@ -49,9 +78,21 @@ const useStyles = makeStyles((theme) => {
         backgroundColor: "pink",
         minWidth: 0,
         minHeight: 0,
+
+        "& .MuiSvgIcon-fontSizeSmall": {
+          ...breakpointsAttribute(["fontSize", textSizeArr]),
+
+        },
+
+
+        "& .MuiTabs-scrollable": {
+          height: "auto",
+          display: "flex",
+        },
+
         //  display:"inline-flex",
         "& .MuiTabs-indicator": {
-          //    backgroundColor: "transparent",
+          backgroundColor: "transparent",
           // flexWrap: "wrap",
           minWidth: "0px",
           minHeight: "0px",
@@ -60,7 +101,7 @@ const useStyles = makeStyles((theme) => {
 
         },
         "& .MuiTabs-flexContainer": {
-          display: "inline-block",
+          //  display: "flex",
         },
         "& button": {
           margin: 0,
@@ -98,7 +139,6 @@ const useStyles = makeStyles((theme) => {
 
 
 
-
 export default function EditingBlock(props) {
 
 
@@ -106,10 +146,12 @@ export default function EditingBlock(props) {
 
   const theme = useTheme()
 
-  const { toolBarCss,collapseCss } = useStyles()
+  const { toolBarCss, collapseCss } = useStyles()
+  const { editorBlockKeyArr, setEditorBlockKeyArr, darkToLightArr, setDarkToLightArr, bgImageObj, editorState, setEditorState } = useContext(Context)
 
+  //const { editorState, setEditorState, editorRef, gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock, markingColorBlock } = props;
+  const { editorRef, gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock, markingColorBlock } = props;
 
-  const { editorState, setEditorState, editorRef, gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock } = props;
   const selection = editorState.getSelection()
   const startKey = selection.getStartKey()
   const endKey = selection.getEndKey()
@@ -118,185 +160,70 @@ export default function EditingBlock(props) {
   const hasFocus = selection.getHasFocus()
   const isCollapsed = selection.isCollapsed()
 
+
+  const isFocusIn = hasFocus && isStartKeyIn && isEndKeyIn
+
   const displayToolBar = hasFocus && isStartKeyIn && isEndKeyIn
   //const arr = [props.children[0]]
   //let preItemValue = props.children[0].props.children.props.block.getData().toObject().backgroundImage
 
-  const [loaded, setLoaded] = useState(false)
+  const headKey = props.children[0].props.children.props.block.getKey()
+
+
+  const hasLoaded = editorBlockKeyArr.some(key => {
+    return key === headKey
+  })
+  //const [loaded, setLoaded] = useState(hasLoaded)
 
   const [showSettingBar, setShowSettingBar] = useState(true)
 
 
-  const allClassNames = classNames({
+  const lightToDarkCss = classNames({
 
-    "editor-block-wrapper": true,
-    "editor-block-wrapper-focus-on": displayToolBar || !loaded
+    "editor-block-light": !(hasFocus && isStartKeyIn && isEndKeyIn && hasLoaded),
+    "editor-block-dark": hasFocus && isStartKeyIn && isEndKeyIn && hasLoaded   //displayToolBar && hasLoaded 
 
   })
+
+
+  const ediotrBlockCss = function () { return darkToLightArr.includes(headKey) ? "editor-block-dark-light" : lightToDarkCss }()
+
 
 
   const settingIconCss = classNames({
     "rotate2": true,
   })
 
-
-  const toolBar =
-
-    useMemo(
-      () => (
-        <Collapse
-          contentEditable={false}
-          in={loaded && isStartKeyIn && isEndKeyIn}
-          timeout={{ enter: 300, exit: 0 }}
-          //  elevation={0}
-          className={collapseCss}
-          style={{
-            //boxShadow: theme.shadows[5],
-            //  transform: "translateY(-100%)",
-            //  position: "absolute",
-            // randomColor(), //colorValues('#' + (Math.random() * 0xFFFFFF << 0).toString(16)),
-            // right: 0,
-
-            // // display: "flex",
-            // alignItems: "center",
-            // //   opacity: 0.5,
-            // //  transition: "width 0.3s",
-            // // width: showSettingBar ? "100%" : 0,
-            // width: "100%",
-            // whiteSpace: "nowrap",
-            // overflow: "hidden",
-           // lineHeight: 1,
-          }}
-        >
-          <div style={{ display: "inline-block" }}>
-            <Zoom in={showSettingBar} unmountOnExit={true}>
-              <IconButton className={theme.sizeCss}
-                contentEditable={false}
-
-                onClick={function (e) {
-                  e.preventDefault(); e.stopPropagation()
-                  //   markingImageBlock(blockKey)
-                  //  setShowColorPanel(pre => !pre)
-                }}
-              >
-                <InsertPhotoOutlinedIcon className={theme.sizeCss} />
-              </IconButton>
-            </Zoom>
-
-            <Zoom in={showSettingBar} unmountOnExit={true}>
-              <IconButton className={theme.sizeCss}
-                contentEditable={false}
-
-                onClick={function (e) {
-                  e.preventDefault(); e.stopPropagation();
-                  //   inputRef.current.click()
-                }}
-              >
-                <ImageTwoToneIcon className={theme.sizeCss} />
-              </IconButton>
-            </Zoom>
-          </div>
-
-
-          {/* <div style={{ backgroundColor: "lightcoral", display: "inline-block" }}> */}
-
-          <Tabs
-
-            className={toolBarCss}
-
-            indicatorColor="primary"
-            value={1}
-            selectionFollowsFocus={true}
-            //onChange={handleChange}
-            indicatorColor="primary"
-            textColor="primary"
-            // variant="fullWidth"
-
-            variant="scrollable"
-            scrollButtons="auto"
-            style={{
-              // display: "inline-block",
-              // backgroundColor: "lightyellow" 
-
-            }}
-          >
-
-            {gradientStyleArr.map(function (item, index) {
-
-              return (
-
-                <Tab key={index}
-                  value={index}
-                  icon={<IconButton className={theme.sizeCss} key={index}
-                    contentEditable={false}
-                    style={{
-                      padding: 0,
-                    }}
-                    onClick={function (e) {
-                      e.preventDefault(); e.stopPropagation();
-                      //    markingColorBlock(e, editorState, setEditorState, item, blockKey, true)
-
-                    }}>
-                    <div className={theme.sizeCss} style={{ borderRadius: "1000px", ...item }} />
-                  </IconButton>}
-                />
-
-
-
-              )
-
-
-              return (
-
-
-
-
-
-
-                <Slide key={index} in={loaded && displayToolBar} in={true} direction="left"
-                  timeout={{ enter: 50 * index + 100, exit: 50 * (gradientStyleArr.length - index) }}
-                  unmountOnExit={true}>
-
-                  <IconButton className={theme.sizeCss} key={index}
-                    contentEditable={false}
-                    style={{
-                      padding: 0,
-                    }}
-                    onClick={function (e) {
-                      e.preventDefault(); e.stopPropagation();
-                      //    markingColorBlock(e, editorState, setEditorState, item, blockKey, true)
-
-                    }}>
-                    <div className={theme.sizeCss} style={{ borderRadius: "1000px", ...item }} />
-                  </IconButton>
-                </Slide>
-
-
-              )
-            })}
-          </Tabs>
-          {/* </div> */}
-        </Collapse>
-      ),
-      [showSettingBar, loaded && displayToolBar]
-    )
+  const inputRef = useRef()
 
 
 
 
   useEffect(function () {
+    if (!hasLoaded) {
 
-    setLoaded(true)
+      setEditorBlockKeyArr(pre => {
+        return [...pre, headKey]
+      })
+
+    }
+
+    if (setDarkToLightArr.length > 0) {
+      setTimeout(() => {
+        setDarkToLightArr([])
+      }, 300);
+
+    }
+
 
   }, [])
 
 
-
   return (
 
-    <div className={allClassNames}>
-      {/* <div className="editor-block-wrapper"> */}
-      {props.children.map((item, index) => {
+    <div className={ediotrBlockCss}>
+
+      {props.children.map((item, index, allChildren) => {
 
         const block = item.props.children.props.block
 
@@ -309,7 +236,7 @@ export default function EditingBlock(props) {
                 //  className={theme.sizeCss}
                 contentEditable={false}
                 style={{
-                  transform: "translateX(100%) translateY(-100%)",
+                  transform: "translateX(0%) translateY(-100%)",
                   position: "absolute",
                   //  background: "skyblue",
                   justifyContent: "center",
@@ -341,11 +268,26 @@ export default function EditingBlock(props) {
                     e.preventDefault()
                     e.stopPropagation()
 
+                    if (allChildren[index + 1]) {
+
+                      const nextItem = allChildren[index + 1]
+                      const nextBlock = nextItem.props.children.props.block
+                      if (nextBlock.getType() === "editingBlock") {
+
+                        setDarkToLightArr(pre => {
+                          return [...pre, nextBlock.getKey()]
+                        })
+                      }
+
+                    }
+
                     // markingColorBlock()
                     // markingColorBlock(e, editorState, setEditorState, {}, blockKey)
 
                     setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
-
+                    block.getKey() === headKey && setEditorBlockKeyArr(pre => {
+                      return pre.filter(key => { return key !== headKey })
+                    })
                     //setShowSettingBar(pre => !pre)
                   }}
                 >
@@ -366,10 +308,16 @@ export default function EditingBlock(props) {
       })}
 
 
+      <Collapse in={isFocusIn} unmountOnExit={true}  contentEditable={false}>
+    
+          <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
+            ediotrBlockCss={ediotrBlockCss} anmimationType={null}
+          />
+       
+      </Collapse>
 
-      {toolBar}
-      {/* </div> */}
     </div >
+
   )
 
 
@@ -377,15 +325,178 @@ export default function EditingBlock(props) {
 }
 
 
+function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBlockCss, anmimationType }) {
+
+  const theme = useTheme()
+  const { gradientStyleArr } = useContext(Context)
+  const [isOverFlow, setIsOverFlow] = useState(false)
+
+  const [randomId] = useState("--toolbar--" + Math.floor(Math.random() * 1000))
+
+  return (
+    <div className={theme.heightCss} style={{ display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center" }}
+
+      contentEditable={false}
+    >
+      {isOverFlow && <IconButton
+        style={{
+          alignItems: "center",
+        }}
+        className={theme.sizeCss}
+        contentEditable={false}
+        onClick={function () {
+
+          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
+
+          toolBar.scrollBy({
+            top: 0,
+            left: -Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
+            behavior: 'smooth'
+          })
+
+        }}
+        onDoubleClick={function (e) {
+          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
+          toolBar.scrollBy({
+            top: 0,
+            left: -1000,
+            behavior: 'smooth'
+          })
+        }}
+
+      >
+        <ChevronLeftIcon className={theme.sizeCss} />
+      </IconButton>
+      }
+
+      <IconButton className={theme.sizeCss}
+        contentEditable={false}
+
+        onClick={function (e) {
+          e.preventDefault(); e.stopPropagation()
 
 
 
-function randomColor() {
+          markingImageBlock(editorState.getSelection().getStartKey())
+          //  setShowColorPanel(pre => !pre)
+        }}
+      >
+        <InsertPhotoOutlinedIcon className={theme.sizeCss} />
+      </IconButton>
 
-  Math.floor(Math.random() * 255)
+      <IconButton className={theme.sizeCss}
+        contentEditable={false}
 
-  return `rgba(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},0.1)`
+        onClick={function (e) {
+          e.preventDefault(); e.stopPropagation();
 
+          inputRef.current.click()
+
+
+
+        }}
+      >
+        <ImageTwoToneIcon className={theme.sizeCss} />
+      </IconButton>
+
+      <DetectableOverflow
+
+        onChange={function (overflow) { setIsOverFlow(overflow) }}
+
+        className={theme.heightCss}
+        style={{
+          display: "block",
+          // backgroundColor: "wheat", 
+          whiteSpace: "nowrap",
+
+          lineHeight: 1,
+          overflow: "hidden",
+          [randomId]: "--toolbar",
+
+        }}>
+        {gradientStyleArr.map(function (item, index) {
+
+
+          return (
+            React.createElement(
+              anmimationType || React.Fragment,
+              {
+                key: index,
+
+                ...anmimationType && {
+                  in: true, unmountOnExit: true,
+                  timeout: { enter: hasLoaded ? 0 : Math.floor((index + 1) / gradientStyleArr.length * (gradientStyleArr.length / 9 * 700)) },
+                  contentEditable: false,
+                  style: {
+                    userSelect: "none",
+                  }
+                },
+              }
+              ,
+              <div className={theme.sizeCss}
+                contentEditable={false}
+
+                key={index}
+                style={{
+                  borderRadius: "1000px",
+                  display: "inline-block",
+                  verticalAlign: "top",
+                  userSelect: "none",
+                  ...item
+                }}
+
+                onMouseDown={function (e) {
+                  e.preventDefault(); e.stopPropagation();
+
+                }}
+                onClick={function (e) {
+                  e.preventDefault(); e.stopPropagation();
+                  // todo   markingColorBlock(e, editorState, setEditorState, item, headKey, true)
+                }}
+              />
+            )
+          )
+
+        })}
+      </DetectableOverflow >
+
+
+      {isOverFlow && <IconButton
+        style={{
+          alignItems: "center",
+        }}
+        className={theme.sizeCss}
+
+        contentEditable={false}
+
+        onClick={function (e) {
+
+
+          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
+          toolBar.scrollBy({
+            top: 0,
+            left: Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
+            behavior: 'smooth'
+          })
+          // document.querySelector('div[style*="--toolbar--xx"]').scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
+        }}
+        onDoubleClick={function (e) {
+          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
+          toolBar.scrollBy({
+            top: 0,
+            left: 1000,
+            behavior: 'smooth'
+          })
+        }}
+
+      >
+        <ChevronRightIcon className={theme.sizeCss} />
+      </IconButton>
+      }
+
+    </div >
+  )
 }
+
 
 

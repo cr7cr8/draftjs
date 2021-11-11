@@ -147,10 +147,10 @@ export default function EditingBlock(props) {
   const theme = useTheme()
 
   const { toolBarCss, collapseCss } = useStyles()
-  const { editorBlockKeyArr, setEditorBlockKeyArr, darkToLightArr, setDarkToLightArr, bgImageObj, editorState, setEditorState } = useContext(Context)
+  const { editorBlockKeyArr, setEditorBlockKeyArr, darkToLightArr, setDarkToLightArr, bgImageObj, editorState, setEditorState, editorRef,} = useContext(Context)
 
   //const { editorState, setEditorState, editorRef, gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock, markingColorBlock } = props;
-  const { editorRef, gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock, markingColorBlock } = props;
+  const {  gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock, markingColorBlock, toolButtonRef } = props;
 
   const selection = editorState.getSelection()
   const startKey = selection.getStartKey()
@@ -159,13 +159,15 @@ export default function EditingBlock(props) {
   const isEndKeyIn = props.children.some(item => { return item.props.children.props.block.getKey() === endKey })
   const hasFocus = selection.getHasFocus()
   const isCollapsed = selection.isCollapsed()
-
+  const focusKey = selection.getFocusKey()
 
   const isFocusIn = hasFocus && isStartKeyIn && isEndKeyIn
 
   const displayToolBar = hasFocus && isStartKeyIn && isEndKeyIn
   //const arr = [props.children[0]]
   //let preItemValue = props.children[0].props.children.props.block.getData().toObject().backgroundImage
+
+
 
   const headKey = props.children[0].props.children.props.block.getKey()
 
@@ -182,9 +184,6 @@ export default function EditingBlock(props) {
 
     "editor-block-light": !(hasFocus && isStartKeyIn && isEndKeyIn && hasLoaded),
     "editor-block-dark": hasFocus && isStartKeyIn && isEndKeyIn && hasLoaded   //displayToolBar && hasLoaded 
-
-
-
 
   })
 
@@ -222,6 +221,40 @@ export default function EditingBlock(props) {
   }, [])
 
 
+  useEffect(function () {
+
+
+    //  props.children[0].props.children.props.block.getData().toObject().backgroundImage
+
+    // const element = Array.from(props.children).find(item => {
+
+
+    //   return item.props.children.props.block.getKey() === focusKey
+
+
+    // })
+
+    // data-offset-key="9itp6-0-0"
+
+    // const element = editorBlockRef.current._node
+
+    // const bound = element && element.getBoundingClientRect()
+
+    const element = document.querySelector(`div[data-offset-key*="${startKey}"]`)
+    const bound = element && element.getBoundingClientRect()
+
+    const bound2 = editorRef.current.editor.editor.getBoundingClientRect()
+
+
+    //console.log(startKey,element)
+
+    //console.log(toolButtonRef)
+     selection.hasFocus && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
+
+
+  })
+
+
   return (
 
     <div className={ediotrBlockCss}>
@@ -230,93 +263,20 @@ export default function EditingBlock(props) {
 
         const block = item.props.children.props.block
 
-        if (isCollapsed && (startKey === block.getKey())) {
-          return (
-            <React.Fragment key={index} >
-              {item}
 
-              <div
-                //  className={theme.sizeCss}
-                contentEditable={false}
-                style={{
-                  transform: "translateX(0%) translateY(-100%)",
-                  position: "absolute",
-                  //  background: "skyblue",
-                  justifyContent: "center",
-                  display: "flex",
-                  alignItems: "center",
-                  //  backgroundColor: "skyblue",
-                  //  width:"100%",
-                  right: 0,
-                  zIndex: 0,
-                  userSelect: "none"
-                }}
-              >
-                <div style={{ width: 0 }}>&nbsp;</div>
+        return item
 
-                <IconButton
-                  style={{
-                    transform: "translateX(0%)",
-                    alignItems: "center",
-                    //backgroundColor: "wheat",
-                  }}
-                  className={theme.sizeCss + " "}
-                  contentEditable={false}
-                  onMouseDown={function (e) {
-                    e.preventDefault()
-                    e.stopPropagation()
-                  }}
-
-                  onClick={function (e) {
-                    e.preventDefault()
-                    e.stopPropagation()
-
-                    if (allChildren[index + 1]) {
-
-                      const nextItem = allChildren[index + 1]
-                      const nextBlock = nextItem.props.children.props.block
-                      if (nextBlock.getType() === "editingBlock") {
-
-                        setDarkToLightArr(pre => {
-                          return [...pre, nextBlock.getKey()]
-                        })
-                      }
-
-                    }
-
-                    // markingColorBlock()
-                    // markingColorBlock(e, editorState, setEditorState, {}, blockKey)
-
-                    setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
-                    block.getKey() === headKey && setEditorBlockKeyArr(pre => {
-                      return pre.filter(key => { return key !== headKey })
-                    })
-                    //setShowSettingBar(pre => !pre)
-                  }}
-                >
-
-                  <CloseIcon className={theme.sizeCss + " " + settingIconCss} />
-                </IconButton>
-                {/* </div> */}
-              </div>
-
-            </React.Fragment>
-          )
-        }
-        else {
-          return item
-        }
 
 
       })}
 
 
-      <Collapse in={isFocusIn} unmountOnExit={true}  contentEditable={false}>
-    
-          <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
-            ediotrBlockCss={ediotrBlockCss} anmimationType={null}
-          />
-       
+      <Collapse in={isFocusIn} unmountOnExit={true} contentEditable={false}>
+
+        <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
+          ediotrBlockCss={ediotrBlockCss} anmimationType={null}
+        />
+
       </Collapse>
 
     </div >
@@ -335,10 +295,6 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
   const [isOverFlow, setIsOverFlow] = useState(false)
 
   const [randomId] = useState("--toolbar--" + Math.floor(Math.random() * 1000))
-
-
-
-
 
   return (
     <div className={theme.heightCss} style={{ display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center" }}
@@ -505,25 +461,5 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
   )
 }
 
-
-
-function setEditingBlockData() {
-
-
-
-}
-
-
-
-
-
-
-// function randomColor() {
-
-//   Math.floor(Math.random() * 255)
-
-//   return `rgba(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},0.1)`
-
-// }
 
 

@@ -13,7 +13,10 @@ import { stateToHTML } from 'draft-js-export-html';
 
 
 //import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
-import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button, } from "@material-ui/core";
+import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button } from "@material-ui/core";
+
+import ToolButton from "./ToolButton"
+
 import { makeStyles, useTheme, ThemeProvider, withTheme } from '@material-ui/styles';
 
 
@@ -52,79 +55,30 @@ import {
 
 import { getDefaultKeyBinding, KeyBindingUtil } from 'draft-js';
 const { hasCommandModifier } = KeyBindingUtil;
+const initialState = { entityMap: {}, blocks: [] };
 
-
-
-
-const Div = styled.div.withConfig({
-
-  shouldForwardProp: (prop, htmlAttributeCheckFn) => { return true }
-
-})`
-
-${props => {
-
-    //  console.log(props)
-    return {
-      width: 100,
-      height: 200,
-      backgroundColor: "pink",
-    }
-
-  }}
-
-`
-
-const initialState = {
-  entityMap: {},
-  blocks: []
-};
 const { mentionPlugin, taggingMention, checkShowing } = createMentionPlugin()
 const { emojiPlugin, EmojiPanel } = createEmojiPlugin()
 const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setImageBlockData*/ } = createImagePlugin()
 
 
 
-//const { fontBarPlugin, taggingFontBar } = createFontBarPlugin()
-
-
-// const useStyles = makeStyles(function (theme) {
-
-//   return {
-//     editorPaperCss: (props) => {
-//       return {
-//         ...theme.breakpointsAttribute(["fontSize", theme.textSizeArr])
-//       }
-//     }
-//   }
-// })
-
-
-const useStyles = makeStyles((theme) => {
-
-
-  return {
-    colorBlockCss: (data) => {
-      return {
-        backgroundImage: data.backgroundImage
-      }
-    }
-  }
-
-})
-
 
 
 export default withContext(function DraftEditor({ ctx, ...props }) {
-  //const theme = useTheme()
 
-  const key = useRef(Math.random() + "")
+
+
 
   const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showHint, showFontBar,
     setShowFontBar, tabValue, setTabValue, panelColor, setPanelColor, editorBlockKeyArr } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
   const theme = useTheme()
+
+
+  const toolButtonRef = useRef()
+
 
   useLayoutEffect(function () {
 
@@ -196,21 +150,33 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       }
     )
 
+    // const selection = editorState.getSelection()
+    // const startKey = selection.getStartKey()
 
+    // const element = document.querySelector(`div[data-offset-key*="${startKey}"]`)
+    // const bound = element && element.getBoundingClientRect()
+
+    // const bound2 = editorRef.current.editor.editor.getBoundingClientRect()
+
+
+    // //console.log(startKey,element)
+
+    // //console.log(toolButtonRef)
+    //  toolButtonRef.current && toolButtonRef.current.setTop(bound.top - 300)
 
 
   })
 
 
-  const selection = editorState.getSelection()
 
 
 
+  const toolButton = useState(React.createElement(ToolButton, { editorState, setEditorState }))
 
 
   return (
 
-    <React.Fragment key={key.current}>
+    <React.Fragment>
 
       <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}>
         <EmojiPanel />
@@ -219,8 +185,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
       <Paper style={{ position: "relative", wordBreak: "break-all" }} >
 
+        <ToolButton {...{ editorState, setEditorState, toolButtonRef }} />
 
-        {ctx.showFontBar && <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColor, setPanelColor }} />}
+        {ctx.showFontBar && <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColor, setPanelColor, }} />}
         <Editor
 
           // onFocus={function (e, two) {
@@ -245,9 +212,12 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             // newState = taggingFontBar(newState)
             newState = taggingMention(showHint, newState)
 
-            setShowFontBar(!newState.getSelection().isCollapsed())
+            //  setShowFontBar(!newState.getSelection().isCollapsed())
 
-            //setShowFontBar(true)
+            //  setShowFontBar(true)
+
+
+
 
             setEditorState(newState)
           }}
@@ -259,13 +229,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           preserveSelectionOnBlur={true}
 
           customStyleMap={{
-
             // LARGE:{
             //   color:"red"
             // }
-
-
-
           }}
 
           customStyleFn={function (style, block) {
@@ -328,42 +294,23 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const blockKey = block.getKey()
             const startKey = editorState.getSelection().getStartKey()
 
+            const randomNum = Math.floor(Math.random() * 2) % 2 === 1
 
             const allClassName = classNames({
 
               "image-block-figure": ((blockType === "atomic") && (blockText === "imageBlockText")) || (blockType === "imageBlock"),
-
-              // "unstyled-focus-on > div[data-offset-key]": blockKey === startKey,
-              // "unstyled-focus-off > div[data-offset-key]": blockKey !== startKey,
-
-
               "text-center": blockData.centerBlock,
               "text-right": blockData.rightBlock,
               "unselectable": !blockText,
-              "unstyled-block": blockType === "unstyled"
+              "unstyled-block": true,// blockType === "unstyled" && randomNum,
+              "unstyled-block2": false,//blockType === "unstyled" && !randomNum
 
             })
 
             return allClassName
-            // if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
-            //   return "image-block-figure"
-            // }
-            // if ((!text) && (type === "unstyled")) {
-            //   return "unstyled-text-draft-block"
-            // }
-            // if (data.centerBlock) {
-            //   return "text-center"
-            // }
-            // if (data.rightBlock) {
-            //   return "text-right"
-            // }
-            // if (!text) {
-            //   return "unselectable"
-            // }
+
 
           }}
-
-
 
           blockRenderMap={
             Immutable.Map({
@@ -377,6 +324,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   markingImageBlock={markingImageBlock}
                   markingColorBlock={markingColorBlock}
                   editorBlockKeyArr={editorBlockKeyArr}
+                  toolButton={toolButton}
                 />,
               },
 
@@ -391,6 +339,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   gradientStyleArr={gradientStyleArr}
                   markingImageBlock={markingImageBlock}
                   markingColorBlock={markingColorBlock}
+                  toolButtonRef={toolButtonRef}
 
                 />
 
@@ -399,10 +348,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             })
           }
 
-
-
-
-
           blockRendererFn={function (block) {
 
             const text = block.getText()
@@ -410,19 +355,13 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const type = block.getType()
             const blockKey = block.getKey()
             const selection = editorState.getSelection()
-            // const startKey = selection && (!selection.isCollapsed())&&selection.getStartKey()
-            // if (startKey.current === blockKey) {
-
-            //   console.log(blockKey)
-
-            // }
-            // if ((!text) && (type === "unstyled")) {
 
             if ((type === "unstyled")) {
 
               return {
                 component: ToolBlock,
                 editable: true,
+
                 props: {
                   editorRef,
                   readOnly,
@@ -436,24 +375,14 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   bgImageObj,
                   showFontBar,
                   setShowFontBar,
+                  toolButtonRef,
                 }
               }
             }
 
-            // if (type === "colorBlock") {
 
-            //   return {
-            //     component: ColorBlock,
-            //     editable: true,
-
-            //   }
-
-            // }
-
-
-            //   if (((type === "atomic") && (text === "imageBlockText")) || (type === "imageBlock")) {
             if (type === "imageBlock") {
-              //   console.log(JSON.stringify(data))
+
               return {
 
                 component: ImagePanel,
@@ -471,52 +400,96 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               }
             }
 
-            // else {
-            //   return null
-            // }
+
 
           }}
 
 
           keyBindingFn={function (e, { getEditorState, setEditorState, ...obj }) {
+            //return undefined to carry on
             const editorState = getEditorState()
-            const selectionState = editorState.getSelection();
+            const selection = editorState.getSelection();
 
-            const startKey = selectionState.getStartKey();
-            const startOffset = selectionState.getStartOffset();
-            const endOffset = selectionState.getEndOffset();
+            const startKey = selection.getStartKey()
+            const startOffset = selection.getStartOffset()
+
+            const endKey = selection.getEndKey()
+            const endOffset = selection.getEndOffset()
+
+            const anchorKey = selection.getAnchorKey()
+            const anchorOffset = selection.getAnchorOffset()
+            const focusKey = selection.getFocusKey()
+            const focusOffset = selection.getFocusOffset()
+
+            const isCollapsed = selection.isCollapsed()
+            const isInOrder = !selection.getIsBackward()
+            const hasFocus = selection.getHasFocus()
+
+            // console.log(startKey, startOffset, endKey, endOffset, anchorKey, anchorOffset, focusKey, focusOffset, isCollapsed, isInOrder, hasFocus)
+
+
             const contentState = editorState.getCurrentContent();
-            const block = contentState.getBlockForKey(selectionState.getStartKey());
             const allBlocks = contentState.getBlockMap()
+
+            const block = contentState.getBlockForKey(startKey);
+            const blockText = block.getText()
+
+            const keyBefore = contentState.getKeyBefore(startKey)
+            const blockBefore = contentState.getBlockBefore(startKey)
+
             const firstBlockKey = allBlocks.slice(0, 1).toArray().shift().getKey()
 
 
+            if ((e.keyCode === 8) && (isCollapsed) && (blockText.length === 0) && (startOffset === 0) && (startKey !== firstBlockKey)) {
 
-            if ((e.keyCode === 8) && (startOffset === 0) && allBlocks.size !== 1 && selectionState.isCollapsed() && startKey !== firstBlockKey) {
+              if (!contentState.getKeyAfter(startKey)) {
+                return undefined
+              }
+              else {
+                //     alert("done")
 
 
-              //if ((e.keyCode === 8) && (startOffset === 0)  && selectionState.isCollapsed() ) {
-              return "backspace"
+
+                let newContentState = Modifier.replaceText(contentState, selection, " ")
+                let es = EditorState.push(editorState, newContentState, "insert-characters")
+
+          
+                es = deleteBlock2(es, startKey, setEditorState)
+                let newSelection = es.getSelection()
+
+                newSelection = newSelection.merge({
+
+                  anchorOffset: newSelection.getAnchorOffset() + 0,  //hilight +0   ,not hilight +1
+                  focusOffset: newSelection.getFocusOffset() + 1
+                })
+
+                es = EditorState.forceSelection(es, newSelection)
+
+
+                setEditorState(es)
+
+                return "dummy"
+
+
+              }
 
             }
+            else if ((e.keyCode === 8) && (isCollapsed) && (startOffset === 0) && (startKey !== firstBlockKey)) {
 
-            // if (!checkShowing() && e.keyCode === 38) {
-            //   //alert("38")
-            //   return isFirefox ? "moveUp" : undefined
-            // }
-            // if (!checkShowing() && e.keyCode === 40) {
-            //   //  alert("40")
-            //   return isFirefox ? "moveDown" : undefined
-            // }
 
-            // if (!checkShowing() && e.keyCode === 38) {
-            //   //alert("38")
-            //   return isFirefox ? "moveUp" : "moveUp"
-            // }
-            // if (!checkShowing() && e.keyCode === 40) {
-            //   //  alert("40")
-            //   return isFirefox ? "moveDown" : "moveDown"
-            // }
+
+              deleteBlock1(editorState, startKey, setEditorState)
+
+
+              // const content = deleteBlock2(contentState, startKey)
+              // const newState = EditorState.push(editorState, content, 'remove-block');
+              // setEditorState(newState)
+
+              return ("done")
+            }
+
+
+
 
 
             if (checkShowing() && e.keyCode === 38) {
@@ -539,13 +512,29 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           handleKeyCommand={function (command, editorState, evenTimeStamp, { getEditorState }) {
             // return undefiend and return not-handled will be igonred in handleKeyCommand
 
+            //  const newState = RichUtils.handleKeyCommand(editorState, command);
 
-            if (command === "backspace") {
-           //   alert("dd")
-              const selectionState = editorState.getSelection();
-              const startKey = selectionState.getStartKey();
-              setEditorState(deleteBlock2(editorState, startKey))
-              // return "handled"
+
+
+            if (command === "deletemore") {
+
+
+
+
+              //RichUtils.handleKeyCommand(editorState, "deletemore")
+              return editorState
+
+
+              //  alert("dfdf")
+            }
+
+            if (command === "backspace") {    //builtin command when hit backspace if not binded in keypress
+
+
+
+              //   RichUtils.handleKeyCommand(editorState, "deletemore")
+
+
             }
 
 
@@ -651,24 +640,15 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
           }}
 
 
-          stripPastedStyles={true}
+
+
+          stripPastedStyles={false}
         // handlePastedText={function (text, html, editorState, props) {
 
         // //  alert(text)
         // //   return "handled"
         //   return "un-handled"
         // }}
-
-
-
-        // handleBeforeInput={function (chars, editorState, evenTimeStamp, { setEditorState }) {
-        //   const selectionState = editorState.getSelection();
-        //   const contentState = editorState.getCurrentContent();
-        //   const block = contentState.getBlockForKey(selectionState.getStartKey());
-        //     console.log(chars.length)
-        // }}
-
-
         />
 
       </Paper>
@@ -703,15 +683,18 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
 
-function deleteBlock(store, blockKey) {
+
+
+
+function deleteBlock1(store, blockKey, setEditorState) {
   // const editorState = store.getEditorState();
-  console.log(Math.random())
+
   const editorState = store;
   let content = editorState.getCurrentContent();
 
   const beforeKey = content.getKeyBefore(blockKey);
   const beforeBlock = content.getBlockForKey(beforeKey);
-
+  const beforeBlockText = beforeBlock && beforeBlock.getText();
   // Note: if the focused block is the first block then it is reduced to an
   // unstyled block with no character
   if (beforeBlock === undefined) {
@@ -740,41 +723,51 @@ function deleteBlock(store, blockKey) {
     return EditorState.forceSelection(newState, newSelection);
   }
 
+
+  //alert(`beforeTextLength ${beforeBlock.getText().length}  anchorKey ${beforeKey}  anchorOffset: ${beforeBlock.getLength()}   focusKey ${blockKey}  `)
+
   const targetRange = new SelectionState({
     anchorKey: beforeKey,
-    anchorOffset: beforeBlock.getLength(),
+    anchorOffset: beforeBlock.getLength(),//beforeBlockText && beforeBlockText.length || 0,// beforeBlock.getLength(),
     focusKey: blockKey,
-    focusOffset: 1,
+    focusOffset: 0,   // one in colorblock or editingBlock
   });
 
   content = Modifier.removeRange(content, targetRange, 'backward');
   const newState = EditorState.push(editorState, content, 'remove-block');
 
+
+
   // force to new selection
+
   const newSelection = new SelectionState({
     anchorKey: beforeKey,
     anchorOffset: beforeBlock.getLength(),
     focusKey: beforeKey,
     focusOffset: beforeBlock.getLength(),
   });
-  return EditorState.forceSelection(newState, newSelection);
-}
 
+
+  setEditorState(EditorState.forceSelection(newState, newSelection))
+
+
+
+  // return EditorState.acceptSelection(newState, newSelection);
+}
 
 
 function deleteBlock2(store, blockKey) {
   // const editorState = store.getEditorState();
-  console.log(Math.random())
+
   const editorState = store;
   let content = editorState.getCurrentContent();
 
   const beforeKey = content.getKeyBefore(blockKey);
   const beforeBlock = content.getBlockForKey(beforeKey);
-
+  const beforeBlockText = beforeBlock && beforeBlock.getText();
   // Note: if the focused block is the first block then it is reduced to an
   // unstyled block with no character
   if (beforeBlock === undefined) {
- //   alert("ffff")
     const targetRange = new SelectionState({
       anchorKey: blockKey,
       anchorOffset: 0,
@@ -800,39 +793,46 @@ function deleteBlock2(store, blockKey) {
     return EditorState.forceSelection(newState, newSelection);
   }
 
+
+  //alert(`beforeTextLength ${beforeBlock.getText().length}  anchorKey ${beforeKey}  anchorOffset: ${beforeBlock.getLength()}   focusKey ${blockKey}  `)
+
   const targetRange = new SelectionState({
     anchorKey: beforeKey,
-    anchorOffset: beforeBlock.getLength(),
+    anchorOffset: beforeBlock.getLength(),//beforeBlockText && beforeBlockText.length || 0,// beforeBlock.getLength(),
     focusKey: blockKey,
-    focusOffset: 0,
+    focusOffset: 0,   // one in colorblock or editingBlock
   });
 
   content = Modifier.removeRange(content, targetRange, 'backward');
   const newState = EditorState.push(editorState, content, 'remove-block');
 
+
+
   // force to new selection
+
   const newSelection = new SelectionState({
     anchorKey: beforeKey,
     anchorOffset: beforeBlock.getLength(),
     focusKey: beforeKey,
     focusOffset: beforeBlock.getLength(),
   });
+
+
+  //setEditorState(EditorState.forceSelection(newState, newSelection))
+
+
+
   return EditorState.forceSelection(newState, newSelection);
 }
 
 
 
-function ImagePanelWrap(props) {
-  //const {children,aonClick} = props.blockProps
-  // alert("a")
-
-  useEffect(function () {
-    //console.log(Date.now())
-
-  }, [])
 
 
 
 
-  return <ImagePanel  {...{ ...props.blockProps }} />
-}
+
+
+
+
+

@@ -190,6 +190,14 @@ figure {
   user-select: none;
 }
 
+.unstyled-block{
+  position: relative;
+  /* background-color: skyblue; */
+}
+.unstyled-block2{
+  background-color: lightgreen;
+}
+
 
 /* .unstyled-text-draft-block::before{
   content:"+";

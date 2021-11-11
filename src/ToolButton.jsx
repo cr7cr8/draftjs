@@ -1,225 +1,171 @@
-import React, { useMemo } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Switch from '@material-ui/core/Switch';
-import SpeedDial from '@material-ui/lab/SpeedDial';
-import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
-import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
-import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
-import SaveIcon from '@material-ui/icons/Save';
-import PrintIcon from '@material-ui/icons/Print';
-import ShareIcon from '@material-ui/icons/Share';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import { Image, AddPhotoAlternateOutlined } from "@material-ui/icons";
+import React, { useState, useRef, useEffect, useLayoutEffect, useContext, useCallback, createContext, useMemo } from 'react';
+import { Context, withContext } from "./ContextProvider"
 
-const useStyles = makeStyles((theme) => ({
+import { AvatarChip, AvatarLogo, TwoLineLabel } from "./AvatarLogo"
+import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 
-  speedDial: {
-    position: 'absolute',
+import Immutable from 'immutable';
 
-    '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
-      // bottom: theme.spacing(2),
-
-      ...theme.breakpointsAttribute(["right", [theme.multiplyArr(theme.textSizeArr, -1.1)]])
-    },
-    "& .MuiFab-root": {
-      // opacity:0,
-      minHeight: "unset",
-      boxShadow: theme.shadows[1],
-
-      ...theme.breakpointsAttribute(["width", [theme.textSizeArr]], ["height", [theme.textSizeArr]])
-    },
-    "& .MuiSpeedDialAction-staticTooltipLabel": {
-      display: "none"
-    },
-    "& .MuiSpeedDialAction-staticTooltip": {
-      //     right: theme.spacing(3),
-      marginRight: theme.spacing(-1),
-      //   ...theme.breakpointsAttribute(["right", [theme.multiplyArr(theme.textSizeArr, 1)]]),
-      //   ...theme.breakpointsAttribute(["marginRight", [theme.multiplyArr(theme.textSizeArr, 0.1)]]),
+import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
+import { FormControlLabel, Typography, IconButton, Button, ButtonGroup, Container, Paper, Avatar, Box, Chip, Grow, Zoom, Slide } from "@material-ui/core";
+import SwitchBtn from "./SwitchBtn"
 
 
-    },
-    "& .MuiSpeedDial-fab": {
-      // display: "none"
+
+
+import ColorLensOutlinedIcon from '@material-ui/icons/ColorLensOutlined';
+
+
+
+
+class ToolButton_ extends React.Component {
+
+
+  constructor(props) {
+    super(props)
+
+    this.editorState = this.props.editorState
+    this.setEditorState = this.props.setEditorState
+    this.state = {
+      top: 0,
+      left: 0,
     }
 
-    // '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
-    // //  top: theme.spacing(2),
-    //   left: theme.spacing(2),
-    // },
-  },
+  }
 
-  speedDial2: {
-    position: 'absolute',
-    transform: "translateX(-30%)",
-    '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
+  componentDidMount() {
 
+    this.props.toolButtonRef.current = this
+  }
 
-      ...theme.breakpointsAttribute(["right", [theme.multiplyArr(theme.textSizeArr, -1.1)]])
-    },
-    "& .MuiFab-root": {
+  componentWillUnmount() {
+    this.props.toolButtonRef.current = null
+  }
 
-      minHeight: "unset",
-      boxShadow: theme.shadows[1],
+  setTop = (value) => {
+  
+    this.setState(pre => {
+      return {
+        ...pre,
+        top: value
+      }
+    })
+  }
 
-      ...theme.breakpointsAttribute(["width", [theme.textSizeArr]], ["height", [theme.textSizeArr]])
-    },
-    "& .MuiSpeedDialAction-staticTooltipLabel": {
-      display: "none"
-    },
-    "& .MuiSpeedDialAction-staticTooltip": {
-      //     right: theme.spacing(3),
-      marginRight: theme.spacing(-1),
-      //   ...theme.breakpointsAttribute(["right", [theme.multiplyArr(theme.textSizeArr, 1)]]),
-      //   ...theme.breakpointsAttribute(["marginRight", [theme.multiplyArr(theme.textSizeArr, 0.1)]]),
-    },
-    "& .MuiSpeedDial-fab": {
-      // display: "none"
-    }
-
-  },
+  setLeft = (value) => {
+    this.setState(pre => {
+      return {
+        ...pre,
+        left: value
+      }
+    })
+  }
 
 
-}));
+  render() {
+
+    const theme = this.props.theme
+    const top = this.state.top
+    const setEditorState = this.props.setEditorState
+    const editorState = this.props.editorState
+    const ctx = this.props.ctx
+    //  console.log(theme)
+    return (
+
+      <IconButton
+        style={{
+          transform: "translateX(0%)",
+          alignItems: "center",
+          userSelect: "none",
+          position: "absolute",
+          //  left,
+          top,
+          right: 0,
+          zIndex: 100,
+          transition:"top 200ms"
+          //  backgroundColor: "pink"
+        }}
+        className={theme.sizeCss}
+        contentEditable={false}
+        onMouseDown={function (e) {
+          e.preventDefault()
+          e.stopPropagation()
+        }}
+
+        onClick={function (e) {
+          e.preventDefault()
+          e.stopPropagation()
+
+          // markingColorBlock()
+          // markingColorBlock(e, editorState, setEditorState, {}, blockKey)
+
+          setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
+
+          //setShowSettingBar(pre => !pre)
+        }}
+      >
+        <ColorLensOutlinedIcon contentEditable={false} className={theme.sizeCss + " " + "rotate1"} style={{ userSelect: "none" }} />
+      </IconButton>
+    )
 
 
 
-// export function ToolButton2({ addImage, hover, top = 0, left = 100, ...props }) {
-//   const classes = useStyles();
-
-//   const [open, setOpen] = React.useState(false);
-//   const [hidden, setHidden] = React.useState(false);
+  }
 
 
-//   const actions = useMemo(() => {
+}
 
 
-//     return [
-//       { icon: <AddPhotoAlternateOutlined />, name: `Copy`, clickFn: addImage },
-//       { icon: <SaveIcon />, name: 'Save' },
-//       // { icon: <PrintIcon />, name: 'Print' },
-//       // { icon: <ShareIcon />, name: 'Share' },
-//       // { icon: <FavoriteIcon />, name: 'Like' },
-//     ]
-//   }, [addImage]);
+const ToolButton = withTheme(withContext(ToolButton_))
+export default ToolButton
 
 
-//   const handleClose = () => {
-//     setOpen(false);
-//   };
+// export default function ToolButton({ editorState, setEditorState, ...props }) {
 
-//   const handleOpen = () => {
-//     setOpen(true);
-//   };
+//   const [top, setTop] = useState(0)
+//   const [left, setLeft] = useState(0)
+
+//   const theme = useTheme()
+
+
 
 //   return (
+//     <IconButton
+//       style={{
+//         transform: "translateX(0%)",
+//         alignItems: "center",
+//         userSelect: "none",
+//         position: "absolute",
+//         //  left,
+//         top,
+//         right: 0,
+//         zIndex: 100,
+//         //  backgroundColor: "pink"
+//       }}
+//       className={theme.sizeCss}
+//       contentEditable={false}
+//       onMouseDown={function (e) {
+//         e.preventDefault()
+//         e.stopPropagation()
+//       }}
 
+//       onClick={function (e) {
+//         e.preventDefault()
+//         e.stopPropagation()
 
-//     <SpeedDial
-//       style={{ top, left, transitionProperty: "" }}
-//       ariaLabel="SpeedDial example"
-//       className={classes.speedDial2}
+//         // markingColorBlock()
+//         // markingColorBlock(e, editorState, setEditorState, {}, blockKey)
 
-//       icon={<SpeedDialIcon />}
-//       onClose={handleClose}
-//       onOpen={handleOpen}
+//         setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
 
-//       hidden={false} //hidden={!hover}
-//       open={open}//open={hover}
-//       direction={"right"}
-//     // hidden={!hover}
-
+//         //setShowSettingBar(pre => !pre)
+//       }}
 //     >
-//       {actions.map((action) => (
-//         <SpeedDialAction
-//           key={action.name}
-//           icon={action.icon}
-//           //tooltipTitle={action.name}
-//           tooltipTitle={<></>}
-//           onClick={action.clickFn}
-//           tooltipPlacement="bottom"
-//           tooltipOpen={true}
+//       <ColorLensOutlinedIcon contentEditable={false} className={theme.sizeCss + " " + "rotate1"} style={{ userSelect: "none" }} />
+//     </IconButton>
+//   )
 
-//         />
-//       ))}
-//     </SpeedDial>
-
-
-//   );
 // }
 
 
 
-export default function SpeedDials({  blockKey, clickFn, hidden, readOnly, setReadOnly, insertImageBlock, ...props }) {
-  const classes = useStyles();
-
-  //const [open, setOpen] = React.useState(false);
-  // const [hidden, setHidden] = React.useState(false);
-
-
-  const actions = useMemo(() => {
-
-
-    return [
-      { icon: <AddPhotoAlternateOutlined />, name: `Copy`, clickFn },
-      { icon: <SaveIcon />, name: 'Save' },
-      // { icon: <PrintIcon />, name: 'Print' },
-      // { icon: <ShareIcon />, name: 'Share' },
-      // { icon: <FavoriteIcon />, name: 'Like' },
-    ]
-  }, [clickFn]);
-
-
-  const [open, setOpen] = React.useState(false)
-  const handleClose = () => {
-    setOpen(false);
-    setReadOnly(false)
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
-    setReadOnly(true)
-  };
-
-  return (
-
-    <SpeedDial
-      ariaLabel="SpeedDial example"
-      className={classes.speedDial}
-      icon={<SpeedDialIcon />}
-      onClose={handleClose}
-      onOpen={handleOpen}
-      hidden={true} //hidden={!hover}
-      open={!hidden}
-      direction={"left"}
-    // hidden={!hover}
-    >
-      {actions.map((action) => (
-        <SpeedDialAction
-          key={action.name}
-          icon={action.icon}
-          //tooltipTitle={action.name}
-          tooltipTitle={<></>}
-          //  onMouseDown={action.clickFn}
-       
-          onMouseDown={function () {
-       
-            setTimeout(() => {
-               insertImageBlock(blockKey)
-            }, 0);
-           
-          }}
-          tooltipPlacement="bottom"
-          tooltipOpen={true}
-
-        />
-      ))}
-    </SpeedDial>
-
-
-  );
-}
