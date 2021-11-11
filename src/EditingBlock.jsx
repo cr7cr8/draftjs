@@ -163,9 +163,6 @@ export default function EditingBlock(props) {
 
   const isFocusIn = hasFocus && isStartKeyIn && isEndKeyIn
 
-
-  const isFocusIn = hasFocus && isStartKeyIn && isEndKeyIn
-
   const displayToolBar = hasFocus && isStartKeyIn && isEndKeyIn
   //const arr = [props.children[0]]
   //let preItemValue = props.children[0].props.children.props.block.getData().toObject().backgroundImage
@@ -274,21 +271,12 @@ export default function EditingBlock(props) {
       })}
 
 
-<<<<<<< HEAD
       <Collapse in={isFocusIn} unmountOnExit={true} contentEditable={false}>
 
         <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
           ediotrBlockCss={ediotrBlockCss} anmimationType={null}
         />
 
-=======
-      <Collapse in={isFocusIn} unmountOnExit={true}  contentEditable={false}>
-    
-          <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
-            ediotrBlockCss={ediotrBlockCss} anmimationType={null}
-          />
-       
->>>>>>> fa0a0c36d64c90e58be0158845fa0d13b6921c5f
       </Collapse>
 
     </div >
