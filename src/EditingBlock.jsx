@@ -87,10 +87,10 @@ export default function EditingBlock(props) {
 
   const frameCss1 = classNames({
 
-   "shadowOn": isFocusIn,
-   "shadowOff": !isFocusIn,
-   "shadowEntering": (!(!firstTime && !isFocusIn)) && (firstTime && isFocusIn) && initial,
-   "shadowLeaving": (!firstTime && !isFocusIn) && initial,
+    "shadowOn": isFocusIn,
+    "shadowOff": !isFocusIn,
+    "shadowEntering": (!(!firstTime && !isFocusIn)) && (firstTime && isFocusIn) && initial,
+    "shadowLeaving": (!firstTime && !isFocusIn) && initial,
 
   })
 
@@ -125,7 +125,7 @@ export default function EditingBlock(props) {
 
     setTimeout(() => {
       setInitial(false)
-    }, 3000);
+    }, 300);
 
   }, [])
 
@@ -175,12 +175,22 @@ export default function EditingBlock(props) {
       })}
 
 
-      <Collapse in={isFocusIn} unmountOnExit={true} contentEditable={false}>
+      <Collapse in={isFocusIn} unmountOnExit={true} contentEditable={false}
 
+        onExited={function () {
+          const selection = editorState.getSelection()
+
+          // seteditorSate  
+          setEditorState(EditorState.acceptSelection(editorState, selection))
+
+        }}
+      >
+        {/* <div style={{ position:"absolute",overflow:"hidden", width:"100%"}}> */}
         <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
-          anmimationType={null} setEditorState={setEditorState}
+          anmimationType={null && Zoom} setEditorState={setEditorState}
+          isFocusIn={isFocusIn}
         />
-
+        {/* </div> */}
       </Collapse>
 
     </div >
@@ -192,7 +202,7 @@ export default function EditingBlock(props) {
 }
 
 
-function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBlockCss, anmimationType, setEditorState }) {
+function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBlockCss, isFocusIn, anmimationType, setEditorState }) {
 
   const theme = useTheme()
   const { gradientStyleArr } = useContext(Context)
@@ -201,7 +211,12 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
   const [randomId] = useState("--toolbar--" + Math.floor(Math.random() * 1000))
 
   return (
-    <div className={theme.heightCss} style={{ display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center", backgroundColor: "wheat" }}
+    <div className={theme.heightCss} style={{
+      display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center",
+      // position: "absolute",
+      // backgroundColor: "wheat" 
+      //zIndex:100,
+    }}
 
       contentEditable={false}
     >
@@ -236,7 +251,7 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
       </IconButton>
       }
 
-      <IconButton className={theme.sizeCss}
+      {/* <IconButton className={theme.sizeCss}
         contentEditable={false}
 
         onClick={function (e) {
@@ -250,9 +265,9 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
         }}
       >
         <InsertPhotoOutlinedIcon className={theme.sizeCss} />
-      </IconButton>
+      </IconButton> */}
 
-      <IconButton className={theme.sizeCss}
+       <IconButton className={theme.sizeCss}
         contentEditable={false}
 
         onClick={function (e) {
@@ -266,6 +281,7 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
       >
         <ImageTwoToneIcon className={theme.sizeCss} />
       </IconButton>
+      
 
       <DetectableOverflow
 
@@ -292,7 +308,7 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
                 key: index,
 
                 ...anmimationType && {
-                  in: true, unmountOnExit: true,
+                  in: isFocusIn, unmountOnExit: true,
                   timeout: { enter: hasLoaded ? 0 : Math.floor((index + 1) / gradientStyleArr.length * (gradientStyleArr.length / 9 * 700)) },
                   contentEditable: false,
                   style: {
