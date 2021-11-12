@@ -88,7 +88,7 @@ export default function createImagePlugin() {
     );
   };
 
-  function taggingEmoji(externalES,) {
+  function taggingEmoji(externalES, ) {
     const [anchorKey, anchorOffset, focusKey, focusOffset, isBackward, hasfocus] = externalES.getSelection().toArray()
     const [anchorStartKey, anchorStartOffset, anchorFocusKey, anchorFocusOffset, isAnchorBackward, isAnchorFocused]
       = [!isBackward ? anchorKey : focusKey, !isBackward ? anchorOffset : focusOffset, isBackward ? anchorKey : focusKey, isBackward ? anchorOffset : focusOffset,]
@@ -100,101 +100,104 @@ export default function createImagePlugin() {
 
     // externalES.getCurrentContent().getBlocksAsArray().forEach(function (block) {
 
-   // externalES.getCurrentContent().getBlockMap().forEach(function (block) {
+    // externalES.getCurrentContent().getBlockMap().forEach(function (block) {
 
-      const block = externalES.getCurrentContent().getBlockForKey(oldSelection.getStartKey())
+    const block = externalES.getCurrentContent().getBlockForKey(oldSelection.getStartKey())
 
-      const blockKey = block.getKey()
-      const blockText = block.getText()
-      const metaArr = block.getCharacterList()
-
-
-      // const [blockKey, blockType, blockText, metaArr] = block.toArray()
-
-      // metaArr.forEach(function (item, index) {
-      //   const itemEntityKey = item.getEntity()
+    const blockKey = block.getKey()
+    const blockText = block.getText()
+    const metaArr = block.getCharacterList()
 
 
-      //   if (itemEntityKey) {
-      //     const entityType = newContent.getEntity(itemEntityKey).getType()
-      //     if (entityType === "EMOJI") {
+    // const [blockKey, blockType, blockText, metaArr] = block.toArray()
 
-      //       newSelection = newSelection.merge({
-      //         anchorKey: blockKey,
-      //         anchorOffset: index,
-      //         focusKey: blockKey,
-      //         focusOffset: index + 1,
-      //         isBackward: false,
-      //         hasFocus: false,
-      //       })
-      //       newContent = Modifier.applyEntity(newContent, newSelection, null)
-      //     }
-      //   }
-      //  })
+    // metaArr.forEach(function (item, index) {
+    //   const itemEntityKey = item.getEntity()
 
 
+    //   if (itemEntityKey) {
+    //     const entityType = newContent.getEntity(itemEntityKey).getType()
+    //     if (entityType === "EMOJI") {
 
-      let matchArr;
-
-      // if  ((matchArr = /.|(^$)/.exec(blockText)) !== null) {
-
-      //   const emojiKey = matchArr[0]
-      //   const start = matchArr.index;
-      //   const end = matchArr.index + matchArr[0].length;
-      //   const contentLength = end - start;
-      //   const contentFocusAt = anchorFocusOffset - start;
-
-
-      //   newSelection = newSelection.merge({
-      //     anchorKey: blockKey,
-      //     anchorOffset: start,
-      //     focusKey: blockKey,
-      //     focusOffset: start + emojiKey.length,
-      //     isBackward: false,
-      //     hasFocus: false,
-
-      //   })
- 
-      //   newContent = newContent.createEntity("DUMMY", "IMMUTABLE", { emojiKey });
-      //   const entityKey = newContent.getLastCreatedEntityKey();
-
-      //   newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
-
-      // }
+    //       newSelection = newSelection.merge({
+    //         anchorKey: blockKey,
+    //         anchorOffset: index,
+    //         focusKey: blockKey,
+    //         focusOffset: index + 1,
+    //         isBackward: false,
+    //         hasFocus: false,
+    //       })
+    //       newContent = Modifier.applyEntity(newContent, newSelection, null)
+    //     }
+    //   }
+    //  })
 
 
 
-      while ((matchArr = emojiRegex.exec(blockText)) !== null) {
+    let matchArr;
+    // Commented out the dummy entity , because the  "setCurrentBlockKey" decleared in the drafteditor.js is placed in the onCHnage function of  draftEditor.js,
+    // so it will up date the editor state on every event change, such as key pressing event 
+    
+    
+    // if  ((matchArr = /.|(^$)/.exec(blockText)) !== null) {
 
-        const emojiKey = matchArr[0]
-        const start = matchArr.index;
-        const end = matchArr.index + matchArr[0].length;
-        const contentLength = end - start;
-        const contentFocusAt = anchorFocusOffset - start;
-
-
-        newSelection = newSelection.merge({
-          anchorKey: blockKey,
-          anchorOffset: start,
-          focusKey: blockKey,
-          focusOffset: start + emojiKey.length,
-          isBackward: false,
-          hasFocus: false,
-
-        })
-
-        newContent = newContent.createEntity("EMOJI", "IMMUTABLE", { emojiKey });
-        const entityKey = newContent.getLastCreatedEntityKey();
-
-        newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
-      }
+    //   const emojiKey = matchArr[0]
+    //   const start = matchArr.index;
+    //   const end = matchArr.index + matchArr[0].length;
+    //   const contentLength = end - start;
+    //   const contentFocusAt = anchorFocusOffset - start;
 
 
+    //   newSelection = newSelection.merge({
+    //     anchorKey: blockKey,
+    //     anchorOffset: start,
+    //     focusKey: blockKey,
+    //     focusOffset: start + emojiKey.length,
+    //     isBackward: false,
+    //     hasFocus: false,
+
+    //   })
+
+    //   newContent = newContent.createEntity("DUMMY", "IMMUTABLE", { emojiKey });
+    //   const entityKey = newContent.getLastCreatedEntityKey();
+
+    //   newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
+
+    // }
+
+
+
+    while ((matchArr = emojiRegex.exec(blockText)) !== null) {
+
+      const emojiKey = matchArr[0]
+      const start = matchArr.index;
+      const end = matchArr.index + matchArr[0].length;
+      const contentLength = end - start;
+      const contentFocusAt = anchorFocusOffset - start;
+
+
+      newSelection = newSelection.merge({
+        anchorKey: blockKey,
+        anchorOffset: start,
+        focusKey: blockKey,
+        focusOffset: start + emojiKey.length,
+        isBackward: false,
+        hasFocus: false,
+
+      })
+
+      newContent = newContent.createEntity("EMOJI", "IMMUTABLE", { emojiKey });
+      const entityKey = newContent.getLastCreatedEntityKey();
+
+      newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
+    }
 
 
 
 
-  //  })
+
+
+    //  })
 
 
 
@@ -269,7 +272,7 @@ export default function createImagePlugin() {
     },
 
     EmojiPanel: withStyles(styleObj, { withTheme: true })(withContext(EmojiPanelComp)),
-   // taggingEmoji
+    // taggingEmoji
 
   }
 
