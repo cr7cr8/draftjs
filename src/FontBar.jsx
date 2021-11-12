@@ -645,8 +645,11 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
           //   transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
           transform: `translateY(-${tabValue === 1 ? 150 : 100}%)`,
 
-          transitionProperty: "top ,left, opacity, transform",
-          transitionDuration: "200ms",
+         // transitionProperty: "top ,left, opacity, transform",
+
+          transitionProperty: "opacity",
+
+          transitionDuration: "150ms",
 
           //  overflow: "hidden",
           whiteSpace: "nowrap",

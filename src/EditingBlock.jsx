@@ -222,11 +222,11 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
 //todo change the blcokstyle text first !!!
 //  RichUtils.toggleBlockType(editorState,"EditingBlock")
   
-  setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
+  setEditorState(RichUtils.toggleBlockType(editorState, "imageBlock"))
+         // RichUtils.onBackspace
 
 
-
-  markingImageBlock(editorState.getSelection().getStartKey())
+//  markingImageBlock(editorState.getSelection().getStartKey())
 
 
 

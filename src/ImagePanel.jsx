@@ -279,6 +279,7 @@ export default function ImagePanel(props) {
                 refreshAll={refreshAll} setRefreshAll={setRefreshAll}
            
                 block={block}
+                key={index}
               />
             </div>
 

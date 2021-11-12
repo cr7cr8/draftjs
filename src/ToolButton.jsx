@@ -14,7 +14,8 @@ import SwitchBtn from "./SwitchBtn"
 
 
 import ColorLensOutlinedIcon from '@material-ui/icons/ColorLensOutlined';
-
+import ControlPointIcon from '@material-ui/icons/ControlPoint';
+import { isThisMinute } from 'date-fns/esm';
 
 
 
@@ -43,7 +44,7 @@ class ToolButton_ extends React.Component {
   }
 
   setTop = (value) => {
-  
+
     this.setState(pre => {
       return {
         ...pre,
@@ -72,40 +73,46 @@ class ToolButton_ extends React.Component {
     //  console.log(theme)
     return (
 
-      <IconButton
-        style={{
-          transform: "translateX(0%)",
-          alignItems: "center",
-          userSelect: "none",
-          position: "absolute",
-          //  left,
-          top,
-          right: 0,
-          zIndex: 100,
-          transition:"top 200ms"
-          //  backgroundColor: "pink"
-        }}
-        className={theme.sizeCss}
-        contentEditable={false}
-        onMouseDown={function (e) {
-          e.preventDefault()
-          e.stopPropagation()
-        }}
+    
+        <IconButton
+           style={{
+            transform: "translateX(0%)",
+            alignItems: "center",
+            userSelect: "none",
+            position: "absolute",
+            //  left,
+            top,
+            right: 0,
+            zIndex: 100,
+            transition: "top 100ms",
+            backgroundColor: "pink"
+  
+          }}
+          className={theme.sizeCss}
+          contentEditable={false}
+          onMouseDown={function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+          }}
 
-        onClick={function (e) {
-          e.preventDefault()
-          e.stopPropagation()
+          onClick={function (e) {
+            e.preventDefault()
+            e.stopPropagation()
 
-          // markingColorBlock()
-          // markingColorBlock(e, editorState, setEditorState, {}, blockKey)
+            // markingColorBlock()
+            // markingColorBlock(e, editorState, setEditorState, {}, blockKey)
 
-          setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
+            //  setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
+            //  setEditorState(RichUtils.toggleBlockType(editorState, "imageBlock"))
 
-          //setShowSettingBar(pre => !pre)
-        }}
-      >
-        <ColorLensOutlinedIcon contentEditable={false} className={theme.sizeCss + " " + "rotate1"} style={{ userSelect: "none" }} />
-      </IconButton>
+            //setShowSettingBar(pre => !pre)
+          }}
+        >
+
+
+          <ControlPointIcon contentEditable={false} className={theme.sizeCss + " " + "rotate1"} style={{ userSelect: "none" }} />
+        </IconButton>
+     
     )
 
 

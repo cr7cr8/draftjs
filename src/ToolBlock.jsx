@@ -45,6 +45,7 @@ export default function ToolBlock(props) {
     showFontBar,
     setShowFontBar,
     toolButtonRef,
+    currentBlockKey,
   } = props.blockProps
 
   //  console.log("----", toolButtonRef.current)
@@ -107,7 +108,7 @@ export default function ToolBlock(props) {
 
 
 
-
+  //console.log(currentBlockKey)
 
   useLayoutEffect(function () {
 
@@ -142,45 +143,10 @@ export default function ToolBlock(props) {
 
   useEffect(function () {
 
-
-
-    const element = editorBlockRef.current._node
-    const bound = element.getBoundingClientRect()
-    const bound2 = editorRef.current.editor.editor.getBoundingClientRect()
-
-    //console.log(editorRef.current.editor.editor)
-
-    //console.log(Array.from(element.children))
-
-    // if (
-    //   !Array.from(element.children).some(item => {
-    //     return item.className === "inner-button"
-    //     //  return false
-    //   })
-    // ) {
-
-
-    //   let button = document.createElement("button");
-    //   button.innerText = "A"
-    //   button.style.position = "absolute"
-    //   button.style.top = 0
-    //   button.style.left = "200px"
-    //   button.className = "inner-button"
-    //   button.contentEditable = false
-
-    //   button.tabIndex = "-1"
-
-    //   element.appendChild(button)
-
-    // }
-    //console.log(toolButton)
-
-    // selection.hasFocus && console.log(bound.top)
-    startKey === blockKey && selection.hasFocus && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
-
-
-
-
+    // const element = editorBlockRef.current._node
+    // const bound = element.getBoundingClientRect()
+    // const bound2 = editorRef.current.editor.editor.getBoundingClientRect()
+    // startKey === blockKey && selection.hasFocus && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
 
   })
 

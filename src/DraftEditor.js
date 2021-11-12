@@ -80,6 +80,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
   const toolButtonRef = useRef()
 
 
+  const [currentBlockKey, setCurrentBlockKey] = useState(null)
+  const specialBakcSpace = useRef(false)
+
   useLayoutEffect(function () {
 
     // if ((left === "50%") && (tabValue !== 3)) {
@@ -167,7 +170,30 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   })
 
+  useEffect(function () {
 
+
+    //   console.log(currentBlockKey)
+    //data-offset-key
+
+
+    const element = document.querySelector(`div[data-offset-key*="${currentBlockKey}-0-0"]`)
+
+
+    // const element = editorBlockRef.current._node
+    const bound = element && element.getBoundingClientRect()
+    const bound2 = editorRef.current && editorRef.current.editor && editorRef.current.editor.editor.getBoundingClientRect()
+
+
+
+
+    //  startKey === blockKey && selection.hasFocus && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
+
+    bound && bound2 && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
+    // element && toolButtonRef.current && toolButtonRef.current.setTop(bound.top)
+
+
+  })
 
 
 
@@ -190,9 +216,18 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
         {ctx.showFontBar && <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColor, setPanelColor, }} />}
         <Editor
 
-          // onFocus={function (e, two) {
-          //   console.log(two)
-          // }}
+
+
+          onFocus={function (e, two) {
+            //  console.log(two)
+
+            // console.log(e.target)
+            // const element = editorBlockRef.current._node
+            // const bound = element.getBoundingClientRect()
+            // const bound2 = editorRef.current.editor.editor.getBoundingClientRect()
+            // startKey === blockKey && selection.hasFocus && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
+
+          }}
           // onBlur={function (...args) {
           //   console.log(args.length)
           // }}
@@ -204,18 +239,39 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
           onChange={function (newState, { ...props }) {
 
-
+            // console.log(Date.now())
 
             // newState = taggingFontBar(newState)
             newState = taggingMention(showHint, newState)
 
-              setShowFontBar(!newState.getSelection().isCollapsed())
-
-            //  setShowFontBar(true)
+         
 
 
+            newState.getCurrentContent()
+
+            const selection = newState.getSelection()
+            const isCollapsed = selection.isCollapsed()
+            const startKey = selection.getStartKey()
 
 
+
+            // const block = newState.getCurrentContent().getBlockForKey(startKey)
+
+            //      if (isCollapsed && startKey) {
+          
+            //       }
+
+            // console.log(newState===editorState)
+            //setShowFontBar(true)
+            //newState = RichUtils.handleKeyCommand(newState, "bold")
+
+            if (specialBakcSpace.current) {
+              const newContentState = Modifier.replaceText(newState.getCurrentContent(), newState.getSelection(), "")
+              newState = EditorState.push(newState, newContentState, "insert-characters")
+              specialBakcSpace.current = false
+            }
+            isCollapsed && setCurrentBlockKey(startKey)
+            setShowFontBar(!newState.getSelection().isCollapsed())
             setEditorState(newState)
           }}
 
@@ -311,19 +367,19 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
           blockRenderMap={
             Immutable.Map({
-              "colorBlock": {
-                element: "div",
-                wrapper: <ColorBlock editorState={editorState}
-                  setEditorState={setEditorState} editorRef={editorRef}
-                  showFontBar={showFontBar}
-                  setShowFontBar={setShowFontBar}
-                  gradientStyleArr={gradientStyleArr}
-                  markingImageBlock={markingImageBlock}
-                  markingColorBlock={markingColorBlock}
-                  editorBlockKeyArr={editorBlockKeyArr}
-                  toolButton={toolButton}
-                />,
-              },
+              // "colorBlock": {
+              //   element: "div",
+              //   wrapper: <ColorBlock editorState={editorState}
+              //     setEditorState={setEditorState} editorRef={editorRef}
+              //     showFontBar={showFontBar}
+              //     setShowFontBar={setShowFontBar}
+              //     gradientStyleArr={gradientStyleArr}
+              //     markingImageBlock={markingImageBlock}
+              //     markingColorBlock={markingColorBlock}
+              //     editorBlockKeyArr={editorBlockKeyArr}
+              //     toolButton={toolButton}
+              //   />,
+              // },
 
               "editingBlock": {
                 element: "div",
@@ -339,9 +395,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   toolButtonRef={toolButtonRef}
 
                 />
-
-
-              }
+              },
+            
+            
+            
             })
           }
 
@@ -353,29 +410,30 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const blockKey = block.getKey()
             const selection = editorState.getSelection()
 
-            if ((type === "unstyled")) {
+            // if ((type === "unstyled")) {
 
-              return {
-                component: ToolBlock,
-                editable: true,
+            //   return {
+            //     component: ToolBlock,
+            //     editable: true,
 
-                props: {
-                  editorRef,
-                  readOnly,
-                  setReadOnly,
-                  markingImageBlock,
-                  markingColorBlock,
-                  editorState,
-                  setEditorState,
-                  taggingFontBar,
-                  gradientStyleArr,
-                  bgImageObj,
-                  showFontBar,
-                  setShowFontBar,
-                  toolButtonRef,
-                }
-              }
-            }
+            //     props: {
+            //       editorRef,
+            //       readOnly,
+            //       setReadOnly,
+            //       markingImageBlock,
+            //       markingColorBlock,
+            //       editorState,
+            //       setEditorState,
+            //       taggingFontBar,
+            //       gradientStyleArr,
+            //       bgImageObj,
+            //       showFontBar,
+            //       setShowFontBar,
+            //       toolButtonRef,
+            //       currentBlockKey,
+            //     }
+            //   }
+            // }
 
 
             if (type === "imageBlock") {
@@ -447,10 +505,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
 
-                let newContentState = Modifier.replaceText(contentState, selection, " ")
+                let newContentState = Modifier.replaceText(contentState, selection, "#")
                 let es = EditorState.push(editorState, newContentState, "insert-characters")
 
-          
+
                 es = deleteBlock2(es, startKey, setEditorState)
                 let newSelection = es.getSelection()
 
@@ -462,7 +520,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                 es = EditorState.forceSelection(es, newSelection)
 
+                specialBakcSpace.current = true
 
+                setCurrentBlockKey(es.getSelection().getStartKey())
                 setEditorState(es)
 
                 return "dummy"
@@ -515,7 +575,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
             if (command === "deletemore") {
 
-
+              alert("fff")
 
 
               //RichUtils.handleKeyCommand(editorState, "deletemore")
@@ -525,14 +585,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               //  alert("dfdf")
             }
 
-            if (command === "backspace") {    //builtin command when hit backspace if not binded in keypress
-
-
-
-              //   RichUtils.handleKeyCommand(editorState, "deletemore")
-
-
-            }
+            // if (command === "backspace") {    //builtin command when hit backspace if not binded in keypress
+            //   //   RichUtils.handleKeyCommand(editorState, "deletemore")
+            // }
 
 
             if (command === "moveUp" || command === "moveDown") {

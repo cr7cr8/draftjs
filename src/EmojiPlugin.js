@@ -136,31 +136,31 @@ export default function createImagePlugin() {
 
       let matchArr;
 
-      if  ((matchArr = /.|(^$)/.exec(blockText)) !== null) {
+      // if  ((matchArr = /.|(^$)/.exec(blockText)) !== null) {
 
-        const emojiKey = matchArr[0]
-        const start = matchArr.index;
-        const end = matchArr.index + matchArr[0].length;
-        const contentLength = end - start;
-        const contentFocusAt = anchorFocusOffset - start;
+      //   const emojiKey = matchArr[0]
+      //   const start = matchArr.index;
+      //   const end = matchArr.index + matchArr[0].length;
+      //   const contentLength = end - start;
+      //   const contentFocusAt = anchorFocusOffset - start;
 
 
-        newSelection = newSelection.merge({
-          anchorKey: blockKey,
-          anchorOffset: start,
-          focusKey: blockKey,
-          focusOffset: start + emojiKey.length,
-          isBackward: false,
-          hasFocus: false,
+      //   newSelection = newSelection.merge({
+      //     anchorKey: blockKey,
+      //     anchorOffset: start,
+      //     focusKey: blockKey,
+      //     focusOffset: start + emojiKey.length,
+      //     isBackward: false,
+      //     hasFocus: false,
 
-        })
+      //   })
  
-        newContent = newContent.createEntity("DUMMY", "IMMUTABLE", { emojiKey });
-        const entityKey = newContent.getLastCreatedEntityKey();
+      //   newContent = newContent.createEntity("DUMMY", "IMMUTABLE", { emojiKey });
+      //   const entityKey = newContent.getLastCreatedEntityKey();
 
-        newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
+      //   newContent = Modifier.applyEntity(newContent, newSelection, entityKey)
 
-      }
+      // }
 
 
 
