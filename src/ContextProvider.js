@@ -120,6 +120,19 @@ const useStyles = makeStyles((theme) => {
       }
     },
 
+    widthCss2: ({ textSizeArr }) => {
+      return {
+        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 2)]),
+      }
+    },
+
+    widthCss3: ({ textSizeArr }) => {
+      return {
+        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, 3)]),
+      }
+    },
+
+
     heightCss: ({ textSizeArr }) => {
       return {
         ...breakpointsAttribute(["height", multiplyArr(textSizeArr, 1)]),
@@ -161,7 +174,7 @@ const useStyles = makeStyles((theme) => {
 })
 
 
-function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, heightCss, widthCss, myTheme, textCss, smTextCss, lgTextCss }) {
+function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, heightCss, widthCss, widthCss2, widthCss3, myTheme, textCss, smTextCss, lgTextCss }) {
 
   //console.log( sizeCss, smSizeCss, heightCss, widthCss,  smTextCss)
 
@@ -182,6 +195,8 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
       smSizeCss: smSizeCss.split(" ").pop(),
       heightCss: heightCss.split(" ").pop(),
       widthCss: widthCss.split(" ").pop(),
+      widthCss2: widthCss2.split(" ").pop(),
+      widthCss3: widthCss3.split(" ").pop(),
 
       textCss: textCss.split(" ").pop(),
       smTextCss: smTextCss.split(" ").pop(),
@@ -582,8 +597,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [imageBlockObj, setImageBlockObj] = useState({})
 
-  const { sizeCss, smSizeCss, heightCss, widthCss, textCss, smTextCss, lgTextCss } = useStyles({ textSizeArr })
-  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, textCss, smTextCss, lgTextCss }), [textSizeArr, isLight, setIsLight,])
+  const { sizeCss, smSizeCss, heightCss, widthCss, widthCss2, widthCss3, textCss, smTextCss, lgTextCss } = useStyles({ textSizeArr })
+  const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, widthCss2, widthCss3, textCss, smTextCss, lgTextCss }), [textSizeArr, isLight, setIsLight,])
 
   //const [bgImageObj_, setBgImageObj] = useState({})
   const bgImageObj = useRef({})
@@ -595,7 +610,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [panelValue, setPanelValue] = useState(0)   //text color panel
 
 
-
+  const editingBlockKeyArrRef = useRef([])
 
 
   useEffect(function () {
@@ -631,8 +646,9 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           editorBlockKeyArr, setEditorBlockKeyArr,
           darkToLightArr, setDarkToLightArr,
 
-
+          editingBlockKeyArrRef,
           gradientStyleArr,
+
 
           //     imageArr, setImageArr,
           //  editorTop, setEditorTop,

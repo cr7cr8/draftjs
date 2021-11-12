@@ -45,10 +45,10 @@ export default function EditingBlock(props) {
   const theme = useTheme()
 
 
-  const { editorBlockKeyArr, setEditorBlockKeyArr, darkToLightArr, setDarkToLightArr, bgImageObj, editorState, setEditorState, editorRef, editingBlockKeyArrRef } = useContext(Context)
+  const { editorBlockKeyArr, setEditorBlockKeyArr, darkToLightArr, setDarkToLightArr, bgImageObj, editorState, setEditorState, editorRef,} = useContext(Context)
 
   //const { editorState, setEditorState, editorRef, gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock, markingColorBlock } = props;
-  const { gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock, markingColorBlock, toolButtonRef } = props;
+  const {  gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock, markingColorBlock, toolButtonRef } = props;
 
   const selection = editorState.getSelection()
   const startKey = selection.getStartKey()
@@ -75,36 +75,19 @@ export default function EditingBlock(props) {
   })
   //const [loaded, setLoaded] = useState(hasLoaded)
 
-  const [initial, setInitial] = useState(true)
-  const [initial2, setInitial2] = useState(true)
+  const [showSettingBar, setShowSettingBar] = useState(true)
 
 
-  const [startAddingShadow, setStartAddingShadow] = useState(false)
-  const [firstTime, setFirstTime] = useState(!editingBlockKeyArrRef.current.includes(headKey))
+  const lightToDarkCss = classNames({
 
-  console.log(headKey)
-  // !firstTime&&alert(headKey)
-
-  const frameCss1 = classNames({
-
-   "shadowOn": isFocusIn,
-   "shadowOff": !isFocusIn,
-   "shadowEntering": (!(!firstTime && !isFocusIn)) && (firstTime && isFocusIn) && initial,
-   "shadowLeaving": (!firstTime && !isFocusIn) && initial,
+    "editor-block-light": !(hasFocus && isStartKeyIn && isEndKeyIn && hasLoaded),
+    "editor-block-dark": hasFocus && isStartKeyIn && isEndKeyIn && hasLoaded   //displayToolBar && hasLoaded 
 
   })
 
-  // if(!firstTime&&!isFocusIn ){
-  //   alert(!firstTime&&!isFocusIn )
-  // }
 
+  const ediotrBlockCss = function () { return darkToLightArr.includes(headKey) ? "editor-block-dark-light" : lightToDarkCss }()
 
-  // const [frameCss, setFrameCss] = useState(frameCssPhase1)
-
-  //const ediotrBlockCss = function () { return darkToLightArr.includes(headKey) ? "editor-block-dark-light" : lightToDarkCss }()
-
-
-  //const ediotrBlockCss = function () { return darkToLightArr.includes(headKey) ? lightToDarkCss: lightToDarkCss }()
 
 
   const settingIconCss = classNames({
@@ -116,16 +99,23 @@ export default function EditingBlock(props) {
 
 
 
-
   useEffect(function () {
+    if (!hasLoaded) {
 
+      setEditorBlockKeyArr(pre => {
+        return [...pre, headKey]
+      })
 
+    }
 
+    if (setDarkToLightArr.length > 0) {
+      setTimeout(() => {
+     //   alert("ff")
+        setDarkToLightArr([])
+      }, 300);
 
+    }
 
-    setTimeout(() => {
-      setInitial(false)
-    }, 3000);
 
   }, [])
 
@@ -133,16 +123,6 @@ export default function EditingBlock(props) {
   useEffect(function () {
 
 
-    props.children.forEach((item, index, allChildren) => {
-
-      const block = item.props.children.props.block;
-
-
-      if (!(editingBlockKeyArrRef.current.includes(block.getKey))) {
-        editingBlockKeyArrRef.current.push(block.getKey())
-      }
-
-    })
 
     const element = document.querySelector(`div[data-offset-key*="${startKey}"]`)
     const bound = element && element.getBoundingClientRect()
@@ -151,21 +131,19 @@ export default function EditingBlock(props) {
 
 
 
-    selection.hasFocus && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
+     selection.hasFocus && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
 
-    console.log(editingBlockKeyArrRef.current)
+
   })
 
 
   return (
 
-    <div className={frameCss1}>
+    <div className={ediotrBlockCss}>
 
       {props.children.map((item, index, allChildren) => {
 
         const block = item.props.children.props.block
-
-        //   !editingBlockKeyArrRef.current.includes(block.getKey()) && editingBlockKeyArrRef.current.push(block.getKey())
 
 
         return item
@@ -178,7 +156,7 @@ export default function EditingBlock(props) {
       <Collapse in={isFocusIn} unmountOnExit={true} contentEditable={false}>
 
         <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
-          anmimationType={null} setEditorState={setEditorState}
+          ediotrBlockCss={ediotrBlockCss} anmimationType={null} setEditorState={setEditorState}
         />
 
       </Collapse>
@@ -192,7 +170,7 @@ export default function EditingBlock(props) {
 }
 
 
-function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBlockCss, anmimationType, setEditorState }) {
+function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBlockCss, anmimationType,setEditorState }) {
 
   const theme = useTheme()
   const { gradientStyleArr } = useContext(Context)
@@ -201,7 +179,7 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
   const [randomId] = useState("--toolbar--" + Math.floor(Math.random() * 1000))
 
   return (
-    <div className={theme.heightCss} style={{ display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center", backgroundColor: "wheat" }}
+    <div className={theme.heightCss} style={{ display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center" }}
 
       contentEditable={false}
     >
@@ -242,11 +220,24 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, editorState, ediotrBl
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation()
 
+//todo change the blcokstyle text first !!!
+//  RichUtils.toggleBlockType(editorState,"EditingBlock")
+  
+  setEditorState(RichUtils.toggleBlockType(editorState, "imageBlock"))
+         // RichUtils.onBackspace
 
-          setEditorState(RichUtils.toggleBlockType(editorState, "imageBlock"))
+
+//  markingImageBlock(editorState.getSelection().getStartKey())
 
 
 
+ 
+     
+  
+  //  setShowColorPanel(pre => !pre)
+
+
+         
         }}
       >
         <InsertPhotoOutlinedIcon className={theme.sizeCss} />

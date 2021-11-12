@@ -47,6 +47,44 @@ figure {
 .unstyled-block{
   -moz-osx-font-smoothing: grayscale;
   /* background-color:#faf; */
+  /* background-color:cornflowerblue; */
+  box-shadow: unset; 
+  transition: all 3000ms;
+}
+
+.editing-block{
+  -moz-osx-font-smoothing: grayscale;
+  /* background-color:#faf; */
+  /* background-color:cornflowerblue; */
+
+  box-shadow: unset; 
+  transition: all 3000ms;
+
+  animation-duration: 3000ms;
+  animation-name: colorEntering;
+  animation-fill-mode: both;
+
+}
+
+@keyframes colorEntering{
+  0% {
+    background-color:unset;
+   
+  }
+  100% {
+    background-color: wheat;
+ 
+  }
+ 
+}
+
+
+
+
+
+
+.unstyle-block-light{
+  /* -moz-osx-font-smoothing: grayscale; */
 
   transition: all 300ms;
 }
@@ -107,6 +145,122 @@ figure {
    
   
   }
+}
+
+.unstyled-to-editing{
+
+  animation-duration: 3000ms;
+  animation-name: unstyled-to-editing;
+  animation-fill-mode: both;
+}
+
+
+
+
+@keyframes unstyled-to-editing{
+  0% {
+    background-color:unset;
+    /* box-shadow: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12); */
+    /* box-shadow: unset; */
+  }
+  100% {
+    background-color: wheat;
+    /* box-shadow: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12);     */
+   
+  
+  }
+}
+
+
+
+.editingBlock{
+  background-color: wheat;
+}
+
+.shadowOff{
+
+  background-color: lemonchiffon;
+  box-shadow: unset;
+  transition: all 1000ms;
+}
+
+
+.shadowOn{
+  background-color: wheat;
+  box-shadow: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12);    
+  transition: all 1000ms ease-in-out 
+}
+
+
+.shadowEntering{
+
+  animation-duration: 1000ms;
+  animation-name:shadowEntering;
+  animation-fill-mode: both;
+  /* transition: box-shadow, 1000ms; */
+}
+
+.shadowLeaving{
+  animation-duration: 1000ms;
+  animation-name:shadowLeaving;
+  animation-fill-mode: both;
+  /* transition: box-shadow, 1000ms; */
+
+}
+
+@keyframes shadowEntering{
+  0% {
+    background-color: unset;
+    box-shadow: unset;
+  }
+  100% {
+    background-color: wheat;
+    box-shadow: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12);    
+   
+  
+  }
+}
+
+@keyframes shadowLeaving{
+  0% {
+    background-color: wheat;
+    box-shadow: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12);    
+  }
+  100% {
+    background-color: lemonchiffon;
+    box-shadow: unset;
+  }
+
+}
+
+
+
+
+.shadowOff-to-Light{
+  animation-duration: 3000ms;
+  animation-name:shadowOff-to-Light;
+  animation-fill-mode: both;
+
+}
+
+@keyframes shadowOff-to-Light{
+  0% {
+    box-shadow: unset;
+  }
+  100% {
+    /* background-color: wheat; */
+    box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 2px 1px -1px rgba(0,0,0,0.12);
+   
+  
+  }
+}
+
+
+.shadowOff-to-Dark{
+  animation-duration: 3000ms;
+  animation-name:shadowOff-to-On;
+  animation-fill-mode: both;
+
 }
 
 

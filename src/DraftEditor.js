@@ -71,7 +71,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
   const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showHint, showFontBar,
-    setShowFontBar, tabValue, setTabValue, panelColor, setPanelColor, editorBlockKeyArr } = ctx
+    setShowFontBar, tabValue, setTabValue, panelColor, setPanelColor, editorBlockKeyArr, editingBlockKeyArrRef } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
   const theme = useTheme()
@@ -197,7 +197,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
 
-  const toolButton = useState(React.createElement(ToolButton, { editorState, setEditorState }))
+  // const toolButton = useState(React.createElement(ToolButton, { editorState, setEditorState }))
 
 
   return (
@@ -211,7 +211,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
       <Paper style={{ position: "relative", wordBreak: "break-all" }} >
 
-        <ToolButton {...{ editorState, setEditorState, toolButtonRef }} />
+        <ToolButton {...{ editorState, setEditorState, toolButtonRef, currentBlockKey }} />
 
         {ctx.showFontBar && <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColor, setPanelColor, }} />}
         <Editor
@@ -244,7 +244,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             // newState = taggingFontBar(newState)
             newState = taggingMention(showHint, newState)
 
-         
+
 
 
             newState.getCurrentContent()
@@ -258,7 +258,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             // const block = newState.getCurrentContent().getBlockForKey(startKey)
 
             //      if (isCollapsed && startKey) {
-          
+
             //       }
 
             // console.log(newState===editorState)
@@ -349,13 +349,26 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
             const randomNum = Math.floor(Math.random() * 2) % 2 === 1
 
+
+            if ((blockType !== "editingBlock") && (editingBlockKeyArrRef.current.includes(blockKey))) {
+              editingBlockKeyArrRef.current = editingBlockKeyArrRef.current.filter(item => item !== blockKey)
+            }
+
             const allClassName = classNames({
 
               "image-block-figure": ((blockType === "atomic") && (blockText === "imageBlockText")) || (blockType === "imageBlock"),
               "text-center": blockData.centerBlock,
               "text-right": blockData.rightBlock,
               "unselectable": !blockText,
-              "unstyled-block": true,// blockType === "unstyled" && randomNum,
+
+
+
+              //    "unstyled-block": blockType === "unstyled",
+              //     "editingBlock": blockType === "editingBlock",
+
+              // "unstyled-to-editing": blockType==="editingBlock",
+
+
               "unstyled-block2": false,//blockType === "unstyled" && !randomNum
 
             })
@@ -396,9 +409,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                 />
               },
-            
-            
-            
+
+
+
             })
           }
 
