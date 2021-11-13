@@ -5,6 +5,8 @@ import ImageListItem from '@material-ui/core/ImageListItem';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Close';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import { EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
+
 
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
@@ -129,7 +131,10 @@ const useStyles = makeStyles((theme) => {
 export default function ImagePanel(props) {
 
 
-  const { block,
+  const {
+
+    contentState,
+    block,
     blockProps: {
       setImageBlockData,
       deleteImageBlock,
@@ -137,12 +142,25 @@ export default function ImagePanel(props) {
       imageBlockObj,
       setImageBlockObj,
       className,
-     
+      currentBlockKey,
+      setCurrentBlockKey,
+      editorState,
+      setEditorState,
     }
 
   } = props
 
   const blockKey = block.getKey()
+  const beforeKey = contentState.getKeyBefore(blockKey)
+  const afterKey = contentState.getKeyAfter(blockKey)
+
+
+
+  const targetKey = beforeKey || afterKey
+
+
+
+
 
 
 
@@ -206,6 +224,25 @@ export default function ImagePanel(props) {
   }
 
 
+  useEffect(function(){
+
+    if (targetKey && currentBlockKey !== targetKey) {
+      const targetBlock = contentState.getBlockForKey(targetKey)
+  
+      const selection = editorState.getSelection().merge({
+        anchorKey: targetKey,
+        anchorOffset: targetBlock.getLength(),
+        focusKey: targetKey,
+        focusOffset: targetBlock.getLength()
+      })
+  
+      setEditorState(EditorState.forceSelection(editorState, selection))
+  
+    }
+
+  },[])
+
+
 
   return (
     <div className={className} contentEditable={false}>
@@ -222,7 +259,7 @@ export default function ImagePanel(props) {
         }}
       >
 
-         {
+        {
           (Array.isArray(imageBlockObj[blockKey]) ? imageBlockObj[blockKey].length : 0) === 0 &&
           <div
             style={{
@@ -252,13 +289,17 @@ export default function ImagePanel(props) {
                   delete pre[blockKey]
                   return { ...pre }
                 })
-              //  console.log(blockKey)
+                //  console.log(blockKey)
+
+              
+              
+
 
               }}
               children={<DeleteIcon />}
             />
           </div>
-        } 
+        }
 
         {Array.isArray(imageBlockObj[blockKey]) && imageBlockObj[blockKey].map((pic, index) => {
 
@@ -277,14 +318,14 @@ export default function ImagePanel(props) {
                 pic={pic}
                 setImageBlockData={setImageBlockData}
                 refreshAll={refreshAll} setRefreshAll={setRefreshAll}
-           
+
                 block={block}
                 key={index}
               />
             </div>
 
           )
-        })} 
+        })}
       </div>
     </div>
   );
@@ -293,7 +334,7 @@ export default function ImagePanel(props) {
 
 
 
-function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData, 
+function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
   setImageBlockObj, imageBlockObj, editorRef, blockKey, theme, index, classes, inputRef, setImageIndex, pic, ...props }) {
 
 
@@ -438,7 +479,7 @@ function ImagePic({ block, refreshAll, setRefreshAll, setImageBlockData,
           children={<KeyboardArrowRightIcon />}
           onClick={
             function () {
-            //  console.log(pic)
+              //  console.log(pic)
               setHorizontal(pre => {
                 setImageBlockData({ ["pos" + index]: { horizontal: Math.max(0, Math.min(pre + 25, 100)), vertical } }, blockKey)
                 return Math.max(0, Math.min(pre + 25, 100))

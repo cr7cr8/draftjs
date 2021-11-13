@@ -170,31 +170,32 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   })
 
-  useEffect(function () {
 
 
-    //   console.log(currentBlockKey)
-    //data-offset-key
+
+  function adjustToolButtonPos(){
 
 
     const element = document.querySelector(`div[data-offset-key*="${currentBlockKey}-0-0"]`)
 
-
     // const element = editorBlockRef.current._node
     const bound = element && element.getBoundingClientRect()
     const bound2 = editorRef.current && editorRef.current.editor && editorRef.current.editor.editor.getBoundingClientRect()
-
-
-
-
-    //  startKey === blockKey && selection.hasFocus && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
-
     bound && bound2 && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
-    // element && toolButtonRef.current && toolButtonRef.current.setTop(bound.top)
+   
+  } 
 
+  useEffect(function () {
+
+    adjustToolButtonPos()
+
+    window.addEventListener("resize",adjustToolButtonPos)
+    return function(){
+      window.removeEventListener("resize",adjustToolButtonPos)
+    }
 
   })
-
+ 
 
 
   // const toolButton = useState(React.createElement(ToolButton, { editorState, setEditorState }))
@@ -243,27 +244,11 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
             // newState = taggingFontBar(newState)
             newState = taggingMention(showHint, newState)
-
-
-
-
             newState.getCurrentContent()
 
             const selection = newState.getSelection()
             const isCollapsed = selection.isCollapsed()
             const startKey = selection.getStartKey()
-
-
-
-            // const block = newState.getCurrentContent().getBlockForKey(startKey)
-
-            //      if (isCollapsed && startKey) {
-
-            //       }
-
-            // console.log(newState===editorState)
-            //setShowFontBar(true)
-            //newState = RichUtils.handleKeyCommand(newState, "bold")
 
             if (specialBakcSpace.current) {
               const newContentState = Modifier.replaceText(newState.getCurrentContent(), newState.getSelection(), "")
@@ -307,7 +292,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               // )
               // return {
               // only style attributes working
-
               //  color:"red",
               //  fontSize:"8rem",
               //  position: "relative",
@@ -360,13 +344,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               "text-center": blockData.centerBlock,
               "text-right": blockData.rightBlock,
               "unselectable": !blockText,
-
-
-
-              //    "unstyled-block": blockType === "unstyled",
-              //     "editingBlock": blockType === "editingBlock",
-
-              // "unstyled-to-editing": blockType==="editingBlock",
 
 
               "unstyled-block2": false,//blockType === "unstyled" && !randomNum
@@ -460,7 +437,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                   setImageBlockObj,
                   editorRef,
                   //blockKey: block.getKey(),
-
+                  currentBlockKey,
+                  setCurrentBlockKey,
+                  editorState,
+                  setEditorState,
                   className: "image-block",
 
 
@@ -729,8 +709,8 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
         <div>{JSON.stringify(editorState.getCurrentContent().selectionAfter, null, 2)}</div> */}
 
-        <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
-        <hr />
+        {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
+        <hr /> */}
         {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
       </div>
       {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
