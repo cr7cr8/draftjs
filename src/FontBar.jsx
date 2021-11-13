@@ -4,9 +4,6 @@ import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata
 
 
 import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button, IconButton } from "@material-ui/core";
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 
 
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
@@ -27,23 +24,23 @@ import TitleIcon from '@material-ui/icons/Title';
 import FormatSizeIcon from '@material-ui/icons/FormatSize';
 import TextFieldsIcon from '@material-ui/icons/TextFields';
 
+
+
 import FormatClearIcon from '@material-ui/icons/FormatClear';
 
 
 
-import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
 import FormatColorFillIcon from '@material-ui/icons/FormatColorFill';
 
 
-import ImageTwoToneIcon from '@material-ui/icons/ImageTwoTone';
 
 
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
-import InvertColorsOffOutlinedIcon from '@material-ui/icons/InvertColorsOffOutlined';
 
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+
+
+import InvertColorsIcon from '@material-ui/icons/InvertColors';
+import InvertColorsOffOutlinedIcon from '@material-ui/icons/InvertColorsOffOutlined';
 
 
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -139,7 +136,11 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, 
 
 
 
-export const FontBar = withContext(function ({ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColor, setPanelColor, ...props }) {
+export const FontBar = withContext(function ({ gradientStyleArr,
+  editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColorGroupNum, setPanelColorGroupNum,
+
+  panelValue, setPanelValue,
+  ...props }) {
 
   let isAllTextBlock = getChoosenBlocks(editorState).every((block, key, ...props) => {
     return block.getType() === "unstyled"
@@ -151,30 +152,19 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
   const [top, setTop] = useState(-4)
   const [left, setLeft] = useState("50%")
-  const [taggingWidth, setTaggingWidth] = useState(0)
 
-  const [top2, setTop2] = useState(4)
-  const [left2, setLeft2] = useState("50%")
-  const [taggingWidth2, setTaggingWidth2] = useState(0)
 
   const fontPanel = useRef()
 
 
   const theme = useTheme()
-  const fontBarPanelRef = useRef()
 
-  const endBlockRef = useRef()
-  //const [panelColor, setPanelColor] = useState(null)
-  const [colorGroupNum, setColorGroupNum] = useState(0)
+
+  // const [colorGroupNum, setColorGroupNum] = useState(0)
 
 
   const selection = editorState.getSelection()
-  // const startKey = selection.getStartKey()
-  // const endKey = selection.getEndKey()
-  // const isStartKeyIn = props.children.some(item => { return item.props.children.props.block.getKey() === startKey })
-  // const isEndKeyIn = props.children.some(item => { return item.props.children.props.block.getKey() === endKey })
-  const hasFocus = selection.getHasFocus()
-  const isCollapsed = selection.isCollapsed()
+
 
   const [editorWidth, setEditorWidth] = useState(0)
 
@@ -355,7 +345,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
     <TitleIcon className={theme.sizeCss} />,
     // <FormatColorTextIcon className={theme.sizeCss} />,
 
-    tabValue !== 1 ? <FormatColorTextIcon className={theme.sizeCss} /> : <InvertColorsOffOutlinedIcon className={theme.sizeCss} />,
+    tabValue !== 1 ? <InvertColorsIcon className={theme.sizeCss} /> : <InvertColorsOffOutlinedIcon className={theme.sizeCss} />,
 
 
     <LinkIcon className={theme.sizeCss} />,
@@ -365,7 +355,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
   ]
 
-  const [directionArr, setDirectionArr] = useState(new Array(categoryBtnArr.length).map(item => true))
+
 
 
   const basicButtonArr = [
@@ -433,7 +423,9 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
         fn: function (e) {
 
-          setColorGroupNum(index);
+
+
+          setPanelColorGroupNum(index);
           changeInlineStyle(e, item[500])
         }
 
@@ -622,7 +614,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
 
 
- 
+
 
 
 
@@ -647,7 +639,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 
           transitionProperty: "top ,left, opacity, transform",
 
-         // transitionProperty: "opacity",
+          // transitionProperty: "opacity",
 
           transitionDuration: "150ms",
 
@@ -682,7 +674,7 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
                   clearInlineColor(e)
                 }
                 setTabValue(index)
-               // index === 1 && tabValue !== 1 && 
+                // index === 1 && tabValue !== 1 && 
                 setTimeout(() => {
                   editorRef.current.focus()
                 }, 0);
@@ -691,8 +683,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
             >{item}</Button>
           })}
 
-        </div> 
- 
+        </div>
+
 
         {/* Parent overflow hidden is off, have to use Fade rather than slide*/}
         <Fade in={tabValue === 0} direction="left" unmountOnExit={true}>
@@ -702,18 +694,33 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
         </Fade>
         <Fade in={tabValue === 1} direction="left" unmountOnExit={true}>
           <div style={{ position: "absolute" }}>
-            <RenderColorPickerPanel buttonArr={colorButtonArr} panelCss={colorTabPanelCss} />
+            <RenderColorPickerPanel
+              buttonArr={colorButtonArr}
+              panelCss={colorTabPanelCss}
+
+
+            />
 
 
           </div>
         </Fade>
         <Fade in={tabValue === 1} timeout={{ enter: 800 }} direction="left" unmountOnExit={true}>
           <div style={{ position: "absolute" }}>
-            <RenderColorPickerPanel buttonArr={colorButtonArr} panelCss={colorTabPanelCss} />
+            <RenderColorPickerPanel
+              buttonArr={colorButtonArr}
+              panelCss={colorTabPanelCss}
+              panelValue={panelValue}
+              setPanelValue={setPanelValue}
+
+            />
 
 
-            {subColorGroupFn(colorGroupNum).map((group, index) => {
-              return <RenderColorPickerPanel buttonArr={[...group.slice(0, 5), ...group.slice(6, 10)]} key={index} panelCss={colorTabPanelCss} />
+            {subColorGroupFn(panelColorGroupNum).map((group, index) => {
+              return <RenderColorPickerPanel buttonArr={[...group.slice(0, 5), ...group.slice(6, 10)]} key={index} panelCss={colorTabPanelCss}
+
+              // panelColor={panelColor}
+              // setPanelColor={setPanelValue}
+              />
 
 
             })}
@@ -735,7 +742,8 @@ export const FontBar = withContext(function ({ gradientStyleArr, editorState, se
 })
 
 
-function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, ...props }) {
+function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, panelValue, setPanelValue, panelColor,
+  setPanelColor, ...props }) {
 
 
 
@@ -748,8 +756,30 @@ function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, 
 
   const { style, ...other } = props
 
+
+
+
+  useEffect(function () {
+
+    const el = document.querySelector(`div[style*="${randomId}"]`)
+
+    if (el && setPanelValue) {
+
+      el.scrollLeft = panelValue
+
+    }
+
+
+
+  }, [])
+
+
+
+
+
+
   return (
-    <div className={panelCss} style={{
+    <div className={panelCss} onS style={{
       ...panelWidth && { width: panelWidth }
     }} >
       {isOverFlow && <IconButton
@@ -768,15 +798,18 @@ function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, 
             behavior: 'smooth'
           })
 
+          setPanelValue(pre => { return Math.max(0, pre - Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2) })
+
+
         }}
-        onDoubleClick={function (e) {
-          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
-          toolBar.scrollBy({
-            top: 0,
-            left: -1000,
-            behavior: 'smooth'
-          })
-        }}
+      // onDoubleClick={function (e) {
+      //   const toolBar = document.querySelector(`div[style*="${randomId}"]`)
+      //   toolBar.scrollBy({
+      //     top: 0,
+      //     left: -1000,
+      //     behavior: 'smooth'
+      //   })
+      // }}
 
       >
         <ChevronLeftIcon className={theme.sizeCss} />
@@ -845,16 +878,19 @@ function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, 
             left: Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
             behavior: 'smooth'
           })
+
+          setPanelValue(pre => { return pre + Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2 })
+
           // document.querySelector('div[style*="--toolbar--xx"]').scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
         }}
-        onDoubleClick={function (e) {
-          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
-          toolBar.scrollBy({
-            top: 0,
-            left: 1000,
-            behavior: 'smooth'
-          })
-        }}
+      // onDoubleClick={function (e) {
+      //   const toolBar = document.querySelector(`div[style*="${randomId}"]`)
+      //   toolBar.scrollBy({
+      //     top: 0,
+      //     left: 1000,
+      //     behavior: 'smooth'
+      //   })
+      // }}
 
       >
         <ChevronRightIcon className={theme.sizeCss} />

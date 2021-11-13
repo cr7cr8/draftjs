@@ -71,7 +71,12 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
   const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showHint, showFontBar,
-    setShowFontBar, tabValue, setTabValue, panelColor, setPanelColor, editorBlockKeyArr, editingBlockKeyArrRef } = ctx
+    setShowFontBar, tabValue, setTabValue,  editorBlockKeyArr, editingBlockKeyArrRef,
+
+    panelColorGroupNum, setPanelColorGroupNum,
+
+    panelValue,
+    setPanelValue, } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
   const theme = useTheme()
@@ -173,7 +178,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
 
-  function adjustToolButtonPos(){
+  function adjustToolButtonPos() {
 
 
     const element = document.querySelector(`div[data-offset-key*="${currentBlockKey}-0-0"]`)
@@ -182,20 +187,20 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
     const bound = element && element.getBoundingClientRect()
     const bound2 = editorRef.current && editorRef.current.editor && editorRef.current.editor.editor.getBoundingClientRect()
     bound && bound2 && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
-   
-  } 
+
+  }
 
   useEffect(function () {
 
     adjustToolButtonPos()
 
-    window.addEventListener("resize",adjustToolButtonPos)
-    return function(){
-      window.removeEventListener("resize",adjustToolButtonPos)
+    window.addEventListener("resize", adjustToolButtonPos)
+    return function () {
+      window.removeEventListener("resize", adjustToolButtonPos)
     }
 
   })
- 
+
 
 
   // const toolButton = useState(React.createElement(ToolButton, { editorState, setEditorState }))
@@ -214,7 +219,15 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
         <ToolButton {...{ editorState, setEditorState, toolButtonRef, currentBlockKey }} />
 
-        {ctx.showFontBar && <FontBar {...{ gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColor, setPanelColor, }} />}
+        {ctx.showFontBar && <FontBar {...{
+          gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue,
+          
+        
+          panelValue,
+          setPanelValue,
+
+          panelColorGroupNum, setPanelColorGroupNum,
+        }} />}
         <Editor
 
 
@@ -338,7 +351,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               editingBlockKeyArrRef.current = editingBlockKeyArrRef.current.filter(item => item !== blockKey)
             }
 
-        
+
 
 
 

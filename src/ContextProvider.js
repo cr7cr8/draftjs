@@ -458,7 +458,7 @@ const gradientStyleArr = [
   { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
   { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
   {
-    backgroundImage: "url(https://picsum.photos/600/300)",
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/600/300)",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     color: "#666",
@@ -513,7 +513,9 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [darkToLightArr, setDarkToLightArr] = useState([])
 
   const [tabValue, setTabValue] = useState(1)
-  const [panelColor, setPanelColor] = useState(null)
+
+
+  const [panelColorGroupNum, setPanelColorGroupNum] = useState(0)
   const [panelValue, setPanelValue] = useState(0)   //text color panel
 
 
@@ -547,9 +549,13 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           emojiCtxStr, setEmojiCtxStr,
           imageBlockObj, setImageBlockObj,
           bgImageObj, //setBgImageObj,
+
           tabValue, setTabValue,
-          panelColor, setPanelColor,
+
           panelValue, setPanelValue, //text color panel
+
+          panelColorGroupNum, setPanelColorGroupNum,
+
           editorBlockKeyArr, setEditorBlockKeyArr,
           darkToLightArr, setDarkToLightArr,
 
