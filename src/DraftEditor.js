@@ -338,6 +338,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               editingBlockKeyArrRef.current = editingBlockKeyArrRef.current.filter(item => item !== blockKey)
             }
 
+        
+
+
+
             const allClassName = classNames({
 
               "image-block-figure": ((blockType === "atomic") && (blockText === "imageBlockText")) || (blockType === "imageBlock"),

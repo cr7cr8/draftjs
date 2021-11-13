@@ -407,7 +407,12 @@ function toPreHtml(editorState) {
           return `<object  data-type="image-block"  data-block_key="${key}" data-block_data="${data}" >` + escape(block.getText()) + '</object>'
 
         },
-        colorBlock: function (block) {
+
+        // editingBlock:function(block){
+        //   alert(JSON.stringify(   block.getData().toObject()))
+        // },
+
+        editingBlock: function (block) {
           const text = block.getText()
           const data = block.getData().toObject()//escape(JSON.stringify(block.getData().toObject()))
           const type = block.getType()
@@ -471,106 +476,8 @@ const gradientStyleArr = [
     backgroundRepeat: "no-repeat",
     color: "#666"
   },
-  { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
-  { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
-  { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
-  { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
-  {
-    backgroundImage: "url(https://picsum.photos/600/300)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "#666",
-
-  },
-  {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "#666"
-  },
-  {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/502/700)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "#666"
-  },
-  { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
-  { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
-  { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
-  { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
-  {
-    backgroundImage: "url(https://picsum.photos/600/300)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "#666",
-
-  },
-  {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "#666"
-  },
-  {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/502/700)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "#666"
-  },
-  { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
-  { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
-  { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
-  { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
-  {
-    backgroundImage: "url(https://picsum.photos/600/300)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "#666",
-
-  },
-  {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "#666"
-  },
-  {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/502/700)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "#666"
-  },
 
 
-  { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
-  { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
-  { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
-  { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
-  {
-    backgroundImage: "url(https://picsum.photos/600/300)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "#666",
-
-  },
-  {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "#666"
-  },
-  {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/502/700)",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    color: "#666"
-  },
-  { backgroundImage: "linear-gradient(to top, #e6b980 0%, #eacda3 100%)", color: "#fff" },
-  { backgroundImage: "linear-gradient(45deg, #ff758c 0%, #ff7eb3 100%)", color: "#fff" },
-  // { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#fff" },
-  // { backgroundImage: "linear-gradient(to top, #e6b980 0%, #eacda3 100%)", color: "#fff" },
-  // { backgroundImage: "linear-gradient(45deg, #ff758c 0%, #ff7eb3 100%)", color: "#fff" },
-  // { backgroundImage: "linear-gradient(45deg, red 0%, blue 100%)", color: "#fff" },
 ]
 
 
