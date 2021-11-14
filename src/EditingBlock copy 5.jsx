@@ -157,27 +157,82 @@ export default function EditingBlock(props) {
   })
 
 
+  // let newContentState = null
+  // arr.forEach((groupArr, index) => {
 
+  //   if (groupArr.length > 1) {
+  //     const startBlock = groupArr[1].props.children.props.block
+  //     const endBlock = groupArr[groupArr.length - 1].props.children.props.block
+
+  //     const anchorKey = startBlock.getKey()
+  //     const focusKey = endBlock.getKey()
+
+  //     console.log(anchorKey, focusKey)
+
+  //     newContentState = Modifier.setBlockData(
+
+  //       newContentState || editorState.getCurrentContent(),
+  //       selection.merge({ anchorKey, focusKey }),
+
+
+  //       Immutable.Map({ a: "a" })
+
+  //     )
+
+
+
+  //   }
+  // })
+
+
+  // useEffect(function () {
+
+  //   let newContentState = null
+  //   arr.forEach((groupArr, index) => {
+
+  //     if (groupArr.length > 1) {
+  //       const startBlock = groupArr[1].props.children.props.block
+  //       const endBlock = groupArr[groupArr.length - 1].props.children.props.block
+
+  //       const anchorKey = startBlock.getKey()
+  //       const focusKey = endBlock.getKey()
+
+  //       console.log(anchorKey, focusKey)
+
+  //       newContentState = Modifier.setBlockData(
+
+  //         newContentState || editorState.getCurrentContent(),
+  //         selection.merge({ anchorKey, focusKey }),
+
+
+  //         Immutable.Map({ })
+
+  //       )
+
+
+
+  //     }
+  //   })
+
+  //   if (newContentState != null) {
+
+  //     let es = EditorState.push(editorState, newContentState, "change-block-data")
+  //     es = EditorState.forceSelection(es, selection)
+  //     setEditorState(es)
+  //     // selection
+
+  //   }
+
+
+  // }, [])
 
 
 
   return (
 
-    <div className={frameCss1} >
+    <div className={frameCss1} >{
 
-      <input ref={inputRef} type="file" multiple={false} style={{ display: "none" }}
-        onClick={function (e) { e.currentTarget.value = null; }}
-        onChange={function (e) {
-
-          const headKey = editorState.getSelection().getStartKey()
-
-          update({e,bgImageObj, editorRef, editorState,setEditorState, headKey})
-
-        }}
-      />
-
-
-      {arr.map((groupArr, index) => {
+      arr.map((groupArr, index) => {
         const styleObj = groupArr[0].props.children.props.block.getData().toObject()
         const headKey = groupArr[0].props.children.props.block.getKey()
 
@@ -195,6 +250,7 @@ export default function EditingBlock(props) {
               backgroundPosition: `${styleObj.horizontal}% ${styleObj.vertical}%`,
             }}
             key={index}>
+
 
 
             {groupArr.map((item, index, allChildren) => {
@@ -227,7 +283,7 @@ export default function EditingBlock(props) {
                 anmimationType={null && Zoom} setEditorState={setEditorState}
                 isFocusIn={isFocusIn} headKey={headKey}
 
-
+           
                 index={index}
               />
               {/* </div> */}
@@ -238,7 +294,7 @@ export default function EditingBlock(props) {
 
 
       })
-      }</div>
+    }</div>
 
 
   )
@@ -248,57 +304,28 @@ export default function EditingBlock(props) {
 }
 
 
-function update({e,bgImageObj, editorRef, editorState,setEditorState,headKey}) {
-  e.preventDefault()
-  e.stopPropagation()
 
-  if (e.currentTarget.files[0].name.trim().match(/\.(gif|jpe?g|tiff|png|webp|bmp)$/i)) {
+function setHeadBlockData(editorState, setEditorState, headKey, dataObj) {
+  const newContent = Modifier.mergeBlockData(
+    editorState.getCurrentContent(),
 
-    const files = e.currentTarget.files
+    editorState.getSelection(),
 
-    const newImage = bgImageObj.current[files[0].name]
-    if (!newImage) {
+    // SelectionState.createEmpty(headKey),
+    Immutable.Map({ ...dataObj, horizontal: 50, vertical: 50 })
+  )
 
-      bgImageObj.current = {
-        ...bgImageObj.current,
-        [files[0].name]: {
-          backgroundImage: `url(${URL.createObjectURL(files[0])})`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        },
+  let es = EditorState.push(editorState, newContent, 'change-block-data');
+  es = EditorState.forceSelection(es, editorState.getSelection())
 
-
-      }
-
-
-    }
-    const updatedImage = bgImageObj.current[files[0].name]
-
-
-    setHeadBlockData(editorState, setEditorState, headKey, updatedImage)
-    //  markingColorBlock(e, editorState, setEditorState, updatedImage, blockKey)
-
-
-
-
-    setTimeout(() => {
-
-      editorRef.current.focus()
-    }, 100);
-
-  }
-
+  return setEditorState(es)
 }
-
-
-
-
 
 
 function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFocusIn, anmimationType, headKey, horizontal, setHorizontal, vertical, setVertical, index }) {
 
   const theme = useTheme()
-  const { gradientStyleArr, editorState, setEditorState, bgImageObj } = useContext(Context)
+  const { gradientStyleArr, editorState, setEditorState } = useContext(Context)
   const [isOverFlow, setIsOverFlow] = useState(false)
 
   const [randomId] = useState("--toolbar--" + Math.floor(Math.random() * 1000))
@@ -347,7 +374,21 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
       </IconButton>
       }
 
+      {/* <IconButton className={theme.sizeCss}
+        contentEditable={false}
 
+        onClick={function (e) {
+          e.preventDefault(); e.stopPropagation()
+
+
+          setEditorState(RichUtils.toggleBlockType(editorState, "imageBlock"))
+
+
+
+        }}
+      >
+        <InsertPhotoOutlinedIcon className={theme.sizeCss} />
+      </IconButton> */}
 
       <IconButton className={theme.sizeCss}
         contentEditable={false}
@@ -355,7 +396,7 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation();
 
-          inputRef.current.click()
+          //  inputRef.current.click()
 
 
 
@@ -408,7 +449,20 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation();
 
+          //   inputRef.current.click()
+          // setHorizontal(pre => {
+          //   //  pre + 25
+          //   const arr = [0, 25, 50, 75, 100]
+          //   const pos = pre[index] / 25
 
+
+          //   const newArr = [...pre]
+          //   newArr[index] = arr[(pos + 1) % 5]
+
+          //   //    console.log("vertical", newArr)
+          //   return newArr
+
+          // })
           const { vertical, horizontal } = editorState.getCurrentContent().getBlockForKey(headKey).getData().toObject()
 
           //  horizontal + 25
@@ -536,21 +590,6 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
 }
 
 
-function setHeadBlockData(editorState, setEditorState, headKey, dataObj) {
-  const newContent = Modifier.mergeBlockData(
-    editorState.getCurrentContent(),
-
-    editorState.getSelection(),
-
-    // SelectionState.createEmpty(headKey),
-    Immutable.Map({ ...dataObj, horizontal: 50, vertical: 50 })
-  )
-
-  let es = EditorState.push(editorState, newContent, 'change-block-data');
-  es = EditorState.forceSelection(es, editorState.getSelection())
-
-  return setEditorState(es)
-}
 
 
 function getRandomColor() {
