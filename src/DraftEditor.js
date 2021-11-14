@@ -71,7 +71,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
   const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showHint, showFontBar,
-    setShowFontBar, tabValue, setTabValue,  editorBlockKeyArr, editingBlockKeyArrRef,
+    setShowFontBar, tabValue, setTabValue, editorBlockKeyArr, editingBlockKeyArrRef,
 
     panelColorGroupNum, setPanelColorGroupNum,
 
@@ -190,13 +190,17 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
   }
 
+
+
   useEffect(function () {
 
     adjustToolButtonPos()
 
     window.addEventListener("resize", adjustToolButtonPos)
+    
     return function () {
       window.removeEventListener("resize", adjustToolButtonPos)
+  
     }
 
   })
@@ -221,8 +225,8 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
         {ctx.showFontBar && <FontBar {...{
           gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue,
-          
-        
+
+
           panelValue,
           setPanelValue,
 

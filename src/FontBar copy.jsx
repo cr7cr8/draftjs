@@ -84,9 +84,9 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, 
         padding: 0,
         margin: 0,
 
-        //...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonCount)], ["height", multiplyArr(textSizeArr, 2)]),
+        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonCount)], ["height", multiplyArr(textSizeArr, 2)]),
 
-        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonCount)])
+        //...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonCount)])
 
 
       }
@@ -158,7 +158,7 @@ export const FontBar = withContext(function ({ gradientStyleArr,
   const selection = editorState.getSelection()
 
 
-
+  const [editorWidth, setEditorWidth] = useState(0)
 
 
 
@@ -410,8 +410,11 @@ export const FontBar = withContext(function ({ gradientStyleArr,
     ].map((item, index) => {
       return {
 
-        //  btn: <FiberManualRecordIcon className={theme.sizeCss} style={{ color: item[500] }} />, // not in use
-        color: item[500],
+
+        //  FiberManualRecordIcon
+        // btn: <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: item[500] }} />,
+        btn: <FiberManualRecordIcon className={theme.sizeCss} style={{ color: item[500] }} />,
+
         fn: function (e) {
 
           setPanelColorGroupNum(index);
@@ -439,10 +442,10 @@ export const FontBar = withContext(function ({ gradientStyleArr,
           const tempArr = Object.keys(color).map((item, index) => {
             return {
 
-
+              //  btn: <RadioButtonUncheckedIcon className={theme.sizeCss} style={{/* backgroundColor: color[item],*/ color:color[item] }} key={index} />,
               btn: <FiberManualRecordIcon className={theme.sizeCss} style={{ color: color[item] }} key={index} />,
-              fn: function (e) { changeInlineStyle(e, color[item]) },
-              color: color[item],
+              fn: function (e) { changeInlineStyle(e, color[item]) }
+
 
             }
           })
@@ -480,7 +483,9 @@ export const FontBar = withContext(function ({ gradientStyleArr,
 
 
 
-
+  useEffect(function () {
+    setEditorWidth(editorRef.current.editor.editor.getBoundingClientRect().width)
+  })
 
 
   useEffect(function () {
@@ -619,22 +624,17 @@ export const FontBar = withContext(function ({ gradientStyleArr,
           display: "block",
 
           zIndex: 1100,
-          overflow: "hidden",
-          borderRadius: "4px",
+
 
           position: "absolute",
           //   transform: `translateX( calc( -50% + ${taggingWidth / 2}px ) )   translateY(-100%)`,
-          //transform: `translateY(-${tabValue === 1 ? 150 : 100}%)`,
+          transform: `translateY(-${tabValue === 1 ? 150 : 100}%)`,
 
-          transform: `translateY(-110%)`,
-
-          transitionProperty: "top ,left",
-          transitionDuration: "150ms",
-
+          transitionProperty: "top ,left, opacity, transform",
 
           // transitionProperty: "opacity",
 
-
+          transitionDuration: "150ms",
 
           //  overflow: "hidden",
           whiteSpace: "nowrap",
@@ -668,7 +668,7 @@ export const FontBar = withContext(function ({ gradientStyleArr,
 
                 width: 100 / categoryBtnArr.length + "%",
                 minWidth: 0,
-                borderRadius: 0,
+                boxShadow: 0,
 
               }}
               onClick={function (e) {
@@ -689,27 +689,48 @@ export const FontBar = withContext(function ({ gradientStyleArr,
         </div>
 
 
-
-        {tabValue === 0 && <RenderColorPickerPanel buttonArr={basicButtonArr} panelCss={colorTabPanelCss} />}
-
-
-        {tabValue === 1 && <ColorPickerPanel panelCss={colorTabPanelCss} panelValue={panelValue} setPanelValue={setPanelValue} buttonArr={colorButtonArr} />}
-
-
-        {tabValue === 1 && subColorGroupFn(panelColorGroupNum).map((group, index) => {
-          return (
+        {/* Parent overflow hidden is off, have to use Fade rather than slide*/}
+        <Fade in={tabValue === 0} direction="left" unmountOnExit={true}>
+          <div style={{ position: "absolute" }}>
+            <RenderColorPickerPanel buttonArr={basicButtonArr} panelCss={colorTabPanelCss} />
+          </div>
+        </Fade>
+        {/* <Fade in={tabValue === 1} direction="left" unmountOnExit={true}>
+          <div style={{ position: "absolute" }}>
             <RenderColorPickerPanel
-              buttonArr={[...group.slice(0, 5), ...group.slice(6, 10),]}
-              key={index}
+              buttonArr={colorButtonArr}
               panelCss={colorTabPanelCss}
-
             />
-          )
-
-        })}
 
 
+          </div>
+        </Fade> */}
+        <Fade in={tabValue === 1} direction="left" unmountOnExit={true}>
+          <div style={{ position: "absolute" }}>
+            {/* <RenderColorPickerPanel
+              buttonArr={colorButtonArr}
+              panelCss={colorTabPanelCss}
+              panelValue={panelValue}
+              setPanelValue={setPanelValue}
+              flag="colorPicker"
+            /> */}
 
+            <ColorPickerPanel panelCss={colorTabPanelCss} panelValue={panelValue} setPanelValue={setPanelValue} buttonArr={colorButtonArr} />
+
+
+            {subColorGroupFn(panelColorGroupNum).map((group, index) => {
+              return (
+                <RenderColorPickerPanel
+                  buttonArr={[...group.slice(0, 5), ...group.slice(6, 10),]}
+                  key={index}
+                  panelCss={colorTabPanelCss}
+                />
+              )
+
+            })}
+
+          </div>
+        </Fade>
 
       </div>
 
@@ -740,7 +761,7 @@ function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, 
   return (
     <div className={panelCss} style={{
       ...panelWidth && { width: panelWidth },
-      //   boxShadow:theme.shadows[5]
+   //   boxShadow:theme.shadows[5]
 
 
 
@@ -811,18 +832,13 @@ function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, 
         {
           buttonArr.map(function (item, index) {
             return (
-              <IconButton className={theme.sizeCss} key={index} style={{
-                verticalAlign: "top", padding: 0,
-                ...item.color && { backgroundColor: item.color },
-                ...item.color && { transform: "scale(0.9)" },
-                ...item.color && { transition: "background-color 500ms" },
-              }}
+              <IconButton className={theme.sizeCss} key={index} style={{ verticalAlign: "top", padding: 0, }}
 
                 onClick={item.fn}
               >
-                {!item.color && item.btn}
-              </IconButton>
-            )
+
+                {item.btn}
+              </IconButton>)
           })
         }
 
@@ -893,7 +909,7 @@ function ColorPickerPanel({ panelCss, panelValue, setPanelValue, buttonArr }) {
 
       overflow: "hidden", justifyContent: "flex-start",
 
-      // boxShadow: theme.shadows[5],
+     // boxShadow: theme.shadows[5],
       backgroundColor: theme.palette.background.default
     }}>
       <IconButton
@@ -922,20 +938,17 @@ function ColorPickerPanel({ panelCss, panelValue, setPanelValue, buttonArr }) {
           buttonArr.map(function (item, index) {
             return (
               <IconButton className={theme.sizeCss} key={index} style={{
-                verticalAlign: "top",
-                padding: 0,
+                verticalAlign: "top", padding: 0,
                 transition: "transform 200ms",
-                transform: `translateX(-${100 * panelValue}%) scale(0.9)`,
-                backgroundColor: item.color,
-
+                transform: `translateX(-${100 * panelValue}%)`,
               }}
 
                 onClick={item.fn}
                 onMouseEnter={item.hoverFn}
-              />
+              >
 
-
-            )
+                {item.btn}
+              </IconButton>)
           })
         }
       </div>
