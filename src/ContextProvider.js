@@ -452,7 +452,7 @@ function toPreHtml(editorState) {
 
 
 //const MyEditor = withContext3(DraftEditor)
-const gradientStyleArr = [
+const gradientStyleArr0 = [
   { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
   { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
   { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
@@ -530,7 +530,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   })
 
 
-
+  const [gradientStyleArr, setGradientStyleArr] = useState(gradientStyleArr0)
 
   return (
     <ThemeProvider theme={theme}>
@@ -560,7 +560,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           darkToLightArr, setDarkToLightArr,
 
           editingBlockKeyArrRef,
-          gradientStyleArr,
+          gradientStyleArr, setGradientStyleArr,
 
 
           //     imageArr, setImageArr,

@@ -49,9 +49,14 @@ export default function EditingBlock(props) {
   const theme = useTheme()
 
 
-  const { editorBlockKeyArr, setEditorBlockKeyArr, darkToLightArr, setDarkToLightArr, bgImageObj, editorState, setEditorState, editorRef, editingBlockKeyArrRef } = useContext(Context)
+  const { editorBlockKeyArr, setEditorBlockKeyArr, darkToLightArr, setDarkToLightArr,
 
-  const { gradientStyleArr, showFontBar, setShowFontBar, markingImageBlock, markingColorBlock, toolButtonRef } = props;
+
+    gradientStyleArr, setGradientStyleArr,
+
+    bgImageObj, editorState, setEditorState, editorRef, editingBlockKeyArrRef } = useContext(Context)
+
+  const { showFontBar, setShowFontBar, markingImageBlock, markingColorBlock, toolButtonRef } = props;
 
   const selection = editorState.getSelection()
   const startKey = selection.getStartKey()
@@ -171,7 +176,7 @@ export default function EditingBlock(props) {
 
           const headKey = editorState.getSelection().getStartKey()
 
-          update({e,bgImageObj, editorRef, editorState,setEditorState, headKey})
+          update({ e, bgImageObj, editorRef, editorState, setEditorState, headKey, gradientStyleArr, setGradientStyleArr })
 
         }}
       />
@@ -248,7 +253,7 @@ export default function EditingBlock(props) {
 }
 
 
-function update({e,bgImageObj, editorRef, editorState,setEditorState,headKey}) {
+function update({ e, bgImageObj, editorRef, editorState, setEditorState, headKey, gradientStyleArr, setGradientStyleArr }) {
   e.preventDefault()
   e.stopPropagation()
 
@@ -278,7 +283,15 @@ function update({e,bgImageObj, editorRef, editorState,setEditorState,headKey}) {
     setHeadBlockData(editorState, setEditorState, headKey, updatedImage)
     //  markingColorBlock(e, editorState, setEditorState, updatedImage, blockKey)
 
+    setGradientStyleArr(pre => {
 
+      return [updatedImage, ...pre.filter(item => { return item.backgroundImage !== updatedImage.backgroundImage })]
+
+
+
+
+
+    })
 
 
     setTimeout(() => {
