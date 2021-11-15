@@ -136,33 +136,19 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, 
 
 
 
-export const FontBar = withContext(function ({ gradientStyleArr,
-  // editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColorGroupNum, setPanelColorGroupNum,
-
-  // panelValue, setPanelValue, ctx,
+export const FontBar = withContext(function ({
   ...props }) {
-
 
   const [top, setTop] = useState(-4)
   const [left, setLeft] = useState("50%")
 
-
   const fontPanel = useRef()
-
 
   const theme = useTheme()
 
   const { editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColorGroupNum, setPanelColorGroupNum,
 
-    panelValue, setPanelValue, charSizePos, setCharSizePos } = props.ctx
-
-  //console.log(charSize)
-
-  //const selection = editorState.getSelection()
-
-
-
-
+    panelValue, setPanelValue, charSizePos, setCharSizePos,gradientStyleArr } = props.ctx
 
 
 
@@ -199,26 +185,7 @@ export const FontBar = withContext(function ({ gradientStyleArr,
 
     if (isCollapsed) { return }
 
-    if (fontStr === "SMALL" || fontStr === "LARGE") {
-      const allBlocks = Modifier.removeInlineStyle(editorState.getCurrentContent(), editorState.getSelection(), fontStr === "LARGE" ? "SMALL" : "LARGE")
-
-      let es = EditorState.push(
-        editorState,
-        allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
-        "change-inline-style",
-      )
-
-
-      es = RichUtils.toggleInlineStyle(es, fontStr);
-      es = EditorState.forceSelection(es, selection)
-      setEditorState(es);
-      setTimeout(() => {
-        editorRef.current && editorRef.current.focus()
-      }, 0);
-
-    }
-
-    else if (fontStr[0] == "#") {
+    if (fontStr[0] == "#") {
 
       let allBlocks = editorState.getCurrentContent()
       const selection = editorState.getSelection()
@@ -247,16 +214,13 @@ export const FontBar = withContext(function ({ gradientStyleArr,
 
     else if (fontStr === "BIGGER" || fontStr === "SMALLER") {
       let allBlocks = editorState.getCurrentContent();
-      // allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SMALL")
-      // allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "LARGE")
+  
       allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize0")
       allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize1")
       allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize2")
       allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize3")
       allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize4")
       allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize5")
-
-
 
       let es = EditorState.push(editorState, allBlocks, "change-inline-style")
 
@@ -266,11 +230,7 @@ export const FontBar = withContext(function ({ gradientStyleArr,
       newCharSizePos = newCharSizePos < 0 ? 5 : newCharSizePos
       newCharSizePos = newCharSizePos > 5 ? 0 : newCharSizePos
 
-
-
       const newFontStr = ["charSize0", "charSize1", "charSize2", "charSize3", "charSize4", "charSize5"][newCharSizePos]
-
-
 
       setCharSizePos(newCharSizePos)
 
@@ -280,10 +240,6 @@ export const FontBar = withContext(function ({ gradientStyleArr,
       // setTimeout(() => {
       //   editorRef.current && editorRef.current.focus()
       // }, 0);
-
-
-
-
     }
 
   }
@@ -298,8 +254,7 @@ export const FontBar = withContext(function ({ gradientStyleArr,
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "ITALIC")
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "UNDERLINE")
 
-    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SMALL")
-    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "LARGE")
+  
 
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize0")
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize1")
@@ -420,13 +375,11 @@ export const FontBar = withContext(function ({ gradientStyleArr,
     },
     {
       btn: <FormatSizeIcon className={theme.sizeCss} />,
-      //  fn: function (e) { changeInlineStyle(e, "LARGE"); }
       fn: function (e) { changeInlineStyle(e, "BIGGER"); }
 
     },
     {
       btn: <TextFieldsIcon className={theme.sizeCss} />,
-      //   fn: function (e) { changeInlineStyle(e, "SMALL"); }
       fn: function (e) { changeInlineStyle(e, "SMALLER"); }
 
     },

@@ -133,15 +133,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
         <ToolButton {...{ editorState, setEditorState, toolButtonRef, currentBlockKey }} />
 
-        {ctx.showFontBar && <FontBar {...{
-          gradientStyleArr, editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue,
-
-
-          panelValue,
-          setPanelValue,
-
-          panelColorGroupNum, setPanelColorGroupNum,
-        }} />}
+        {ctx.showFontBar && <FontBar />}
         <Editor
 
 

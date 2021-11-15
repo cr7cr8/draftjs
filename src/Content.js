@@ -20,14 +20,6 @@ import {
 } from "react-device-detect";
 
 
-function TTT(node, myRef) {
-
-  const ref = useRef()
-  forwardRef()
-  return <React.Fragment>{node}</React.Fragment>
-
-}
-
 
 const useSize = (target) => {
   const [size, setSize] = React.useState()

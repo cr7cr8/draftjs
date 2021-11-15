@@ -221,14 +221,7 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
           '@global': {
             html: {
 
-              // '& span[style*="--font--large"]': {
-              //   ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1.2)]),
-              // },
-
-              // '& span[style*="--font--small"]': {
-              //   ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
-              // },
-
+        
 
               '& span[style*="--charSize0"]': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.5)]),
