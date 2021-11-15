@@ -163,22 +163,39 @@ function toHtml({ preHtml, theme, ctx }) {
 
           const fontNode = convertNodeToElement(child, index, transformFn)
 
-          if (typeof (fontNode) === "object" && (fontNode.props.textcolor || fontNode.props.className === "large" || fontNode.props.className === "small")) {
+          if (typeof (fontNode) === "object" && 
+          
+          (fontNode.props.textcolor ||
+            fontNode.props.className === "charSize0" ||
+            fontNode.props.className === "charSize1" ||
+            fontNode.props.className === "charSize2" ||
+            fontNode.props.className === "charSize3" ||
+            fontNode.props.className === "charSize4" ||
+            fontNode.props.className === "charSize5")) {
 
             //fontSize in the  theme.lgTextCss as classname of a span tag will not work
             //console.log(React.cloneElement(fontNode, { className:theme.lgTextCss }, fontNode.props.children)) 
 
             console.log(fontNode.props.textcolor)
 
-            let className = null
-            if (fontNode.props.className === "large") { className = theme.lgTextCss }
-            if (fontNode.props.className === "small") { className = theme.smTextCss }
+            let objAttribute = null
+            // if (fontNode.props.className === "large") { className = theme.lgTextCss }
+            // if (fontNode.props.className === "small") { className = theme.smTextCss }
+
+            if (fontNode.props.className === "charSize0") { objAttribute = {"--charSize0":"charSize0" }}
+            if (fontNode.props.className === "charSize1") { objAttribute = {"--charSize1":"charSize1" }}
+            if (fontNode.props.className === "charSize2") { objAttribute = {"--charSize2":"charSize2" }}
+            if (fontNode.props.className === "charSize3") { objAttribute = {"--charSize3":"charSize3" }}
+            if (fontNode.props.className === "charSize4") { objAttribute = {"--charSize4":"charSize4" }}
+            if (fontNode.props.className === "charSize5") { objAttribute = {"--charSize5":"charSize5" }}
+            
+            
             let color = null
             if (fontNode.props.textcolor) { color = fontNode.props.textcolor }
 
             return React.cloneElement(
-              <div />,
-              { key: index, className, style: { display: "inline", color } },
+              <span />,
+              { key: index,  style: { display: "inline", color, ...objAttribute} },
               fontNode.props.children
             )
 
