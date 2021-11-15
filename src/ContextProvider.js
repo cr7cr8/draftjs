@@ -215,6 +215,36 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
 
 
       overrides: {
+
+        MuiCssBaseline: {
+
+          '@global': {
+            html: {
+              //backgroundColor: "brown",
+
+
+
+
+              //   color: "red",
+
+              '& span[style*="--font--large"]': {
+                ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1.2)]),
+              },
+
+              '& span[style*="--font--small"]': {
+                ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
+              },
+
+              '& span[data-mention-head*="@"] span': {
+                ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
+              },
+
+            },
+
+
+          },
+        },
+
         MuiChip: {
           root: {
             //     ...breakpointsAttribute(["borderRadius", ...textSizeArr])
@@ -534,6 +564,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   return (
     <ThemeProvider theme={theme}>
+
       <StyledThemeProvider theme={theme}>
         <Context.Provider value={{
           //isLight, setIsLight, theme, breakpointsAttribute,

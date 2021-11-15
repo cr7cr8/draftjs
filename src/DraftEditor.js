@@ -101,29 +101,29 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
     // )
 
 
-    document.querySelectorAll(`span[class*="${theme.lgTextCss}"]`).forEach(
-      item => {
-        if (Object.values(item.style).includes("--font-size-large")) { return }
-        else {
-          item.classList.remove(theme.lgTextCss)
-        }
+    // document.querySelectorAll(`span[class*="${theme.lgTextCss}"]`).forEach(
+    //   item => {
+    //     if (Object.values(item.style).includes("--font-size-large")) { return }
+    //     else {
+    //       item.classList.remove(theme.lgTextCss)
+    //     }
 
-      }
-    )
+    //   }
+    // )
 
 
-    document.querySelectorAll('span[style*="--font-size-large"]').forEach(
-      item => {
+    // document.querySelectorAll('span[style*="--font-size-large"]').forEach(
+    //   item => {
 
-        if (item.parentElement && item.parentElement.getAttribute("data-mention-head")) {
-          // console.log(item.parentElement.getAttribute("data-mention-head"))
-        }
-        else {
-          item.className = theme.lgTextCss
-        }
+    //     if (item.parentElement && item.parentElement.getAttribute("data-mention-head")) {
+    //       // console.log(item.parentElement.getAttribute("data-mention-head"))
+    //     }
+    //     else {
+    //       item.className = theme.lgTextCss
+    //     }
 
-      }
-    )
+    //   }
+    // )
 
 
     ///////////////////////////////////////
@@ -135,28 +135,30 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
     //   }
     // )
 
-    document.querySelectorAll(`span[class*="${theme.smTextCss}"]`).forEach(
-      item => {
-        if (Object.values(item.style).includes("--font-size-small")) { return }
-        else {
-          item.classList.remove(theme.smTextCss)
-        }
+    // document.querySelectorAll(`span[class*="${theme.smTextCss}"]`).forEach(
+    //   item => {
+    //     if (Object.values(item.style).includes("--font-size-small")) { return }
+    //     else {
+    //       item.classList.remove(theme.smTextCss)
+    //     }
 
-      }
-    )
+    //   }
+    // )
 
 
 
-    document.querySelectorAll('span[style*="--font-size-small"]').forEach(
-      item => {
-        if (item.parentElement && item.parentElement.getAttribute("data-mention-head")) {
-          //console.log(item.parentElement.getAttribute("data-mention-head"))
-        }
-        else {
-          item.className = theme.smTextCss
-        }
-      }
-    )
+    // document.querySelectorAll('span[style*="--font-size-small"]').forEach(
+    //   item => {
+    //     if (item.parentElement && item.parentElement.getAttribute("data-mention-head")) {
+    //       //console.log(item.parentElement.getAttribute("data-mention-head"))
+    //     }
+    //     else {
+    //       item.className = theme.smTextCss
+    //     }
+    //   }
+    // )
+
+
 
     // const selection = editorState.getSelection()
     // const startKey = selection.getStartKey()
@@ -321,13 +323,16 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             }
             if (styleNameArr.includes("LARGE")) {
 
-              styleObj["--font-size-large"] = "large"
+           //   styleObj["--font-size-large"] = "large"
 
+              styleObj["--font--large"] = "large"
               //  styleObj.color = "red"
             }
             if (styleNameArr.includes("SMALL")) {
 
-              styleObj["--font-size-small"] = "small"
+           //   styleObj["--font-size-small"] = "small"
+
+              styleObj["--font--small"] = "small"
 
               //  styleObj.color = "red"
             }
@@ -708,7 +713,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
 
-          stripPastedStyles={false}
+          stripPastedStyles={true}
         // handlePastedText={function (text, html, editorState, props) {
 
         // //  alert(text)

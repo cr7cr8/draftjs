@@ -19,7 +19,7 @@ function App() {
 
 
       {/* <Switch /> */}
-      <CssBaseline />
+ 
 
       <Container disableGutters={true} fixed={false} maxWidth={window.innerWidth >= 3000 ? false : "lg"} >
 

@@ -138,9 +138,10 @@ function toHtml({ preHtml, theme, ctx }) {
           return convertNodeToElement(child, index, transformFn)
         })
 
-        return <span key={index} style={{ fontSize: 0, width: 0, height: 0, display: "inline-block" }}><span><span>{element}</span></span></span>
+      //  return <></>
+        return <span key={index} style={{ fontSize: 0, width: 0, height: 0, display: "inline-block", overflow: "hidden" }}>{element}</span>
 
-        //fontSize in the  theme.lgTextCss as classname of a span tag will not work
+        //fontSize in the  theme.lgTextCss as classname of a span tag will not work, need overfolow hidden to cover hide
         return <React.Fragment key={index}></React.Fragment>  // work as well
       }
 
@@ -272,7 +273,7 @@ export default withTheme(withContext(function Content({ theme, ctx, ...props }) 
 
   return (
     <Zoom in={ctx.showContent} unmountOnExit={true}>
-      <Paper style={{wordBreak: "break-all"}}>{
+      <Paper style={{ wordBreak: "break-all" }}>{
         toHtml({ preHtml: toPreHtml(editorState), theme, ctx })
       }
       </Paper>
