@@ -221,8 +221,6 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
           '@global': {
             html: {
 
-        
-
               '& span[style*="--charSize0"]': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.5)]),
               },
@@ -241,10 +239,6 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
               '& span[style*="--charSize5"]': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 2.0)]),
               },
-           
-
-
-
 
               '& span[data-mention-head*="@"] span': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
@@ -310,8 +304,8 @@ const inlineStyleFn = (styleNameSet, ...props) => {
     if (styleNameSet.has(colorString)) {
       styleObj.attributes.textcolor = colorString
     }
- 
- 
+
+
   })
 
   if (styleNameSet.has("charSize0")) {
@@ -473,27 +467,27 @@ function toPreHtml(editorState) {
 }
 
 
-//const MyEditor = withContext3(DraftEditor)
+
 const gradientStyleArr0 = [
   { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
   { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
   { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
   { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
   {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/600/300)",
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.8) 0%, rgba(226,235,240,0.8) 100%),  url(https://picsum.photos/600/300)",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     color: "#666",
 
   },
   {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/500/700)",
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.8) 0%, rgba(226,235,240,0.8) 100%),  url(https://picsum.photos/500/700)",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     color: "#666"
   },
   {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.5) 0%, rgba(226,235,240,0.5) 100%),  url(https://picsum.photos/502/700)",
+    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.8) 0%, rgba(226,235,240,0.8) 100%),  url(https://picsum.photos/502/700)",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     color: "#666"
@@ -511,7 +505,35 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [isLight, setIsLight] = useState(true)
 
   const editorRef = useRef()
-  const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
+  const [editorState, setEditorState] = useState(EditorState.createWithContent(
+
+    convertFromRaw(
+
+      {
+        entityMap: {
+          // "0": {
+          //     type: "image",
+          //     mutability: "IMMUTABLE",
+          //     data: {
+          //         src:
+          //             "https://www.draft-js-plugins.com/images/canada-landscape-small.jpg"
+          //     }
+          // }
+        },
+        blocks: [
+          {
+            key: "1111",
+            text:" @dsd",
+            type: "editingBlock",
+          }
+        ]
+      }
+
+    )
+  ))
+  //const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
+
+
 
 
   const [showContent, setShowContent] = useState(false)
@@ -554,7 +576,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [gradientStyleArr, setGradientStyleArr] = useState(gradientStyleArr0)
 
-  const [charSizePos,setCharSizePos] = useState(2)
+  const [charSizePos, setCharSizePos] = useState(2)
 
   return (
     <ThemeProvider theme={theme}>
@@ -586,7 +608,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
           editingBlockKeyArrRef,
           gradientStyleArr, setGradientStyleArr,
-          charSizePos,setCharSizePos,
+          charSizePos, setCharSizePos,
 
           //     imageArr, setImageArr,
           //  editorTop, setEditorTop,

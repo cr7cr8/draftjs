@@ -108,10 +108,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
     adjustToolButtonPos()
 
     window.addEventListener("resize", adjustToolButtonPos)
-    
+
     return function () {
       window.removeEventListener("resize", adjustToolButtonPos)
-  
+
     }
 
   })
@@ -128,7 +128,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}>
         <EmojiPanel />
       </Collapse>
-     
+
       <Paper style={{ position: "relative", wordBreak: "break-all" }} >
 
         <ToolButton {...{ editorState, setEditorState, toolButtonRef, currentBlockKey }} />
@@ -202,9 +202,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               if (item[0] === "#") {
                 styleObj.color = item
               }
-              if(item.indexOf("charSize")>=0){
+              if (item.indexOf("charSize") >= 0) {
                 console.log(item)
-                styleObj["--charSize"+[...item].pop()] = item
+                styleObj["--charSize" + [...item].pop()] = item
               }
             })
 
@@ -227,14 +227,14 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             }
             if (styleNameArr.includes("LARGE")) {
 
-           //   styleObj["--font-size-large"] = "large"
+              //   styleObj["--font-size-large"] = "large"
 
               styleObj["--font--large"] = "large"
               //  styleObj.color = "red"
             }
             if (styleNameArr.includes("SMALL")) {
 
-           //   styleObj["--font-size-small"] = "small"
+              //   styleObj["--font-size-small"] = "small"
 
               styleObj["--font--small"] = "small"
 
@@ -300,6 +300,14 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               //     toolButton={toolButton}
               //   />,
               // },
+
+              "unstyled": {
+                element: "div",
+
+                wrapper: <ToolBlock />
+
+              },
+
 
               "editingBlock": {
                 element: "div",
@@ -420,7 +428,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
             if ((e.keyCode === 8) && (isCollapsed) && (blockText.length === 0) && (startOffset === 0) && (startKey !== firstBlockKey)) {
 
-              if (!contentState.getKeyAfter(startKey)) {
+              if ((!contentState.getKeyAfter(startKey) && (!isFirefox)) && false) {
                 return undefined
               }
               else {
@@ -456,32 +464,38 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             }
             else if ((e.keyCode === 8) && (isCollapsed) && (startOffset === 0) && (startKey !== firstBlockKey)) {
 
-
-
               deleteBlock1(editorState, startKey, setEditorState)
-
-
-              // const content = deleteBlock2(contentState, startKey)
-              // const newState = EditorState.push(editorState, content, 'remove-block');
-              // setEditorState(newState)
-
               return ("done")
             }
 
 
 
+            //comment out beaause  blockRenderMap is taking care of it. it passes the blocks of its adjecent same blocks into the warper as a array
+            // props.children.map(item=>{return item.props.children}) to return each individual block
+            // if (isFirefox && (e.keyCode === 38) && !checkShowing()) {
+            //   return "moveUp"
+            // }
+
+            // else if (isFirefox && (e.keyCode === 40) && !checkShowing()) {
+            //   return "moveDown"
+            // }
 
 
-            if (checkShowing() && e.keyCode === 38) {
+            else if (checkShowing() && e.keyCode === 38) {
               return undefined
             }
-            if (checkShowing() && e.keyCode === 40) {
+            else if (checkShowing() && e.keyCode === 40) {
               return undefined
             }
 
             // if ((block.getType() === "imageBlock")) {
             //   return "cancel-delete"
             // }
+
+
+
+
+
             else if (e.shiftKey || hasCommandModifier(e) || e.altKey) {
               return getDefaultKeyBinding(e);
             }
@@ -625,7 +639,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
         //   return "un-handled"
         // }}
         />
- 
+
       </Paper>
 
       {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>

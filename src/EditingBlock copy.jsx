@@ -42,14 +42,6 @@ import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 
 
-import {
-  isMobile,
-  isFirefox,
-  isChrome,
-  browserName,
-  engineName,
-} from "react-device-detect";
-
 
 export default function EditingBlock(props) {
 
@@ -102,6 +94,9 @@ export default function EditingBlock(props) {
 
   const inputRef = useRef()
 
+
+
+
   const arr = [[props.children[0]]]
   let preItemValue = props.children[0].props.children.props.block.getData().toObject().backgroundImage
   props.children.reduce((previousItem, currentItem, currentIndex) => {
@@ -128,7 +123,7 @@ export default function EditingBlock(props) {
 
 
 
-  //console.log(arr)
+  console.log(arr)
 
 
 
@@ -200,7 +195,7 @@ export default function EditingBlock(props) {
 
 
         return (
-          <div className={""} 
+          <div className={""}
             style={{
               ...styleObj,
               //    backgroundPosition: `${horizontal}% ${vertical}%`,
@@ -213,14 +208,11 @@ export default function EditingBlock(props) {
 
               const block = item.props.children.props.block
 
-//item.props.children.props.onClick=function(){alert("ff")}
 
-//item.props.onClick=function(){alert("fff")}
               //   !editingBlockKeyArrRef.current.includes(block.getKey()) && editingBlockKeyArrRef.current.push(block.getKey())
 
               return (
-                item.props.children
-                //item
+                item
               )
 
 
@@ -297,6 +289,10 @@ function update({ e, bgImageObj, editorRef, editorState, setEditorState, headKey
 
       return [updatedImage, ...pre.filter(item => { return item.backgroundImage !== updatedImage.backgroundImage })]
 
+
+
+
+
     })
 
 
@@ -329,13 +325,45 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
     <div className={theme.heightCss} style={{
       display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center",
       // position: "absolute",
-      backgroundColor: "rgba(245 ,222	,179 ,0.5)"
-
+       backgroundColor: "rgba(245 ,222	,179 ,0.5)" 
+        
       // zIndex:100,
     }}
 
       contentEditable={false}
     >
+      {isOverFlow && <IconButton
+        style={{
+          alignItems: "center",
+        }}
+        className={theme.sizeCss}
+        contentEditable={false}
+        onClick={function () {
+
+          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
+
+          toolBar.scrollBy({
+            top: 0,
+            left: -Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
+            behavior: 'smooth'
+          })
+
+        }}
+        onDoubleClick={function (e) {
+          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
+          toolBar.scrollBy({
+            top: 0,
+            left: -1000,
+            behavior: 'smooth'
+          })
+        }}
+
+      >
+        <ChevronLeftIcon className={theme.sizeCss} />
+      </IconButton>
+      }
+
+
 
       <IconButton className={theme.sizeCss}
         contentEditable={false}
@@ -416,41 +444,6 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
       >
         <SwapHorizIcon className={theme.sizeCss} />
       </IconButton>
-
-
-
-      {isOverFlow && <IconButton
-        style={{
-          alignItems: "center",
-        }}
-        className={theme.sizeCss}
-        contentEditable={false}
-        onClick={function () {
-
-          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
-
-          toolBar.scrollBy({
-            top: 0,
-            left: -Number(window.getComputedStyle(toolBar).width.replace("px", "")) / 2,
-            behavior: 'smooth'
-          })
-
-        }}
-        onDoubleClick={function (e) {
-          const toolBar = document.querySelector(`div[style*="${randomId}"]`)
-          toolBar.scrollBy({
-            top: 0,
-            left: -1000,
-            behavior: 'smooth'
-          })
-        }}
-
-      >
-        <ChevronLeftIcon className={theme.sizeCss} />
-      </IconButton>
-      }
-
-
 
 
 
@@ -555,63 +548,37 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
       }
 
 
-
-
-
-
-
-
-
-
-
-
-      <IconButton className={theme.sizeCss}
+<IconButton className={theme.sizeCss}
         contentEditable={false}
 
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation();
 
 
-          changeBlockData({e,dirStr:"left", editorState, setEditorState})
+          const { vertical, horizontal } = editorState.getCurrentContent().getBlockForKey(headKey).getData().toObject()
 
+          //  horizontal + 25
 
+          let newContent = Modifier.mergeBlockData(
+            editorState.getCurrentContent(),
+            //blockItem.props.children.props.contentState,
+            SelectionState.createEmpty(headKey),
+            Immutable.Map({ horizontal: horizontal >= 0 ? (horizontal + 25) > 100 ? 0 : (horizontal + 25) : 50 }),
+          )
+
+          let es = EditorState.push(editorState, newContent, 'change-block-data');
+          es = EditorState.forceSelection(es, editorState.getSelection())
+
+          setEditorState(es)
         }}
       >
-        <FormatAlignLeftIcon className={theme.sizeCss} />
+        <SwapHorizIcon className={theme.sizeCss} />
       </IconButton>
 
-      <IconButton className={theme.sizeCss}
-        contentEditable={false}
-
-        onClick={function (e) {
-          e.preventDefault(); e.stopPropagation();
-          changeBlockData({e,dirStr:"center", editorState, setEditorState})
-
-
-        }}
-      >
-        <FormatAlignCenterIcon className={theme.sizeCss} />
-      </IconButton>
-
-
-      <IconButton className={theme.sizeCss}
-        contentEditable={false}
-
-        onClick={function (e) {
-          e.preventDefault(); e.stopPropagation();
-          changeBlockData({e,dirStr:"right", editorState, setEditorState})
-
-
-        }}
-      >
-        <FormatAlignRightIcon className={theme.sizeCss} />
-      </IconButton>
 
     </div >
   )
 }
-
-
 
 
 function setHeadBlockData(editorState, setEditorState, headKey, dataObj) {
@@ -629,42 +596,6 @@ function setHeadBlockData(editorState, setEditorState, headKey, dataObj) {
 
   return setEditorState(es)
 }
-
-
-
-
-
-function changeBlockData({e, dirStr, editorState, setEditorState}) {
-
-  e.preventDefault(); e.stopPropagation();
-
-  const selection = editorState.getSelection()
-  const startKey = selection.getStartKey()
-  const data = editorState.getCurrentContent().getBlockForKey(startKey).getData().toObject()
-
-  const dirObj = {
-    left: { centerBlock: false, rightBlock: false },
-    center: { centerBlock: !(data.centerBlock), rightBlock: false },
-    right: { centerBlock: false, rightBlock: !(data.rightBlock) }
-  }
-
-
-  let allBlocks = Modifier.mergeBlockData(editorState.getCurrentContent(), editorState.getSelection(), Immutable.Map(dirObj[dirStr]))
-
-  let es = EditorState.push(
-    editorState,
-    allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
-    "change-block-data",
-  )
-
-  es = EditorState.forceSelection(es, selection)
-  setEditorState(es);
-
-  // setTimeout(() => {
-  //    editorRef.current.focus()
-  // }, 0);
-}
-
 
 
 function getRandomColor() {
