@@ -323,7 +323,8 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
     <div className={theme.heightCss} style={{
       display: "flex", width: "100%", justifyContent: "flex-start", alignItems: "center",
       // position: "absolute",
-      // backgroundColor: "wheat" 
+       backgroundColor: "rgba(245 ,222	,179 ,0.5)" 
+        
       // zIndex:100,
     }}
 
