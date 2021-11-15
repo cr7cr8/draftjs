@@ -34,16 +34,9 @@ import { getEventListeners } from 'events';
 
 
 
-export default function ToolBlock(props){
-
-  console.log(props)
-
-  return props.children.map(item=>{return item.props.children})
-
-}
 
 
-export  function ToolBlock0(props) {
+export default function ToolBlock(props) {
 
   const { block, selection, contentState, } = props
 

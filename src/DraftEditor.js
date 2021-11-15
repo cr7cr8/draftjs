@@ -273,7 +273,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               "image-block-figure": ((blockType === "atomic") && (blockText === "imageBlockText")) || (blockType === "imageBlock"),
               "text-center": blockData.centerBlock,
               "text-right": blockData.rightBlock,
-              "unselectable": !blockText,
+              "unselectable": blockType === "imageBlock",
 
 
               "unstyled-block2": false,//blockType === "unstyled" && !randomNum
@@ -301,12 +301,12 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               //   />,
               // },
 
-              "unstyled": {
-                element: "div",
+              // "unstyled": {
+              //   element: "div",
 
-                wrapper: <ToolBlock />
+              //   wrapper: <ToolBlock />
 
-              },
+              // },
 
 
               "editingBlock": {
@@ -470,8 +470,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
 
-            //comment out beaause  blockRenderMap is taking care of it. it passes the blocks of its adjecent same blocks into the warper as a array
-            // props.children.map(item=>{return item.props.children}) to return each individual block
+
+
+
             // if (isFirefox && (e.keyCode === 38) && !checkShowing()) {
             //   return "moveUp"
             // }

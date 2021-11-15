@@ -213,14 +213,16 @@ export default function EditingBlock(props) {
 
               const block = item.props.children.props.block
 
+//console.log(item)
+
 //item.props.children.props.onClick=function(){alert("ff")}
 
 //item.props.onClick=function(){alert("fff")}
               //   !editingBlockKeyArrRef.current.includes(block.getKey()) && editingBlockKeyArrRef.current.push(block.getKey())
 
               return (
-                item.props.children
-                //item
+               // item.props.children // cannnot use this line. highlight the block will not work!!!
+                item
               )
 
 
