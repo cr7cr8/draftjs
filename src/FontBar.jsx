@@ -137,9 +137,9 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, 
 
 
 export const FontBar = withContext(function ({ gradientStyleArr,
-  editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColorGroupNum, setPanelColorGroupNum,
+  // editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColorGroupNum, setPanelColorGroupNum,
 
-  panelValue, setPanelValue,
+  // panelValue, setPanelValue, ctx,
   ...props }) {
 
 
@@ -152,10 +152,13 @@ export const FontBar = withContext(function ({ gradientStyleArr,
 
   const theme = useTheme()
 
+  const { editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColorGroupNum, setPanelColorGroupNum,
 
+    panelValue, setPanelValue, charSizePos, setCharSizePos } = props.ctx
 
+  //console.log(charSize)
 
-  const selection = editorState.getSelection()
+  //const selection = editorState.getSelection()
 
 
 
@@ -242,6 +245,47 @@ export const FontBar = withContext(function ({ gradientStyleArr,
 
     }
 
+    else if (fontStr === "BIGGER" || fontStr === "SMALLER") {
+      let allBlocks = editorState.getCurrentContent();
+      // allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SMALL")
+      // allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "LARGE")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize0")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize1")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize2")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize3")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize4")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize5")
+
+
+
+      let es = EditorState.push(editorState, allBlocks, "change-inline-style")
+
+
+      let newCharSizePos = fontStr === "BIGGER" ? (charSizePos + 1) : fontStr === "SMALLER" ? (charSizePos - 1) : charSizePos
+
+      newCharSizePos = newCharSizePos < 0 ? 5 : newCharSizePos
+      newCharSizePos = newCharSizePos > 5 ? 0 : newCharSizePos
+
+
+
+      const newFontStr = ["charSize0", "charSize1", "charSize2", "charSize3", "charSize4", "charSize5"][newCharSizePos]
+
+
+
+      setCharSizePos(newCharSizePos)
+
+      es = RichUtils.toggleInlineStyle(es, newFontStr);
+      es = EditorState.forceSelection(es, selection)
+      setEditorState(es);
+      // setTimeout(() => {
+      //   editorRef.current && editorRef.current.focus()
+      // }, 0);
+
+
+
+
+    }
+
   }
 
   function clearInlineStyle(e) {
@@ -256,6 +300,16 @@ export const FontBar = withContext(function ({ gradientStyleArr,
 
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SMALL")
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "LARGE")
+
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize0")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize1")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize2")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize3")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize4")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize5")
+
+
+    setCharSizePos(2)
 
     colorStringArr.forEach(colorString => {
       allBlocks = Modifier.removeInlineStyle(allBlocks, selection, colorString)
@@ -366,11 +420,15 @@ export const FontBar = withContext(function ({ gradientStyleArr,
     },
     {
       btn: <FormatSizeIcon className={theme.sizeCss} />,
-      fn: function (e) { changeInlineStyle(e, "LARGE"); }
+      //  fn: function (e) { changeInlineStyle(e, "LARGE"); }
+      fn: function (e) { changeInlineStyle(e, "BIGGER"); }
+
     },
     {
       btn: <TextFieldsIcon className={theme.sizeCss} />,
-      fn: function (e) { changeInlineStyle(e, "SMALL"); }
+      //   fn: function (e) { changeInlineStyle(e, "SMALL"); }
+      fn: function (e) { changeInlineStyle(e, "SMALLER"); }
+
     },
 
     {

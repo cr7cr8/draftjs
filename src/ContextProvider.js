@@ -220,20 +220,38 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
 
           '@global': {
             html: {
-              //backgroundColor: "brown",
+
+              // '& span[style*="--font--large"]': {
+              //   ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1.2)]),
+              // },
+
+              // '& span[style*="--font--small"]': {
+              //   ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
+              // },
 
 
-
-
-              //   color: "red",
-
-              '& span[style*="--font--large"]': {
-                ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1.2)]),
+              '& span[style*="--charSize0"]': {
+                ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.5)]),
               },
-
-              '& span[style*="--font--small"]': {
+              '& span[style*="--charSize1"]': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
               },
+              '& span[style*="--charSize2"]': {
+                ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1)]),
+              },
+              '& span[style*="--charSize3"]': {
+                ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1.2)]),
+              },
+              '& span[style*="--charSize4"]': {
+                ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1.5)]),
+              },
+              '& span[style*="--charSize5"]': {
+                ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 2.0)]),
+              },
+           
+
+
+
 
               '& span[data-mention-head*="@"] span': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
@@ -254,6 +272,8 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
           root: {
             fontSize: "3rem",
             ...breakpointsAttribute(["fontSize", textSizeArr])
+
+
           }
         },
         // MuiCollapse: {
@@ -285,68 +305,47 @@ const inlineStyleFn = (styleNameSet, ...props) => {
 
   // console.log(styleName.toArray())
 
-  // if (color) {
-  //   return {
-  //     element: 'p',
-  //     style: {
-  //       color: "red",
-  //     },
-  //     attributes:{
-  //       "data-type": "xxxx",
-  //     }
-  //   };
-  // }
-
   const styleObj = {
 
     element: "span",
-    style: {
+    style: {},
+    attributes: {}
 
-    },
-    attributes: {
-
-    }
   }
 
   colorStringArr.forEach(colorString => {
     if (styleNameSet.has(colorString)) {
       styleObj.attributes.textcolor = colorString
     }
+ 
+ 
   })
 
+  if (styleNameSet.has("charSize0")) {
 
-  if (styleNameSet.has("LARGE")) {
+    styleObj.attributes.class = "charSize0"
+  }
+  if (styleNameSet.has("charSize1")) {
 
-    styleObj.attributes.class = "large"
-    // return {
-    //   element: "span",
-    //   style: {
-    //     //  color: "red",
+    styleObj.attributes.class = "charSize1"
+  }
+  if (styleNameSet.has("charSize2")) {
 
-    //     //  backgroundColor: "pink",
-    //   },
-    //   attributes: {
-    //     "class": "large",
+    styleObj.attributes.class = "charSize2"
+  }
+  if (styleNameSet.has("charSize3")) {
 
-    //   }
+    styleObj.attributes.class = "charSize3"
+  }
+  if (styleNameSet.has("charSize4")) {
 
-    // }
+    styleObj.attributes.class = "charSize4"
+  }
+  if (styleNameSet.has("charSize5")) {
+
+    styleObj.attributes.class = "charSize5"
   }
 
-  if (styleNameSet.toArray().includes("SMALL")) {
-    styleObj.attributes.class = "small"
-    // return {
-    //   element: "span",
-    //   // style: {
-    //   //   //color: "red",
-    //   //   "--font-size-large":"large"
-    //   // },
-    //   attributes: {
-    //     "class": "small",
-    //   }
-
-    // }
-  }
 
   return styleObj
 }
@@ -542,7 +541,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [editorBlockKeyArr, setEditorBlockKeyArr] = useState([])
   const [darkToLightArr, setDarkToLightArr] = useState([])
 
-  const [tabValue, setTabValue] = useState(1)
+  const [tabValue, setTabValue] = useState(0)
 
 
   const [panelColorGroupNum, setPanelColorGroupNum] = useState(0)
@@ -561,6 +560,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
 
   const [gradientStyleArr, setGradientStyleArr] = useState(gradientStyleArr0)
+
+  const [charSizePos,setCharSizePos] = useState(2)
 
   return (
     <ThemeProvider theme={theme}>
@@ -592,7 +593,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
           editingBlockKeyArrRef,
           gradientStyleArr, setGradientStyleArr,
-
+          charSizePos,setCharSizePos,
 
           //     imageArr, setImageArr,
           //  editorTop, setEditorTop,
@@ -662,20 +663,6 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
               labelPlacement="start"
             />
           </FormGroup>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
           <DraftEditor />

@@ -88,6 +88,97 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
   const [currentBlockKey, setCurrentBlockKey] = useState(null)
   const specialBakcSpace = useRef(false)
 
+  useLayoutEffect(function () {
+
+    // if ((left === "50%") && (tabValue !== 3)) {
+    //   setTabValue(3)
+    // }
+
+    // document.querySelectorAll(`span[class*="${theme.lgTextCss}"]:not(span[style*="--font-size-large"])`).forEach(
+    //   item => {
+    //     item.classList.remove(theme.lgTextCss)
+    //   }
+    // )
+
+
+    // document.querySelectorAll(`span[class*="${theme.lgTextCss}"]`).forEach(
+    //   item => {
+    //     if (Object.values(item.style).includes("--font-size-large")) { return }
+    //     else {
+    //       item.classList.remove(theme.lgTextCss)
+    //     }
+
+    //   }
+    // )
+
+
+    // document.querySelectorAll('span[style*="--font-size-large"]').forEach(
+    //   item => {
+
+    //     if (item.parentElement && item.parentElement.getAttribute("data-mention-head")) {
+    //       // console.log(item.parentElement.getAttribute("data-mention-head"))
+    //     }
+    //     else {
+    //       item.className = theme.lgTextCss
+    //     }
+
+    //   }
+    // )
+
+
+    ///////////////////////////////////////
+
+
+    // document.querySelectorAll(`span[class*="${theme.smTextCss}"]:not(span[style*="--font-size-small"])`).forEach(
+    //   item => {
+    //     item.classList.remove(theme.smTextCss)
+    //   }
+    // )
+
+    // document.querySelectorAll(`span[class*="${theme.smTextCss}"]`).forEach(
+    //   item => {
+    //     if (Object.values(item.style).includes("--font-size-small")) { return }
+    //     else {
+    //       item.classList.remove(theme.smTextCss)
+    //     }
+
+    //   }
+    // )
+
+
+
+    // document.querySelectorAll('span[style*="--font-size-small"]').forEach(
+    //   item => {
+    //     if (item.parentElement && item.parentElement.getAttribute("data-mention-head")) {
+    //       //console.log(item.parentElement.getAttribute("data-mention-head"))
+    //     }
+    //     else {
+    //       item.className = theme.smTextCss
+    //     }
+    //   }
+    // )
+
+
+
+    // const selection = editorState.getSelection()
+    // const startKey = selection.getStartKey()
+
+    // const element = document.querySelector(`div[data-offset-key*="${startKey}"]`)
+    // const bound = element && element.getBoundingClientRect()
+
+    // const bound2 = editorRef.current.editor.editor.getBoundingClientRect()
+
+
+    // //console.log(startKey,element)
+
+    // //console.log(toolButtonRef)
+    //  toolButtonRef.current && toolButtonRef.current.setTop(bound.top - 300)
+
+
+  })
+
+
+
 
   function adjustToolButtonPos() {
 
@@ -118,7 +209,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
 
-
+  // const toolButton = useState(React.createElement(ToolButton, { editorState, setEditorState }))
 
 
   return (
@@ -128,7 +219,8 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
       <Collapse in={ctx.showEmojiPanel} unmountOnExit={true} style={{ opacity: ctx.showEmojiPanel ? 1 : 0, transitionProperty: "height, opacity", }}>
         <EmojiPanel />
       </Collapse>
-     
+      {/* </Fade> */}
+
       <Paper style={{ position: "relative", wordBreak: "break-all" }} >
 
         <ToolButton {...{ editorState, setEditorState, toolButtonRef, currentBlockKey }} />
@@ -209,10 +301,6 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             styleNameArr.forEach(item => {
               if (item[0] === "#") {
                 styleObj.color = item
-              }
-              if(item.indexOf("charSize")>=0){
-                console.log(item)
-                styleObj["--charSize"+[...item].pop()] = item
               }
             })
 

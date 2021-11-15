@@ -118,14 +118,24 @@ function toHtml({ preHtml, theme, ctx }) {
 
       }
 
-      else if ((node.attribs && node.attribs["class"] && node.attribs["class"] === "large") || (node.attribs && node.attribs["class"] && node.attribs["class"] === "small")) {
+      else if (
+        (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize0")
+        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize1")
+        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize2")
+        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize3")
+        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize4")
+        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize5")
+
+      ) {
 
 
         const color = node.attribs && node.attribs.textcolor
 
-        return <div key={index} style={{ display: "inline", color, }} className={node.attribs["class"] === "large" ? theme.lgTextCss : theme.smTextCss}>
+        return <span key={index} style={{ display: "inline", color, ["--"+node.attribs["class"]]:node.attribs["class"] }}
+        //className={node.attribs["class"] === "large" ? theme.lgTextCss : theme.smTextCss}>
+        >
           {convertNodeToElement(node, index, transformFn).props.children}
-        </div>
+        </span>
 
       }
 
@@ -138,7 +148,7 @@ function toHtml({ preHtml, theme, ctx }) {
           return convertNodeToElement(child, index, transformFn)
         })
 
-      //  return <></>
+        //  return <></>
         return <span key={index} style={{ fontSize: 0, width: 0, height: 0, display: "inline-block", overflow: "hidden" }}>{element}</span>
 
         //fontSize in the  theme.lgTextCss as classname of a span tag will not work, need overfolow hidden to cover hide
