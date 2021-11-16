@@ -265,9 +265,9 @@ export const FontBar = withContext(function ({
       es = RichUtils.toggleInlineStyle(es, newFontStr);
       es = EditorState.forceSelection(es, selection)
       setEditorState(es);
-      // setTimeout(() => {
-      //   editorRef.current && editorRef.current.focus()
-      // }, 0);
+      setTimeout(() => {
+        editorRef.current && editorRef.current.focus()
+      }, 0);
     }
 
   }
