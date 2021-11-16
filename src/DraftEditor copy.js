@@ -68,6 +68,8 @@ const { imagePlugin, ImagePanel, markingImageBlock,  /* deleteImageBlock, setIma
 export default withContext(function DraftEditor({ ctx, ...props }) {
 
 
+
+
   const { editorState, setEditorState, editorRef, imageBlockObj, setImageBlockObj, gradientStyleArr, bgImageObj, showHint, showFontBar,
     setShowFontBar, tabValue, setTabValue, editorBlockKeyArr, editingBlockKeyArrRef,
 
@@ -78,20 +80,28 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
   const [readOnly, setReadOnly] = useState(false)
 
   const theme = useTheme()
+
+
   const toolButtonRef = useRef()
+
+
   const [currentBlockKey, setCurrentBlockKey] = useState(null)
   const specialBakcSpace = useRef(false)
 
 
   function adjustToolButtonPos() {
 
+
     const element = document.querySelector(`div[data-offset-key*="${currentBlockKey}-0-0"]`)
+
     // const element = editorBlockRef.current._node
     const bound = element && element.getBoundingClientRect()
     const bound2 = editorRef.current && editorRef.current.editor && editorRef.current.editor.editor.getBoundingClientRect()
     bound && bound2 && toolButtonRef.current && toolButtonRef.current.setTop(bound.top - bound2.top)
 
   }
+
+
 
   useEffect(function () {
 
@@ -105,6 +115,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
     }
 
   })
+
+
+
+
 
 
   return (
@@ -175,24 +189,16 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             //   color:"red"
             // }
           }}
-
-
           customStyleFn={function (style, block) {
 
             const styleNameArr = style.toArray();
             const styleObj = {}
             styleNameArr.forEach(item => {
-              if ((item[0] === "#") && (item[1] !== "#")) {
+              if (item[0] === "#") {
                 styleObj.color = item
               }
-
-              if ((item[0] === "#") && (item[1] === "#")) {
-                styleObj.backgroundColor = "#" + item.replace("##", "")
-              }
-
-
               if (item.indexOf("charSize") >= 0) {
-                //    console.log(item)
+                console.log(item)
                 styleObj["--charSize" + [...item].pop()] = item
               }
             })
@@ -221,22 +227,41 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const allClassName = classNames({
 
               "image-block-figure": blockType === "imageBlock",
-
               "text-center": blockData.centerBlock,
               "text-right": blockData.rightBlock,
-
               "unselectable": blockType === "imageBlock",
 
-              //"unstyled-block2": false,//blockType === "unstyled" && !randomNum
+              "unstyled-block2": false,//blockType === "unstyled" && !randomNum
 
             })
 
             return allClassName
 
+
           }}
 
           blockRenderMap={
             Immutable.Map({
+              // "colorBlock": {
+              //   element: "div",
+              //   wrapper: <ColorBlock editorState={editorState}
+              //     setEditorState={setEditorState} editorRef={editorRef}
+              //     showFontBar={showFontBar}
+              //     setShowFontBar={setShowFontBar}
+              //     gradientStyleArr={gradientStyleArr}
+              //     markingImageBlock={markingImageBlock}
+              //     markingColorBlock={markingColorBlock}
+              //     editorBlockKeyArr={editorBlockKeyArr}
+              //     toolButton={toolButton}
+              //   />,
+              // },
+
+              // "unstyled": {
+              //   element: "div",
+              //   wrapper: <ToolBlock />
+
+              // },
+
 
               "editingBlock": {
                 element: "div",
@@ -253,6 +278,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
                 />
               },
+
+
+
             })
           }
 
@@ -263,6 +291,31 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             const type = block.getType()
             const blockKey = block.getKey()
             const selection = editorState.getSelection()
+
+            // if ((type === "unstyled")) {
+
+            //   return {
+            //     component: ToolBlock,
+            //     editable: true,
+
+            //     props: {
+            //       editorRef,
+            //       readOnly,
+            //       setReadOnly,
+            //       markingImageBlock,
+            //       markingColorBlock,
+            //       editorState,
+            //       setEditorState,
+            //       taggingFontBar,
+            //       gradientStyleArr,
+            //       bgImageObj,
+            //       showFontBar,
+            //       setShowFontBar,
+            //       toolButtonRef,
+            //       currentBlockKey,
+            //     }
+            //   }
+            // }
 
 
             if (type === "imageBlock") {
@@ -369,6 +422,11 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               return ("done")
             }
 
+
+
+
+
+
             // if (isFirefox && (e.keyCode === 38) && !checkShowing()) {
             //   return "moveUp"
             // }
@@ -388,6 +446,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
             // if ((block.getType() === "imageBlock")) {
             //   return "cancel-delete"
             // }
+
+
+
+
 
             else if (e.shiftKey || hasCommandModifier(e) || e.altKey) {
               return getDefaultKeyBinding(e);
@@ -546,12 +608,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
         <div>{JSON.stringify(editorState.getCurrentContent().selectionAfter, null, 2)}</div> */}
 
-        <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
-        <hr />
+        {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
+        <hr /> */}
         {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
-
-        {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
-
       </div>
       {/* <div style={{ whiteSpace: "pre-wrap", display: "flex", fontSize: 15 }}>
 

@@ -1,0 +1,50 @@
+{
+	"bookmarks": [
+		{
+			"fsPath": "$ROOTPATH$\\src\\FontBar.jsx",
+			"bookmarks": [
+				-1,
+				89,
+				230,
+				636,
+				653,
+				670,
+				738,
+				760,
+				1003,
+				-1
+			]
+		},
+		{
+			"fsPath": "$ROOTPATH$\\src\\ContextProvider.js",
+			"bookmarks": [
+				-1,
+				110,
+				256,
+				603,
+				338,
+				-1,
+				-1,
+				-1,
+				-1,
+				-1
+			]
+		},
+		{
+			"fsPath": "$ROOTPATH$\\src\\DraftEditor.js",
+			"bookmarks": [
+				-1,
+				84,
+				219,
+				239,
+				328,
+				337,
+				-1,
+				-1,
+				-1,
+				-1,
+				548
+			]
+		}
+	]
+}

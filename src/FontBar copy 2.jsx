@@ -21,8 +21,6 @@ import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
 
 import FilterNoneTwoToneIcon from '@material-ui/icons/FilterNoneTwoTone';
-import FormatPaintIcon from '@material-ui/icons/FormatPaint';
-
 
 import TitleIcon from '@material-ui/icons/Title';
 import FormatSizeIcon from '@material-ui/icons/FormatSize';
@@ -219,7 +217,7 @@ export const FontBar = withContext(function ({
 
       colorStringArr.forEach(color => {
 
-        allBlocks = Modifier.removeInlineStyle(allBlocks, selection, tabValue === 0 ? color : "#" + color)
+        allBlocks = Modifier.removeInlineStyle(allBlocks, selection, color)
 
       })
 
@@ -230,9 +228,8 @@ export const FontBar = withContext(function ({
       )
 
 
-      es = RichUtils.toggleInlineStyle(es, (tabValue === 0 ? "" : "#") + fontStr);
+      es = RichUtils.toggleInlineStyle(es, fontStr);
       es = EditorState.forceSelection(es, selection)
-
       setEditorState(es);
       setTimeout(() => {
         editorRef.current && editorRef.current.focus()
@@ -296,7 +293,6 @@ export const FontBar = withContext(function ({
 
     colorStringArr.forEach(colorString => {
       allBlocks = Modifier.removeInlineStyle(allBlocks, selection, colorString)
-      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "#"+colorString)
     })
 
 
@@ -387,26 +383,6 @@ export const FontBar = withContext(function ({
 
   const basicButtonArr = [
 
-
-    {
-      btn: <ColorLensOutlinedIcon className={theme.sizeCss} style={{}} />,
-      fn: function (e) {
-        /*changeBlockData(e, "right") */
-        setTabValue(pre => pre === 0 ? false : 0)
-      }
-    },
-
-    {
-      btn: <FormatPaintIcon className={theme.sizeCss} style={{ transform: "rotate(0deg)" }} />,
-      fn: function (e) {
-        setTabValue(pre => pre === 1 ? false : 1)
-      }
-
-    },
-
-
-
-
     {
       btn: <FormatBoldIcon className={theme.sizeCss} />,
       fn: function (e) { toggleInlineStyle(e, "BOLD") }
@@ -416,7 +392,7 @@ export const FontBar = withContext(function ({
       fn: function (e) { toggleInlineStyle(e, "ITALIC") }
     },
     {
-      btn: <FormatUnderlinedIcon className={theme.sizeCss} style={{}} />,
+      btn: <FormatUnderlinedIcon className={theme.sizeCss} style={{ transform: "scale(0.8) " }} />,
       fn: function (e) { toggleInlineStyle(e, "UNDERLINE") }
     },
     {
@@ -424,7 +400,11 @@ export const FontBar = withContext(function ({
       fn: function (e) { changeInlineStyle(e, "BIGGER"); }
 
     },
+    {
+      btn: <TextFieldsIcon className={theme.sizeCss} />,
+      fn: function (e) { changeInlineStyle(e, "SMALLER"); }
 
+    },
 
     {
       btn: <FormatClearIcon className={theme.sizeCss} />,
@@ -442,6 +422,10 @@ export const FontBar = withContext(function ({
     {
       btn: <LinkIcon className={theme.sizeCss} />,
       fn: function (e) { /*changeBlockData(e, "center")*/ }
+    },
+    {
+      btn: <ColorLensOutlinedIcon className={theme.sizeCss}  style={{ transform: "scale(0.8)" }}/>,
+      fn: function (e) { /*changeBlockData(e, "right") */ }
     },
 
     // {
@@ -671,7 +655,7 @@ export const FontBar = withContext(function ({
   }, [tabValue])
 
 
-  //  console.log(linkValue.length)
+  console.log(linkValue.length)
   return (
     <>
       <div
@@ -713,57 +697,63 @@ export const FontBar = withContext(function ({
           //     direction:"rtl"
         }}>
 
+        <div className={theme.heightCss} style={{
+          display: "flex",
+          width: "100%", justifyContent: "flex-start",
+          alignItems: "center",
 
-        {/* <RenderColorPickerPanel buttonArr={basicButtonArr} panelCss={colorTabPanelCss} tabValue={tabValue} /> */}
-        <div style={{ display: "flex" }}>
-          {basicButtonArr.map((item, index) => {
+          margin: 0,
 
-            return (
-
-
-              <IconButton className={theme.sizeCss} key={index}
-
-                style={{
+          //  backgroundColor:theme.palette.background.default,
 
 
-                  // borderRadius: 0,
+        }}>
+          {categoryBtnArr.map((item, index) => {
+
+            return <Button
+
+              key={index}
+              className={theme.sizeCss}
+              style={{
+                color: theme.palette.text.secondary,
+                //  backgroundColor: tabValue === index ? "skyblue" : "#A0A0A0",
+
+                backgroundColor: tabValue === index ? theme.palette.background.default : "#A0A0A0",
+
+                width: 100 / categoryBtnArr.length + "%",
+                minWidth: 0,
+                borderRadius: 0,
+
+              }}
+              onClick={function (e) {
+                e.preventDefault(); e.stopPropagation();
+                if (index === 1 && tabValue === 1) {
+                  clearInlineColor(e)
+                }
+                setTabValue(index)
 
 
-                  // ...((index === 0 || index === 1) && (tabValue !== index) && (tabValue === 0 || tabValue === 1)) && { opacity: 0.3  , backgroundColor:"#A0A0A0", borderRadius:0   }
-
-                  ...((tabValue !== index) && (tabValue === 0 || tabValue === 1)) && { opacity: 0.5, backgroundColor: "#A0A0A0", borderRadius: 0 },
-
-
-                  ...(tabValue === false) && (index === 0 || index === 1) && { opacity: 0.5, backgroundColor: "#A0A0A0", borderRadius: 0 }
-                }}
-
-                onClick={function (e) {
-                  if ((index !== 0) && (index !== 1)) {
-                    setTabValue(false)
-                  }
-                  item.fn(e)
-                }}
-              >
-
-                {item.btn}
-
-              </IconButton>
-
-            )
+                tabValue === 2 || index !== 2 && setTimeout(() => {
+                  editorRef.current.focus()
+                }, 0);
 
 
+              }}
 
+            >{item}</Button>
           })}
+
         </div>
 
 
 
-
-        {(tabValue === 0 || tabValue === 1) &&
-          <ColorPickerPanel tabValue={tabValue} panelCss={colorTabPanelCss} panelValue={panelValue} setPanelValue={setPanelValue} buttonArr={colorButtonArr} />}
+        {tabValue === 0 && <RenderColorPickerPanel buttonArr={basicButtonArr} panelCss={colorTabPanelCss} />}
 
 
-        {(tabValue === 0 || tabValue === 1) && subColorGroupFn(panelColorGroupNum).map((group, index) => {
+        {tabValue === 1 && <ColorPickerPanel panelCss={colorTabPanelCss} panelValue={panelValue} setPanelValue={setPanelValue} buttonArr={colorButtonArr} />}
+
+
+        {tabValue === 1 && subColorGroupFn(panelColorGroupNum).map((group, index) => {
           return (
             <RenderColorPickerPanel
               buttonArr={[...group.slice(0, 5), ...group.slice(6, 10),]}
@@ -775,11 +765,7 @@ export const FontBar = withContext(function ({
 
         })}
 
-
-
-
-
-        {tabValue === 8 &&
+        {tabValue === 2 &&
 
 
           <InputBase
@@ -834,10 +820,6 @@ export const FontBar = withContext(function ({
 
 
 })
-
-
-
-
 
 
 function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, panelValue, setPanelValue, panelColor,
@@ -996,7 +978,7 @@ function RenderColorPickerPanel({ buttonArr, panelCss, panelWidth, extraButton, 
 
 
 
-function ColorPickerPanel({ panelCss, panelValue, setPanelValue, buttonArr, tabValue }) {
+function ColorPickerPanel({ panelCss, panelValue, setPanelValue, buttonArr }) {
 
   const theme = useTheme()
 
@@ -1016,8 +998,6 @@ function ColorPickerPanel({ panelCss, panelValue, setPanelValue, buttonArr, tabV
           alignItems: "center",
           padding: 0,
           display: panelValue <= 0 ? "none" : "block"
-
-
         }}
         className={theme.sizeCss}
         contentEditable={false}

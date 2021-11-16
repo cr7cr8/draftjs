@@ -65,6 +65,7 @@ let colorStringArr = [];
     colorStringArr = [...colorStringArr, ...Object.values(item)]
   })
 
+let charSizeArr = ["charSize0", "charSize1", "charSize2", "charSize3", "charSize4", "charSize5"]
 
 
 
@@ -213,7 +214,6 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
       },
 
 
-
       overrides: {
 
         MuiCssBaseline: {
@@ -243,6 +243,27 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
               '& span[data-mention-head*="@"] span': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
               },
+
+
+              '& input[style*="--linkinput"]': {
+                //   backgroundColor:"lightBlue",
+                //   width:"200%",
+                ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
+                //    width
+              },
+
+
+              // '& div[style*="--linkinput"] input': {
+              //   //   backgroundColor:"pink",
+              //   //       width:"200%",
+
+              //   ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
+
+              //   borderWidth: 0,
+              //   //    width
+              // },
+
+
 
             },
 
@@ -304,34 +325,22 @@ const inlineStyleFn = (styleNameSet, ...props) => {
     if (styleNameSet.has(colorString)) {
       styleObj.attributes.textcolor = colorString
     }
-
-
   })
 
-  if (styleNameSet.has("charSize0")) {
+  colorStringArr.forEach(colorString => {
+    if (styleNameSet.has("#"+colorString)) {
+      styleObj.attributes.textbackcolor = colorString
+    }
+  })
 
-    styleObj.attributes.class = "charSize0"
-  }
-  if (styleNameSet.has("charSize1")) {
 
-    styleObj.attributes.class = "charSize1"
-  }
-  if (styleNameSet.has("charSize2")) {
 
-    styleObj.attributes.class = "charSize2"
-  }
-  if (styleNameSet.has("charSize3")) {
+  charSizeArr.forEach(item => {
+    if (styleNameSet.has(item)) {
+      styleObj.attributes.class = item
+    }
+  })
 
-    styleObj.attributes.class = "charSize3"
-  }
-  if (styleNameSet.has("charSize4")) {
-
-    styleObj.attributes.class = "charSize4"
-  }
-  if (styleNameSet.has("charSize5")) {
-
-    styleObj.attributes.class = "charSize5"
-  }
 
 
   return styleObj
@@ -505,33 +514,65 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [isLight, setIsLight] = useState(true)
 
   const editorRef = useRef()
+
+
+
+  const entityMap = {
+    "index0111": {
+      // "key":"aaaaa",
+      "type": "foodMarket",
+      "mutability": "MUTABLE",
+      "data": {
+        "eat": "apple"
+      }
+    },
+  }
+
+
+
+
   const [editorState, setEditorState] = useState(EditorState.createWithContent(
 
-    convertFromRaw(
+    convertFromRaw({
+      entityMap: {
+        //not functional in current draftJS version
+        // "index0111": {
+        //   // "key":"aaaaa",
+        //   "type": "foodMarket",
+        //   "mutability": "MUTABLE",
+        //   "data": {
+        //     "eat": "apple"
+        //   }
+        // },
+        // "index0222": {
+        //   // "key":"aaaaa",
+        //   "type": "house",
+        //   "mutability": "MUTABLE",
+        //   "data": {
+        //     "drink": "tea"
+        //   }
+        // },
 
-      {
-        entityMap: {
-          // "0": {
-          //     type: "image",
-          //     mutability: "IMMUTABLE",
-          //     data: {
-          //         src:
-          //             "https://www.draft-js-plugins.com/images/canada-landscape-small.jpg"
-          //     }
-          // }
+      },
+
+      blocks: [
+        {
+          key: "1111", text: "abc", type: "editingBlock", data: { aa: "aa" },
+          // characterList: [  //not functional in current draftJS version, need manually apply
+          //   { style: "BOLD", "entity": "index0111" },
+          //   { style: [], entity: null },
+          //   { style: [], entity: null },
+
+          // ],
         },
-        blocks: [
-          {
-            key: "1111",
-            text:" @dsd",
-            type: "editingBlock",
-          }
-        ]
-      }
+      ]
 
-    )
+
+    }),
+
   ))
-  //const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')))
+
+
 
 
 
@@ -540,7 +581,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [showMention, setShowMention] = useState(false)
   const [showHint, setShowHint] = useState(false)
   const [avatarHint, setAvatarHint] = useState(false)
-  const [showFontBar, setShowFontBar] = useState(false)
+  const [showFontBar, setShowFontBar] = useState(true)
 
 
   const [showEmojiPanel, setShowEmojiPanel] = useState(false)
@@ -556,7 +597,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [editorBlockKeyArr, setEditorBlockKeyArr] = useState([])
   const [darkToLightArr, setDarkToLightArr] = useState([])
 
-  const [tabValue, setTabValue] = useState(0)
+  const [tabValue, setTabValue] = useState(false)
 
 
   const [panelColorGroupNum, setPanelColorGroupNum] = useState(0)
@@ -566,17 +607,14 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const editingBlockKeyArrRef = useRef([])
 
 
-  useEffect(function () {
-
-    // console.log(window.getComputedStyle(inputRef.current).width)
-
-    // inputRef.current
-  })
 
 
   const [gradientStyleArr, setGradientStyleArr] = useState(gradientStyleArr0)
 
   const [charSizePos, setCharSizePos] = useState(2)
+
+    const[linkValue,setLinkValue] = useState("")
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -609,7 +647,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           editingBlockKeyArrRef,
           gradientStyleArr, setGradientStyleArr,
           charSizePos, setCharSizePos,
-
+          linkValue,setLinkValue,
           //     imageArr, setImageArr,
           //  editorTop, setEditorTop,
         }}>
