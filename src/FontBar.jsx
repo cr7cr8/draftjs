@@ -312,7 +312,15 @@ export const FontBar = withContext(function ({
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "BOLD")
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "ITALIC")
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "UNDERLINE")
-    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW0")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW1")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW2")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW3")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW4")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW5")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW6")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW7")
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW8")
 
 
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize0")
