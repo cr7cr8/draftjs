@@ -312,6 +312,7 @@ export const FontBar = withContext(function ({
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "BOLD")
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "ITALIC")
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "UNDERLINE")
+
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW0")
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW1")
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW2")
@@ -526,7 +527,7 @@ export const FontBar = withContext(function ({
 
   const shadowButtonArr = shadowTextArr.map((item, index) => { return { shadowStr: item, fn: function (e) { changeInlineStyle(e, "SHADOW", index) } } })
 
-  
+
 
 
 
@@ -722,52 +723,45 @@ export const FontBar = withContext(function ({
 
 
 
-        <Fade in={tabValue === 0 || tabValue === 1} unmountOnExit={true}>
-          <div>
-
-            {subColorGroupFn(panelColorGroupNum).map((group, index) => {
-              return (
-                <RenderColorPickerPanel
-                  buttonArr={[...group.slice(0, 5), ...group.slice(6, 10),]}
-                  key={index}
-                  panelCss={colorTabPanelCss}
-
-                />
-              )
-            })}
-            <ColorPickerPanel tabValue={tabValue} panelCss={colorTabPanelCss} panelValue={panelValue} setPanelValue={setPanelValue} buttonArr={colorButtonArr} />
-          </div>
-        </Fade>
-
-        <Fade in={tabValue === 2} unmountOnExit={true}>
-          <div >
-            {
-              shadowButtonArr.map((item, index) => {
-
-                const str = "shadowcss"
 
 
-                return <IconButton className={theme.sizeCss} key={index} style={{
-                  textShadow: item.shadowStr
-                }}
-                  onClick={item.fn}
-                >
+        {(tabValue === 0 || tabValue === 1) && subColorGroupFn(panelColorGroupNum).map((group, index) => {
+          return (
+            <RenderColorPickerPanel
+              buttonArr={[...group.slice(0, 5), ...group.slice(6, 10),]}
+              key={index}
+              panelCss={colorTabPanelCss}
 
-                  <div className={theme.textCss}>{str[index]}</div>
-
-
-                </IconButton>
+            />
+          )
+        })}
+        {(tabValue === 0 || tabValue === 1) && <ColorPickerPanel tabValue={tabValue} panelCss={colorTabPanelCss}
+          panelValue={panelValue} setPanelValue={setPanelValue} buttonArr={colorButtonArr} />}
 
 
 
-              })
-
-            }
+        {tabValue === 2 && shadowButtonArr.map((item, index) => {
 
 
+          const str = "shadowcss"
 
-          </div>
-        </Fade>
+          return <IconButton className={theme.sizeCss} key={index} style={{
+            textShadow: item.shadowStr
+          }}
+            onClick={item.fn}
+          >
+            <div className={theme.textCss}>{str[index]}</div>
+          </IconButton>
+
+
+
+        })
+
+        }
+
+
+
+
 
 
 
