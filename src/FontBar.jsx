@@ -430,7 +430,12 @@ export const FontBar = withContext(function ({
       }
 
     },
-
+    {
+      btn: <FilterNoneTwoToneIcon className={theme.sizeCss} style={{ transform: "scale(0.8) rotate(270deg)" }} />,
+      fn: function (e) {
+        setTabValue(pre => pre === 2 ? false : 2)
+      }
+    },
     {
       btn: <FormatBoldIcon className={theme.sizeCss} />,
       fn: function (e) { toggleInlineStyle(e, "BOLD") }
@@ -452,14 +457,7 @@ export const FontBar = withContext(function ({
       btn: <FormatClearIcon className={theme.sizeCss} />,
       fn: function (e) { clearInlineStyle(e) }
     },
-    {
-      btn: <FilterNoneTwoToneIcon className={theme.sizeCss} style={{ transform: "scale(0.8) rotate(270deg)" }} />,
-      fn: function (e) {
-
-        setTabValue(pre => pre === 2 ? false : 2)
-        //changeInlineStyle(e, "SHADOW")
-      }
-    },
+ 
     {
       btn: <LinkIcon className={theme.sizeCss} />,
       fn: function (e) { /*changeBlockData(e, "center")*/ }
@@ -785,14 +783,14 @@ export const FontBar = withContext(function ({
 
                   // ...((index === 0 || index === 1) && (tabValue !== index) && (tabValue === 0 || tabValue === 1)) && { opacity: 0.3  , backgroundColor:"#A0A0A0", borderRadius:0   }
 
-                  ...((tabValue !== index) && (tabValue === 0 || tabValue === 1)) && { opacity: 0.5, backgroundColor: "#A0A0A0", borderRadius: 0 },
+                  ...((tabValue !== index) && (tabValue === 0 || tabValue === 1|| tabValue === 2)) && { opacity: 0.5, backgroundColor: "#A0A0A0", borderRadius: 0 },
 
 
-                  ...(tabValue === false) && (index === 0 || index === 1) && { opacity: 0.5, backgroundColor: "#A0A0A0", borderRadius: 0 }
+                  ...(tabValue === false) && (index === 0 || index === 1|| index === 2) && { opacity: 0.5, backgroundColor: "#A0A0A0", borderRadius: 0 }
                 }}
 
                 onClick={function (e) {
-                  if ((index !== 0) && (index !== 1)) {
+                  if ((index !== 0) && (index !== 1) && (index !== 2)) {
                     setTabValue(false)
                   }
                   item.fn(e)

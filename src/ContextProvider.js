@@ -642,7 +642,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [editorBlockKeyArr, setEditorBlockKeyArr] = useState([])
   const [darkToLightArr, setDarkToLightArr] = useState([])
 
-  const [tabValue, setTabValue] = useState(2)
+  const [tabValue, setTabValue] = useState(false)
 
 
   const [panelColorGroupNum, setPanelColorGroupNum] = useState(0)
