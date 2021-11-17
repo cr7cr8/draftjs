@@ -67,6 +67,35 @@ let colorStringArr = [];
 
 let charSizeArr = ["charSize0", "charSize1", "charSize2", "charSize3", "charSize4", "charSize5"]
 
+//const shadowIndexArr = ["SHADOW0","SHADOW1","SHADOW2","SHADOW3","SHADOW4","SHADOW5","SHADOW6","SHADOW7","SHADOW8"]
+
+const shadowIndexArr = [...new Array(9)].map((item, index) => ("SHADOW" + index))
+
+
+
+const shadowTextArr = [
+
+  "0 0 5px #FFF, 0 0 10px #FFF, 0 0 15px #FFF, 0 0 20px #49ff18, 0 0 30px #49FF18, 0 0 40px #49FF18, 0 0 55px #49FF18, 0 0 75px #49ff18",
+
+  "0 -1px 4px #FFF, 0 -2px 10px #ff0, 0 -10px 20px #ff8000, 0 -18px 40px #F00",
+
+  "2px 2px 0 #4074b5, 2px -2px 0 #4074b5, -2px 2px 0 #4074b5, -2px -2px 0 #4074b5, 2px 0px 0 #4074b5, 0px 2px 0 #4074b5, -2px 0px 0 #4074b5, 0px -2px 0 #4074b5",
+
+  "1px 0px 1px #CCCCCC, 0px 1px 1px #EEEEEE, 2px 1px 1px #CCCCCC, 1px 2px 1px #EEEEEE, 3px 2px 1px #CCCCCC, 2px 3px 1px #EEEEEE, 4px 3px 1px #CCCCCC, 3px 4px 1px #EEEEEE, 5px 4px 1px #CCCCCC, 4px 5px 1px #EEEEEE, 6px 5px 1px #CCCCCC, 5px 6px 1px #EEEEEE, 7px 6px 1px #CCCCCC",
+
+  "0 1px 0 #CCCCCC, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15)",
+
+  "0 1px #808d93, -1px 0 #cdd2d5, -1px 2px #808d93, -2px 1px #cdd2d5, -2px 3px #808d93, -3px 2px #cdd2d5, -3px 4px #808d93, -4px 3px #cdd2d5, -4px 5px #808d93, -5px 4px #cdd2d5, -5px 6px #808d93, -6px 5px #cdd2d5, -6px 7px #808d93, -7px 6px #cdd2d5, -7px 8px #808d93, -8px 7px #cdd2d5",
+
+  "2px 2px 0px #FFFFFF, 5px 4px 0px rgba(0,0,0,0.15)",
+
+  "1px 3px 0 #969696, 1px 13px 5px #aba8a8",
+
+  "0 1px 0px #378ab4, 1px 0 0px #5dabcd, 1px 2px 1px #378ab4, 2px 1px 1px #5dabcd, 2px 3px 2px #378ab4, 3px 2px 2px #5dabcd, 3px 4px 2px #378ab4, 4px 3px 3px #5dabcd, 4px 5px 3px #378ab4, 5px 4px 2px #5dabcd, 5px 6px 2px #378ab4, 6px 5px 2px #5dabcd, 6px 7px 1px #378ab4, 7px 6px 1px #5dabcd, 7px 8px 0px #378ab4, 8px 7px 0px #5dabcd",
+]
+
+
+
 
 
 export const Context = createContext();
@@ -313,6 +342,7 @@ const inlineStyleFn = (styleNameSet, ...props) => {
 
   // console.log(styleName.toArray())
 
+
   const styleObj = {
 
     element: "span",
@@ -328,7 +358,7 @@ const inlineStyleFn = (styleNameSet, ...props) => {
   })
 
   colorStringArr.forEach(colorString => {
-    if (styleNameSet.has("#"+colorString)) {
+    if (styleNameSet.has("#" + colorString)) {
       styleObj.attributes.textbackcolor = colorString
     }
   })
@@ -338,6 +368,12 @@ const inlineStyleFn = (styleNameSet, ...props) => {
   charSizeArr.forEach(item => {
     if (styleNameSet.has(item)) {
       styleObj.attributes.class = item
+    }
+  })
+
+  shadowIndexArr.forEach(item => {
+    if (styleNameSet.has(item)) {
+      styleObj.attributes.textshadow = shadowTextArr[Number(item.replace("SHADOW", ""))]
     }
   })
 
@@ -363,7 +399,8 @@ const entityStyleFn = (entity, ...props) => {
       element: 'object',
       attributes: {
         "data-type": "avatar_body"
-      }
+      },
+
 
     }
   }
@@ -478,28 +515,36 @@ function toPreHtml(editorState) {
 
 
 const gradientStyleArr0 = [
-  { backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", color: "#ffaaaa" },
-  { backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", color: "orange" },
-  { backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)", color: "white" },
-  { backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)", color: "orange" },
+  {
+    backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",// color: "#ffaaaa"
+  },
+  {
+    backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", //color: "orange" 
+  },
+  {
+    backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",// color: "white"
+  },
+  {
+    backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)",  //color: "orange" 
+  },
   {
     backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.8) 0%, rgba(226,235,240,0.8) 100%),  url(https://picsum.photos/600/300)",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    color: "#666",
+    //  color: "#666",
 
   },
   {
     backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.8) 0%, rgba(226,235,240,0.8) 100%),  url(https://picsum.photos/500/700)",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    color: "#666"
+    //   color: "#666"
   },
   {
     backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.8) 0%, rgba(226,235,240,0.8) 100%),  url(https://picsum.photos/502/700)",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    color: "#666"
+    // color: "#666"
   },
 
 
@@ -597,7 +642,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [editorBlockKeyArr, setEditorBlockKeyArr] = useState([])
   const [darkToLightArr, setDarkToLightArr] = useState([])
 
-  const [tabValue, setTabValue] = useState(false)
+  const [tabValue, setTabValue] = useState(2)
 
 
   const [panelColorGroupNum, setPanelColorGroupNum] = useState(0)
@@ -613,7 +658,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [charSizePos, setCharSizePos] = useState(2)
 
-    const[linkValue,setLinkValue] = useState("")
+  const [linkValue, setLinkValue] = useState("")
 
 
   return (
@@ -647,7 +692,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           editingBlockKeyArrRef,
           gradientStyleArr, setGradientStyleArr,
           charSizePos, setCharSizePos,
-          linkValue,setLinkValue,
+          linkValue, setLinkValue,
+          shadowTextArr,
           //     imageArr, setImageArr,
           //  editorTop, setEditorTop,
         }}>

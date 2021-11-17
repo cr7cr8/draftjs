@@ -74,7 +74,10 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
     panelColorGroupNum, setPanelColorGroupNum,
 
     panelValue,
-    setPanelValue, } = ctx
+    setPanelValue,
+    shadowTextArr
+
+  } = ctx
   const [readOnly, setReadOnly] = useState(false)
 
   const theme = useTheme()
@@ -189,12 +192,18 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               if ((item[0] === "#") && (item[1] === "#")) {
                 styleObj.backgroundColor = "#" + item.replace("##", "")
               }
-
-
               if (item.indexOf("charSize") >= 0) {
                 //    console.log(item)
                 styleObj["--charSize" + [...item].pop()] = item
               }
+              if ((item[0] === "S") && (item[1] === "H") && (item[2] === "A")) {
+
+
+                styleObj["textShadow"] = shadowTextArr[Number(item.replace("SHADOW", ""))]
+
+              }
+
+
             })
 
             if (styleNameArr.length > 0) {

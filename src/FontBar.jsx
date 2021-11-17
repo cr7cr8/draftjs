@@ -176,7 +176,8 @@ export const FontBar = withContext(function ({
 
   const { editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColorGroupNum, setPanelColorGroupNum,
 
-    panelValue, setPanelValue, charSizePos, setCharSizePos, gradientStyleArr, linkValue, setLinkValue } = props.ctx
+    panelValue, setPanelValue, charSizePos, setCharSizePos, gradientStyleArr, linkValue, setLinkValue,
+    shadowTextArr } = props.ctx
 
 
   function toggleInlineStyle(e, fontStr) {
@@ -201,7 +202,7 @@ export const FontBar = withContext(function ({
 
   }
 
-  function changeInlineStyle(e, fontStr) {
+  function changeInlineStyle(e, fontStr, shadowIndex) {
     e.preventDefault(); e.stopPropagation();
 
 
@@ -228,8 +229,6 @@ export const FontBar = withContext(function ({
         allBlocks,               // editorState.getCurrentContent().getBlockMap().merge(allBlocks)
         "change-inline-style",
       )
-
-
       es = RichUtils.toggleInlineStyle(es, (tabValue === 0 ? "" : "#") + fontStr);
       es = EditorState.forceSelection(es, selection)
 
@@ -270,6 +269,38 @@ export const FontBar = withContext(function ({
       }, 0);
     }
 
+    else if (fontStr === "SHADOW") {
+
+
+
+      let allBlocks = editorState.getCurrentContent();
+
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW0")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW1")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW2")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW3")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW4")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW5")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW6")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW7")
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW8")
+
+      let es = EditorState.push(editorState, allBlocks, "change-inline-style")
+
+
+
+
+      es = RichUtils.toggleInlineStyle(es, "SHADOW" + shadowIndex);
+      es = EditorState.forceSelection(es, selection)
+      setEditorState(es);
+      setTimeout(() => {
+        editorRef.current && editorRef.current.focus()
+      }, 0);
+
+    }
+
+
+
   }
 
   function clearInlineStyle(e) {
@@ -281,7 +312,7 @@ export const FontBar = withContext(function ({
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "BOLD")
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "ITALIC")
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "UNDERLINE")
-
+    allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "SHADOW")
 
 
     allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "charSize0")
@@ -296,7 +327,7 @@ export const FontBar = withContext(function ({
 
     colorStringArr.forEach(colorString => {
       allBlocks = Modifier.removeInlineStyle(allBlocks, selection, colorString)
-      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "#"+colorString)
+      allBlocks = Modifier.removeInlineStyle(allBlocks, selection, "#" + colorString)
     })
 
 
@@ -370,20 +401,7 @@ export const FontBar = withContext(function ({
     // }, 0);
   }
 
-  const categoryBtnArr = [
 
-    <TitleIcon className={theme.sizeCss} />,
-    // <FormatColorTextIcon className={theme.sizeCss} />,
-
-    tabValue !== 1 ? <InvertColorsIcon className={theme.sizeCss} /> : <InvertColorsOffOutlinedIcon className={theme.sizeCss} />,
-
-
-    <LinkIcon className={theme.sizeCss} />,
-
-    <FormatColorFillIcon className={theme.sizeCss} />,
-
-
-  ]
 
   const basicButtonArr = [
 
@@ -404,9 +422,6 @@ export const FontBar = withContext(function ({
 
     },
 
-
-
-
     {
       btn: <FormatBoldIcon className={theme.sizeCss} />,
       fn: function (e) { toggleInlineStyle(e, "BOLD") }
@@ -424,30 +439,23 @@ export const FontBar = withContext(function ({
       fn: function (e) { changeInlineStyle(e, "BIGGER"); }
 
     },
-
-
     {
       btn: <FormatClearIcon className={theme.sizeCss} />,
       fn: function (e) { clearInlineStyle(e) }
     },
-
-    // {
-    //   btn: < LinkIcon className={theme.sizeCss} />,
-    //   fn: function (e) { }
-    // },
     {
       btn: <FilterNoneTwoToneIcon className={theme.sizeCss} style={{ transform: "scale(0.8) rotate(270deg)" }} />,
-      fn: function (e) {  /* changeBlockData(e, "left") */ }
+      fn: function (e) {
+
+        setTabValue(pre => pre === 2 ? false : 2)
+        //changeInlineStyle(e, "SHADOW")
+      }
     },
     {
       btn: <LinkIcon className={theme.sizeCss} />,
       fn: function (e) { /*changeBlockData(e, "center")*/ }
     },
 
-    // {
-    //   btn: <NavigateNextIcon className={theme.sizeCss} />,
-    //   fn: function (e) { e.preventDefault(); e.stopPropagation(); setMovingPX(-100) }
-    // }
 
   ]
 
@@ -507,23 +515,11 @@ export const FontBar = withContext(function ({
 
   }
 
-  const subColorButtonFn = function () {
 
-    let arr = [];
-    [
-      red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime,
-      yellow, amber, orange, deepOrange, brown, grey, blueGrey].forEach(
-        (color) => {
+  const shadowButtonArr = shadowTextArr.map((item, index) => { return { shadowStr: item, fn: function (e) { changeInlineStyle(e, "SHADOW", index) } } })
 
-          const tempArr = Object.keys(color).map(item => {
-            return { btn: <RadioButtonUncheckedIcon className={theme.sizeCss} style={{ backgroundColor: color[item] }} /> }
-          })
+  
 
-          arr = [...arr, ...tempArr]
-
-        })
-    return arr
-  }
 
 
   const [editorWidth, setEditorWidth] = useState(0)
@@ -715,6 +711,62 @@ export const FontBar = withContext(function ({
 
 
         {/* <RenderColorPickerPanel buttonArr={basicButtonArr} panelCss={colorTabPanelCss} tabValue={tabValue} /> */}
+
+
+
+        <Fade in={tabValue === 0 || tabValue === 1} unmountOnExit={true}>
+          <div>
+
+            {subColorGroupFn(panelColorGroupNum).map((group, index) => {
+              return (
+                <RenderColorPickerPanel
+                  buttonArr={[...group.slice(0, 5), ...group.slice(6, 10),]}
+                  key={index}
+                  panelCss={colorTabPanelCss}
+
+                />
+              )
+            })}
+            <ColorPickerPanel tabValue={tabValue} panelCss={colorTabPanelCss} panelValue={panelValue} setPanelValue={setPanelValue} buttonArr={colorButtonArr} />
+          </div>
+        </Fade>
+
+        <Fade in={tabValue === 2} unmountOnExit={true}>
+          <div >
+            {
+              shadowButtonArr.map((item, index) => {
+
+                const str = "shadowcss"
+
+
+                return <IconButton className={theme.sizeCss} key={index} style={{
+                  textShadow: item.shadowStr
+                }}
+                  onClick={item.fn}
+                >
+
+                  <div className={theme.textCss}>{str[index]}</div>
+
+
+                </IconButton>
+
+
+
+              })
+
+            }
+
+
+
+          </div>
+        </Fade>
+
+
+
+
+
+
+
         <div style={{ display: "flex" }}>
           {basicButtonArr.map((item, index) => {
 
@@ -755,26 +807,6 @@ export const FontBar = withContext(function ({
 
           })}
         </div>
-
-
-
-
-        {(tabValue === 0 || tabValue === 1) &&
-          <ColorPickerPanel tabValue={tabValue} panelCss={colorTabPanelCss} panelValue={panelValue} setPanelValue={setPanelValue} buttonArr={colorButtonArr} />}
-
-
-        {(tabValue === 0 || tabValue === 1) && subColorGroupFn(panelColorGroupNum).map((group, index) => {
-          return (
-            <RenderColorPickerPanel
-              buttonArr={[...group.slice(0, 5), ...group.slice(6, 10),]}
-              key={index}
-              panelCss={colorTabPanelCss}
-
-            />
-          )
-
-        })}
-
 
 
 

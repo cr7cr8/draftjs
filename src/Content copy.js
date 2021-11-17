@@ -100,7 +100,8 @@ function toHtml({ preHtml, theme, ctx }) {
   const html = ReactHtmlParser(preHtml, {
     transform: function transformFn(node, index) {
 
-      if (node.attribs && (node.attribs.class || node.attribs.textcolor || node.attribs.textbackcolor || node.attribs.textshadow)) {
+
+      if (node.name !== "object" && node.attribs) {
 
         const styleObj = {}
 
@@ -109,27 +110,46 @@ function toHtml({ preHtml, theme, ctx }) {
         node.attribs["textbackcolor"] && (() => { styleObj["backgroundColor"] = node.attribs["textbackcolor"] })()
         node.attribs["textshadow"] && (() => { styleObj["textShadow"] = node.attribs["textshadow"] })()
 
+
+
+
         return <span key={index} style={{ ...styleObj }} >
           {convertNodeToElement(node, index, transformFn).props.children}
         </span>
-      }
-
-      else if (
-        (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize0")
-        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize1")
-        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize2")
-        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize3")
-        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize4")
-        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize5")
-
-      ) {
-        const color = node.attribs && node.attribs.textcolor
-        const backgroundColor = node.attribs && node.attribs.textbackcolor
-        return <span key={index} style={{ display: "inline", backgroundColor, color, ["--" + node.attribs["class"]]: node.attribs["class"] }}>
-          {convertNodeToElement(node, index, transformFn).props.children}
-        </span>
 
       }
+
+
+
+      // if (node.attribs && !node.attribs.class && (node.attribs.textcolor || node.attribs.textbackcolor)) {
+
+      //   return <span key={index} style={{ color: node.attribs.textcolor, backgroundColor: node.attribs.textbackcolor }} >
+      //     {convertNodeToElement(node, index, transformFn).props.children}
+      //   </span>
+
+      // }
+
+      // else if (
+      //   (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize0")
+      //   || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize1")
+      //   || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize2")
+      //   || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize3")
+      //   || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize4")
+      //   || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize5")
+
+      // ) {
+
+
+      //   const color = node.attribs && node.attribs.textcolor
+      //   const backgroundColor = node.attribs && node.attribs.textbackcolor
+
+      //   return <span key={index} style={{ display: "inline", backgroundColor, color, ["--" + node.attribs["class"]]: node.attribs["class"] }}
+      //   //className={node.attribs["class"] === "large" ? theme.lgTextCss : theme.smTextCss}>
+      //   >
+      //     {convertNodeToElement(node, index, transformFn).props.children}
+      //   </span>
+
+      // }
 
 
 
@@ -144,7 +164,7 @@ function toHtml({ preHtml, theme, ctx }) {
         return <span key={index} style={{ fontSize: 0, width: 0, height: 0, display: "inline-block", overflow: "hidden" }}>{element}</span>
 
         //fontSize in the  theme.lgTextCss as classname of a span tag will not work, need overfolow hidden to cover hide
-        //return <React.Fragment key={index}></React.Fragment>  // work as well
+        return <React.Fragment key={index}></React.Fragment>  // work as well
       }
 
 
@@ -155,24 +175,72 @@ function toHtml({ preHtml, theme, ctx }) {
 
           const fontNode = convertNodeToElement(child, index, transformFn)
 
-          if (typeof (fontNode) === "object" && (fontNode.props.className || fontNode.props.textcolor || fontNode.props.textbackcolor || fontNode.props.textshadow)) {
+
+          console.log(fontNode)
+
+          const styleObj = {
+
+            ...fontNode.props.textshadow && { textShadow: fontNode.props.textshadow },
 
 
-            const styleObj = {
-
-              ...fontNode.props.textshadow && { textShadow: fontNode.props.textshadow },
-              ...fontNode.props.textcolor && { color: fontNode.props.textcolor },
-              ...fontNode.props.textbackcolor && { backgroundColor: fontNode.props.textbackcolor },
-              ...fontNode.props.className && (fontNode.props.className.indexOf("charSize") >= 0) && { ["--" + fontNode.props.className]: fontNode.props.className }
-            }
-
-            // return React.cloneElement(<span />,   { key: index, style: { display: "inline", backgroundColor, color, ...objAttribute } }, fontNode.props.children)
-            return <span key={index} style={{ ...styleObj }}>{fontNode.props.children}</span>
+            ...fontNode.props.textcolor && { color: fontNode.props.textcolor },
+            ...fontNode.props.textbackcolor && { backgroundColor: fontNode.props.textbackcolor },
+            ...fontNode.props.className && (fontNode.props.className.indexOf("charSize") >= 0) && { ["--" + fontNode.props.className]: fontNode.props.className }
 
           }
-          else {
-            return <React.Fragment key={index}>{fontNode}</React.Fragment>
-          }
+
+
+          return <span key={index} style={{...styleObj}}>{fontNode.props.children}</span>
+
+          // return React.cloneElement(
+          //   <span />,
+          //   { key: index, style: { display: "inline", backgroundColor, color, ...objAttribute } },
+          //   fontNode.props.children
+          // )
+
+
+          // if (typeof (fontNode) === "object" &&
+
+          //   (fontNode.props.textcolor ||
+          //     fontNode.props.className === "charSize0" ||
+          //     fontNode.props.className === "charSize1" ||
+          //     fontNode.props.className === "charSize2" ||
+          //     fontNode.props.className === "charSize3" ||
+          //     fontNode.props.className === "charSize4" ||
+          //     fontNode.props.className === "charSize5")) {
+
+          // //fontSize in the  theme.lgTextCss as classname of a span tag will not work
+          // //console.log(React.cloneElement(fontNode, { className:theme.lgTextCss }, fontNode.props.children)) 
+
+          // console.log(fontNode.props.textcolor)
+
+          // let objAttribute = null
+
+
+          // if (fontNode.props.className === "charSize0") { objAttribute = { "--charSize0": "charSize0" } }
+          // if (fontNode.props.className === "charSize1") { objAttribute = { "--charSize1": "charSize1" } }
+          // if (fontNode.props.className === "charSize2") { objAttribute = { "--charSize2": "charSize2" } }
+          // if (fontNode.props.className === "charSize3") { objAttribute = { "--charSize3": "charSize3" } }
+          // if (fontNode.props.className === "charSize4") { objAttribute = { "--charSize4": "charSize4" } }
+          // if (fontNode.props.className === "charSize5") { objAttribute = { "--charSize5": "charSize5" } }
+
+
+          // let color = null
+          // let backgroundColor = null
+          // if (fontNode.props.textcolor) { color = fontNode.props.textcolor }
+          // if (fontNode.props.textbackcolor) { backgroundColor = fontNode.props.textbackcolor }
+
+          // return React.cloneElement(
+          //   <span />,
+          //   { key: index, style: { display: "inline", backgroundColor, color, ...objAttribute } },
+          //   fontNode.props.children
+          // )
+
+          // }
+          // else {
+          //   return <React.Fragment key={index}>{fontNode}</React.Fragment>
+          // }
+
 
         })
 
@@ -182,26 +250,59 @@ function toHtml({ preHtml, theme, ctx }) {
         return <AvatarChip hoverContent={personName} key={index} size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={personName} >{element}</AvatarChip>
       }
 
+      // else if (node.name === "object" && node.attribs["data-type"] === "emoji" && !isMobile) {
 
+      //   return <Emoji key={index}>{node.attribs["data-emoji_symbol"]}</Emoji>
+
+      // }
       else if (node.name === "object" && node.attribs["data-type"] === "emoji") {
 
+
+
         const element = node.children.map((child, index) => {
+
+
+
           const emojiNode = convertNodeToElement(child, index, transformFn)
-          if (typeof (emojiNode) === "object" && (emojiNode.props.className || emojiNode.props.textcolor || emojiNode.props.textbackcolor || emojiNode.props.textshadow)) {
 
+          console.log(emojiNode.props.className)
+          //  alert(typeof (emojiNode))
+          if (typeof (emojiNode) === "object" &&
 
-            const styleObj = {
+            (emojiNode.props.className === "charSize0")
+            || (emojiNode.props.className === "charSize1")
+            || (emojiNode.props.className === "charSize2")
+            || (emojiNode.props.className === "charSize3")
+            || (emojiNode.props.className === "charSize4")
+            || (emojiNode.props.className === "charSize5")
+            || (emojiNode.props.textcolor)
+            || (emojiNode.props.textbackcolor)
 
-              ...emojiNode.props.textshadow && { textShadow: emojiNode.props.textshadow },
-              ...emojiNode.props.textcolor && { color: emojiNode.props.textcolor },
-              ...emojiNode.props.textbackcolor && { backgroundColor: emojiNode.props.textbackcolor },
-              ...emojiNode.props.className && (emojiNode.props.className.indexOf("charSize") >= 0) && { ["--" + emojiNode.props.className]: emojiNode.props.className }
-            }
-            return <span key={index} style={{ ...styleObj }}>{emojiNode.props.children}</span>
+          ) {
 
+            // alert("fffsss")
+            // todo textcolor and textbackcolor
+
+            let color = emojiNode.props.textcolor
+            let backgroundColor = emojiNode.props.textbackcolor
+
+            return <span key={index} style={{ ["--" + emojiNode.props.className]: emojiNode.props.className, color, backgroundColor }}>{emojiNode.props.children}</span>
+
+            // return React.cloneElement(
+            //   <span />,
+            //   {
+            //     key: index, 
+            //     style: {
+            //       display: "inline",
+            //       color:"red",
+            //       ["--" + node.attribs["class"]]: node.attribs["class"]
+            //     }
+            //   },
+            //   emojiNode.props.children
+            // )
           }
           else {
-            return <React.Fragment key={index}>{emojiNode}</React.Fragment>
+            return <React.Fragment key={index}   >{emojiNode}</React.Fragment>
           }
         })
 
@@ -225,6 +326,8 @@ function toHtml({ preHtml, theme, ctx }) {
         const key = node.attribs["data-block_key"]
         const data = JSON.parse(node.attribs["data-block_data"])
 
+
+
         if (!headRowArr.includes(index)) { return <React.Fragment key={index} /> }
 
         const listArr = arr2.find(arrGroup => {
@@ -246,7 +349,7 @@ function toHtml({ preHtml, theme, ctx }) {
             listArr.map((item, index) => {
 
               return <div key={index} style={{ textAlign: item.node.attribs["data-text-align"] }}  >{convertNodeToElement(item.node, index, transformFn)}</div>
-             // return <React.Fragment key={index}>{convertNodeToElement(item.node, index, transformFn)}</React.Fragment>
+              return <React.Fragment key={index}>{convertNodeToElement(item.node, index, transformFn)}</React.Fragment>
             })
           }
 
