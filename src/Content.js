@@ -114,25 +114,6 @@ function toHtml({ preHtml, theme, ctx }) {
         </span>
       }
 
-      else if (
-        (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize0")
-        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize1")
-        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize2")
-        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize3")
-        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize4")
-        || (node.attribs && node.attribs["class"] && node.attribs["class"] === "charSize5")
-
-      ) {
-        const color = node.attribs && node.attribs.textcolor
-        const backgroundColor = node.attribs && node.attribs.textbackcolor
-        return <span key={index} style={{ display: "inline", backgroundColor, color, ["--" + node.attribs["class"]]: node.attribs["class"] }}>
-          {convertNodeToElement(node, index, transformFn).props.children}
-        </span>
-
-      }
-
-
-
 
       if (node.name === "object" && node.attribs["data-type"] === "avatar_head") {
 
@@ -157,9 +138,7 @@ function toHtml({ preHtml, theme, ctx }) {
 
           if (typeof (fontNode) === "object" && (fontNode.props.className || fontNode.props.textcolor || fontNode.props.textbackcolor || fontNode.props.textshadow)) {
 
-
             const styleObj = {
-
               ...fontNode.props.textshadow && { textShadow: fontNode.props.textshadow },
               ...fontNode.props.textcolor && { color: fontNode.props.textcolor },
               ...fontNode.props.textbackcolor && { backgroundColor: fontNode.props.textbackcolor },
@@ -168,17 +147,12 @@ function toHtml({ preHtml, theme, ctx }) {
 
             // return React.cloneElement(<span />,   { key: index, style: { display: "inline", backgroundColor, color, ...objAttribute } }, fontNode.props.children)
             return <span key={index} style={{ ...styleObj }}>{fontNode.props.children}</span>
-
           }
           else {
             return <React.Fragment key={index}>{fontNode}</React.Fragment>
           }
-
         })
-
         const personName = reactElementToJSXString(<>{element}</>).replace(/(<([^>]*)>)/ig, '').replace(/\s/g, '')
-
-
         return <AvatarChip hoverContent={personName} key={index} size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={personName} >{element}</AvatarChip>
       }
 
@@ -246,7 +220,7 @@ function toHtml({ preHtml, theme, ctx }) {
             listArr.map((item, index) => {
 
               return <div key={index} style={{ textAlign: item.node.attribs["data-text-align"] }}  >{convertNodeToElement(item.node, index, transformFn)}</div>
-             // return <React.Fragment key={index}>{convertNodeToElement(item.node, index, transformFn)}</React.Fragment>
+              // return <React.Fragment key={index}>{convertNodeToElement(item.node, index, transformFn)}</React.Fragment>
             })
           }
 
