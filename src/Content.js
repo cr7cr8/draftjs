@@ -263,9 +263,9 @@ export default withTheme(withContext(function Content({ theme, ctx, ...props }) 
   const { editorState, setEditorState, toPreHtml } = ctx
 
 
-  useEffect(function () {
-    document.querySelectorAll(".large").forEach(item => item.className = theme.lgTextCss)
-  })
+  // useEffect(function () {
+  //   document.querySelectorAll(".large").forEach(item => item.className = theme.lgTextCss)
+  // })
 
 
   return (
