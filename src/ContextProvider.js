@@ -277,7 +277,7 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
               '& input[style*="--linkinput"]': {
                 //   backgroundColor:"lightBlue",
                 //   width:"200%",
-                ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
+                ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)], ["height", multiplyArr(textSizeArr, 0.8)]),
                 //    width
               },
 
@@ -581,35 +581,79 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
     convertFromRaw({
       entityMap: {
         //not functional in current draftJS version
-        // "index0111": {
-        //   // "key":"aaaaa",
-        //   "type": "foodMarket",
-        //   "mutability": "MUTABLE",
-        //   "data": {
-        //     "eat": "apple"
-        //   }
-        // },
-        // "index0222": {
-        //   // "key":"aaaaa",
-        //   "type": "house",
-        //   "mutability": "MUTABLE",
-        //   "data": {
-        //     "drink": "tea"
-        //   }
-        // },
+        0: {
+          "type": "longMentionOff_HEAD",
+          "mutability": "MUTABLE",
+          "data": {  "mentionType": "longMentionOff_HEAD"       }
+        },
+        1: {
+          "type": "longMentionOff_BODY",
+          "mutability": "MUTABLE",
+          "data": { "mentionType": "longMentionOff_BODY"  }
+        },
 
       },
 
+
       blocks: [
         {
-          key: "1111", text: "abc", type: "editingBlock", data: { aa: "aa" },
-          // characterList: [  //not functional in current draftJS version, need manually apply
-          //   { style: "BOLD", "entity": "index0111" },
-          //   { style: [], entity: null },
-          //   { style: [], entity: null },
+          key: "1111", text: "abcs @abc_d  dfgsfsad  dsdfwefwfwf", type: "editingBlock",
 
-          // ],
+          data: {
+            "backgroundImage": "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",
+            "horizontal": 50,
+            "vertical": 50
+          },
+          inlineStyleRanges: [
+            {
+              "offset": 0,
+              "length": 1,
+              "style": "BOLD"
+            },
+            {
+              "offset": 2,
+              "length": 1,
+              "style": "#e91e63"
+            },
+          ],
+          entityRanges: [
+
+            [
+              {
+                "offset": 4,
+                "length": 2,
+                "key": 0
+              },
+              {
+                "offset": 6,
+                "length": 5,
+                "key": 1
+              },
+            ],
+
+          ],
         },
+
+        {
+          key: "2222", text: " @ab fcabcddfgsfsaddsdfwefwfwf", type: "editingBlock",
+          entityRanges: [
+
+            [
+              {
+                "offset": 0,
+                "length": 2,
+                "key": 0
+              },
+              {
+                "offset": 2,
+                "length": 2,
+                "key": 1
+              },
+            ],
+
+          ],
+        }
+
       ]
 
 
@@ -624,7 +668,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [showContent, setShowContent] = useState(false)
   const [showMention, setShowMention] = useState(false)
-  const [showHint, setShowHint] = useState(false)
+  const [showHint, setShowHint] = useState(true)
   const [avatarHint, setAvatarHint] = useState(false)
   const [showFontBar, setShowFontBar] = useState(true)
 
@@ -642,7 +686,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const [editorBlockKeyArr, setEditorBlockKeyArr] = useState([])
   const [darkToLightArr, setDarkToLightArr] = useState([])
 
-  const [tabValue, setTabValue] = useState(false)
+  const [tabValue, setTabValue] = useState(3)
 
 
   const [panelColorGroupNum, setPanelColorGroupNum] = useState(0)

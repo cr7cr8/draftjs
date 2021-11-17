@@ -473,7 +473,7 @@ export default function createMentionPlugin() {
 
     else if (mentionType === "longMentionOff_HEAD") {
       return showMention
-        ? <span style={{ fontSize: 0, width: 0, height: 0, display: "inline-block" }} data-mention-head="@">{children}</span>  //<></> works as well
+        ? <></>//<div style={{ fontSize: 0, width: 0, height: 0, display: "inline-block" }} data-mention-head="@">{children}</div>  //<></> works as well
         : <span className={longMention_HEAD_Css} data-mention-head="@">{children}</span>
     }
     else if (mentionType === "longMentionOff_BODY") {

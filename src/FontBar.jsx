@@ -31,7 +31,7 @@ import TextFieldsIcon from '@material-ui/icons/TextFields';
 
 
 import FormatClearIcon from '@material-ui/icons/FormatClear';
-
+import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
 
 
 import FormatColorFillIcon from '@material-ui/icons/FormatColorFill';
@@ -437,6 +437,12 @@ export const FontBar = withContext(function ({
       }
     },
     {
+      btn: <LinkIcon className={theme.sizeCss} />,
+      fn: function (e) {
+        setTabValue(pre => pre === 3 ? false : 3)
+      }
+    },
+    {
       btn: <FormatBoldIcon className={theme.sizeCss} />,
       fn: function (e) { toggleInlineStyle(e, "BOLD") }
     },
@@ -457,11 +463,8 @@ export const FontBar = withContext(function ({
       btn: <FormatClearIcon className={theme.sizeCss} />,
       fn: function (e) { clearInlineStyle(e) }
     },
- 
-    {
-      btn: <LinkIcon className={theme.sizeCss} />,
-      fn: function (e) { /*changeBlockData(e, "center")*/ }
-    },
+
+
 
 
   ]
@@ -738,25 +741,65 @@ export const FontBar = withContext(function ({
 
 
 
-        {tabValue === 2 && shadowButtonArr.map((item, index) => {
+        {tabValue === 2 &&
+          <div style={{display:"flex"}}>
+            {shadowButtonArr.map((item, index) => {
+              const str = "shadowcss"
+              return <IconButton className={theme.sizeCss} key={index}  onClick={item.fn}>
+                <div className={theme.textCss} style={{transform:"translateY(-4px)",textShadow: item.shadowStr }}>{str[index]}</div>
+              </IconButton>
 
-
-          const str = "shadowcss"
-
-          return <IconButton className={theme.sizeCss} key={index} style={{
-            textShadow: item.shadowStr
-          }}
-            onClick={item.fn}
-          >
-            <div className={theme.textCss}>{str[index]}</div>
-          </IconButton>
-
-
-
-        })
-
+            })}
+          </div>
         }
 
+
+        {tabValue === 3 &&
+          <div style={{ display: "flex", lineHeight: 1, padding: 0, alignItems: "center", }}>
+            <InputBase
+
+              autoFocus={true}
+
+              inputProps={{
+                value: linkValue,
+                placeholder: "",
+                onKeyUp: function (e) {
+                  if (e.key === 'Enter' || e.keyCode === 13) {
+                    alert("enter")
+                  }
+                },
+
+                style: {
+                  // backgroundColor:theme.palette.background.default,
+                  // backgroundColor: "pink",
+                  //  ...linkValue.length && { width: linkValue.length + "ch" },
+
+                  //  minWidth: "100%",
+                  "--linkinput": "fontsize",
+                  lineHeight: 1,
+                  margin: 0,
+                  padding: 0,
+
+                }
+              }}
+
+              onChange={function (e) { setLinkValue(e.target.value) }}
+              //onClick={function(e){alert("sd")}}
+
+              style={{
+                lineHeight: 1,
+                // width: linkValue.length + "ch",
+                padding: 2,
+                paddingTop: 4,
+                paddingBottom: 4,
+                paddingRight: 0,
+                margin: 0,
+                display: "block",
+              }}
+            />
+            <IconButton className={theme.smSizeCss} ><CheckRoundedIcon className={theme.smSizeCss} /></IconButton>
+          </div>
+        }
 
 
 
@@ -783,14 +826,14 @@ export const FontBar = withContext(function ({
 
                   // ...((index === 0 || index === 1) && (tabValue !== index) && (tabValue === 0 || tabValue === 1)) && { opacity: 0.3  , backgroundColor:"#A0A0A0", borderRadius:0   }
 
-                  ...((tabValue !== index) && (tabValue === 0 || tabValue === 1|| tabValue === 2)) && { opacity: 0.5, backgroundColor: "#A0A0A0", borderRadius: 0 },
+                  ...((tabValue !== index) && (tabValue === 0 || tabValue === 1 || tabValue === 2 || tabValue === 3)) && { opacity: 0.5, backgroundColor: "#A0A0A0", borderRadius: 0 },
 
 
-                  ...(tabValue === false) && (index === 0 || index === 1|| index === 2) && { opacity: 0.5, backgroundColor: "#A0A0A0", borderRadius: 0 }
+                  ...(tabValue === false) && (index === 0 || index === 1 || index === 2 || index === 3) && { opacity: 0.5, backgroundColor: "#A0A0A0", borderRadius: 0 }
                 }}
 
                 onClick={function (e) {
-                  if ((index !== 0) && (index !== 1) && (index !== 2)) {
+                  if ((index !== 0) && (index !== 1) && (index !== 2) && (index !== 3)) {
                     setTabValue(false)
                   }
                   item.fn(e)
