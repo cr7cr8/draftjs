@@ -92,7 +92,7 @@ class ToolButton_ extends React.Component {
 
     const toolButtonCss = classNames({
       [theme.widthCss]: true,
-    //  [theme.widthCss2]:  blockType === "editingBlock"&& !blockText,
+      [theme.widthCss2]:  blockType === "editingBlock"&& !blockText,
      // [theme.widthCss3]: this.state.isExpanded && !blockText && blockType !== "unstyled",
 
     })
@@ -130,7 +130,7 @@ class ToolButton_ extends React.Component {
           whiteSpace: "nowrap",
           direction: "rtl",
         }}>
-        {/* <IconButton
+        <IconButton
           style={{
             transform: blockType === "unstyled" ?   "rotate(0deg)" : "rotate(-45deg)",
             transition: "transform 300ms",
@@ -170,11 +170,39 @@ class ToolButton_ extends React.Component {
 
 
           <ControlPointIcon contentEditable={false} className={theme.sizeCss + " " + "rotate1"} style={{ userSelect: "none" }} />
-        </IconButton> */}
+        </IconButton>
 
 
 
-      
+        {/* {blockType !== "editingBlock" && <IconButton
+          style={{
+            padding: 0
+          }}
+          className={theme.sizeCss}
+          contentEditable={false}
+          onMouseDown={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+          }}
+
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            this.toggleExpand()
+            // markingColorBlock()
+            // markingColorBlock(e, editorState, setEditorState, {}, blockKey)
+
+            setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
+            //  setEditorState(RichUtils.toggleBlockType(editorState, "imageBlock"))
+
+            //setShowSettingBar(pre => !pre)
+          }}
+        >
+
+
+          <ColorLensOutlinedIcon contentEditable={false} className={theme.sizeCss + " " + "rotate1"} style={{ userSelect: "none" }} />
+        </IconButton>
+        } */}
 
         {!blockText && <IconButton
           style={{
@@ -190,9 +218,14 @@ class ToolButton_ extends React.Component {
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
-    
+          //  this.toggleExpand()
+            // markingColorBlock()
+            // markingColorBlock(e, editorState, setEditorState, {}, blockKey)
+
+            //  setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
+            //  setEditorState(RichUtils.toggleBlockType(editorState, "imageBlock"))
             setEditorState(RichUtils.toggleBlockType(editorState, "imageBlock"))
-          
+            //setShowSettingBar(pre => !pre)
           }}
         >
 
@@ -218,7 +251,52 @@ const ToolButton = withTheme(withContext(ToolButton_))
 export default ToolButton
 
 
+// export default function ToolButton({ editorState, setEditorState, ...props }) {
 
+//   const [top, setTop] = useState(0)
+//   const [left, setLeft] = useState(0)
+
+//   const theme = useTheme()
+
+
+
+//   return (
+//     <IconButton
+//       style={{
+//         transform: "translateX(0%)",
+//         alignItems: "center",
+//         userSelect: "none",
+//         position: "absolute",
+//         //  left,
+//         top,
+//         right: 0,
+//         zIndex: 100,
+//         //  backgroundColor: "pink"
+//       }}
+//       className={theme.sizeCss}
+//       contentEditable={false}
+//       onMouseDown={function (e) {
+//         e.preventDefault()
+//         e.stopPropagation()
+//       }}
+
+//       onClick={function (e) {
+//         e.preventDefault()
+//         e.stopPropagation()
+
+//         // markingColorBlock()
+//         // markingColorBlock(e, editorState, setEditorState, {}, blockKey)
+
+//         setEditorState(RichUtils.toggleBlockType(editorState, "editingBlock"))
+
+//         //setShowSettingBar(pre => !pre)
+//       }}
+//     >
+//       <ColorLensOutlinedIcon contentEditable={false} className={theme.sizeCss + " " + "rotate1"} style={{ userSelect: "none" }} />
+//     </IconButton>
+//   )
+
+// }
 
 
 

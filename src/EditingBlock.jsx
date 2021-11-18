@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect, useContext, useCallback, createCont
 import { Context, withContext } from "./ContextProvider"
 
 
-import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
+import { genKey, EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata, SelectionState, convertToRaw, convertFromRaw, RichUtils, Modifier, convertFromHTML, AtomicBlockUtils } from 'draft-js';
 import Editor from "draft-js-plugins-editor";
 import Immutable from 'immutable';
 
@@ -40,7 +40,11 @@ import DetectableOverflow from "react-detectable-overflow"
 import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
 import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
 import FormatAlignRightIcon from '@material-ui/icons/FormatAlignRight';
+import AddIcon from '@material-ui/icons/Add';
+import AddPhotoAlternateOutlinedIcon from '@material-ui/icons/AddPhotoAlternateOutlined';
 
+
+import BlurOnIcon from '@material-ui/icons/BlurOn';
 
 import {
   isMobile,
@@ -64,11 +68,11 @@ export default function EditingBlock(props) {
 
     gradientStyleArr, setGradientStyleArr,
 
-    bgImageObj, editorState, setEditorState, editorRef, 
-    
- //   editorBlockKeyArr,
+    bgImageObj, editorState, setEditorState, editorRef,
+
+    //   editorBlockKeyArr,
     editingBlockKeyArrRef } = useContext(Context)
-    
+
 
   const { showFontBar, setShowFontBar, markingImageBlock, markingColorBlock, toolButtonRef } = props;
 
@@ -90,7 +94,7 @@ export default function EditingBlock(props) {
 
   //const hasLoaded = editorBlockKeyArr.some(key => {
   const hasLoaded = editingBlockKeyArrRef.current.some(key => {
-   return key === headKey
+    return key === headKey
   })
 
 
@@ -175,7 +179,7 @@ export default function EditingBlock(props) {
 
 
 
-
+  const fromBlockKey = useRef()
 
 
   return (
@@ -186,9 +190,25 @@ export default function EditingBlock(props) {
         onClick={function (e) { e.currentTarget.value = null; }}
         onChange={function (e) {
 
-          const headKey = editorState.getSelection().getStartKey()
+          let headKey = editorState.getSelection().getStartKey()
+          let realHeadKey = headKey
 
-          update({ e, bgImageObj, editorRef, editorState, setEditorState, headKey, gradientStyleArr, setGradientStyleArr })
+
+          arr.forEach(group => {
+
+            group.forEach(item => {
+
+              if (item.props.children.props.block.getKey() === headKey) {
+                realHeadKey = group[0].props.children.props.block.getKey()
+
+              }
+            })
+
+          })
+
+
+
+          update({ e, bgImageObj, editorRef, editorState, setEditorState, headKey: realHeadKey, gradientStyleArr, setGradientStyleArr })
 
         }}
       />
@@ -205,7 +225,7 @@ export default function EditingBlock(props) {
 
 
         return (
-          <div className={""} 
+          <div className={""}
             style={{
               ...styleObj,
               //    backgroundPosition: `${horizontal}% ${vertical}%`,
@@ -218,15 +238,15 @@ export default function EditingBlock(props) {
 
               const block = item.props.children.props.block
 
-//console.log(item)
+              //console.log(item)
 
-//item.props.children.props.onClick=function(){alert("ff")}
+              //item.props.children.props.onClick=function(){alert("ff")}
 
-//item.props.onClick=function(){alert("fff")}
+              //item.props.onClick=function(){alert("fff")}
               //   !editingBlockKeyArrRef.current.includes(block.getKey()) && editingBlockKeyArrRef.current.push(block.getKey())
 
               return (
-               // item.props.children // cannnot use this line. highlight the block will not work!!!
+                // item.props.children // cannnot use this line. highlight the block will not work!!!
                 item
               )
 
@@ -350,13 +370,14 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation();
 
+
           inputRef.current.click()
 
 
 
         }}
       >
-        <ImageTwoToneIcon className={theme.sizeCss} />
+        <AddPhotoAlternateOutlinedIcon className={theme.sizeCss} />
       </IconButton>
 
 
@@ -579,7 +600,7 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
           e.preventDefault(); e.stopPropagation();
 
 
-          changeBlockData({e,dirStr:"left", editorState, setEditorState})
+          changeBlockData({ e, dirStr: "left", editorState, setEditorState })
 
 
         }}
@@ -592,7 +613,7 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
 
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation();
-          changeBlockData({e,dirStr:"center", editorState, setEditorState})
+          changeBlockData({ e, dirStr: "center", editorState, setEditorState })
 
 
         }}
@@ -606,7 +627,7 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
 
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation();
-          changeBlockData({e,dirStr:"right", editorState, setEditorState})
+          changeBlockData({ e, dirStr: "right", editorState, setEditorState })
 
 
         }}
@@ -614,20 +635,99 @@ function ToolBar({ hasLoaded, inputRef, markingImageBlock, ediotrBlockCss, isFoc
         <FormatAlignRightIcon className={theme.sizeCss} />
       </IconButton>
 
+      <IconButton className={theme.sizeCss}
+        contentEditable={false}
+
+        onClick={function (e) {
+          e.preventDefault(); e.stopPropagation();
+          // changeBlockData({ e, dirStr: "right", editorState, setEditorState })
+
+
+        }}
+      >
+        <BlurOnIcon className={theme.sizeCss} />
+      </IconButton>
+
+
+
+
+      <IconButton className={theme.sizeCss}
+        contentEditable={false}
+
+        onClick={function (e) {
+          //       alert("x")
+          e.preventDefault(); e.stopPropagation();
+
+
+          //addEmptyBlock(editorState,setEditorState)
+          if (editorState.getSelection().isCollapsed()) {
+            let es = EditorState.moveFocusToEnd(editorState)
+
+            let newContentState = Modifier.splitBlock(es.getCurrentContent(), es.getSelection())
+
+            es = EditorState.push(es, newContentState, "split-block")
+
+            newContentState = Modifier.setBlockData(
+              newContentState, es.getSelection(),
+              Immutable.Map({ backgroundImage: `linear-gradient(${Math.floor(Math.random() * 360)}deg,${getRandomColor()} 0%,${getRandomColor()} 100%)` })
+            )
+
+            es = EditorState.push(es, newContentState, "change-block-data")
+
+            // newContentState = Modifier.setBlockType(es.getCurrentContent(),es.getSelection(),"unstyled")
+            // es = EditorState.push(es, newContentState, "change-block-Type")
+
+            // setEditorState(es)
+            // newContentState = Modifier.setBlockType(es.getCurrentContent(),es.getSelection(),"editingBlock")
+            // es = EditorState.push(es, newContentState, "change-block-Type")
+            setEditorState(es)
+
+
+          }
+        }}
+
+      >
+        <AddIcon className={theme.sizeCss} />
+      </IconButton>
+
+
     </div >
   )
 }
 
 
 
+const addEmptyBlock = (editorState, setEditorState) => {
+  const newBlock = new ContentBlock({
+    key: genKey(),
+    type: 'unstyled',
+    text: 'dds',
+    characterList: Immutable.List()
+  })
 
-function setHeadBlockData(editorState, setEditorState, headKey, dataObj) {
+  const contentState = editorState.getCurrentContent()
+  const newBlockMap = contentState.getBlockMap().set(newBlock.key, newBlock)
+
+  let es = EditorState.push(
+    editorState,
+    ContentState
+      .createFromBlockArray(newBlockMap.toArray())
+      .set('selectionBefore', contentState.getSelectionBefore())
+      .set('selectionAfter', contentState.getSelectionAfter())
+  )
+  setEditorState(es)
+}
+
+
+
+
+function setHeadBlockData(editorState, setEditorState, headKey, dataObj, individual = false) {
   const newContent = Modifier.mergeBlockData(
     editorState.getCurrentContent(),
 
-    editorState.getSelection(),
+    individual ? editorState.getSelection() : SelectionState.createEmpty(headKey),
 
-    // SelectionState.createEmpty(headKey),
+    //SelectionState.createEmpty(headKey),
     Immutable.Map({ ...dataObj, horizontal: 50, vertical: 50 })
   )
 
@@ -641,7 +741,7 @@ function setHeadBlockData(editorState, setEditorState, headKey, dataObj) {
 
 
 
-function changeBlockData({e, dirStr, editorState, setEditorState}) {
+function changeBlockData({ e, dirStr, editorState, setEditorState }) {
 
   e.preventDefault(); e.stopPropagation();
 
@@ -679,3 +779,4 @@ function getRandomColor() {
   return "rgba(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + (",") + Math.floor(Math.random() * 255) + ",0.3)"
 
 }
+
