@@ -100,7 +100,7 @@ function toHtml({ preHtml, theme, ctx }) {
   const html = ReactHtmlParser(preHtml, {
     transform: function transformFn(node, index) {
 
-      if (node.attribs && (node.attribs.class || node.attribs.textcolor || node.attribs.textbackcolor || node.attribs.textshadow)) {
+      if (node.attribs && (node.attribs.class || node.attribs.textcolor || node.attribs.textbackcolor || node.attribs.textshadow || node.attribs.linkadd)) {
 
         const styleObj = {}
 
@@ -109,9 +109,21 @@ function toHtml({ preHtml, theme, ctx }) {
         node.attribs["textbackcolor"] && (() => { styleObj["backgroundColor"] = node.attribs["textbackcolor"] })()
         node.attribs["textshadow"] && (() => { styleObj["textShadow"] = node.attribs["textshadow"] })()
 
-        return <span key={index} style={{ ...styleObj }} >
-          {convertNodeToElement(node, index, transformFn).props.children}
-        </span>
+
+        return React.createElement(node.attribs.linkadd ? "a" : "span",
+          { style: { ...styleObj }, ...node.attribs.linkadd && { href: node.attribs.linkadd.replace("LINK", ""), target: "_blank" } },
+          convertNodeToElement(node, index, transformFn).props.children)
+
+        // if (node.attribs.linkadd) {
+        //   return <a key={index} style={{ ...styleObj }} href={node.attribs.linkadd.replace("LINK","")} >
+        //   {convertNodeToElement(node, index, transformFn).props.children}
+        // </a>
+        // }
+
+
+        // return <span key={index} style={{ ...styleObj }} >
+        //   {convertNodeToElement(node, index, transformFn).props.children}
+        // </span>
       }
 
 
@@ -121,8 +133,8 @@ function toHtml({ preHtml, theme, ctx }) {
           return convertNodeToElement(child, index, transformFn)
         })
 
-        //  return <></>
-        return <span key={index} style={{ fontSize: 0, width: 0, height: 0, display: "inline-block", overflow: "hidden" }}>{element}</span>
+        return <React.Fragment key={index}></React.Fragment>
+        //return <span key={index} style={{ fontSize: 0, width: 0, height: 0, display: "inline-block", overflow: "hidden" }}>{element}</span>
 
         //fontSize in the  theme.lgTextCss as classname of a span tag will not work, need overfolow hidden to cover hide
         //return <React.Fragment key={index}></React.Fragment>  // work as well
@@ -136,7 +148,10 @@ function toHtml({ preHtml, theme, ctx }) {
 
           const fontNode = convertNodeToElement(child, index, transformFn)
 
-          if (typeof (fontNode) === "object" && (fontNode.props.className || fontNode.props.textcolor || fontNode.props.textbackcolor || fontNode.props.textshadow)) {
+          if (typeof (fontNode) === "object" && (fontNode.props.className || fontNode.props.textcolor
+            || fontNode.props.textbackcolor
+            || fontNode.props.linkadd
+            || fontNode.props.textshadow)) {
 
             const styleObj = {
               ...fontNode.props.textshadow && { textShadow: fontNode.props.textshadow },
@@ -145,6 +160,15 @@ function toHtml({ preHtml, theme, ctx }) {
               ...fontNode.props.className && (fontNode.props.className.indexOf("charSize") >= 0) && { ["--" + fontNode.props.className]: fontNode.props.className }
             }
 
+
+
+            return React.createElement(
+              fontNode.props.linkadd ? "a" : "span",
+              { style: { ...styleObj }, ...fontNode.props.linkadd && { href: fontNode.props.linkadd.replace("LINK", ""), target: "_blank" } },
+              fontNode.props.children
+            )
+
+
             // return React.cloneElement(<span />,   { key: index, style: { display: "inline", backgroundColor, color, ...objAttribute } }, fontNode.props.children)
             return <span key={index} style={{ ...styleObj }}>{fontNode.props.children}</span>
           }
@@ -152,6 +176,7 @@ function toHtml({ preHtml, theme, ctx }) {
             return <React.Fragment key={index}>{fontNode}</React.Fragment>
           }
         })
+
         const personName = reactElementToJSXString(<>{element}</>).replace(/(<([^>]*)>)/ig, '').replace(/\s/g, '')
         return <AvatarChip hoverContent={personName} key={index} size={theme.textSizeArr} labelSize={theme.textSizeArr} personName={personName} >{element}</AvatarChip>
       }
@@ -161,7 +186,11 @@ function toHtml({ preHtml, theme, ctx }) {
 
         const element = node.children.map((child, index) => {
           const emojiNode = convertNodeToElement(child, index, transformFn)
-          if (typeof (emojiNode) === "object" && (emojiNode.props.className || emojiNode.props.textcolor || emojiNode.props.textbackcolor || emojiNode.props.textshadow)) {
+          if (typeof (emojiNode) === "object" && (emojiNode.props.className
+            || emojiNode.props.textcolor
+            || emojiNode.props.linkadd
+            || emojiNode.props.textbackcolor
+            || emojiNode.props.textshadow)) {
 
 
             const styleObj = {
@@ -171,7 +200,13 @@ function toHtml({ preHtml, theme, ctx }) {
               ...emojiNode.props.textbackcolor && { backgroundColor: emojiNode.props.textbackcolor },
               ...emojiNode.props.className && (emojiNode.props.className.indexOf("charSize") >= 0) && { ["--" + emojiNode.props.className]: emojiNode.props.className }
             }
-            return <span key={index} style={{ ...styleObj }}>{emojiNode.props.children}</span>
+           
+            return React.createElement(
+              emojiNode.props.linkadd ? "a" : "span",
+              { style: { ...styleObj }, ...emojiNode.props.linkadd && { href: emojiNode.props.linkadd.replace("LINK", ""), target: "_blank" } },
+              emojiNode.props.children
+            )
+           // return <span key={index} style={{ ...styleObj }}>{emojiNode.props.children}</span>
 
           }
           else {
@@ -241,6 +276,7 @@ export default withTheme(withContext(function Content({ theme, ctx, ...props }) 
     <Zoom in={ctx.showContent} unmountOnExit={true}>
       <Paper style={{ wordBreak: "break-all" }}>{
         toHtml({ preHtml: toPreHtml(editorState), theme, ctx })
+        //toHtml({ preHtml: toPreHtml(), theme, ctx })
       }
       </Paper>
     </Zoom>

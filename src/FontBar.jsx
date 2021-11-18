@@ -435,6 +435,7 @@ export const FontBar = withContext(function ({
       let es = editorState;
       let allBlocks = es.getCurrentContent();
       styleArr.forEach(item => {
+
         if (item.indexOf("LINK") >= 0) {
           allBlocks = Modifier.removeInlineStyle(allBlocks, selection, item);
           es = EditorState.push(es, allBlocks, "change-inline-style")
@@ -443,9 +444,13 @@ export const FontBar = withContext(function ({
         }
       })
 
-      const linkMD5 = md5(linkValue)
-      linkDictionary.current["LINK" + md5(linkValue)] = linkValue
-      es = RichUtils.toggleInlineStyle(es, "LINK" + linkMD5)
+      //  const linkMD5 = md5(linkValue)
+      //   linkDictionary.current["LINK" + md5(linkValue)] = linkValue
+      //  es = RichUtils.toggleInlineStyle(es, "LINK" + linkMD5)
+
+      linkDictionary.current["LINK" + linkValue] = linkValue
+      es = RichUtils.toggleInlineStyle(es, "LINK" + linkValue)
+
 
       es = EditorState.forceSelection(es, selection.merge({
 

@@ -248,24 +248,29 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
         MuiCssBaseline: {
 
           '@global': {
+            a:{
+              color:"#08c",
+              textDecoration:"none",
+            },
+
             html: {
 
-              '& span[style*="--charSize0"]': {
+              '& a[style*="--charSize0"],span[style*="--charSize0"]': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.5)]),
               },
-              '& span[style*="--charSize1"]': {
+              '& a[style*="--charSize1"],span[style*="--charSize1"]': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 0.8)]),
               },
-              '& span[style*="--charSize2"]': {
+              '& a[style*="--charSize2"],span[style*="--charSize2"]': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1)]),
               },
-              '& span[style*="--charSize3"]': {
+              '& a[style*="--charSize3"],span[style*="--charSize3"]': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1.2)]),
               },
-              '& span[style*="--charSize4"]': {
+              '& a[style*="--charSize4"],span[style*="--charSize4"]': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 1.5)]),
               },
-              '& span[style*="--charSize5"]': {
+              '& a[style*="--charSize5"],span[style*="--charSize5"]': {
                 ...breakpointsAttribute(["fontSize", multiplyArr(textSizeArr, 2.0)]),
               },
 
@@ -336,11 +341,12 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
 
 
 const inlineStyleFn = (styleNameSet, ...props) => {
-
-
+  //function inlineStyleFn(styleNameSet, ...props){
   // let color = styleName.filter((value) => value.startsWith("BOLD")).first();
 
   // console.log(styleName.toArray())
+  //console.log(this)
+
 
 
   const styleObj = {
@@ -363,8 +369,6 @@ const inlineStyleFn = (styleNameSet, ...props) => {
     }
   })
 
-
-
   charSizeArr.forEach(item => {
     if (styleNameSet.has(item)) {
       styleObj.attributes.class = item
@@ -376,6 +380,23 @@ const inlineStyleFn = (styleNameSet, ...props) => {
       styleObj.attributes.textshadow = shadowTextArr[Number(item.replace("SHADOW", ""))]
     }
   })
+
+
+  styleNameSet.forEach(item => {
+
+    if (item.indexOf("LINK") >= 0) {
+      styleObj.attributes.linkadd = item
+    }
+
+  })
+  // Object.keys(linkDictionary.current).forEach(item=>{
+
+  //   if (styleNameSet.has(item)) {
+  //     styleObj.attributes.linkAdd = linkDictionary.current[item]
+  //   }
+
+  // })
+
 
 
 
@@ -424,12 +445,16 @@ const entityStyleFn = (entity, ...props) => {
 
 function toPreHtml(editorState) {
 
+  const linkDictionary = this
+
+  console.log(linkDictionary)
+
   const preHtml = stateToHTML(
     editorState.getCurrentContent(),
     {
       defaultBlockTag: "div",
 
-      entityStyleFn,
+      entityStyleFn: entityStyleFn.bind(linkDictionary),
       inlineStyleFn,
 
       blockStyleFn: function (block) {
@@ -581,8 +606,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
     convertFromRaw({
       entityMap: {
         //not functional in current draftJS version
-        0: {  "type": "longMentionOff_HEAD",   "mutability": "MUTABLE",  "data": { "mentionType": "longMentionOff_HEAD" } },
-        1: {        "type": "longMentionOff_BODY","mutability": "MUTABLE", "data": { "mentionType": "longMentionOff_BODY" }  },
+        0: { "type": "longMentionOff_HEAD", "mutability": "MUTABLE", "data": { "mentionType": "longMentionOff_HEAD" } },
+        1: { "type": "longMentionOff_BODY", "mutability": "MUTABLE", "data": { "mentionType": "longMentionOff_BODY" } },
       },
 
       blocks: [
@@ -617,7 +642,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const { sizeCss, smSizeCss, heightCss, widthCss, widthCss2, widthCss3, textCss, smTextCss, lgTextCss } = useStyles({ textSizeArr })
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, widthCss2, widthCss3, textCss, smTextCss, lgTextCss }), [textSizeArr, isLight, setIsLight,])
 
-  
+
   const bgImageObj = useRef({})
   //const [editorBlockKeyArr, setEditorBlockKeyArr] = useState([])
   //const [darkToLightArr, setDarkToLightArr] = useState([])
@@ -643,7 +668,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
       <StyledThemeProvider theme={theme}>
         <Context.Provider value={{
           //isLight, setIsLight, theme, breakpointsAttribute,
-          toPreHtml,
+          toPreHtml,// toPreHtml.bind(linkDictionary, editorState, linkDictionary),
           editorRef,
           editorState, setEditorState,
           showMention, setShowMention,
@@ -662,8 +687,8 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
           panelColorGroupNum, setPanelColorGroupNum,
 
-         // editorBlockKeyArr, setEditorBlockKeyArr,
-        //  darkToLightArr, setDarkToLightArr,
+          // editorBlockKeyArr, setEditorBlockKeyArr,
+          //  darkToLightArr, setDarkToLightArr,
 
           editingBlockKeyArrRef,
           gradientStyleArr, setGradientStyleArr,
