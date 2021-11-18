@@ -59,12 +59,16 @@ export default function EditingBlock(props) {
   const theme = useTheme()
 
 
-  const { editorBlockKeyArr, setEditorBlockKeyArr, darkToLightArr, setDarkToLightArr,
+  const { // setEditorBlockKeyArr,// darkToLightArr, setDarkToLightArr,
 
 
     gradientStyleArr, setGradientStyleArr,
 
-    bgImageObj, editorState, setEditorState, editorRef, editingBlockKeyArrRef } = useContext(Context)
+    bgImageObj, editorState, setEditorState, editorRef, 
+    
+ //   editorBlockKeyArr,
+    editingBlockKeyArrRef } = useContext(Context)
+    
 
   const { showFontBar, setShowFontBar, markingImageBlock, markingColorBlock, toolButtonRef } = props;
 
@@ -84,8 +88,9 @@ export default function EditingBlock(props) {
   const headKey = props.children[0].props.children.props.block.getKey()
 
 
-  const hasLoaded = editorBlockKeyArr.some(key => {
-    return key === headKey
+  //const hasLoaded = editorBlockKeyArr.some(key => {
+  const hasLoaded = editingBlockKeyArrRef.current.some(key => {
+   return key === headKey
   })
 
 

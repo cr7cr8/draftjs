@@ -197,11 +197,14 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
                 styleObj["--charSize" + [...item].pop()] = item
               }
               if ((item[0] === "S") && (item[1] === "H") && (item[2] === "A")) {
-
-
                 styleObj["textShadow"] = shadowTextArr[Number(item.replace("SHADOW", ""))]
-
               }
+              if (item.indexOf("LINK") >= 0) {
+
+                styleObj["color"] = "blue"
+                styleObj["textDecoration"] = " underline"
+              }
+
 
 
             })

@@ -5,6 +5,7 @@ import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata
 
 import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button, IconButton, TextField } from "@material-ui/core";
 
+import md5 from 'md5';
 
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
 import { Context, withContext } from "./ContextProvider"
@@ -177,7 +178,7 @@ export const FontBar = withContext(function ({
   const { editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColorGroupNum, setPanelColorGroupNum,
 
     panelValue, setPanelValue, charSizePos, setCharSizePos, gradientStyleArr, linkValue, setLinkValue,
-    shadowTextArr } = props.ctx
+    shadowTextArr, linkDictionary } = props.ctx
 
 
   function toggleInlineStyle(e, fontStr) {
@@ -411,6 +412,125 @@ export const FontBar = withContext(function ({
   }
 
 
+  function recordLink(e) {
+
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+
+    const selection = editorState.getSelection()
+    const isCollapsed = selection.isCollapsed()
+
+    //  linkDictionary.current[md5(linkValue)] = linkValue
+    if (isCollapsed) { alert("slection collapsed"); return }
+
+
+    if (linkValue) {
+      const startKey = selection.getStartKey()
+      const endKey = selection.getEndKey()
+      const startOffset = selection.getStartOffset()
+      const endOffset = selection.getEndOffset()
+
+      const styleArr = editorState.getCurrentContent().getBlockForKey(endKey).getInlineStyleAt(endOffset - 1).toArray()
+
+      let es = editorState;
+      let allBlocks = es.getCurrentContent();
+      styleArr.forEach(item => {
+        if (item.indexOf("LINK") >= 0) {
+          allBlocks = Modifier.removeInlineStyle(allBlocks, selection, item);
+          es = EditorState.push(es, allBlocks, "change-inline-style")
+          es = EditorState.acceptSelection(es, selection)
+          //     setEditorState(es);
+        }
+      })
+
+      const linkMD5 = md5(linkValue)
+      linkDictionary.current["LINK" + md5(linkValue)] = linkValue
+      setEditorState(RichUtils.toggleInlineStyle(es, "LINK" + linkMD5))
+     // setTabValue(false)
+    }
+    else{
+      const startKey = selection.getStartKey()
+      const endKey = selection.getEndKey()
+      const startOffset = selection.getStartOffset()
+      const endOffset = selection.getEndOffset()
+
+      const styleArr = editorState.getCurrentContent().getBlockForKey(endKey).getInlineStyleAt(endOffset - 1).toArray()
+
+      let es = editorState;
+      let allBlocks = es.getCurrentContent();
+      styleArr.forEach(item => {
+        if (item.indexOf("LINK") >= 0) {
+          allBlocks = Modifier.removeInlineStyle(allBlocks, selection, item);
+          es = EditorState.push(es, allBlocks, "change-inline-style")
+          es = EditorState.acceptSelection(es, selection)
+          //     setEditorState(es);
+        }
+      })
+
+   //   const linkMD5 = md5(linkValue)
+   //   linkDictionary.current["LINK" + md5(linkValue)] = linkValue
+      setEditorState(es)
+
+
+    }
+
+  }
+
+  //if (tabValue === 3) { applyLink() }
+  function applyLink(e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+
+
+    const selection = editorState.getSelection()
+    const isCollapsed = selection.isCollapsed()
+    if (isCollapsed) { return }
+
+    const startKey = selection.getStartKey()
+    const endKey = selection.getEndKey()
+    const startOffset = selection.getStartOffset()
+    const endOffset = selection.getEndOffset()
+
+    const styleArr = editorState.getCurrentContent().getBlockForKey(endKey).getInlineStyleAt(endOffset - 1).toArray()
+
+
+
+    const linkTag = styleArr.find(item => item.indexOf("LINK") >= 0)
+
+    if (linkTag) {
+      setLinkValue(linkDictionary.current[linkTag])
+    }
+    else {
+      setLinkValue("empty")
+    }
+
+
+
+    // if (styleArr.length > 0) {
+
+    //   const linkTag = styleArr.find(item => { return item.indexOf("#") >= 0 })
+    //   if (linkTag) { setLinkValue(linkTag) }
+
+    // }
+    // else {
+    //   setLinkValue("")
+    // }
+    //alert(JSON.stringify(styleArr))
+
+    // let linkTag = ""
+    // if (styleArr.some(item => {
+
+
+    //   console.log(item)
+
+    //   linkTag = String(item).findIndex("#") >= 0 ? item : "";
+    //   return item.findIndex("#") >= 0
+    // })) {
+
+    //   setLinkValue(linkTag)
+    // }
+
+  }
+
+
 
   const basicButtonArr = [
 
@@ -434,12 +554,14 @@ export const FontBar = withContext(function ({
       btn: <FilterNoneTwoToneIcon className={theme.sizeCss} style={{ transform: "scale(0.8) rotate(270deg)" }} />,
       fn: function (e) {
         setTabValue(pre => pre === 2 ? false : 2)
+
       }
     },
     {
       btn: <LinkIcon className={theme.sizeCss} />,
       fn: function (e) {
         setTabValue(pre => pre === 3 ? false : 3)
+
       }
     },
     {
@@ -661,19 +783,20 @@ export const FontBar = withContext(function ({
 
   })
 
+  useEffect(function () {
+
+    if (tabValue === 3) { applyLink() }
+
+
+  }, [tabValue, top, left])
+
+
 
   useEffect(function () {
 
-
     // if (tabValue === 2) {
-
     //   document.querySelector('div[style*="--linkinput"] input')
-
-
     // }
-
-
-
   }, [tabValue])
 
 
@@ -742,11 +865,11 @@ export const FontBar = withContext(function ({
 
 
         {tabValue === 2 &&
-          <div style={{display:"flex"}}>
+          <div style={{ display: "flex" }}>
             {shadowButtonArr.map((item, index) => {
               const str = "shadowcss"
-              return <IconButton className={theme.sizeCss} key={index}  onClick={item.fn}>
-                <div className={theme.textCss} style={{transform:"translateY(-4px)",textShadow: item.shadowStr }}>{str[index]}</div>
+              return <IconButton className={theme.sizeCss} key={index} onClick={item.fn}>
+                <div className={theme.textCss} style={{ transform: "translateY(-4px)", textShadow: item.shadowStr }}>{str[index]}</div>
               </IconButton>
 
             })}
@@ -758,14 +881,16 @@ export const FontBar = withContext(function ({
           <div style={{ display: "flex", lineHeight: 1, padding: 0, alignItems: "center", }}>
             <InputBase
 
-              autoFocus={true}
+              autoFocus={false}
 
               inputProps={{
                 value: linkValue,
                 placeholder: "",
                 onKeyUp: function (e) {
                   if (e.key === 'Enter' || e.keyCode === 13) {
-                    alert("enter")
+                    //  alert("enter")
+                    applyLink(e)
+
                   }
                 },
 
@@ -797,14 +922,16 @@ export const FontBar = withContext(function ({
                 display: "block",
               }}
             />
-            <IconButton className={theme.smSizeCss} ><CheckRoundedIcon className={theme.smSizeCss} /></IconButton>
+            <IconButton className={theme.smSizeCss}
+              onClick={function (e) {
+                recordLink(e)
+
+              }}
+            >
+              <CheckRoundedIcon className={theme.smSizeCss} />
+            </IconButton>
           </div>
         }
-
-
-
-
-
 
 
 
@@ -815,20 +942,13 @@ export const FontBar = withContext(function ({
 
             return (
 
-
               <IconButton className={theme.sizeCss} key={index}
 
                 style={{
 
-
-                  // borderRadius: 0,
-
-
                   // ...((index === 0 || index === 1) && (tabValue !== index) && (tabValue === 0 || tabValue === 1)) && { opacity: 0.3  , backgroundColor:"#A0A0A0", borderRadius:0   }
 
                   ...((tabValue !== index) && (tabValue === 0 || tabValue === 1 || tabValue === 2 || tabValue === 3)) && { opacity: 0.5, backgroundColor: "#A0A0A0", borderRadius: 0 },
-
-
                   ...(tabValue === false) && (index === 0 || index === 1 || index === 2 || index === 3) && { opacity: 0.5, backgroundColor: "#A0A0A0", borderRadius: 0 }
                 }}
 

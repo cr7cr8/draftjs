@@ -581,97 +581,33 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
     convertFromRaw({
       entityMap: {
         //not functional in current draftJS version
-        0: {
-          "type": "longMentionOff_HEAD",
-          "mutability": "MUTABLE",
-          "data": {  "mentionType": "longMentionOff_HEAD"       }
-        },
-        1: {
-          "type": "longMentionOff_BODY",
-          "mutability": "MUTABLE",
-          "data": { "mentionType": "longMentionOff_BODY"  }
-        },
-
+        0: {  "type": "longMentionOff_HEAD",   "mutability": "MUTABLE",  "data": { "mentionType": "longMentionOff_HEAD" } },
+        1: {        "type": "longMentionOff_BODY","mutability": "MUTABLE", "data": { "mentionType": "longMentionOff_BODY" }  },
       },
-
 
       blocks: [
         {
           key: "1111", text: "abcs @abc_d  dfgsfsad  dsdfwefwfwf", type: "editingBlock",
-
-          data: {
-            "backgroundImage": "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",
-            "horizontal": 50,
-            "vertical": 50
-          },
-          inlineStyleRanges: [
-            {
-              "offset": 0,
-              "length": 1,
-              "style": "BOLD"
-            },
-            {
-              "offset": 2,
-              "length": 1,
-              "style": "#e91e63"
-            },
-          ],
-          entityRanges: [
-
-            [
-              {
-                "offset": 4,
-                "length": 2,
-                "key": 0
-              },
-              {
-                "offset": 6,
-                "length": 5,
-                "key": 1
-              },
-            ],
-
-          ],
+          data: { "backgroundImage": "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", "horizontal": 50, "vertical": 50 },
+          inlineStyleRanges: [{ "offset": 0, "length": 1, "style": "BOLD" }, { "offset": 2, "length": 8, "style": "#e91e63" },],
+          entityRanges: [{ "offset": 4, "length": 2, "key": 0 }, { "offset": 6, "length": 5, "key": 1 },],
         },
 
         {
-          key: "2222", text: " @ab fcabcddfgsfsaddsdfwefwfwf", type: "editingBlock",
-          entityRanges: [
-
-            [
-              {
-                "offset": 0,
-                "length": 2,
-                "key": 0
-              },
-              {
-                "offset": 2,
-                "length": 2,
-                "key": 1
-              },
-            ],
-
-          ],
+          key: "2222", text: "@ab @fca bcddfgsfsaddsdfwefwfwf", type: "editingBlock",
+          inlineStyleRanges: [{ "offset": 0, "length": 3, "style": "BOLD" }, { "offset": 2, "length": 1, "style": "#e91e63" },],
+          entityRanges: [{ "offset": 3, "length": 2, "key": 0 }, { "offset": 5, "length": 3, "key": 1 },],
         }
-
       ]
-
-
     }),
 
   ))
 
-
-
-
-
-
   const [showContent, setShowContent] = useState(false)
   const [showMention, setShowMention] = useState(false)
-  const [showHint, setShowHint] = useState(true)
+  const [showHint, setShowHint] = useState(false)
   const [avatarHint, setAvatarHint] = useState(false)
-  const [showFontBar, setShowFontBar] = useState(true)
-
+  const [showFontBar, setShowFontBar] = useState(false)
 
   const [showEmojiPanel, setShowEmojiPanel] = useState(false)
   const [emojiCtxStr, setEmojiCtxStr] = useState("😃😄😁😆😅😂")
@@ -681,29 +617,25 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
   const { sizeCss, smSizeCss, heightCss, widthCss, widthCss2, widthCss3, textCss, smTextCss, lgTextCss } = useStyles({ textSizeArr })
   const theme = useCallback(createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, myTheme, heightCss, widthCss, widthCss2, widthCss3, textCss, smTextCss, lgTextCss }), [textSizeArr, isLight, setIsLight,])
 
-  //const [bgImageObj_, setBgImageObj] = useState({})
+  
   const bgImageObj = useRef({})
-  const [editorBlockKeyArr, setEditorBlockKeyArr] = useState([])
-  const [darkToLightArr, setDarkToLightArr] = useState([])
+  //const [editorBlockKeyArr, setEditorBlockKeyArr] = useState([])
+  //const [darkToLightArr, setDarkToLightArr] = useState([])
 
   const [tabValue, setTabValue] = useState(3)
-
-
-  const [panelColorGroupNum, setPanelColorGroupNum] = useState(0)
   const [panelValue, setPanelValue] = useState(0)   //text color panel
+  const [panelColorGroupNum, setPanelColorGroupNum] = useState(0)
 
 
   const editingBlockKeyArrRef = useRef([])
-
-
-
-
   const [gradientStyleArr, setGradientStyleArr] = useState(gradientStyleArr0)
+
+
 
   const [charSizePos, setCharSizePos] = useState(2)
 
   const [linkValue, setLinkValue] = useState("")
-
+  const linkDictionary = useRef({})
 
   return (
     <ThemeProvider theme={theme}>
@@ -730,13 +662,14 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
           panelColorGroupNum, setPanelColorGroupNum,
 
-          editorBlockKeyArr, setEditorBlockKeyArr,
-          darkToLightArr, setDarkToLightArr,
+         // editorBlockKeyArr, setEditorBlockKeyArr,
+        //  darkToLightArr, setDarkToLightArr,
 
           editingBlockKeyArrRef,
           gradientStyleArr, setGradientStyleArr,
           charSizePos, setCharSizePos,
           linkValue, setLinkValue,
+          linkDictionary,
           shadowTextArr,
           //     imageArr, setImageArr,
           //  editorTop, setEditorTop,
