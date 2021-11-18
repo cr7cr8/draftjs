@@ -201,7 +201,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               }
               if (item.indexOf("LINK") >= 0) {
 
-                styleObj["color"] = "blue"
+                styleObj["color"] = "#08c"
                 styleObj["textDecoration"] = " underline"
               }
 

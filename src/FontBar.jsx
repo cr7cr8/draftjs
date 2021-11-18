@@ -16,6 +16,7 @@ import FormatUnderlinedIcon from '@material-ui/icons/FormatUnderlined';
 
 
 import LinkIcon from '@material-ui/icons/Link';
+import CancelIcon from '@material-ui/icons/CancelOutlined';
 
 import FormatAlignLeftIcon from '@material-ui/icons/FormatAlignLeft';
 import FormatAlignCenterIcon from '@material-ui/icons/FormatAlignCenter';
@@ -445,9 +446,9 @@ export const FontBar = withContext(function ({
       const linkMD5 = md5(linkValue)
       linkDictionary.current["LINK" + md5(linkValue)] = linkValue
       setEditorState(RichUtils.toggleInlineStyle(es, "LINK" + linkMD5))
-     // setTabValue(false)
+      // setTabValue(false)
     }
-    else{
+    else {
       const startKey = selection.getStartKey()
       const endKey = selection.getEndKey()
       const startOffset = selection.getStartOffset()
@@ -457,22 +458,26 @@ export const FontBar = withContext(function ({
 
       let es = editorState;
       let allBlocks = es.getCurrentContent();
-      styleArr.forEach(item => {
-        if (item.indexOf("LINK") >= 0) {
-          allBlocks = Modifier.removeInlineStyle(allBlocks, selection, item);
-          es = EditorState.push(es, allBlocks, "change-inline-style")
-          es = EditorState.acceptSelection(es, selection)
-          //     setEditorState(es);
-        }
-      })
+      //  styleArr.forEach(item => {
+      //   if (item.indexOf("LINK") >= 0) {
 
-   //   const linkMD5 = md5(linkValue)
-   //   linkDictionary.current["LINK" + md5(linkValue)] = linkValue
+      Object.keys(linkDictionary.current).forEach(item => {
+        allBlocks = Modifier.removeInlineStyle(allBlocks, selection, item);
+        es = EditorState.push(es, allBlocks, "change-inline-style")
+        es = EditorState.acceptSelection(es, selection)
+
+      })
+      //     setEditorState(es);
+      //    }
+      //   })
+
+      //   const linkMD5 = md5(linkValue)
+      //   linkDictionary.current["LINK" + md5(linkValue)] = linkValue
       setEditorState(es)
 
 
     }
-
+    setTabValue(false)
   }
 
   //if (tabValue === 3) { applyLink() }
@@ -499,7 +504,7 @@ export const FontBar = withContext(function ({
       setLinkValue(linkDictionary.current[linkTag])
     }
     else {
-      setLinkValue("empty")
+      setLinkValue("")
     }
 
 
@@ -881,7 +886,7 @@ export const FontBar = withContext(function ({
           <div style={{ display: "flex", lineHeight: 1, padding: 0, alignItems: "center", }}>
             <InputBase
 
-              autoFocus={false}
+              autoFocus={true}
 
               inputProps={{
                 value: linkValue,
@@ -928,7 +933,10 @@ export const FontBar = withContext(function ({
 
               }}
             >
-              <CheckRoundedIcon className={theme.smSizeCss} />
+              {linkValue
+                ? <CheckRoundedIcon className={theme.smSizeCss} />
+                : <CancelIcon className={theme.smSizeCss}></CancelIcon>
+              }
             </IconButton>
           </div>
         }

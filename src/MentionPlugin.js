@@ -40,7 +40,7 @@ const useStyles = makeStyles(({ breakpointsAttribute, ...theme }) => {
         display: "inline-flex",
         lineHeight: "100%",
         alignItems: "center",
-
+     //   color:"rgba(0,0,0,0)",
         //whiteSpace: "pre-line",
         //  transform: "scale(0.8)",
         //    boxShadow: theme.shadows[5],
