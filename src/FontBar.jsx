@@ -179,7 +179,7 @@ export const FontBar = withContext(function ({
   const { editorState, setEditorState, editorRef, bgImageObj, tabValue, setTabValue, panelColorGroupNum, setPanelColorGroupNum,
 
     panelValue, setPanelValue, charSizePos, setCharSizePos, gradientStyleArr, linkValue, setLinkValue,
-    shadowTextArr, linkDictionary } = props.ctx
+    shadowTextArr, linkDictionary, setShowFontBar } = props.ctx
 
 
   function toggleInlineStyle(e, fontStr) {
@@ -445,8 +445,19 @@ export const FontBar = withContext(function ({
 
       const linkMD5 = md5(linkValue)
       linkDictionary.current["LINK" + md5(linkValue)] = linkValue
-      setEditorState(RichUtils.toggleInlineStyle(es, "LINK" + linkMD5))
-      // setTabValue(false)
+      es = RichUtils.toggleInlineStyle(es, "LINK" + linkMD5)
+
+      es = EditorState.forceSelection(es, selection.merge({
+
+        focusKey: endKey,
+        focusOffset: endOffset,
+        anchorKey: endKey,
+        anchorOffset: endOffset,
+      }))
+
+      setEditorState(es)
+      setShowFontBar(false)
+      setTabValue(false)
     }
     else {
       const startKey = selection.getStartKey()
@@ -473,11 +484,20 @@ export const FontBar = withContext(function ({
 
       //   const linkMD5 = md5(linkValue)
       //   linkDictionary.current["LINK" + md5(linkValue)] = linkValue
-      setEditorState(es)
+      es = EditorState.forceSelection(es, selection.merge({
 
+        focusKey: endKey,
+        focusOffset: endOffset,
+        anchorKey: endKey,
+        anchorOffset: endOffset,
+      }))
+
+      setEditorState(es)
+      setShowFontBar(false)
+      setTabValue(false)
 
     }
-    setTabValue(false)
+
   }
 
   //if (tabValue === 3) { applyLink() }
@@ -894,7 +914,7 @@ export const FontBar = withContext(function ({
                 onKeyUp: function (e) {
                   if (e.key === 'Enter' || e.keyCode === 13) {
                     //  alert("enter")
-                    applyLink(e)
+                    recordLink(e)
 
                   }
                 },

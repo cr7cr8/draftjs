@@ -163,8 +163,15 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
               newState = EditorState.push(newState, newContentState, "insert-characters")
               specialBakcSpace.current = false
             }
+
+
+
             isCollapsed && setCurrentBlockKey(startKey)
+            isCollapsed && tabValue === 3 && setTabValue(false)
+
+
             setShowFontBar(!newState.getSelection().isCollapsed())
+
             setEditorState(newState)
           }}
 
@@ -558,9 +565,9 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
         <div>{JSON.stringify(editorState.getCurrentContent().selectionAfter, null, 2)}</div> */}
 
-        <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
+        {/* <div>{JSON.stringify(editorState.getCurrentContent(), null, 2)}</div>
         <hr />
-        <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</div>
+        <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()), null, 2)}</div> */}
 
         {/* <div>{JSON.stringify(convertToRaw(editorState.getCurrentContent()).entityMap, null, 2)}</div> */}
 
