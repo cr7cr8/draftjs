@@ -1,6 +1,6 @@
 
 ### Dev18
-remaking fontbar and toolbar
+remaking fontbar and toolbar, link added, editingBlock can be individually created by clicking plug sign
 
 ### Dev17
  horizontal scroll panel template made in context
