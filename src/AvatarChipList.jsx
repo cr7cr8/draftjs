@@ -85,7 +85,7 @@ export default withTheme(withContext(function AvatarChipList({
   nameOnTyping = "",
   ctx,
   theme,
-  friendListArr = ["就好看了房", "aaabsbbccdfsfew", "aassabbcFewf", "aaabfd放空间的s", "aaa分割空ss间而"],
+  friendListArr = ["刘德华","Mike","TonyHawk","张学友","小刘","郭富城","黎明", "Ben","Bench"],
   setShowing,
   setMatchFriendArr,
   tabIndex = 0,

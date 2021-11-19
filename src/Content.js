@@ -200,13 +200,13 @@ function toHtml({ preHtml, theme, ctx }) {
               ...emojiNode.props.textbackcolor && { backgroundColor: emojiNode.props.textbackcolor },
               ...emojiNode.props.className && (emojiNode.props.className.indexOf("charSize") >= 0) && { ["--" + emojiNode.props.className]: emojiNode.props.className }
             }
-           
+
             return React.createElement(
               emojiNode.props.linkadd ? "a" : "span",
               { style: { ...styleObj }, ...emojiNode.props.linkadd && { href: emojiNode.props.linkadd.replace("LINK", ""), target: "_blank" } },
               emojiNode.props.children
             )
-           // return <span key={index} style={{ ...styleObj }}>{emojiNode.props.children}</span>
+            // return <span key={index} style={{ ...styleObj }}>{emojiNode.props.children}</span>
 
           }
           else {
@@ -236,28 +236,31 @@ function toHtml({ preHtml, theme, ctx }) {
 
         if (!headRowArr.includes(index)) { return <React.Fragment key={index} /> }
 
-        const listArr = arr2.find(arrGroup => {
+        const listArr = arr2.find(arrGroup => { return arrGroup[0].row === index })
 
-          return arrGroup[0].row === index
+        return <div key={node.attribs["data-block_key"]} style={{ position: "relative" }}>
+          <div
+            style={{
+              ...data,
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              backgroundPosition: `${data.horizontal}% ${data.vertical}%`,
+              // ...data.centerBlock&&{textAlign:"center"},
+              // ...data.rightBlock&&{textAlign:"right"},
+            }}
+          />
 
-        })
+          <div style={{position:"relative"}}>
+            {
+              listArr.map((item, index) => {
 
-        return <div key={node.attribs["data-block_key"]}
+                return <div key={index} style={{ textAlign: item.node.attribs["data-text-align"] }}  >{convertNodeToElement(item.node, index, transformFn)}</div>
+                // return <React.Fragment key={index}>{convertNodeToElement(item.node, index, transformFn)}</React.Fragment>
+              })
+            }
 
-          style={{
-            ...data,
-            backgroundPosition: `${data.horizontal}% ${data.vertical}%`,
-            // ...data.centerBlock&&{textAlign:"center"},
-            // ...data.rightBlock&&{textAlign:"right"},
-          }}>
-
-          {
-            listArr.map((item, index) => {
-
-              return <div key={index} style={{ textAlign: item.node.attribs["data-text-align"] }}  >{convertNodeToElement(item.node, index, transformFn)}</div>
-              // return <React.Fragment key={index}>{convertNodeToElement(item.node, index, transformFn)}</React.Fragment>
-            })
-          }
+          </div>
 
         </div>
       }

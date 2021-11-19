@@ -353,6 +353,30 @@ figure {
 }
 
 
+.block-wrap{
+  position: relative;
+
+
+
+}
+.block-wrap::before{
+
+  content: ' ';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+  background-image: url('https://picsum.photos/632/347');
+  background-repeat: no-repeat;
+  /* background-position: 50% 0; */
+  background-size: cover;
+
+  pointer-events: none;
+}
+
 /* .unstyled-text-draft-block::before{
   content:"+";
   color: #E2202D;

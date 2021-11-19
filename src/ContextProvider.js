@@ -200,6 +200,7 @@ const useStyles = makeStyles((theme) => {
     },
 
 
+
   }
 })
 
@@ -248,9 +249,9 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
         MuiCssBaseline: {
 
           '@global': {
-            a:{
-              color:"#08c",
-              textDecoration:"none",
+            a: {
+              color: "#08c",
+              textDecoration: "none",
             },
 
             html: {
@@ -538,35 +539,27 @@ function toPreHtml(editorState) {
 }
 
 
-
+//"linear-gradient(to top, rgba(207,217,223,0.8) 0%, rgba(226,235,240,0.8) 100%),
 const gradientStyleArr0 = [
+
   {
-    backgroundImage: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",// color: "#ffaaaa"
-  },
-  {
-    backgroundImage: "linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)", //color: "orange" 
-  },
-  {
-    backgroundImage: "linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",// color: "white"
-  },
-  {
-    backgroundImage: "linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%)",  //color: "orange" 
-  },
-  {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.8) 0%, rgba(226,235,240,0.8) 100%),  url(https://picsum.photos/600/300)",
+    backgroundImage: "url(https://picsum.photos/600/300)",
+    //  opacity:"0.3",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     //  color: "#666",
 
+    // backgroundColor: "red",
   },
   {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.8) 0%, rgba(226,235,240,0.8) 100%),  url(https://picsum.photos/500/700)",
+    backgroundImage: "url(https://picsum.photos/500/700)",
+
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     //   color: "#666"
   },
   {
-    backgroundImage: "linear-gradient(to top, rgba(207,217,223,0.8) 0%, rgba(226,235,240,0.8) 100%),  url(https://picsum.photos/502/700)",
+    backgroundImage: "url(https://picsum.photos/502/700)",
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     // color: "#666"
@@ -580,7 +573,8 @@ const gradientStyleArr0 = [
 export default function ContextProvider({ myTheme = {}, ...props }) {
 
 
-  const [textSizeArr, setTextSizeArr] = useState(["4rem", "6rem", "4rem", "1rem", "2rem"])
+  // const [textSizeArr, setTextSizeArr] = useState(["4rem", "6rem", "4rem", "1rem", "2rem"])
+  const [textSizeArr, setTextSizeArr] = useState(["1.8rem", "1.6rem", "2rem", "1.6rem", "2rem"])
   const [isLight, setIsLight] = useState(true)
 
   const editorRef = useRef()
@@ -612,17 +606,135 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
       blocks: [
         {
-          key: "1111", text: "abcs @abc_d  dfgsfsad  dsdfwefwfwf", type: "editingBlock",
-          data: { "backgroundImage": "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", "horizontal": 50, "vertical": 50 },
-          inlineStyleRanges: [{ "offset": 0, "length": 1, "style": "BOLD" }, { "offset": 2, "length": 8, "style": "#e91e63" },],
-          entityRanges: [{ "offset": 4, "length": 2, "key": 0 }, { "offset": 6, "length": 5, "key": 1 },],
+          key: "1111", text: "", type: "editingBlock",
+          // data: { "backgroundImage": "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)", "horizontal": 50, "vertical": 50 },
+          data: {
+            "backgroundImage": "url(https://picsum.photos/600/600)",
+            "backgroundSize": "cover",
+            "backgroundRepeat": "no-repeat",
+            "backgroundColor": "wheat",
+            "horizontal": 50,
+            "vertical": 50,
+            "opacity": 0.5
+          }
+
         },
 
         {
-          key: "2222", text: "@ab @fca bcddfgsfsaddsdfwefwfwf", type: "editingBlock",
-          inlineStyleRanges: [{ "offset": 0, "length": 3, "style": "BOLD" }, { "offset": 2, "length": 1, "style": "#e91e63" },],
-          entityRanges: [{ "offset": 3, "length": 2, "key": 0 }, { "offset": 5, "length": 3, "key": 1 },],
-        }
+          key: "2222", text: "  @visitor  @刘", type: "editingBlock",
+          "inlineStyleRanges": [
+            {
+              "offset": 3,
+              "length": 7,
+              "style": "SHADOW6"
+            },
+            {
+              "offset": 3,
+              "length": 7,
+              "style": "#9c27b0"
+            }
+          ],
+
+
+          entityRanges: [
+            {
+              "offset": 1,
+              "length": 2,
+              "key": 0
+            },
+            {
+              "offset": 3,
+              "length": 7,
+              "key": 1
+            }
+          ]
+        },
+
+        {
+          key: "3333", text: "Hello 你好 !", type: "editingBlock",
+          data: { "direction": "center", "centerBlock": true, "rightBlock": false },
+
+
+          "inlineStyleRanges": [
+            {
+              "offset": 0,
+              "length": 5,
+              "style": "#00bcd4"
+            },
+            {
+              "offset": 0,
+              "length": 5,
+              "style": "SHADOW4"
+            },
+            {
+              "offset": 0,
+              "length": 6,
+              "style": "ITALIC"
+            },
+            {
+              "offset": 6,
+              "length": 2,
+              "style": "SHADOW1"
+            },
+            {
+              "offset": 6,
+              "length": 2,
+              "style": "#e91e63"
+            },
+            {
+              "offset": 6,
+              "length": 2,
+              "style": "charSize4"
+            }
+          ],
+          entityRanges: [],
+        },
+
+        {
+          key: "4444", text: "", type: "editingBlock",
+
+        },
+        {
+          key: "5555", text: "😃have a try 试试 ", type: "editingBlock",
+          data: { "centerBlock": false, "rightBlock": true },
+
+          "inlineStyleRanges": [
+            {
+              "offset": 0,
+              "length": 2,
+              "style": "SHADOW0"
+            },
+            
+            {
+              "offset": 0,
+              "length": 14,
+              "style": "BOLD"
+            },
+            {
+              "offset": 0,
+              "length": 14,
+              "style": "charSize2"
+            },
+            {
+              "offset": 0,
+              "length": 14,
+              "style": "#009688"
+            },
+            {
+              "offset": 1,
+              "length": 10,
+              "style": "SHADOW2"
+            },
+            {
+              "offset": 11,
+              "length": 3,
+              "style": "SHADOW0"
+            }
+          ],
+        },
+        {
+          key: "6666", text: "", type: "editingBlock",
+        },
       ]
     }),
 
@@ -630,7 +742,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [showContent, setShowContent] = useState(false)
   const [showMention, setShowMention] = useState(false)
-  const [showHint, setShowHint] = useState(false)
+  const [showHint, setShowHint] = useState(true)
   const [avatarHint, setAvatarHint] = useState(false)
   const [showFontBar, setShowFontBar] = useState(false)
 
@@ -718,12 +830,12 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
               labelPlacement="start"
             />
 
-            <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
+            {/* <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
               control={<SwitchBtn checked={showFontBar} factor={[2, 2, 2, 1.8, 2.2]}
                 onChange={() => { setShowFontBar(pre => !pre); editorRef.current.focus() }} name="showFontBar" color="primary" />}
               label="FontBar"
               labelPlacement="start"
-            />
+            /> */}
 
             <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
               control={<SwitchBtn checked={showHint} factor={[2, 2, 2, 1.8, 2.2]}

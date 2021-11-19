@@ -240,11 +240,59 @@ export default function EditingBlock(props) {
       />
       {arr.map((groupArr, index) => {
         //GroupBlock({ groupArr, editorState, hasLoaded, inputRef, markingColorBlock, setEditorState, index, isFocusIn, markingImageBlock })
-        const topKey = groupArr[0].props.children.props.block.getKey()
-        return <GroupBlock key={index} {...{ groupArr, topKey, editorState, hasLoaded, inputRef, markingColorBlock, setEditorState, index, isFocusIn, markingImageBlock }} />
+       const topKey = groupArr[0].props.children.props.block.getKey()
+        return <GroupBlock key={index} {...{ groupArr,topKey, editorState, hasLoaded, inputRef, markingColorBlock, setEditorState, index, isFocusIn, markingImageBlock }} />
 
       })}
 
+
+      {/* {arr.map((groupArr, index) => {
+        const styleObj = groupArr[0].props.children.props.block.getData().toObject()
+        const headKey = groupArr[0].props.children.props.block.getKey()
+
+        const isInRange = groupArr.some(item => {
+          const block = item.props.children.props.block
+          return block.getKey() === editorState.getSelection().getStartKey()
+        })
+
+     
+
+        return (
+          <div className={"block-wrap"}
+            style={{
+     
+              backgroundPosition: `${styleObj.horizontal}% ${styleObj.vertical}%`,
+            }}
+            key={index}>
+            {groupArr.map((item, index, allChildren) => {
+              return ( item  )
+            })}
+
+            <Collapse in={isFocusIn && isInRange} unmountOnExit={true} contentEditable={false}
+              //timeout={{enter:3000,exit:3000}}
+              onExited={function () {
+                const selection = editorState.getSelection()
+                setEditorState(EditorState.acceptSelection(editorState, selection))
+
+              }}
+            >
+
+              <ToolBar hasLoaded={hasLoaded} inputRef={inputRef} markingImageBlock={markingImageBlock} editorState={editorState}
+                anmimationType={null && Zoom} setEditorState={setEditorState}
+                isFocusIn={isFocusIn} headKey={headKey}
+
+
+                index={index}
+              />
+
+            </Collapse>
+
+          </div >
+        )
+
+
+      }) }
+      */}
 
 
     </div>
@@ -256,7 +304,7 @@ export default function EditingBlock(props) {
 
 }
 
-function GroupBlock({ groupArr, editorState, hasLoaded, inputRef, markingColorBlock, setEditorState, topKey, index, isFocusIn, markingImageBlock }) {
+function GroupBlock({ groupArr, editorState, hasLoaded, inputRef, markingColorBlock, setEditorState, topKey,index, isFocusIn, markingImageBlock }) {
   const styleObj = groupArr[0].props.children.props.block.getData().toObject()
   const headKey = groupArr[0].props.children.props.block.getKey()
   const isInRange = groupArr.some(item => {
@@ -298,7 +346,7 @@ function GroupBlock({ groupArr, editorState, hasLoaded, inputRef, markingColorBl
             anmimationType={null && Zoom} setEditorState={setEditorState}
             isFocusIn={isFocusIn} headKey={headKey}
             index={index}
-            topKey={topKey}
+            topKey={topKey}    
           />
         </Collapse>
       </div>
@@ -358,7 +406,7 @@ function update({ e, bgImageObj, editorRef, editorState, setEditorState, headKey
 
 
 
-function ToolBar({ hasLoaded, topKey, inputRef, markingImageBlock, ediotrBlockCss, isFocusIn, anmimationType, headKey, horizontal, setHorizontal, vertical, setVertical, index }) {
+function ToolBar({ hasLoaded, topKey,inputRef, markingImageBlock, ediotrBlockCss, isFocusIn, anmimationType, headKey, horizontal, setHorizontal, vertical, setVertical, index }) {
 
   const theme = useTheme()
   const { gradientStyleArr, editorState, setEditorState, bgImageObj } = useContext(Context)
@@ -658,8 +706,8 @@ function ToolBar({ hasLoaded, topKey, inputRef, markingImageBlock, ediotrBlockCs
 
         onClick={function (e) {
           e.preventDefault(); e.stopPropagation();
-          // const headKey = getHeadKey(editorState)
-          changeOpacity({ topKey, editorState, setEditorState })
+         // const headKey = getHeadKey(editorState)
+          changeOpacity({ topKey,  editorState, setEditorState })
 
 
         }}
@@ -691,10 +739,7 @@ function ToolBar({ hasLoaded, topKey, inputRef, markingImageBlock, ediotrBlockCs
               Immutable.Map({ backgroundImage: `linear-gradient(${Math.floor(Math.random() * 360)}deg,${getRandomColor()} 0%,${getRandomColor()} 100%)`, opacity: 1 })
             )
 
-            newContentState = Modifier.setBlockType(newContentState, es.getSelection(), "editingBlock")
-
-
-            es = EditorState.push(es, newContentState, "change-block-type")
+            es = EditorState.push(es, newContentState, "change-block-data")
 
 
             setEditorState(es)
@@ -748,7 +793,7 @@ function setHeadBlockData(editorState, setEditorState, headKey, dataObj, individ
 
 function changeOpacity({ topKey, editorState, setEditorState }) {
 
-
+   
 
   const selection = editorState.getSelection()
 
@@ -767,7 +812,7 @@ function changeOpacity({ topKey, editorState, setEditorState }) {
   }
 
 
-  let allBlocks = Modifier.mergeBlockData(editorState.getCurrentContent(), SelectionState.createEmpty(topKey), Immutable.Map({ opacity }))
+  let allBlocks = Modifier.mergeBlockData(editorState.getCurrentContent(), SelectionState.createEmpty(topKey), Immutable.Map({opacity}))
 
   let es = EditorState.push(
     editorState,

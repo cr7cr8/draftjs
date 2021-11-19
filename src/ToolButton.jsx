@@ -191,9 +191,36 @@ class ToolButton_ extends React.Component {
             e.preventDefault()
             e.stopPropagation()
     
-            setEditorState(RichUtils.toggleBlockType(editorState, "imageBlock"))
-          
-          }}
+         //   setEditorState(RichUtils.toggleBlockType(editorState, "imageBlock"))
+          // todo add blockdata to the below block
+        
+         const originalSection = editorState.getSelection()
+        
+          if (editorState.getSelection().isCollapsed()) {
+            let es = EditorState.moveFocusToEnd(editorState)
+
+            let newContentState = Modifier.splitBlock(es.getCurrentContent(), es.getSelection())
+
+            es = EditorState.push(es, newContentState, "split-block")
+
+            newContentState = Modifier.setBlockData(
+              newContentState, es.getSelection(),
+              Immutable.Map({ })
+            )
+
+            newContentState = Modifier.setBlockType(newContentState, es.getSelection(), "imageBlock")
+
+
+            es = EditorState.push(es, newContentState, "change-block-type")
+            es = EditorState.forceSelection(es,originalSection)
+
+            setEditorState(es)
+
+
+          }
+        
+        
+        }}
         >
 
 

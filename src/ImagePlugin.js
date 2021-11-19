@@ -60,7 +60,7 @@ export default function createImagePlugin() {
     let newContent = Modifier.setBlockType(
       externalES.getCurrentContent(),
       newSelection,
-      "unstyled"
+      "editingBlock"     //"unstyled"
     );
 
     newContent = Modifier.setBlockData(
