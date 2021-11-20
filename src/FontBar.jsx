@@ -5,7 +5,7 @@ import { EditorBlock, EditorState, ContentState, ContentBlock, CharacterMetadata
 
 import { Avatar, Chip, Popover, Typography, Container, CssBaseline, Paper, Grow, Zoom, Collapse, Fade, Slide, Button, IconButton, TextField } from "@material-ui/core";
 
-import md5 from 'md5';
+
 
 import { makeStyles, styled, useTheme, withStyles, withTheme } from '@material-ui/core/styles';
 import { Context, withContext } from "./ContextProvider"
@@ -420,7 +420,7 @@ export const FontBar = withContext(function ({
     const selection = editorState.getSelection()
     const isCollapsed = selection.isCollapsed()
 
-    //  linkDictionary.current[md5(linkValue)] = linkValue
+
     if (isCollapsed) { alert("slection collapsed"); return }
 
 
@@ -444,9 +444,7 @@ export const FontBar = withContext(function ({
         }
       })
 
-      //  const linkMD5 = md5(linkValue)
-      //   linkDictionary.current["LINK" + md5(linkValue)] = linkValue
-      //  es = RichUtils.toggleInlineStyle(es, "LINK" + linkMD5)
+
 
       linkDictionary.current["LINK" + linkValue] = linkValue
       es = RichUtils.toggleInlineStyle(es, "LINK" + linkValue)
@@ -487,8 +485,7 @@ export const FontBar = withContext(function ({
       //    }
       //   })
 
-      //   const linkMD5 = md5(linkValue)
-      //   linkDictionary.current["LINK" + md5(linkValue)] = linkValue
+
       es = EditorState.forceSelection(es, selection.merge({
 
         focusKey: endKey,
