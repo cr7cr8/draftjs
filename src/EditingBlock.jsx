@@ -426,7 +426,7 @@ function ToolBarMobile({ hasLoaded, topKey, inputRef, markingImageBlock, ediotrB
 
 
           let es = EditorState.push(editorState, newContent, 'change-block-data');
-          //  es = EditorState.forceSelection(es, editorState.getSelection())
+            es = EditorState.acceptSelection(es, editorState.getSelection())
 
           setEditorState(es)
         }}
@@ -458,7 +458,7 @@ function ToolBarMobile({ hasLoaded, topKey, inputRef, markingImageBlock, ediotrB
           )
 
           let es = EditorState.push(editorState, newContent, 'change-block-data');
-          // es = EditorState.forceSelection(es, editorState.getSelection())
+           es = EditorState.acceptSelection(es, editorState.getSelection())
 
           setEditorState(es)
         }}
@@ -1053,7 +1053,8 @@ function changeOpacity({ topKey, editorState, setEditorState }) {
     "change-block-data",
   )
 
-  es = EditorState.forceSelection(es, selection)
+  es = isMobile ? EditorState.acceptSelection(es, editorState.getSelection()) : EditorState.forceSelection(es, editorState.getSelection())
+ // es = EditorState.forceSelection(es, selection)
   setEditorState(es);
 
 }
