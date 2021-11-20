@@ -239,7 +239,7 @@ export default withContext(function DraftEditor({ ctx, ...props }) {
 
             const allClassName = classNames({
 
-              "image-block-figure": blockType === "imageBlock",
+              "block-gap": blockType === "imageBlock"|| blockType === "editingBlock",
 
               "text-center": blockData.centerBlock,
               "text-right": blockData.rightBlock,

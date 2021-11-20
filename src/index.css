@@ -20,8 +20,16 @@ figure {
   margin-inline-end: 0px;
 }
 
-.image-block-figure + .image-block-figure{
-  margin-top: 4px;
+/* .image-block-figure + .image-block-figure{
+  margin-top: 2px;
+} */
+/* .image-block-figure {
+  margin-top: 1px;
+  margin-bottom: 1px;
+} */
+.block-gap {
+  margin-top: 1px;
+  margin-bottom: 1px;
 }
 
 .unstyled-focus-on{

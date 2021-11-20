@@ -478,11 +478,11 @@ function toPreHtml(editorState) {
 
 
         return {
-          // style: {
-          //   ...styleObj.centerBlock && { textAlign: "center" },
-          //   ...styleObj.rightBlock && { textAlign: "right" }
+          style: {
+           // ...styleObj.centerBlock && { textAlign: "center" },
+           // ...styleObj.rightBlock && { textAlign: "right" }
 
-          // },
+          },
           attributes: {
 
             ...styleObj.centerBlock && { className: "text-center" },

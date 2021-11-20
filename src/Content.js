@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useEffect, useRef, forwardRef } from "react"
+import React, { useLayoutEffect, useEffect, useRef, forwardRef, useState } from "react"
 import { stateToHTML } from 'draft-js-export-html';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2, } from 'react-html-parser';
 import { withTheme, Paper, ThemeProvider, Typography, Zoom, Box } from "@material-ui/core";
@@ -19,6 +19,8 @@ import {
   engineName,
 } from "react-device-detect";
 
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';// This only needs to be imported once in your app
 
 
 const useSize = (target) => {
@@ -238,31 +240,38 @@ function toHtml({ preHtml, theme, ctx }) {
 
         const listArr = arr2.find(arrGroup => { return arrGroup[0].row === index })
 
-        return <div key={node.attribs["data-block_key"]} style={{ position: "relative" }}>
-          <div
+        return (
+          <div key={node.attribs["data-block_key"]}
             style={{
-              ...data,
-              position: "absolute",
-              width: "100%",
-              height: "100%",
-              backgroundPosition: `${data.horizontal}% ${data.vertical}%`,
-              // ...data.centerBlock&&{textAlign:"center"},
-              // ...data.rightBlock&&{textAlign:"right"},
-            }}
-          />
+              position: "relative",
+              marginTop: "1px",
+              marignBottom: "1px",
+            }}>
+            <div
+              style={{
+                ...data,
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                backgroundPosition: `${data.horizontal}% ${data.vertical}%`,
 
-          <div style={{position:"relative"}}>
-            {
-              listArr.map((item, index) => {
+                // ...data.centerBlock&&{textAlign:"center"},
+                // ...data.rightBlock&&{textAlign:"right"},
+              }}
+            />
 
-                return <div key={index} style={{ textAlign: item.node.attribs["data-text-align"] }}  >{convertNodeToElement(item.node, index, transformFn)}</div>
-                // return <React.Fragment key={index}>{convertNodeToElement(item.node, index, transformFn)}</React.Fragment>
-              })
-            }
+            <div style={{ position: "relative" }}>
+              {
+                listArr.map((item, index) => {
 
-          </div>
+                  return <div key={index} style={{ textAlign: item.node.attribs["data-text-align"] }}  >{convertNodeToElement(item.node, index, transformFn)}</div>
+                  // return <React.Fragment key={index}>{convertNodeToElement(item.node, index, transformFn)}</React.Fragment>
+                })
+              }
 
-        </div>
+            </div>
+
+          </div>)
       }
 
     }
@@ -321,7 +330,7 @@ const useStyles = makeStyles((theme) => {
         display: 'grid',
         gridTemplateColumns: "1fr 1fr",
         gridTemplateRows: "1fr 1fr",
-        gridGap: "4px",
+        gridGap: "2px",
 
         justifyContent: 'space-around',
         overflow: 'hidden',
@@ -377,33 +386,75 @@ function ImagePanel({ imageLinkArr = [], posData = {}, ...props }) {
   const size = useSize(target)
 
 
-  return (
-    <div className={classes.baseGridCss} ref={target}
-      style={{
-        backgroundColor: "wheat",
-        width: "100%",
-        height: (size && size.width * 9 / 16) || 0 + "px",
-        //paddingBottom: "56.25%"
-        //   height: (size && size.width * 9 / 16) || 0 + "px",
-      }}
-    >
-      {
+  const [photoIndex, setPhotoIndex] = useState(0)
+  const [isOpen, setIsOpen] = useState(false)
 
-        imageLinkArr.map((pic, index) => {
+
+
+  const lightbox = <Lightbox
+    mainSrc={imageLinkArr[photoIndex]}
+    nextSrc={imageLinkArr[(photoIndex + 1) % imageLinkArr.length]}
+    prevSrc={imageLinkArr[(photoIndex + imageLinkArr.length - 1) % imageLinkArr.length]}
+    onCloseRequest={() => { setIsOpen(false); /*setFullVisible(true)*/ }}
+    onMovePrevRequest={() =>
+      setPhotoIndex(
+        pre => (pre + imageLinkArr.length - 1) % imageLinkArr.length,
+      )
+    }
+    onMoveNextRequest={() =>
+      setPhotoIndex(
+        pre => (pre + imageLinkArr.length + 1) % imageLinkArr.length,
+      )
+    }
+  />
+
+
+
+
+  return (
+    <>
+
+
+      <div className={classes.baseGridCss} ref={target}
+        style={{
+         // backgroundColor: "wheat",
+          width: "100%",
+          height: (size && size.width * 9 / 16) || 0 + "px",
+          //paddingBottom: "56.25%"
+          //   height: (size && size.width * 9 / 16) || 0 + "px",
+          marginTop: "1px",
+          marignBottom: "1px",
+        }}
+      >
+
+        {imageLinkArr.map((pic, index) => {
           const { horizontal = 50, vertical = 50 } = posData["pos" + index] || {}
 
           return <div key={index}>
-
-            <img src={pic} style={{
-              position: "absolute", objectFit: "cover", width: "100%", height: "100%",
-              objectPosition: horizontal + "%" + " " + vertical + "%"
-            }} />
-
+            <img src={pic}
+              style={{
+                position: "absolute", objectFit: "cover", width: "100%", height: "100%",
+                objectPosition: horizontal + "%" + " " + vertical + "%"
+              }}
+              onClick={function () {
+                setPhotoIndex(index); setIsOpen(true);
+              }}
+            />
           </div>
+        })}
 
-        })
-      }
-    </div>
 
+        {isOpen && lightbox}
+
+
+
+
+
+
+
+
+
+      </div>
+    </>
   )
 }

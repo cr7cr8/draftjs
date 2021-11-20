@@ -59,8 +59,9 @@ const useStyles = makeStyles((theme) => {
         display: 'grid',
         gridTemplateColumns: "1fr 1fr",
         gridTemplateRows: "1fr 1fr",
-        gridGap: "4px",
-
+        gridGap: "2px",
+        //   marginTop: "2px",
+        //  marginBottom: "2px",
         justifyContent: 'space-around',
         overflow: 'hidden',
         backgroundColor: theme.palette.background.paper,
@@ -224,23 +225,23 @@ export default function ImagePanel(props) {
   }
 
 
-  useEffect(function(){
+  useEffect(function () {
 
     if (targetKey && currentBlockKey !== targetKey) {
       const targetBlock = contentState.getBlockForKey(targetKey)
-  
+
       const selection = editorState.getSelection().merge({
         anchorKey: targetKey,
         anchorOffset: targetBlock.getLength(),
         focusKey: targetKey,
         focusOffset: targetBlock.getLength()
       })
-  
+
       setEditorState(EditorState.forceSelection(editorState, selection))
-  
+
     }
 
-  },[])
+  }, [])
 
 
 
@@ -254,7 +255,7 @@ export default function ImagePanel(props) {
 
       <div className={classes.baseGridCss} ref={target}
         style={{
-          backgroundColor: "wheat",
+          ...(!imageBlockObj[blockKey] || (imageBlockObj[blockKey] && imageBlockObj[blockKey].length === 0)) && { backgroundColor: "wheat" },
           height: (size && size.width * 9 / 16) || 0 + "px",
         }}
       >
@@ -291,8 +292,8 @@ export default function ImagePanel(props) {
                 })
                 //  console.log(blockKey)
 
-              
-              
+
+
 
 
               }}
