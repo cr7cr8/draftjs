@@ -65,7 +65,7 @@ import {
   red, pink, purple, deepPurple, indigo, blue, lightBlue, cyan, teal, green, lightGreen, lime,
   yellow, amber, orange, deepOrange, brown, grey, blueGrey
 } from '@material-ui/core/colors';
-import { browserName } from 'react-device-detect';
+import { browserName, isMobile } from 'react-device-detect';
 import InputBase from '@material-ui/core/InputBase';
 
 let colorStringArr = [];
@@ -111,7 +111,7 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, 
 
         transition: "width",
 
-        //...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonCount)], ["height", multiplyArr(textSizeArr, 2)]),
+        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonCount)], ["height", multiplyArr(textSizeArr, 2)]),
 
         width: editorWidth
 
@@ -149,7 +149,7 @@ const useStyles = makeStyles(({ textSizeArr, breakpointsAttribute, multiplyArr, 
         alignItems: "center", //backgroundColor: "pink",
 
 
-        ...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonCount)], ["height", multiplyArr(textSizeArr, 1)])
+        //     ...breakpointsAttribute(["width", multiplyArr(textSizeArr, buttonCount)], ["height", multiplyArr(textSizeArr, 1)])
 
 
       }
@@ -695,8 +695,11 @@ export const FontBar = withContext(function ({
 
     const selection = editorState.getSelection()
 
-
-    if (!selection.isCollapsed()) {
+    if (isMobile) {
+      setLeft(0);
+      setTop(0)
+    }
+    else if (!selection.isCollapsed()) {
       const startKey = selection.getStartKey()
       const startOffset = selection.getStartOffset()
 
@@ -822,12 +825,6 @@ export const FontBar = withContext(function ({
 
 
 
-  useEffect(function () {
-
-    // if (tabValue === 2) {
-    //   document.querySelector('div[style*="--linkinput"] input')
-    // }
-  }, [tabValue])
 
 
   //  console.log(linkValue.length)
@@ -863,7 +860,8 @@ export const FontBar = withContext(function ({
           // transitionProperty: "opacity",
 
 
-          overflow: tabValue !== 2 ? "hidden" : "visible",
+          //  overflow: tabValue !== 2 ? "hidden" : "visible",
+
 
           whiteSpace: "nowrap",
           boxShadow: theme.shadows[5],

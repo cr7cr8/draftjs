@@ -19,15 +19,15 @@ import Immutable from "immutable"
 import DetectableOverflow from "react-detectable-overflow"
 
 
-// import {
-//   isMobile,
-//   isFirefox,
-//   isChrome,
-//   browserName,
-//   engineName,
-//   BrowserTypes,
-//   deviceDetect
-// } from "react-device-detect";
+import {
+  isMobile,
+  isFirefox,
+  isChrome,
+  browserName,
+  engineName,
+  BrowserTypes,
+  deviceDetect
+} from "react-device-detect";
 
 //import axios from 'axios';
 //import url, { axios } from './config';
@@ -246,6 +246,12 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
 
       overrides: {
 
+        IconButton: {
+          padding: 0,
+
+        },
+
+
         MuiCssBaseline: {
 
           '@global': {
@@ -311,6 +317,14 @@ function createMyTheme({ textSizeArr, isLight, setIsLight, sizeCss, smSizeCss, h
             //     ...breakpointsAttribute(["borderRadius", ...textSizeArr])
           }
         },
+
+        MuiIconButton: {
+          root: {
+            padding: 0,
+          }
+
+        },
+
         MuiPaper: {
           root: {
             fontSize: "3rem",
@@ -574,23 +588,10 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
 
   // const [textSizeArr, setTextSizeArr] = useState(["4rem", "6rem", "4rem", "1rem", "2rem"])
-  const [textSizeArr, setTextSizeArr] = useState(["1.8rem", "1.6rem", "2rem", "1.6rem", "2rem"])
+  const [textSizeArr, setTextSizeArr] = useState(["2rem", "1.5rem", "1.5rem", "1.5rem", "1.5rem"])
   const [isLight, setIsLight] = useState(true)
 
   const editorRef = useRef()
-
-
-
-  const entityMap = {
-    "index0111": {
-      // "key":"aaaaa",
-      "type": "foodMarket",
-      "mutability": "MUTABLE",
-      "data": {
-        "eat": "apple"
-      }
-    },
-  }
 
 
 
@@ -704,7 +705,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
               "length": 2,
               "style": "SHADOW0"
             },
-            
+
             {
               "offset": 0,
               "length": 14,
@@ -742,7 +743,7 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
 
   const [showContent, setShowContent] = useState(false)
   const [showMention, setShowMention] = useState(false)
-  const [showHint, setShowHint] = useState(true)
+  const [showHint, setShowHint] = useState(!isMobile)
   const [avatarHint, setAvatarHint] = useState(false)
   const [showFontBar, setShowFontBar] = useState(false)
 
@@ -816,19 +817,19 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
           {/* <BasicImageList /> */}
 
           <FormGroup row >
-            <FormControlLabel
+             <FormControlLabel
               control={<SwitchBtn checked={showContent} factor={[2, 2, 2, 1.8, 2.2]}
                 onChange={() => { setShowContent(pre => !pre) }} name="showContent" color="primary" />}
               label="Content"
               labelPlacement="start"
             />
 
-            <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
+            {!isMobile && <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
               control={<SwitchBtn checked={showMention} factor={[2, 2, 2, 1.8, 3]}
                 onChange={() => { setShowMention(pre => !pre); editorRef.current.focus() }} name="showMention" color="primary" />}
               label="AvatarMention"
               labelPlacement="start"
-            />
+            />}
 
             {/* <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
               control={<SwitchBtn checked={showFontBar} factor={[2, 2, 2, 1.8, 2.2]}
@@ -837,44 +838,39 @@ export default function ContextProvider({ myTheme = {}, ...props }) {
               labelPlacement="start"
             /> */}
 
-            <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
+            {!isMobile && <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
               control={<SwitchBtn checked={showHint} factor={[2, 2, 2, 1.8, 2.2]}
                 onChange={() => { setShowHint(pre => !pre); editorRef.current.focus() }} name="showHint" color="primary" />}
               label="Hint"
               labelPlacement="start"
-            />
+            />}
 
-            <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
+            {!isMobile && <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
               control={<SwitchBtn checked={avatarHint} factor={[2, 2, 2, 1.8, 2.2]} disabled={!showHint}
                 onChange={() => { setAvatarHint(pre => !pre); editorRef.current.focus() }} name="showHint" color="primary" />}
               label="AvatarHint"
               labelPlacement="start"
-            />
+            />}
 
-            <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
-
+            {!isMobile && <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
               control={
                 <SwitchBtn
-
                   checked={showEmojiPanel} factor={[2, 2, 2, 1.8, 2.2]}
-
                   onChange={() => {
                     setShowEmojiPanel(pre => !pre);
-
-
                   }} name="showEmojiPanel" color="primary" />
               }
               label="EmojiPanel"
               labelPlacement="start"
 
-            />
+            />}
 
-            <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
+            {!isMobile && <FormControlLabel style={{ color: "orange", fontSize: "3rem" }}
               control={<SwitchBtn checked={!isLight} factor={[2, 2, 2, 1.8, 2.2]}
                 onChange={() => { setIsLight(pre => !pre) }} name="lightDark" color="primary" />}
               label="LightDark"
               labelPlacement="start"
-            />
+            />}
           </FormGroup>
 
 
